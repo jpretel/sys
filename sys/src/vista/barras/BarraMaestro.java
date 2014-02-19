@@ -25,6 +25,7 @@ public class BarraMaestro extends JToolBar {
 	private JButton btnGrabar;
 	private JButton btnEliminar;
 	private JButton btnSalir;
+	private JButton btnCancelar;
 	
 	public JButton getBtnNuevo() {
 		return btnNuevo;
@@ -123,6 +124,21 @@ public class BarraMaestro extends JToolBar {
 				getFormMaestro().grabar();
 			}
 		});
+		
+		btnCancelar = new JButton("");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				getFormMaestro().cancelar();
+			}
+		});
+		btnCancelar
+		.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.getResource("/main/resources/iconos/cancelar.png"))
+				.getImage().getScaledInstance(_ancho, _alto,
+						java.awt.Image.SCALE_DEFAULT)));
+		btnCancelar.setToolTipText("Cancelar");
+		add(btnCancelar);
+		
 		btnGrabar
 				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
 						.getResource("/main/resources/iconos/grabar.png"))
@@ -173,6 +189,15 @@ public class BarraMaestro extends JToolBar {
 		getBtnGrabar().setEnabled(!band);
 		getBtnEliminar().setEnabled(band);
 		getBtnNuevo().setEnabled(band);
+		getBtnCancelar().setEnabled(!band);
+	}
+
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
+	public void setBtnCancelar(JButton btnCancelar) {
+		this.btnCancelar = btnCancelar;
 	}
 
 	public AbstractMaestro getFormMaestro() {

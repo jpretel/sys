@@ -88,12 +88,14 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract void vista_edicion();
 	public abstract void vista_noedicion();
 	
-	public void refrescar() {
+	public void cancelar () {
 		llenar_tablas();
 		llenar_lista();
 		llenar_datos();
-	}
-	
+		setEstado(VISTA);
+		vista_noedicion();
+		getBarra().enVista();
+	}	
 
 	public void salir() {
 		this.dispose();

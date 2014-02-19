@@ -86,9 +86,7 @@ public class FrmConsumidor extends AbstractMaestro {
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(321, 37, 184, 20);
 		getContentPane().add(txtDescripcion);
-		setEstado(VISTA);
-		vista_noedicion();
-		refrescar();
+		iniciar();
 	}
 
 	@Override

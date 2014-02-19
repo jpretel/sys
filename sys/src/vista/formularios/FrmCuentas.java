@@ -35,7 +35,7 @@ public class FrmCuentas extends AbstractMaestro {
 	private JTextField txtDescripcion;
 
 	public FrmCuentas(BarraMaestro barra) {
-		super("Cuentas Contables2", barra);
+		super("Cuentas Contables", barra);
 		
 		
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
