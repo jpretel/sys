@@ -1,4 +1,4 @@
-package vista.utils;
+package vista.utilitarios;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -10,26 +10,25 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 import vista.barras.BarraMaestro;
-import vista.formularios.FrmConsumidor;
-import vista.formularios.FrmCuentas;
-import vista.formularios.FrmDocumento;
 import vista.formularios.FrmGrupos;
 
 public class menus extends JMenuBar implements ActionListener{
+	
+	private static final long serialVersionUID = 1L;
 	public String VectOpc[][]; // Vector de Opciones
 	public String MetodoElegido = ""; //Nombre del Metodo a ejecutar
 	public int LngOpc; //Longitud de Opciones
 	public int LngVector;
-	public JInternalFrame Formularios[];
-	public JToolBar barra;
-	public menus(JToolBar barra){
-		this.barra = barra;
-		InicializarForms();
+	public JInternalFrame Formularios[];	
+	
+	public menus(BarraMaestro barraMaestro){		
+		InicializarForms(barraMaestro);
 	}
+	
+	
 	
 	public  menus(String VectOpc[][],String MetodoElegido){
 		
@@ -41,7 +40,7 @@ public class menus extends JMenuBar implements ActionListener{
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		Hashtable lista = new Hashtable();		
+		Hashtable<String, JMenuItem> lista = new Hashtable<String, JMenuItem>();		
 		for (int i = 0; i < LngVector ;i++){					
 			//Si tiene Hijos debe ser un SubItem
 			if(TieneHijos(this.VectOpc[i][0])){
@@ -65,9 +64,7 @@ public class menus extends JMenuBar implements ActionListener{
 				
 		}
 		
-		String idPapa;
-		//Solo para comparar las clases
-		JMenu ObjMenuTmp = new JMenu();
+		String idPapa;		
 		for(int i = 0; i < this.LngVector ; i++){
 			if(EsPrincipal(this.VectOpc[i][0])){
 				if(lista.get(this.VectOpc[i][0]) instanceof JMenu){
@@ -78,10 +75,9 @@ public class menus extends JMenuBar implements ActionListener{
 			}else{
 				idPapa = this.VectOpc[i][0].substring(0,this.VectOpc[i][0].length() -1);
 				objMenu = (JMenu)lista.get(idPapa);				
-				if(lista.get(this.VectOpc[i][0]).getClass() == ObjMenuTmp.getClass()){
+				if(lista.get(this.VectOpc[i][0])  instanceof JMenu){
 					objMenu.add((JMenu)lista.get(VectOpc[i][0]));
-				}else{
-					
+				}else{					
 					objMenu.add((JMenuItem)lista.get(VectOpc[i][0]));
 				}
 			}
@@ -89,23 +85,14 @@ public class menus extends JMenuBar implements ActionListener{
 		
 	}	
 
-	private void InicializarForms() {
+	private void InicializarForms(BarraMaestro barraMaestro) {
 		//formulario= FrmCuentas.class;		
 		int index = 0;
 		int nElementos = 1 ;
-		FrmCuentas frmCuentas = new FrmCuentas((BarraMaestro) this.barra);
-		nElementos = nElementos + 1;
-		FrmConsumidor frmConsumidor = new FrmConsumidor((BarraMaestro) this.barra);
-		nElementos = nElementos + 1;
-		FrmDocumento frmDocumento = new FrmDocumento((BarraMaestro) this.barra);
-		
-		
+		FrmGrupos frmGrupos = new FrmGrupos(barraMaestro);
 		Formularios = new JInternalFrame[nElementos];		
-		Formularios[index] = frmCuentas;
-		index = index + 1;
-		Formularios[index] = frmConsumidor;	
-		index = index + 1;
-		Formularios[index] = frmDocumento;		
+		Formularios[index] = frmGrupos;	
+		index = index + 1;			
 	}
 	
 	public JInternalFrame getFormulario(int index){		
@@ -149,24 +136,11 @@ public class menus extends JMenuBar implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		 try { 
-			 /* Si el contexto en que se utiliza el objeto MiMenu es 
-			 una ventana, dentro de la cual hay una barra de menús, 
-			 extendiendo la barra MiMenu, el objeto que instancia 
-			 la clase está en la tercera generación. Si este no es el 
-			 caso, habrá que alterar la instrucción, referenciando 
-			 el objeto padre en la generación correcta */ 
 			 Object objPapa = getParent().getParent().getParent(); 
-			 Class MiPapa = 
-			 getParent().getParent().getParent().getClass(); 
-			 /* Estableciendo que los parámetros del método de acciones 
-			 en la clase que llama a MiMenu son de tipo String y 
-			 pasando como argumento a dicho método la clave de la 
-			 opción seleccionada */ 
+			 Class MiPapa = getParent().getParent().getParent().getClass(); 
 			 Class[] TiposParametros = new Class[] {String.class}; 
 			 Object[] argumentos = new Object[] {e.getActionCommand()}; 
-			 /* Definiendo el método de acciones de la clase que llama 
-			 a MiMenu y sus parámetros para luego invocarlo 
-			 ocasionando su ejecución */ 
+
 			 Method target = objPapa.getClass().getMethod( 
 					 this.MetodoElegido, TiposParametros); 
 			 Object param[] = { e.getActionCommand() }; 

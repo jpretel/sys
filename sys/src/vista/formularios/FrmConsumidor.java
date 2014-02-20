@@ -134,7 +134,7 @@ public class FrmConsumidor extends AbstractMaestro {
 		getContentPane().setLayout(groupLayout);
 		iniciar();
 	}
-
+	
 	@Override
 	public void nuevo() {
 		setConsumidorPADRE(null);
