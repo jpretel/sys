@@ -31,6 +31,8 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 
+import vista.barras.BarraMaestro;
+
 import javax.swing.JDesktopPane;
 
 import java.awt.BorderLayout;
@@ -45,7 +47,7 @@ import java.awt.BorderLayout;
  */
 public class MainFrame extends JRibbonFrame {
 	public MainFrame() {
-		
+
 		JDesktopPane desktopPane = new JDesktopPane();
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
 	}
@@ -54,8 +56,8 @@ public class MainFrame extends JRibbonFrame {
 	private static final long serialVersionUID = 1L;
 
 	public static ResizableIcon getResizableIconFromResource(String resource) {
-		return ImageWrapperResizableIcon.getIcon(MainFrame.class
-				.getClassLoader().getResource(resource), new Dimension(48, 48));
+		return ImageWrapperResizableIcon.getIcon(
+				MainFrame.class.getResource(resource), new Dimension(48, 48));
 	}
 
 	/**
@@ -83,17 +85,18 @@ public class MainFrame extends JRibbonFrame {
 					JRibbonBand band1 = new JRibbonBand("Edición", null);
 
 					JRibbonBand band2 = new JRibbonBand("world!", null);
-					
+
 					JRibbonBand band3 = new JRibbonBand("Otra!", null);
 
-					JCommandButton button1 = new JCommandButton("Nuevo",
-							getResizableIconFromResource("nuevo.png"));
+					JCommandButton button1 = new JCommandButton(
+							"Nuevo",
+							getResizableIconFromResource("/main/resources/iconos/nuevo.png"));
 					JCommandButton button2 = new JCommandButton("Editar",
-							getResizableIconFromResource("editar.png"));
+							getResizableIconFromResource("/main/resources/iconos/editar.png"));
 					JCommandButton button3 = new JCommandButton("Cancelar",
-							getResizableIconFromResource("cancelar.png"));
+							getResizableIconFromResource("/main/resources/iconos/cancelar.png"));
 					JCommandButton button4 = new JCommandButton("Grabar",
-							getResizableIconFromResource("grabar.png"));
+							getResizableIconFromResource("/main/resources/iconos/grabar.png"));
 					band1.addCommandButton(button1, TOP);
 					band1.addCommandButton(button2, MEDIUM);
 					band1.addCommandButton(button3, LOW);
@@ -122,7 +125,7 @@ public class MainFrame extends JRibbonFrame {
 									.getControlPanel()),
 							new IconRibbonBandResizePolicy(band1
 									.getControlPanel())));
-					
+
 					band3.setResizePolicies((List) Arrays.asList(
 							new CoreRibbonResizePolicies.None(band1
 									.getControlPanel()),
