@@ -37,13 +37,6 @@ public class Main {
 				| IllegalAccessException
 				| javax.swing.UnsupportedLookAndFeelException ex) {
 		}
-<<<<<<< HEAD
-		aa
-		// Comentars
-=======
-		
-		// Comentarsss
->>>>>>> branch 'master' of ssh://git@github.com/jpretel/sys.git
 		*/
 		
 		
