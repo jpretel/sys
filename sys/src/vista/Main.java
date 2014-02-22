@@ -2,13 +2,19 @@ package vista;
 
 import java.awt.EventQueue;
 
+
+
+
+import org.jvnet.substance.SubstanceLookAndFeel;
+import org.jvnet.substance.skin.OfficeBlue2007Skin;
+
 import controlador.VariablesGlobales;
 
 
 public class Main {
 
 	public static void main(String[] args) {
-		
+		/*
 		try {	
 			salir:
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
@@ -31,10 +37,13 @@ public class Main {
 				| IllegalAccessException
 				| javax.swing.UnsupportedLookAndFeelException ex) {
 		}
+		*/
+		
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					SubstanceLookAndFeel.setSkin(new OfficeBlue2007Skin());
 					Home app = new Home("Sistema ERP");
 					VariablesGlobales.home = app;
 					app.setVisible(true);
