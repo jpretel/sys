@@ -2,28 +2,26 @@ package vista;
 
 import static org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority.MEDIUM;
 import static org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority.TOP;
-import static org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority.LOW;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.awt.KeyEventDispatcher;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.skin.OfficeBlue2007Skin;
 import org.jvnet.substance.skin.OfficeSilver2007Skin;
-import org.jvnet.substance.skin.MagmaSkin;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.api.ribbon.AbstractRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
 import org.pushingpixels.flamingo.api.ribbon.RibbonApplicationMenu;
@@ -32,26 +30,34 @@ import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 
 import vista.barras.BarraMaestro;
+import vista.formularios.FrmCuentas;
+import vista.formularios.FrmDocumento;
 
-import javax.swing.JDesktopPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-import java.awt.BorderLayout;
-
-/**
- * Main Frame to demonstrate ribbon use.
- * 
- * @author <a href="http://blog.frankel.ch/">Nicolas Frankel</a>
- * @date 26 juin 2010
- * @version 1.0
- * 
- */
 public class MainFrame extends JRibbonFrame {
+	static BarraMaestro barraMaestro;
+	static JDesktopPane desktopPane;
+
 	public MainFrame() {
-
-		JDesktopPane desktopPane = new JDesktopPane();
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				System.out.println(arg0);
+			}
+		});
+		
+		desktopPane = new JDesktopPane();
+		
+		
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
-	}
+		barraMaestro = new BarraMaestro();
+		barraMaestro.setVisible(false);
+		getContentPane().add(barraMaestro, BorderLayout.WEST);
 
+	}
+	
 	/** Serial version unique id. */
 	private static final long serialVersionUID = 1L;
 
@@ -67,101 +73,108 @@ public class MainFrame extends JRibbonFrame {
 	 *            Application arguments
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+
+		SwingUtilities.invokeLater(new Runnable() {
+
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			public void run() {
-				try {
-					JFrame.setDefaultLookAndFeelDecorated(true);
-					JDialog.setDefaultLookAndFeelDecorated(true);
 
-					SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
+				JFrame.setDefaultLookAndFeelDecorated(true);
+				JDialog.setDefaultLookAndFeelDecorated(true);
 
-					MainFrame frame = new MainFrame();
+				SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
+				MainFrame frame = new MainFrame();
 
-					frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-					frame.pack();
-					frame.setVisible(true);
+				frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				frame.pack();
+				frame.setVisible(true);
 
-					JRibbonBand band1 = new JRibbonBand("Edición", null);
+				JRibbonBand band1 = new JRibbonBand(
+						"Maestros",
+						getResizableIconFromResource("/main/resources/iconos/editar.png"));
 
-					JRibbonBand band2 = new JRibbonBand("world!", null);
+				JRibbonBand band2 = new JRibbonBand("world!", null);
 
-					JRibbonBand band3 = new JRibbonBand("Otra!", null);
+				JCommandButton button1 = new JCommandButton(
+						"Cuentas",
+						getResizableIconFromResource("/main/resources/iconos/nuevo.png"));
 
-					JCommandButton button1 = new JCommandButton(
-							"Nuevo",
-							getResizableIconFromResource("/main/resources/iconos/nuevo.png"));
-					JCommandButton button2 = new JCommandButton("Editar",
-							getResizableIconFromResource("/main/resources/iconos/editar.png"));
-					JCommandButton button3 = new JCommandButton("Cancelar",
-							getResizableIconFromResource("/main/resources/iconos/cancelar.png"));
-					JCommandButton button4 = new JCommandButton("Grabar",
-							getResizableIconFromResource("/main/resources/iconos/grabar.png"));
-					band1.addCommandButton(button1, TOP);
-					band1.addCommandButton(button2, MEDIUM);
-					band1.addCommandButton(button3, LOW);
-					band1.addCommandButton(button4, TOP);
+				button1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						FrmCuentas frmGrupos = new FrmCuentas(barraMaestro);
+						frmGrupos.setVisible(true);
+						desktopPane.add(frmGrupos);
+						try {
+							frmGrupos.setSelected(true);
+						} catch (PropertyVetoException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				JCommandButton button2 = new JCommandButton(
+						"Consumidores",
+						getResizableIconFromResource("/main/resources/iconos/editar.png"));
+				JCommandButton button3 = new JCommandButton(
+						"Sub Diarios",
+						getResizableIconFromResource("/main/resources/iconos/cancelar.png"));
+				JCommandButton button4 = new JCommandButton(
+						"Tipo de Documentos",
+						getResizableIconFromResource("/main/resources/iconos/grabar.png"));
+				
+				button4.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						FrmDocumento frm = new FrmDocumento(barraMaestro);
+						frm.setVisible(true);
+						desktopPane.add(frm);
+						try {
+							frm.setSelected(true);
+						} catch (PropertyVetoException e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				
+				System.out.println();
+				
+				band1.addCommandButton(button1, TOP);
+				band1.addCommandButton(button2, MEDIUM);
+				band1.addCommandButton(button3, MEDIUM);
+				band1.addCommandButton(button4, MEDIUM);
 
-					band1.setResizePolicies((List) Arrays.asList(
-							new CoreRibbonResizePolicies.None(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mirror(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mid2Low(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.High2Low(band1
-									.getControlPanel()),
-							new IconRibbonBandResizePolicy(band1
-									.getControlPanel())));
+				band1.setResizePolicies((List) Arrays.asList(
+						new CoreRibbonResizePolicies.Mid2Mid(band1
+								.getControlPanel()),
+						new IconRibbonBandResizePolicy(band1.getControlPanel())));
 
-					band2.setResizePolicies((List) Arrays.asList(
-							new CoreRibbonResizePolicies.None(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mirror(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mid2Low(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.High2Low(band1
-									.getControlPanel()),
-							new IconRibbonBandResizePolicy(band1
-									.getControlPanel())));
+				band2.setResizePolicies((List) Arrays.asList(
+						new CoreRibbonResizePolicies.Mid2Mid(band1
+								.getControlPanel()),
+						new IconRibbonBandResizePolicy(band2.getControlPanel())));
 
-					band3.setResizePolicies((List) Arrays.asList(
-							new CoreRibbonResizePolicies.None(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mirror(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mid2Low(band1
-									.getControlPanel()),
-							new CoreRibbonResizePolicies.High2Low(band1
-									.getControlPanel()),
-							new IconRibbonBandResizePolicy(band1
-									.getControlPanel())));
+				RibbonTask task1 = new RibbonTask("Contabilidad", band1);
+				RibbonTask task2 = new RibbonTask("Logística", band2);
 
-					/*
-					 * band2.setResizePolicies((List) Arrays .asList(new
-					 * IconRibbonBandResizePolicy(band2 .getControlPanel())));
-					 */
-					JRibbonBand[] bandas = new JRibbonBand[2];
+				frame.getRibbon().addTask(task1);
+				frame.getRibbon().addTask(task2);
 
-					bandas[0] = band1;
-					bandas[1] = band2;
-
-					RibbonTask task1 = new RibbonTask("Edición", bandas);
-
-					RibbonTask task2 = new RibbonTask("Utilidades", band3);
-
-					frame.getRibbon().addTask(task1);
-					frame.getRibbon().addTask(task2);
-
-					frame.getRibbon().setApplicationMenu(
-							new RibbonApplicationMenu());
-
-					frame.setBounds(0, 0, 400, 400);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				frame.getRibbon().setApplicationMenu(
+						new RibbonApplicationMenu());
 			}
 		});
 	}
+}
+
+class MyDispatcher implements KeyEventDispatcher {
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent e) {
+        if (e.getID() == KeyEvent.KEY_PRESSED) {
+            System.out.println("tester");
+        } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+            System.out.println("2test2");
+        } else if (e.getID() == KeyEvent.KEY_TYPED) {
+            System.out.println("3test3");
+        }
+        return false;
+    }
 }
