@@ -1,4 +1,4 @@
-package vista.utils;
+package vista.utilitarios;
 
 public class StringUtils {
 	public static String _left(String cadena, int longitud){

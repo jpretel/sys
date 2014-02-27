@@ -1,4 +1,4 @@
-package vista.utils;
+package vista.utilitarios;
 
 public class Main {
 	public static void main(String args[]){

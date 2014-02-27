@@ -1,4 +1,4 @@
-package vista.utils;
+package vista.utilitarios;
 
 import java.util.Observable;
 
