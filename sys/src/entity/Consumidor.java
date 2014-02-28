@@ -24,12 +24,10 @@ public class Consumidor implements Serializable, Cloneable {
 
 	private String tipo;
 
-	// bi-directional many-to-one association to Consumidor
 	@ManyToOne
 	@JoinColumn(name = "idref_consumidor")
 	private Consumidor consumidor;
 
-	// bi-directional many-to-one association to Consumidor
 	@OneToMany(mappedBy = "consumidor")
 	private List<Consumidor> consumidors;
 

@@ -44,16 +44,10 @@ public abstract class AbstractDAO<T> {
 		getEntityManager().getTransaction().commit();
 	}
 	
-	public void crear_editar (T entity, Object id){
-		if (getEntityManager().find(entityClass, id) == null){
+	public void crear_editar (T entity){		
 			getEntityManager().getTransaction().begin();
 			getEntityManager().merge(entity);
 			getEntityManager().getTransaction().commit();
-		} else {
-			getEntityManager().getTransaction().begin();
-			getEntityManager().persist(entity);
-			getEntityManager().getTransaction().commit();
-		}
 	}
 
 	public void remove(T entity) {

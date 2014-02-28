@@ -283,6 +283,12 @@ public class FrmDocumento extends AbstractMaestro {
 			getBarra().enEdicion();
 		}
 	}
+
+	@Override
+	public void nuevo_lista() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 class NumeradorTableModel extends DefaultTableModel {

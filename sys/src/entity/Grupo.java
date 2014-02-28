@@ -2,6 +2,7 @@ package entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -20,6 +21,10 @@ public class Grupo implements Serializable {
 	private String descCorta;
 
 	private String descripcion;
+
+	//bi-directional many-to-one association to Subgrupo
+	@OneToMany(mappedBy="grupo")
+	private List<Subgrupo> subgrupos;
 
 	public Grupo() {
 	}
@@ -46,6 +51,28 @@ public class Grupo implements Serializable {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public List<Subgrupo> getSubgrupos() {
+		return this.subgrupos;
+	}
+
+	public void setSubgrupos(List<Subgrupo> subgrupos) {
+		this.subgrupos = subgrupos;
+	}
+
+	public Subgrupo addSubgrupo(Subgrupo subgrupo) {
+		getSubgrupos().add(subgrupo);
+		subgrupo.setGrupo(this);
+
+		return subgrupo;
+	}
+
+	public Subgrupo removeSubgrupo(Subgrupo subgrupo) {
+		getSubgrupos().remove(subgrupo);
+		subgrupo.setGrupo(null);
+
+		return subgrupo;
 	}
 
 }

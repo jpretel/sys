@@ -5,6 +5,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import entity.Menu;
+import entity.Menu_;
 
 public class MenuDAO extends AbstractDAO<Menu> {
 	public MenuDAO(){
@@ -12,8 +13,8 @@ public class MenuDAO extends AbstractDAO<Menu> {
 	}
 	public Menu RetornarIndex(String pos) {
 		CriteriaQuery<Menu> q = cb.createQuery(Menu.class);
-		Root<Menu> m = q.from(Menu.class);
-		Predicate condicion = cb.equal(m.get("posicion"), pos);
+		Root<Menu> m = q.from(Menu.class);		
+		Predicate condicion = cb.equal(m.get(Menu_.posicion), pos);
 		q.select(m).where(condicion);
 		Menu menu = getEntityManager().createQuery(q).getSingleResult();
 		return menu;

@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vista.barras.BarraMaestro;
+import vista.utilitarios.ButtonEditor;
+import vista.utilitarios.ButtonRenderer;
 import vista.utilitarios.MaestroTableModel;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -14,15 +19,22 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import dao.GrupoDAO;
+import dao.SubgrupoDAO;
 import entity.Grupo;
+import entity.Subgrupo;
+import entity.SubgrupoPK;
 
 import java.awt.Component;
+
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -33,14 +45,18 @@ public class FrmGrupos extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
 	private JButton btnInsertarLinea;
+
 	private GrupoDAO gdao = new GrupoDAO();
+	private SubgrupoDAO sgDAO = new SubgrupoDAO();
+ 
 	private List<Grupo> grupoL = new ArrayList<Grupo>();
 	private Grupo grupoE = new Grupo();
 	private JTextField txtDescCorta;
 	private JTable tblSubGrupo;
 	private DefaultTableModel subgrupo;
+	JButton button=new JButton("");
 	public FrmGrupos(BarraMaestro barra){
-		super("Grupo de Productos",barra);
+		super("Familia de Productos",barra);
 		setBounds(100, 100, 600, 353);
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -50,7 +66,7 @@ public class FrmGrupos extends AbstractMaestro {
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		JLabel lblCodigo = new JLabel("Codigoasasa");
+		JLabel lblCodigo = new JLabel("Codigo");
 		
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
@@ -68,14 +84,37 @@ public class FrmGrupos extends AbstractMaestro {
 		
 		JScrollPane scrollPane_SubGrupo = new JScrollPane();
 		
-		subgrupo = new DefaultTableModel();	
-		subgrupo.addColumn("Codigo");
-		subgrupo.addColumn("Descripcion");
+		btnInsertarLinea = new JButton("Insertar Linea");
+		
+		subgrupo = new DefaultTableModel();		
+		String columnNames[]=new String[] {"Codigo" , "Descripcion" , "Accion"};
+		subgrupo.setColumnIdentifiers(columnNames);
 		tblSubGrupo = new JTable(subgrupo);
 		scrollPane_SubGrupo.setViewportView(tblSubGrupo);
-		tblSubGrupo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);			
+		tblSubGrupo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);		
+		tblSubGrupo.getColumn("Accion").setCellRenderer(new ButtonRenderer());
+		ButtonEditor buttonEditor = new ButtonEditor(new JCheckBox());		
+		tblSubGrupo.getColumn("Accion").setCellEditor(buttonEditor);
+		tblSubGrupo.getColumn("Accion").setPreferredWidth(30);		
+		final JTextField textCodigo = new JTextField();
+		final JTextField textDescripcoon = new JTextField();
+		textDescripcoon.setHorizontalAlignment(JTextField.RIGHT);
 		
-		btnInsertarLinea = new JButton("Insertar Linea");	
+		TableColumn column0 = tblSubGrupo.getColumnModel().getColumn(0);
+		TableColumn column1 = tblSubGrupo.getColumnModel().getColumn(1);	
+		
+		column0.setCellEditor(new DefaultCellEditor(textCodigo));
+		column1.setCellEditor(new DefaultCellEditor(textDescripcoon));		
+		buttonEditor.getButton().addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				int seleccion = JOptionPane.showOptionDialog(null, "Desea Eliminar el Registro Seleccionado", "Informacion del Sistema",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Si", "No"}, "Si");
+				if (seleccion == 0){
+					subgrupo.removeRow(tblSubGrupo.getSelectedRow());
+				}
+			}
+		});
+		
 	
 		btnInsertarLinea.setIcon(new ImageIcon("C:\\SOLUTION\\Graphics\\insdetalle.bmp"));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -142,10 +181,10 @@ public class FrmGrupos extends AbstractMaestro {
 					.addGap(6))
 		);
 		getContentPane().setLayout(groupLayout);
-		
+	
 		btnInsertarLinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String fila [] = {"",""};
+			public void actionPerformed(ActionEvent e) {			
+				final Object fila [] = {"","",};				
 				subgrupo.addRow(fila);
 			}
 		});
@@ -161,14 +200,21 @@ public class FrmGrupos extends AbstractMaestro {
 							setGrupo(null);
 						llenar_datos();						
 					}
-				});
+				});		
 		iniciar();
 	}
 	@Override
 	public void nuevo() {
-		setGrupo(new Grupo());
+		setGrupo(new Grupo());	
+		limpiar_detalle();
 		super.nuevo();
-
+		
+	}
+	
+	public void limpiar_detalle(){
+		while (subgrupo.getRowCount() != 0) {
+			subgrupo.removeRow(0);
+		}
 	}
 
 	@Override
@@ -179,11 +225,32 @@ public class FrmGrupos extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		getGrupo().setIdgrupo(this.txtCodigo.getText());
-		getGrupo().setDescripcion(this.txtDescripcion.getText());
-		getGrupo().setDescCorta(this.txtDescCorta.getText());
-		gdao.crear_editar(getGrupo(), getGrupo().getIdgrupo());
-		super.grabar();
+		try
+		{
+			String lcCodigo = this.txtCodigo.getText();
+			getGrupo().setIdgrupo(lcCodigo);
+			getGrupo().setDescripcion(this.txtDescripcion.getText());
+			getGrupo().setDescCorta(this.txtDescCorta.getText());
+			gdao.crear_editar(getGrupo());
+			int nFilas = this.subgrupo.getRowCount();			
+			for(int i = 0;i < nFilas;i++){
+				SubgrupoPK sgpk1 = new SubgrupoPK();
+				Subgrupo sg1 = new Subgrupo();
+				sgpk1.setGrupoIdgrupo(lcCodigo);
+				sgpk1.setIdsubgrupo(this.subgrupo.getValueAt(i, 0).toString());
+				sg1.setDescripcion(this.subgrupo.getValueAt(i, 1).toString());
+				sg1.setId(sgpk1);
+				sg1.setGrupo(getGrupo());			
+				sgDAO.crear_editar(sg1);
+			}
+			super.grabar();
+		}catch(Exception ex){
+			JOptionPane.showMessageDialog(null, ex);
+		}
+	}
+	
+	public boolean validar_detalle(){
+		return false;
 	}
 
 	@Override
@@ -203,12 +270,11 @@ public class FrmGrupos extends AbstractMaestro {
 			this.txtDescripcion.setText(null);
 			this.txtDescCorta.setText(null);
 		}
-		
+		llenar_detalle();		
 	}
 	@Override
 	public void llenar_lista() {
 		tblLista.setFillsViewportHeight(true);
-
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
 		for (Grupo grupo : getGrupos()) {
@@ -218,9 +284,20 @@ public class FrmGrupos extends AbstractMaestro {
 			setGrupo(getGrupos().get(0));
 			tblLista.setRowSelectionInterval(0, 0);
 		}
-		
+		llenar_detalle();	
 	}
 	
+	private void llenar_detalle() {
+		String Codigo = this.txtCodigo.getText();
+		while(subgrupo.getRowCount() != 0){			
+				subgrupo.removeRow(0);			
+		}		
+		for(Subgrupo subgrupoEnt : sgDAO.findAllbyGrupo()){			
+			if(Codigo.equals(subgrupoEnt.getId().getGrupoIdgrupo())){
+				subgrupo.addRow(new Object[] { subgrupoEnt.getId().getIdsubgrupo(), subgrupoEnt.getDescripcion()});
+			}
+		}
+	}
 	@Override
 	public void llenar_tablas() {
 		setGrupos(gdao.findAll());
@@ -248,8 +325,8 @@ public class FrmGrupos extends AbstractMaestro {
 		txtDescripcion.setEditable(true);
 		this.txtDescCorta.setEditable(true);
 		this.btnInsertarLinea.setEnabled(true);
-		tblLista.setEnabled(false);		
-		
+		tblLista.setEnabled(false);
+		tblSubGrupo.setEnabled(true);		
 	}
 	@Override
 	public void vista_noedicion() {
@@ -258,6 +335,7 @@ public class FrmGrupos extends AbstractMaestro {
 		this.txtDescCorta.setEditable(false);
 		this.btnInsertarLinea.setEnabled(false);
 		tblLista.setEnabled(true);
+		tblSubGrupo.setEnabled(false);
 		
 	}
 	@Override
@@ -271,5 +349,10 @@ public class FrmGrupos extends AbstractMaestro {
 		} else {
 			getBarra().enEdicion();
 		}
+	}
+	@Override
+	public void nuevo_lista() {
+		// TODO Auto-generated method stub
+		
 	}
 }

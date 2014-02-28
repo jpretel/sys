@@ -127,7 +127,7 @@ public class FrmCuentas extends AbstractMaestro {
 	public void grabar() {
 		getCuenta().setId(txtCodigo.getText());
 		getCuenta().setDescripcion(txtDescripcion.getText());
-		getCuentaDAO().crear_editar(getCuenta(), getCuenta().getId());
+		getCuentaDAO().crear_editar(getCuenta());
 		super.grabar();
 	}
 
@@ -218,5 +218,11 @@ public class FrmCuentas extends AbstractMaestro {
 		} else {
 			getBarra().enEdicion();
 		}
+	}
+
+	@Override
+	public void nuevo_lista() {
+		// TODO Auto-generated method stub
+		
 	}
 }

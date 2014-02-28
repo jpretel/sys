@@ -30,7 +30,6 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
-		//home = controlador.VariablesGlobales.home;
 		setBounds(100, 100, 555, 325);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -76,6 +75,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		llenar_lista();
 		llenar_datos();
 	}
+	
 
 	public void eliminar() {
 		setEstado(VISTA);
@@ -87,6 +87,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract void llenar_tablas();
 	public abstract void vista_edicion();
 	public abstract void vista_noedicion();
+	public abstract void nuevo_lista();
 	
 	public void cancelar () {
 		llenar_tablas();

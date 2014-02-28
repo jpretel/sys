@@ -23,8 +23,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JCheckBox;
-
-import vista.utils.StringUtils;
+import vista.utilitarios.StringUtils;
 
 public class FrmConsumidor extends AbstractMaestro {
 
@@ -134,7 +133,7 @@ public class FrmConsumidor extends AbstractMaestro {
 		getContentPane().setLayout(groupLayout);
 		iniciar();
 	}
-	
+
 	@Override
 	public void nuevo() {
 		setConsumidorPADRE(null);
@@ -182,8 +181,7 @@ public class FrmConsumidor extends AbstractMaestro {
 				getConsumidor().setJerarquia(jerarquia);
 			}
 		}
-		getConsumidorDAO().crear_editar(getConsumidor(),
-				getConsumidor().getId());
+		getConsumidorDAO().crear_editar(getConsumidor());
 		super.grabar();
 	}
 
@@ -310,6 +308,12 @@ public class FrmConsumidor extends AbstractMaestro {
 
 	public void setConsumidorPADRE(Consumidor consumidorPADRE) {
 		this.consumidorPADRE = consumidorPADRE;
+	}
+
+	@Override
+	public void nuevo_lista() {
+		// TODO Auto-generated method stub
+		
 	}
 }
 
