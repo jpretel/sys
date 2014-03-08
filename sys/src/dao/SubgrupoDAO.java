@@ -29,4 +29,13 @@ public class SubgrupoDAO extends AbstractDAO<Subgrupo> {
 		List<Subgrupo>  subgrupo = getEntityManager().createQuery(q).getResultList();
 		return subgrupo;
 	}
+	
+	/*public Subgrupo findAllbyGrupo2(Grupo grupo) {
+		CriteriaQuery<Subgrupo> q = cb.createQuery(Subgrupo.class);
+		Root<Subgrupo> m = q.from(Subgrupo.class);
+		Predicate condicion = cb.equal(m.get("grupo"), grupo);
+		q.select(m).where(condicion);
+		Subgrupo  subgrupo = getEntityManager().createQuery(q).getSingleResult();
+		return subgrupo;
+	}*/
 }

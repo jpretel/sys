@@ -1,13 +1,18 @@
 package vista.barras;
 
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 
 import vista.formularios.AbstractMaestro;
 
+import java.awt.Event;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class BarraMaestro extends JToolBar {
 	/**
@@ -18,7 +23,7 @@ public class BarraMaestro extends JToolBar {
 	private static final int _ancho = 28;
 	private static final int _alto = -1;
 	private AbstractMaestro formMaestro;
-	
+
 	private JButton btnNuevo;
 	private JButton btnEditar;
 	private JButton btnAnular;
@@ -26,7 +31,7 @@ public class BarraMaestro extends JToolBar {
 	private JButton btnEliminar;
 	private JButton btnSalir;
 	private JButton btnCancelar;
-	
+
 	public JButton getBtnNuevo() {
 		return btnNuevo;
 	}
@@ -84,6 +89,7 @@ public class BarraMaestro extends JToolBar {
 			}
 		});
 
+
 		btnNuevo.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
 				.getResource("/main/resources/iconos/nuevo.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
@@ -124,7 +130,7 @@ public class BarraMaestro extends JToolBar {
 				getFormMaestro().grabar();
 			}
 		});
-		
+
 		btnCancelar = new JButton("");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -132,13 +138,13 @@ public class BarraMaestro extends JToolBar {
 			}
 		});
 		btnCancelar
-		.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
-				.getResource("/main/resources/iconos/cancelar.png"))
-				.getImage().getScaledInstance(_ancho, _alto,
-						java.awt.Image.SCALE_DEFAULT)));
+				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+						.getResource("/main/resources/iconos/cancelar.png"))
+						.getImage().getScaledInstance(_ancho, _alto,
+								java.awt.Image.SCALE_DEFAULT)));
 		btnCancelar.setToolTipText("Cancelar");
 		add(btnCancelar);
-		
+
 		btnGrabar
 				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
 						.getResource("/main/resources/iconos/grabar.png"))
@@ -182,8 +188,8 @@ public class BarraMaestro extends JToolBar {
 	public void enEdicion() {
 		edicion(false);
 	}
-	
-	private void edicion(boolean band){
+
+	private void edicion(boolean band) {
 		getBtnAnular().setEnabled(band);
 		getBtnEditar().setEnabled(band);
 		getBtnGrabar().setEnabled(!band);

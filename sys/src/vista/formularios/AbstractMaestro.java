@@ -87,7 +87,8 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract void llenar_tablas();
 	public abstract void vista_edicion();
 	public abstract void vista_noedicion();
-	public abstract void nuevo_lista();
+	public abstract void init();
+	public abstract void actualiza_objeto(Object entidad);
 	
 	public void cancelar () {
 		llenar_tablas();

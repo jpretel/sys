@@ -82,10 +82,9 @@ public class FrmGrupos extends AbstractMaestro {
 		txtDescCorta.setColumns(10);
 		JLabel lblSubgrupos = new JLabel("SubGrupos");
 		
-		JScrollPane scrollPane_SubGrupo = new JScrollPane();
-		
-		btnInsertarLinea = new JButton("Insertar Linea");
-		
+		JScrollPane scrollPane_SubGrupo = new JScrollPane();				
+		//AutoCompleteDecorator.decorate(txtDescCorta, validValues, true);		
+		btnInsertarLinea = new JButton("Insertar Linea");		
 		subgrupo = new DefaultTableModel();		
 		String columnNames[]=new String[] {"Codigo" , "Descripcion" , "Accion"};
 		subgrupo.setColumnIdentifiers(columnNames);
@@ -351,7 +350,12 @@ public class FrmGrupos extends AbstractMaestro {
 		}
 	}
 	@Override
-	public void nuevo_lista() {
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
 		
 	}

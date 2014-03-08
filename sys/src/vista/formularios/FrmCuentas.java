@@ -221,8 +221,15 @@ public class FrmCuentas extends AbstractMaestro {
 	}
 
 	@Override
-	public void nuevo_lista() {
+	public void init() {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void actualiza_objeto(Object entidad) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

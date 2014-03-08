@@ -10,10 +10,15 @@ import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import vista.barras.BarraMaestro;
+import vista.formularios.FrmCuentas;
 import vista.formularios.FrmGrupos;
+import vista.formularios.FrmListaMarcas;
+import vista.formularios.FrmListaProductos;
+import vista.formularios.FrnListaMedidas;
 
 public class menus extends JMenuBar implements ActionListener{
 	
@@ -26,8 +31,7 @@ public class menus extends JMenuBar implements ActionListener{
 	
 	public menus(BarraMaestro barraMaestro){		
 		InicializarForms(barraMaestro);
-	}
-	
+	}	
 	
 	
 	public  menus(String VectOpc[][],String MetodoElegido){
@@ -85,14 +89,28 @@ public class menus extends JMenuBar implements ActionListener{
 		
 	}	
 
-	private void InicializarForms(BarraMaestro barraMaestro) {
-		//formulario= FrmCuentas.class;		
+	private void InicializarForms(BarraMaestro barraMaestro) {		
 		int index = 0;
-		int nElementos = 1 ;
-		FrmGrupos frmGrupos = new FrmGrupos(barraMaestro);
-		Formularios = new JInternalFrame[nElementos];		
-		Formularios[index] = frmGrupos;	
-		index = index + 1;			
+		int nElementos = 4;
+		try{ 
+			FrmGrupos frmGrupos = new FrmGrupos(barraMaestro);
+			Formularios = new JInternalFrame[nElementos];		
+			Formularios[index] = frmGrupos;
+			
+			index = index + 1;
+			FrmListaProductos frmProducto = new FrmListaProductos("",barraMaestro);
+			Formularios[index] = frmProducto;
+			
+			index = index + 1;
+			FrnListaMedidas frmMedidas = new FrnListaMedidas("",barraMaestro);
+			Formularios[index] = frmMedidas;
+			
+			index = index + 1;
+			FrmListaMarcas frmMarcas = new FrmListaMarcas("",barraMaestro);
+			Formularios[index] = frmMarcas;
+		}catch(Exception ex){
+			JOptionPane.showMessageDialog(null, "Esta opcion no esta asignado al Catalogo de Menus");
+		}	
 	}
 	
 	public JInternalFrame getFormulario(int index){		
@@ -116,7 +134,6 @@ public class menus extends JMenuBar implements ActionListener{
 
 
 	private boolean TieneHijos(String item) {
-		// TODO Auto-generated method stub
 		int NVeces = 0;
 		int lngItem = item.length();
 		for(int i = 0; i<LngVector ;i++){

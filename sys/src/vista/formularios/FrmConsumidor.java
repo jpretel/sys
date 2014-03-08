@@ -23,6 +23,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JCheckBox;
+
 import vista.utilitarios.StringUtils;
 
 public class FrmConsumidor extends AbstractMaestro {
@@ -311,7 +312,13 @@ public class FrmConsumidor extends AbstractMaestro {
 	}
 
 	@Override
-	public void nuevo_lista() {
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
 		
 	}

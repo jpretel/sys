@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.DocumentoDAO;
 import entity.Documento;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -285,10 +286,17 @@ public class FrmDocumento extends AbstractMaestro {
 	}
 
 	@Override
-	public void nuevo_lista() {
+	public void init() {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void actualiza_objeto(Object entidad) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
 class NumeradorTableModel extends DefaultTableModel {
