@@ -47,6 +47,7 @@ import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
 import core.inicio.ConfigInicial;
 import vista.barras.BarraMaestro;
+import vista.formularios.FrmConsultarRUC;
 import vista.formularios.FrmConsumidor;
 import vista.formularios.FrmCuentas;
 import vista.formularios.FrmGrupos;
@@ -212,7 +213,7 @@ public class MainFrame extends JRibbonFrame {
 
 		RibbonApplicationMenuEntryPrimary nn = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
-				"Favoritos", returnAction("FrmUsuario"), CommandButtonKind.ACTION_ONLY);
+				"CRUD Ususarios", returnAction("FrmConsultarRUC"), CommandButtonKind.ACTION_ONLY);
 
 		ribbon.addMenuEntry(nn);
 		
@@ -268,31 +269,25 @@ public class MainFrame extends JRibbonFrame {
 				}
 			};
 		}
-		
-		if (opcion.equalsIgnoreCase("login")) {
-			return new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					//login frm = new login();
-					//getDesktopPane().add(frm);
-					
-					 JFrame marco = new JFrame("Suscripcion Acerca de Java");
-		                marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		                marco.getContentPane().add(new login(), BorderLayout.CENTER);
-		                marco.pack();
-		                marco.setVisible(true);
-
-				}
-			};
-		}
-		
+				
 		if (opcion.equalsIgnoreCase("FrmUsuario")) {
 			return new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					FrmUsuario frm = new FrmUsuario(barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("FrmConsultarRUC")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmConsultarRUC frm = new FrmConsultarRUC(barraMaestro);
 					getDesktopPane().add(frm);
 
 				}
@@ -373,6 +368,7 @@ public class MainFrame extends JRibbonFrame {
 		return null;
 	}
 
+	
 	ActionListener accion = new ActionListener() {
 
 		@Override
