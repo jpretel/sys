@@ -32,7 +32,7 @@ public class FrmCuentas extends AbstractMaestro {
 	private List<Cuenta> cuentas = new ArrayList<Cuenta>();
 	private JTable tblLista;
 	private JTextField txtCodigo;
-	private JTextField txtDescripcion;
+	private JTextField txtDescripcion;	
 
 	public FrmCuentas(BarraMaestro barra) {
 		super("Cuentas Contables", barra);

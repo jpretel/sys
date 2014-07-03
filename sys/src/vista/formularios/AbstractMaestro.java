@@ -21,6 +21,10 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	
 	private BarraMaestro barra;
 		
+	public AbstractMaestro(){
+		
+	}
+	
 	public AbstractMaestro(String titulo, BarraMaestro barra) {
 		setBarra(barra);
 		setEstado(VISTA);

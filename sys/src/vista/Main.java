@@ -13,17 +13,17 @@ public class Main {
 			salir:
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
 					.getInstalledLookAndFeels()) {
-				System.out.println(info.getName());
+				System.out.println("Nombre del Estilo: " + 	info.getName());
+				System.out.println("Clase del Estilo: " + 	info.getClassName());
 				switch (info.getName()) {
 				case "GTK+":
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break salir;
+						javax.swing.UIManager.setLookAndFeel(info.getClassName());
+					break salir;	
 				case "Windows":
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+						//javax.swing.UIManager.setLookAndFeel(info.getClassName());
 					break salir;
 				default:
-					javax.swing.UIManager
-							.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+					javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 					break;
 				}
 			}

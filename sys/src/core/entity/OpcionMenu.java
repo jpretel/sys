@@ -3,7 +3,7 @@ package core.entity;
 public class OpcionMenu {
 	private int posicion;
 	private String descripcion;
-	private String opcion;
+	private String opcion; //Id unico por formulario
 	private int prioridad;
 	
 	public int getPosicion() {

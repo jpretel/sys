@@ -40,13 +40,25 @@ import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 
-import core.dao.ModuloDAO;
+import dao.ModuloDAO;
 import core.entity.GrupoMenu;
-import core.entity.Modulo;
+import entity.Modulo;
 import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
 import core.inicio.ConfigInicial;
 import vista.barras.BarraMaestro;
+import vista.formularios.FrmConsumidor;
+import vista.formularios.FrmCuentas;
+import vista.formularios.FrmGrupos;
+import vista.formularios.FrmListaMarcas;
+import vista.formularios.FrmListaProductos;
+import vista.formularios.FrmModulo;
+import vista.formularios.FrmProductos;
+import vista.formularios.FrmUsuario;
+import vista.formularios.FrnListaMedidas;
+import vista.formularios.ModuloSpring;
+import vista.formularios.frmMarca;
+import vista.formularios.login;
 import vista.utilitarios.MenuController;
 
 import java.awt.event.KeyEvent;
@@ -55,9 +67,9 @@ public class MainFrame extends JRibbonFrame {
 	static BarraMaestro barraMaestro;
 	static JDesktopPane desktopPane;
 	static ModuloDAO moduloDAO = new ModuloDAO();
-
+	static JFrame marco = new JFrame("Login: Sistema");
 	public MainFrame() {
-
+		marco.setVisible(false);
 		desktopPane = new JDesktopPane();
 
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
@@ -96,6 +108,10 @@ public class MainFrame extends JRibbonFrame {
 
 	}
 
+	public static JDesktopPane getDesktopPane() {
+		return desktopPane;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void CreaRibbonMenu() {
 		MenuController menu_controller = new MenuController();
@@ -113,9 +129,10 @@ public class MainFrame extends JRibbonFrame {
 				if (grupo.getOpciones() == null) {
 					grupo.setOpciones(new ArrayList<OpcionMenu>());
 				}
-
+				// System.out.println(grupo.getOpciones().size());
 				boolean dibujaGrupo = (grupo.getOpciones().size() > 0);
 
+				// System.out.println(dibujaGrupo);
 				JRibbonBand band = new JRibbonBand(grupo.getDescripcion(),
 						getResizableIconFromResource(grupo.getImagen()));
 
@@ -124,6 +141,8 @@ public class MainFrame extends JRibbonFrame {
 					bandas_aux.add(band);
 
 					for (OpcionMenu opcion : grupo.getOpciones()) {
+
+						// System.out.println(opcion);
 
 						JCommandButton button = new JCommandButton(
 								opcion.getDescripcion(),
@@ -136,6 +155,8 @@ public class MainFrame extends JRibbonFrame {
 						} else {
 							band.addCommandButton(button, LOW);
 						}
+						
+						button.addActionListener(returnAction(opcion.getOpcion()));
 					}
 
 					band.setResizePolicies((List) Arrays.asList(
@@ -151,6 +172,7 @@ public class MainFrame extends JRibbonFrame {
 			if (bandas_aux.size() > 0) {
 				JRibbonBand[] bandas = new JRibbonBand[bandas_aux.size()];
 				for (int i = 0; i < bandas_aux.size(); i++) {
+					// System.out.println(bandas_aux.size());
 					bandas[i] = bandas_aux.get(i);
 				}
 
@@ -161,11 +183,13 @@ public class MainFrame extends JRibbonFrame {
 			}
 		}
 
+		// Comienzo del Contenido del Menu Desplegable
+
 		RibbonApplicationMenu ribbon = new RibbonApplicationMenu();
 
 		RibbonApplicationMenuEntryPrimary modulo_popup = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/salir.png"),
-				"Modulos", null, CommandButtonKind.POPUP_ONLY);
+				"Modulo", null, CommandButtonKind.POPUP_ONLY);
 
 		List<Modulo> modulos = moduloDAO.findAll();
 		RibbonApplicationMenuEntrySecondary[] modulos_vec = new RibbonApplicationMenuEntrySecondary[modulos
@@ -173,14 +197,10 @@ public class MainFrame extends JRibbonFrame {
 		int i = -1;
 		for (final Modulo m : modulos) {
 			i++;
+			System.out.println("Enlazando y creando botones..." + m.getDescripcion());
 			RibbonApplicationMenuEntrySecondary secondary = new RibbonApplicationMenuEntrySecondary(
 					getResizableIconFromResource16x16("/main/resources/salir.png"),
-
-					m.getDescripcion(), new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
-							System.out.println(m.getOpcion());
-						}
-					}, CommandButtonKind.ACTION_ONLY);
+					m.getDescripcion(), returnAction(m.getOpcion()),CommandButtonKind.ACTION_ONLY);
 			modulos_vec[i] = secondary;
 		}
 
@@ -192,76 +212,30 @@ public class MainFrame extends JRibbonFrame {
 
 		RibbonApplicationMenuEntryPrimary nn = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
-				"Favoritos", null, CommandButtonKind.ACTION_ONLY);
+				"Favoritos", returnAction("FrmUsuario"), CommandButtonKind.ACTION_ONLY);
 
 		ribbon.addMenuEntry(nn);
 		
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-		nn.setEnabled(false);
+		for(int mas=0; mas<2;mas++){
+			
+			nn = new RibbonApplicationMenuEntryPrimary(
+			getResizableIconFromResource("/main/resources/salir.png"), "Desactivado",
+			null, CommandButtonKind.ACTION_ONLY);
+			nn.setEnabled(false);
 
-		ribbon.addMenuEntry(nn);
+			ribbon.addMenuEntry(nn);
+			
+		}
+		for(int mas=0; mas<6;mas++){
+			
+			nn = new RibbonApplicationMenuEntryPrimary(
+			getResizableIconFromResource("/main/resources/salir.png"), "Productos Lista",
+			returnAction("FrmListaProductos"), CommandButtonKind.ACTION_ONLY);
 
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"), "",
-				null, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
+			ribbon.addMenuEntry(nn);
+			
+		}
+		
 		
 		RibbonApplicationMenuEntryFooter footer = new RibbonApplicationMenuEntryFooter(
 				getResizableIconFromResource("/main/resources/salir.png"),
@@ -274,15 +248,141 @@ public class MainFrame extends JRibbonFrame {
 				"Salir2", null);
 
 		ribbon.addFooterEntry(footer);
-		
-		
-		
+
 		getRibbon().setApplicationMenu(ribbon);
-		
+
 		setIconImage(new ImageIcon(
 				MainFrame.class.getResource("/main/resources/iconos/nuevo.png"))
 				.getImage());
 	}
+
+	private ActionListener returnAction(String opcion) {
+		if (opcion.equalsIgnoreCase("Frm_Cuentas")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmCuentas frm = new FrmCuentas(barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("login")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					//login frm = new login();
+					//getDesktopPane().add(frm);
+					
+					 JFrame marco = new JFrame("Suscripcion Acerca de Java");
+		                marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		                marco.getContentPane().add(new login(), BorderLayout.CENTER);
+		                marco.pack();
+		                marco.setVisible(true);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("FrmUsuario")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmUsuario frm = new FrmUsuario(barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("FrmGrupos")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmGrupos frm = new FrmGrupos(barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("ModuloSpring")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					ModuloSpring frm = new ModuloSpring(barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("FrmModulo")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmModulo frm = new FrmModulo(barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("FrmListaProductos")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmListaProductos frm = new FrmListaProductos("..::Lista de los Productos::..", barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("FrmProductos")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmProductos frm = new FrmProductos("..::Productos::..", barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		
+		if (opcion.equalsIgnoreCase("Frm_Consumidor")) {
+			return new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					FrmConsumidor frm = new FrmConsumidor(barraMaestro);
+					getDesktopPane().add(frm);
+
+				}
+			};
+		}
+		return null;
+	}
+
+	ActionListener accion = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			FrmListaMarcas frmConsumidor = new FrmListaMarcas("Probando..",
+					barraMaestro);
+			getDesktopPane().add(frmConsumidor);
+
+		}
+	};
 
 	/** Serial version unique id. */
 	private static final long serialVersionUID = 1L;
@@ -310,7 +410,14 @@ public class MainFrame extends JRibbonFrame {
 				JDialog.setDefaultLookAndFeelDecorated(true);
 
 				SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
-				new MainFrame();
+				//new MainFrame();				
+						
+		        marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		        marco.getContentPane().add(new login(), BorderLayout.CENTER);
+		        marco.pack();
+		        marco.setLocationRelativeTo(null);
+		        marco.setVisible(true);
+					
 			}
 		});
 	}

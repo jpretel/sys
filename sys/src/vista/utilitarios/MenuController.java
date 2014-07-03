@@ -1,5 +1,6 @@
 package vista.utilitarios;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class MenuController {
 		om.setPosicion(2);
 		om.setDescripcion("Consumidores");
 		om.setImagen("/main/resources/grabar.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("Frm_Consumidor");
 		om.setPrioridad(2); //1, 2 o 3
 		
 		opciones.add(om);

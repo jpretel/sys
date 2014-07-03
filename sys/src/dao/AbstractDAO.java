@@ -14,13 +14,13 @@ import javax.persistence.criteria.Root;
 
 public abstract class AbstractDAO<T> {
 	private Class<T> entityClass;
-		
+
 	private EntityManagerFactory factory;
 
 	private EntityManager em;
-	
+
 	protected CriteriaBuilder cb;
-	
+
 	public AbstractDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;
 		factory = Persistence.createEntityManagerFactory("sys");
@@ -43,7 +43,7 @@ public abstract class AbstractDAO<T> {
 		getEntityManager().merge(entity);
 		getEntityManager().getTransaction().commit();
 	}
-	
+
 	public void crear_editar (T entity){		
 			getEntityManager().getTransaction().begin();
 			getEntityManager().merge(entity);
@@ -79,7 +79,7 @@ public abstract class AbstractDAO<T> {
 		q.setFirstResult(range[0]);
 		return q.getResultList();
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int count() {
 		CriteriaQuery cq = getEntityManager()
@@ -89,7 +89,7 @@ public abstract class AbstractDAO<T> {
 		Query q = getEntityManager().createQuery(cq);
 		return ((Long) q.getSingleResult()).intValue();
 	}
-	
+
 	public List<T> rangeOfList (List<T> array, int[] range) {
 		List<T> lista = new ArrayList<T>();
 		for(int i = range[0] ; i<range[1] ; i++){

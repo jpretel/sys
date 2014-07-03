@@ -23,7 +23,7 @@ public class BarraMaestro extends JToolBar {
 	private static final int _ancho = 28;
 	private static final int _alto = -1;
 	private AbstractMaestro formMaestro;
-
+	
 	private JButton btnNuevo;
 	private JButton btnEditar;
 	private JButton btnAnular;

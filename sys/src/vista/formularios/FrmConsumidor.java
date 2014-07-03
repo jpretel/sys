@@ -252,13 +252,14 @@ public class FrmConsumidor extends AbstractMaestro {
 
 	@Override
 	public void setSelected(boolean selected) throws PropertyVetoException {
+		super.setSelected(selected);/*
 		controlador.VariablesGlobales.home.getBarraMaestro().setVisible(
 				selected);
 		if (selected) {
 			controlador.VariablesGlobales.home.getBarraMaestro()
 					.setFormMaestro(this);
 		}
-		super.setSelected(selected);
+		super.setSelected(selected);*/
 	}
 
 	public Consumidor getConsumidor() {
