@@ -26,10 +26,7 @@ import vista.barras.BarraMaestro;
 import vista.utilitarios.MaestroTableModel;
 
 public class FrmConsultarRUC extends AbstractMaestro implements MouseListener{
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	private static Consultar cons;

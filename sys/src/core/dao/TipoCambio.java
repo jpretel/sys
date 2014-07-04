@@ -16,8 +16,8 @@ public class TipoCambio {
 
 		try {
 			Map<String, String> data = new HashMap<String, String>();
-			data.put("mesElegido", "03");
-			data.put("mes", "03");
+			data.put("mesElegido", "07");
+			data.put("mes", "07");
 			data.put("anho", "2014");
 			data.put("accion", "init");
 			data.put("email", "");
