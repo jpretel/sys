@@ -289,7 +289,7 @@ public class MainFrame extends JRibbonFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					FrmConsultarRUC frm = new FrmConsultarRUC(barraMaestro);
 					getDesktopPane().add(frm);
-
+					System.out.println("Probando consulta RUC");
 				}
 			};
 		}

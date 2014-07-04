@@ -7,7 +7,6 @@ public class MaestroTableModel extends DefaultTableModel {
 	private static final long serialVersionUID = 1L;
 
 	public MaestroTableModel() {
-		addColumn("ID");
 		addColumn("Código");
 		addColumn("Descripción");
 	}
