@@ -18,7 +18,9 @@
 		<class>entity.Prueba</class>
 		<class>entity.Modulo</class>
 		<class>entity.Usuario</class>
-		<class>entity.Ruc</class>	
+		<class>entity.Ruc</class>
+		
+		
 		<properties>
 			<!-- <property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml"/> -->
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd" />
