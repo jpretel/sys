@@ -17,8 +17,8 @@
 		<class>entity.Empleado</class>
 		<class>entity.Prueba</class>
 		<class>entity.Modulo</class>
-		<class>entity.Usuario</class>
 		<class>entity.Ruc</class>
+		<class>entity.Usuario</class>
 		
 		
 		<properties>
