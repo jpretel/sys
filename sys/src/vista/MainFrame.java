@@ -296,12 +296,11 @@ public class MainFrame extends JRibbonFrame {
 		
 		if (opcion.equalsIgnoreCase("FrmGrupos")) {
 			return new ActionListener() {
-
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					FrmGrupos frm = new FrmGrupos(barraMaestro);
 					getDesktopPane().add(frm);
-
+					
 				}
 			};
 		}
@@ -322,10 +321,11 @@ public class MainFrame extends JRibbonFrame {
 			return new ActionListener() {
 
 				@Override
+				
 				public void actionPerformed(ActionEvent arg0) {
-					FrmModulo frm = new FrmModulo(barraMaestro);
+					FrmConsultarRUC frm = new FrmConsultarRUC(barraMaestro);
 					getDesktopPane().add(frm);
-
+					System.out.println("Probando consulta RUC");
 				}
 			};
 		}
@@ -405,7 +405,7 @@ public class MainFrame extends JRibbonFrame {
 				JFrame.setDefaultLookAndFeelDecorated(true);
 				JDialog.setDefaultLookAndFeelDecorated(true);
 
-				SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
+				//SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
 				//new MainFrame();				
 						
 		        marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
