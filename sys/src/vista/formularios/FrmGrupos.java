@@ -50,6 +50,8 @@ public class FrmGrupos extends AbstractMaestro {
 	private SubgrupoDAO sgDAO = new SubgrupoDAO();
  
 	private List<Grupo> grupoL = new ArrayList<Grupo>();
+	private List<Subgrupo> subgrupoEL = new ArrayList<Subgrupo>();
+	
 	private Grupo grupoE = new Grupo();
 	private JTextField txtDescCorta;
 	private JTable tblSubGrupo;
@@ -99,17 +101,26 @@ public class FrmGrupos extends AbstractMaestro {
 		final JTextField textDescripcoon = new JTextField();
 		textDescripcoon.setHorizontalAlignment(JTextField.RIGHT);
 		
-		TableColumn column0 = tblSubGrupo.getColumnModel().getColumn(0);
-		TableColumn column1 = tblSubGrupo.getColumnModel().getColumn(1);	
-		
+		final TableColumn column0 = tblSubGrupo.getColumnModel().getColumn(0);
+		final TableColumn column1 = tblSubGrupo.getColumnModel().getColumn(1);	
 		column0.setCellEditor(new DefaultCellEditor(textCodigo));
-		column1.setCellEditor(new DefaultCellEditor(textDescripcoon));		
+		column1.setCellEditor(new DefaultCellEditor(textDescripcoon));
+		
+		/*aca comienzo*/
 		buttonEditor.getButton().addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				int seleccion = JOptionPane.showOptionDialog(null, "Desea Eliminar el Registro Seleccionado", "Informacion del Sistema",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Si", "No"}, "Si");
-				if (seleccion == 0){
-					subgrupo.removeRow(tblSubGrupo.getSelectedRow());
+				if (seleccion == 0){									
+					SubgrupoPK sgpk1 = new SubgrupoPK();
+					Subgrupo sg1 = new Subgrupo();
+					sgpk1.setGrupoIdgrupo(getGrupo().getIdgrupo());
+					sgpk1.setIdsubgrupo(subgrupo.getValueAt(tblSubGrupo.getSelectedRow(), 0).toString());
+					sg1.setDescripcion(subgrupo.getValueAt(tblSubGrupo.getSelectedRow(), 1).toString());
+					sg1.setId(sgpk1);
+					sg1.setGrupo(getGrupo());
+					subgrupo.removeRow(tblSubGrupo.getSelectedRow());	
+					subgrupoEL.add(sg1);
 				}
 			}
 		});
@@ -226,12 +237,16 @@ public class FrmGrupos extends AbstractMaestro {
 	public void grabar() {
 		try
 		{
+			/*Borrar Todo el Detalle*/			
+			for(Subgrupo sge : subgrupoEL){
+				sgDAO.remove(sge);
+			}
 			String lcCodigo = this.txtCodigo.getText();
 			getGrupo().setIdgrupo(lcCodigo);
 			getGrupo().setDescripcion(this.txtDescripcion.getText());
 			getGrupo().setDescCorta(this.txtDescCorta.getText());
 			gdao.crear_editar(getGrupo());
-			int nFilas = this.subgrupo.getRowCount();			
+			int nFilas = this.subgrupo.getRowCount();		
 			for(int i = 0;i < nFilas;i++){
 				SubgrupoPK sgpk1 = new SubgrupoPK();
 				Subgrupo sg1 = new Subgrupo();
@@ -242,6 +257,7 @@ public class FrmGrupos extends AbstractMaestro {
 				sg1.setGrupo(getGrupo());			
 				sgDAO.crear_editar(sg1);
 			}
+			
 			super.grabar();
 		}catch(Exception ex){
 			JOptionPane.showMessageDialog(null, ex);
