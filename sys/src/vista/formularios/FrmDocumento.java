@@ -33,7 +33,7 @@ public class FrmDocumento extends AbstractMaestro {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	private JTable tblLista;
 
 	private JTable tblnumeradores;
@@ -50,10 +50,10 @@ public class FrmDocumento extends AbstractMaestro {
 	private DocumentoNumeroDAO docnumDAO = new DocumentoNumeroDAO();
 
 	private JButton btnILinea;
-
+	private JButton btnBLinea;
 	public FrmDocumento(BarraMaestro barra) {
 		super("Documentos");
-
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 199, 273);
 
@@ -91,24 +91,24 @@ public class FrmDocumento extends AbstractMaestro {
 			}
 		});
 
-		JButton btnBLinea = new JButton("B Linea");
+		btnBLinea = new JButton("B Linea");
 		btnBLinea.setBounds(446, 15, 83, 20);
 		btnBLinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ind = tblnumeradores.getSelectedRow();
-				if (ind != 0)
+				if (ind >= 0)
 					numeradoresTM.removeRow(ind);
 			}
 		});
-		getContentPane().setLayout(null);
-		getContentPane().add(scrollPane);
-		getContentPane().add(lblDescripcin);
-		getContentPane().add(lblCdigo);
-		getContentPane().add(txtDescripcion);
-		getContentPane().add(txtCodigo);
-		getContentPane().add(btnILinea);
-		getContentPane().add(btnBLinea);
-		getContentPane().add(scrollPaneNum);
+		pnlContenido.setLayout(null);
+		pnlContenido.add(scrollPane);
+		pnlContenido.add(lblDescripcin);
+		pnlContenido.add(lblCdigo);
+		pnlContenido.add(txtDescripcion);
+		pnlContenido.add(txtCodigo);
+		pnlContenido.add(btnILinea);
+		pnlContenido.add(btnBLinea);
+		pnlContenido.add(scrollPaneNum);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -136,15 +136,15 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public void anular() {
-
+		
 	}
 
 	@Override
 	public void grabar() {
 		documentoDAO.crear_editar(getDocumento());
-		System.out.println(getNumeradores().size());
+		docnumDAO.borrarPorDocumento(getDocumento());
 		for (DocumentoNumero num : getNumeradores()) {
-			docnumDAO.crear_editar(num);
+			docnumDAO.create(num);
 		}
 	}
 
@@ -228,7 +228,9 @@ public class FrmDocumento extends AbstractMaestro {
 			txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(true);
 		numeradoresTM.setEditar(true);
-		this.btnILinea.setEnabled(true);
+		btnILinea.setEnabled(true);
+		btnBLinea.setEnabled(true);
+		
 	}
 
 	@Override
@@ -236,7 +238,8 @@ public class FrmDocumento extends AbstractMaestro {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
 		numeradoresTM.setEditar(false);
-		this.btnILinea.setEnabled(false);
+		btnILinea.setEnabled(false);
+		btnBLinea.setEnabled(false);
 	}
 
 	public Documento getDocumento() {

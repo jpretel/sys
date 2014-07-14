@@ -29,6 +29,7 @@ public class FrmPtoEmision extends AbstractMaestro {
 	private PtoEmisionDAO ptoEmisionDAO = new PtoEmisionDAO();
 
 	private List<PtoEmision> ptosEmision = new ArrayList<PtoEmision>();
+
 	public List<PtoEmision> getPtosEmision() {
 		return ptosEmision;
 	}
@@ -39,7 +40,7 @@ public class FrmPtoEmision extends AbstractMaestro {
 
 	private JTable tblLista;
 	private JTextField txtCodigo;
-	private JTextField txtDescripcion;	
+	private JTextField txtDescripcion;
 
 	public FrmPtoEmision() {
 		super("Puntos de Emisión");
@@ -64,42 +65,96 @@ public class FrmPtoEmision extends AbstractMaestro {
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblCdigo)
-						.addComponent(lblDescripcin))
-					.addGap(5)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtCodigo, GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-							.addGap(44)))
-					.addContainerGap())
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(26)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCdigo)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblDescripcin)))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)))
-					.addContainerGap())
-		);
+		groupLayout
+				.setHorizontalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addContainerGap()
+										.addComponent(scrollPane,
+												GroupLayout.DEFAULT_SIZE, 226,
+												Short.MAX_VALUE)
+										.addPreferredGap(
+												ComponentPlacement.UNRELATED)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(lblCdigo)
+														.addComponent(
+																lblDescripcin))
+										.addGap(5)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																txtDescripcion,
+																GroupLayout.DEFAULT_SIZE,
+																142,
+																Short.MAX_VALUE)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addComponent(
+																				txtCodigo,
+																				GroupLayout.DEFAULT_SIZE,
+																				98,
+																				Short.MAX_VALUE)
+																		.addGap(44)))
+										.addContainerGap()));
+		groupLayout
+				.setVerticalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(26)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								lblCdigo)
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addComponent(
+																												txtCodigo,
+																												GroupLayout.PREFERRED_SIZE,
+																												GroupLayout.DEFAULT_SIZE,
+																												GroupLayout.PREFERRED_SIZE)
+																										.addPreferredGap(
+																												ComponentPlacement.RELATED)
+																										.addGroup(
+																												groupLayout
+																														.createParallelGroup(
+																																Alignment.BASELINE)
+																														.addComponent(
+																																txtDescripcion,
+																																GroupLayout.PREFERRED_SIZE,
+																																22,
+																																GroupLayout.PREFERRED_SIZE)
+																														.addComponent(
+																																lblDescripcin)))))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				scrollPane,
+																				GroupLayout.DEFAULT_SIZE,
+																				370,
+																				Short.MAX_VALUE)))
+										.addContainerGap()));
 		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -131,7 +186,7 @@ public class FrmPtoEmision extends AbstractMaestro {
 	public void grabar() {
 		getPtoEmisionDAO().crear_editar(getPtoEmision());
 	}
-	
+
 	@Override
 	public void llenarDesdeVista() {
 		getPtoEmision().setIdptoemision(this.txtCodigo.getText().trim());
@@ -162,7 +217,8 @@ public class FrmPtoEmision extends AbstractMaestro {
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
 		for (PtoEmision pto : getPtosEmision()) {
-			model.addRow(new Object[] { pto.getIdptoemision(), pto.getDescripcion() });
+			model.addRow(new Object[] { pto.getIdptoemision(),
+					pto.getDescripcion() });
 		}
 		if (getPtosEmision().size() > 0) {
 			setPtoEmision(getPtosEmision().get(0));
@@ -193,13 +249,13 @@ public class FrmPtoEmision extends AbstractMaestro {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
