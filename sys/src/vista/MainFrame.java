@@ -70,6 +70,9 @@ public class MainFrame extends JRibbonFrame {
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
 		barraMaestro = new BarraMaestro();
 		barraMaestro.setVisible(false);
+		
+		cOpciones.setBarraMaestro(barraMaestro);
+		cOpciones.setDesktopPane(getDesktopPane());
 		getContentPane().add(barraMaestro, BorderLayout.WEST);
 
 		setTitle("BRIGHT GLOBAL CHANGE ERP");
@@ -230,7 +233,6 @@ public class MainFrame extends JRibbonFrame {
 			ribbon.addMenuEntry(nn);
 			
 		}
-		
 		
 		RibbonApplicationMenuEntryFooter footer = new RibbonApplicationMenuEntryFooter(
 				getResizableIconFromResource("/main/resources/salir.png"),

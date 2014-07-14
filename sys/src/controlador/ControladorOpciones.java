@@ -28,7 +28,7 @@ public class ControladorOpciones {
 			return new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					FrmPtoEmision frm = new FrmPtoEmision(barraMaestro);
+					FrmPtoEmision frm = new FrmPtoEmision();
 					getDesktopPane().add(frm);
 
 				}
@@ -47,12 +47,12 @@ public class ControladorOpciones {
 			};
 		}
 
-		if (opcion.equalsIgnoreCase("Frm_Cuentas")) {
+		if (opcion.equalsIgnoreCase("FrmCuentas")) {
 			return new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					FrmCuentas frm = new FrmCuentas(barraMaestro);
+					FrmCuentas frm = new FrmCuentas();
 					getDesktopPane().add(frm);
 
 				}
@@ -144,12 +144,12 @@ public class ControladorOpciones {
 			};
 		}
 
-		if (opcion.equalsIgnoreCase("Frm_Consumidor")) {
+		if (opcion.equalsIgnoreCase("FrmConsumidor")) {
 			return new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					FrmConsumidor frm = new FrmConsumidor(barraMaestro);
+					FrmConsumidor frm = new FrmConsumidor();
 					getDesktopPane().add(frm);
 
 				}

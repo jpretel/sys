@@ -2,7 +2,7 @@ package entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.math.BigDecimal;
+import java.util.List;
 
 
 /**
@@ -17,29 +17,24 @@ public class Documento implements Serializable {
 
 	@Id
 	@Column(unique=true, nullable=false, length=3)
-	private String id;
+	private String iddocumento;
 
-	@Column(length=50)
+	@Column(length=75)
 	private String descripcion;
 
-	@Column(precision=10)
-	private BigDecimal factor;
-
-	@Column(length=1)
-	private String origen;
-
-	@Column(name="tc_ajuste", length=1)
-	private String tcAjuste;
+	//bi-directional many-to-one association to DocumentoNumero
+	@OneToMany(mappedBy="documento")
+	private List<DocumentoNumero> documentoNumeros;
 
 	public Documento() {
 	}
 
-	public String getId() {
-		return this.id;
+	public String getIddocumento() {
+		return this.iddocumento;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setIddocumento(String iddocumento) {
+		this.iddocumento = iddocumento;
 	}
 
 	public String getDescripcion() {
@@ -50,28 +45,26 @@ public class Documento implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public BigDecimal getFactor() {
-		return this.factor;
+	public List<DocumentoNumero> getDocumentoNumeros() {
+		return this.documentoNumeros;
 	}
 
-	public void setFactor(BigDecimal factor) {
-		this.factor = factor;
+	public void setDocumentoNumeros(List<DocumentoNumero> documentoNumeros) {
+		this.documentoNumeros = documentoNumeros;
 	}
 
-	public String getOrigen() {
-		return this.origen;
+	public DocumentoNumero addDocumentoNumero(DocumentoNumero documentoNumero) {
+		getDocumentoNumeros().add(documentoNumero);
+		documentoNumero.setDocumento(this);
+
+		return documentoNumero;
 	}
 
-	public void setOrigen(String origen) {
-		this.origen = origen;
-	}
+	public DocumentoNumero removeDocumentoNumero(DocumentoNumero documentoNumero) {
+		getDocumentoNumeros().remove(documentoNumero);
+		documentoNumero.setDocumento(null);
 
-	public String getTcAjuste() {
-		return this.tcAjuste;
-	}
-
-	public void setTcAjuste(String tcAjuste) {
-		this.tcAjuste = tcAjuste;
+		return documentoNumero;
 	}
 
 }

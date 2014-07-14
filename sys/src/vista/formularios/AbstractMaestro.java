@@ -1,13 +1,13 @@
 package vista.formularios;
 
-import java.beans.PropertyVetoException;
-
 import javax.swing.JInternalFrame;
 
-import vista.barras.BarraMaestro;
+import vista.barras.PanelBarraMaestro;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.JPanel;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 public abstract class AbstractMaestro extends JInternalFrame {
 
@@ -19,14 +19,9 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	protected static final String VISTA = "VISTA";
 	protected static final String NUEVO = "NUEVO";
 	
-	private BarraMaestro barra;
-		
-	public AbstractMaestro(){
-		
-	}
-	
-	public AbstractMaestro(String titulo, BarraMaestro barra) {
-		setBarra(barra);
+	private PanelBarraMaestro barra;
+	protected JPanel pnlContenido;
+	public AbstractMaestro(String titulo) {
 		setEstado(VISTA);
 		setTitle(titulo);
 		setMaximizable(true);
@@ -34,18 +29,15 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
+		barra = new PanelBarraMaestro();
+		barra.setFormMaestro(this);
+		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		getContentPane().add(barra, BorderLayout.NORTH);
+		
+		pnlContenido = new JPanel();
+		getContentPane().add(pnlContenido, BorderLayout.CENTER);
 		setBounds(100, 100, 555, 325);
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 539, Short.MAX_VALUE)
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 295, Short.MAX_VALUE)
-		);
-		getContentPane().setLayout(groupLayout);
-
 	}
 	
 	public void iniciar() {
@@ -56,12 +48,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		vista_noedicion();
 	}
 
-	public void nuevo() {
-		setEstado(NUEVO);
-		getBarra().enEdicion();
-		llenar_datos();
-		vista_edicion();
-	}
+	public abstract void nuevo();
 
 	public void editar() {
 		setEstado(EDICION);
@@ -71,14 +58,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 
 	public abstract void anular();
 
-	public void grabar(){
-		setEstado(VISTA);
-		getBarra().enVista();
-		vista_noedicion();
-		llenar_tablas();
-		llenar_lista();
-		llenar_datos();
-	}
+	public abstract void grabar();
 	
 
 	public void eliminar() {
@@ -101,20 +81,38 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		setEstado(VISTA);
 		vista_noedicion();
 		getBarra().enVista();
-	}	
+	}
+	
+	public void DoGrabar() {
+		boolean esVistaValido;
+		esVistaValido = isValidaVista();
+		if (esVistaValido) {
+			llenarDesdeVista();
+			grabar();
+			setEstado(VISTA);
+			getBarra().enVista();
+			vista_noedicion();
+			llenar_tablas();
+			llenar_lista();
+			llenar_datos();
+		}
+	}
+	
+	public void DoNuevo() {
+		nuevo();
+		setEstado(NUEVO);
+		getBarra().enEdicion();
+		llenar_datos();
+		vista_edicion();
+	}
+	
+	public abstract void llenarDesdeVista();
+	
+	public abstract boolean isValidaVista();
 
 	public void salir() {
 		this.dispose();
 	}
-	
-	@Override
-	public void setSelected(boolean selected) throws PropertyVetoException {
-		super.setSelected(selected);
-		actualizaBarra();
-	}
-	
-	protected abstract void actualizaBarra();
-	
 
 	public String getEstado() {
 		return estado;
@@ -124,11 +122,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		this.estado = estado;
 	}
 
-	public BarraMaestro getBarra() {
+	public PanelBarraMaestro getBarra() {
 		return barra;
 	}
 
-	public void setBarra(BarraMaestro barra) {
+	public void setBarra(PanelBarraMaestro barra) {
 		this.barra = barra;
-	}	
+	}
 }

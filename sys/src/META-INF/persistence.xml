@@ -19,6 +19,9 @@
 		<class>entity.Modulo</class>
 		<class>entity.Ruc</class>
 		<class>entity.Usuario</class>
+		<class>entity.PtoEmision</class>
+		<class>entity.DocumentoNumero</class>
+		<class>entity.DocumentoNumeroPK</class>
 		
 		
 		<properties>
@@ -27,9 +30,9 @@
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="root" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<!-- <property name="eclipselink.ddl-generation" value="drop-and-create-tables" 
+			<!--<property name="eclipselink.ddl-generation" value="drop-and-create-tables" 
 				/> 
-			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />-->
+	 <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />-->
 
 		</properties>
 	</persistence-unit>

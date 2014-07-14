@@ -1,18 +1,14 @@
 package vista.barras;
 
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
 
 import vista.formularios.AbstractMaestro;
 
-import java.awt.Event;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import javax.swing.SwingConstants;
 
 public class BarraMaestro extends JToolBar {
 	/**
@@ -81,11 +77,12 @@ public class BarraMaestro extends JToolBar {
 	}
 
 	public BarraMaestro() {
+		setOrientation(SwingConstants.VERTICAL);
 
 		btnNuevo = new JButton("");
 		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				getFormMaestro().nuevo();
+				getFormMaestro().DoNuevo();
 			}
 		});
 
@@ -127,7 +124,7 @@ public class BarraMaestro extends JToolBar {
 		btnGrabar = new JButton("");
 		btnGrabar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getFormMaestro().grabar();
+				getFormMaestro().DoGrabar();
 			}
 		});
 

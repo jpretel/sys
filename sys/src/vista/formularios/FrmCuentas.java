@@ -11,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import vista.barras.BarraMaestro;
 import vista.utilitarios.MaestroTableModel;
 
 import javax.swing.JScrollPane;
@@ -34,9 +33,10 @@ public class FrmCuentas extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;	
 
-	public FrmCuentas(BarraMaestro barra) {
-		super("Cuentas Contables", barra);
+	public FrmCuentas() {
+		super("Cuentas Contables");
 		
+		getBarra().setFormMaestro(this);
 		
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
 		lblCdigo.setBounds(227, 11, 46, 14);
@@ -58,7 +58,8 @@ public class FrmCuentas extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
@@ -95,7 +96,7 @@ public class FrmCuentas extends AbstractMaestro {
 							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)))
 					.addContainerGap())
 		);
-		getContentPane().setLayout(groupLayout);
+		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -115,7 +116,6 @@ public class FrmCuentas extends AbstractMaestro {
 	@Override
 	public void nuevo() {
 		setCuenta(new Cuenta());
-		super.nuevo();
 	}
 
 	@Override
@@ -125,11 +125,14 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
+		getCuentaDAO().crear_editar(getCuenta());
+	}
+	
+	@Override
+	public void llenarDesdeVista() {
 		getCuenta().setId(txtCodigo.getText());
 		getCuenta().setDescripcion(txtDescripcion.getText());
-		getCuentaDAO().crear_editar(getCuenta());
-		super.grabar();
-	}
+	};
 
 	@Override
 	public void eliminar() {
@@ -144,7 +147,7 @@ public class FrmCuentas extends AbstractMaestro {
 	public void setCuenta(Cuenta cuenta) {
 		this.cuenta = cuenta;
 	}
-
+	
 	public CuentaDAO getCuentaDAO() {
 		return cuentaDAO;
 	}
@@ -208,19 +211,6 @@ public class FrmCuentas extends AbstractMaestro {
 	}
 
 	@Override
-	protected void actualizaBarra() {
-		getBarra().setVisible(isSelected());
-		if (isSelected()) {
-			getBarra().setFormMaestro(this);
-		}
-		if (getEstado().equals(VISTA)) {
-			getBarra().enVista();
-		} else {
-			getBarra().enEdicion();
-		}
-	}
-
-	@Override
 	public void init() {
 		// TODO Auto-generated method stub
 		
@@ -230,6 +220,15 @@ public class FrmCuentas extends AbstractMaestro {
 	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean isValidaVista() {
+		if (txtCodigo.getText().trim().isEmpty())
+			return false;
+		if (txtDescripcion.getText().trim().isEmpty())
+			return false;
+		return true;
 	}
 
 }

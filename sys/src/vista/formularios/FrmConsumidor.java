@@ -11,7 +11,6 @@ import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.JXTreeTable;
 
-import vista.barras.BarraMaestro;
 import vista.utilitarios.MaestroTreeTableModel;
 
 import javax.swing.JLabel;
@@ -50,8 +49,8 @@ public class FrmConsumidor extends AbstractMaestro {
 	JScrollPane scrollPane;
 	JCheckBox chkEsConsumidorInicial;
 
-	public FrmConsumidor(BarraMaestro barra) {
-		super("Centros de Costo", barra);
+	public FrmConsumidor() {
+		super("Centros de Costo");
 		scrollPane = new JScrollPane(tblLista);
 
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -144,12 +143,15 @@ public class FrmConsumidor extends AbstractMaestro {
 			chkEsConsumidorInicial.setSelected(false);
 		}
 		setConsumidor(new Consumidor());
-
-		super.nuevo();
 	}
 
 	@Override
 	public void grabar() {
+		getConsumidorDAO().crear_editar(getConsumidor());
+	}
+	
+	@Override
+	public void llenarDesdeVista() {
 		getConsumidor().setId(txtCodigo.getText());
 		getConsumidor().setDescripcion(txtDescripcion.getText());
 		if (getEstado().equals(NUEVO)) {
@@ -182,8 +184,15 @@ public class FrmConsumidor extends AbstractMaestro {
 				getConsumidor().setJerarquia(jerarquia);
 			}
 		}
-		getConsumidorDAO().crear_editar(getConsumidor());
-		super.grabar();
+	}
+	
+	@Override
+	public boolean isValidaVista() {
+		if (this.txtCodigo.getText().trim().isEmpty())
+			return false;
+		if (this.txtDescripcion.getText().trim().isEmpty())
+			return false;
+		return true;
 	}
 
 	@Override
@@ -284,19 +293,6 @@ public class FrmConsumidor extends AbstractMaestro {
 
 	public void setConsumidores(List<Consumidor> consumidores) {
 		this.consumidores = consumidores;
-	}
-
-	@Override
-	protected void actualizaBarra() {
-		getBarra().setVisible(isSelected());
-		if (isSelected()) {
-			getBarra().setFormMaestro(this);
-		}
-		if (getEstado().equals(VISTA)) {
-			getBarra().enVista();
-		} else {
-			getBarra().enEdicion();
-		}
 	}
 
 	@Override
