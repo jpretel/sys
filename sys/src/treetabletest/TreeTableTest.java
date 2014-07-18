@@ -30,7 +30,7 @@ public class TreeTableTest extends JFrame {
         //create and add the first department with its list of Employee objects
         departmentList.add(new Department(2, "Marketing", empList2));
         
-        //we use a no root model
+        //we use a no root modeldddd
         NoRootTreeTableModel  noRootTreeTableModel = new NoRootTreeTableModel(departmentList);
         treeTable = new JXTreeTable(noRootTreeTableModel);
         treeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);        
