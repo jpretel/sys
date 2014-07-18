@@ -1,5 +1,6 @@
 package vista.formularios.listas;
 
+import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -11,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EtchedBorder;
 
 import entity.Documento;
+import vista.barras.BarraMaestro;
 import vista.controles.ComboBox;
 import vista.controles.IDocumentoDAO;
 
@@ -31,14 +33,29 @@ import java.awt.GridBagLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
 import org.jdesktop.swingx.JXCollapsiblePane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import org.jdesktop.swingx.JXTaskPaneContainer;
+
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JCheckBox;
+
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.BevelBorder;
 
 public abstract class AbstractDocList extends JInternalFrame {
 
@@ -61,7 +78,9 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 	private DefaultTableModel modelo_lista;
 	private List<Object[]> datos;
-	private final Action action = new SwingAction();
+
+	private static final int _ancho = 20;
+	private static final int _alto = 20;
 
 	/**
 	 * Crea la lista del documento con los filtros por defecto.
@@ -84,32 +103,32 @@ public abstract class AbstractDocList extends JInternalFrame {
 		pnlDocumentos.setViewportView(tblDocumentos);
 
 		JPanel pnlFiltros = new JPanel();
-		
+
 		pnlFiltros.setPreferredSize(new Dimension(0, 70));
-		
+
 		pnlFiltros
 				.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		getContentPane().add(pnlFiltros, BorderLayout.NORTH);
-		
+
 		JLabel lblDesde = new JLabel("Desde");
-		
-				txtDesde = new JXDatePicker();
-				txtDesde.setFormats(dateFormatter);
-				
-						txtDesde.setDate(calendar.getTime());
+
+		txtDesde = new JXDatePicker();
+		txtDesde.setFormats(dateFormatter);
+
+		txtDesde.setDate(calendar.getTime());
 
 		JLabel lblHasta = new JLabel("Hasta");
-		
-				txtHasta = new JXDatePicker();
-				txtHasta.setFormats(dateFormatter);
-				txtHasta.setDate(calendar.getTime());
+
+		txtHasta = new JXDatePicker();
+		txtHasta.setFormats(dateFormatter);
+		txtHasta.setDate(calendar.getTime());
 
 		JLabel lblDocumento = new JLabel("Documento");
 
 		JLabel lblSerie = new JLabel("Serie");
-		
-				txtSerie = new JTextField();
-				txtSerie.setColumns(10);
+
+		txtSerie = new JTextField();
+		txtSerie.setColumns(10);
 
 		JLabel lblNmero = new JLabel("N\u00FAmero");
 
@@ -123,87 +142,233 @@ public abstract class AbstractDocList extends JInternalFrame {
 			}
 		});
 		GroupLayout gl_pnlFiltros = new GroupLayout(pnlFiltros);
-		gl_pnlFiltros.setHorizontalGroup(
-			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(lblDesde, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
-							.addGap(46))
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblHasta, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(6)
-							.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(lblDocumento, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
-							.addGap(36))
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblSerie, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtSerie, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
-					.addGap(169)
-					.addComponent(btnActualizar, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
-					.addContainerGap())
-		);
-		gl_pnlFiltros.setVerticalGroup(
-			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(11)
-							.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblHasta)
-								.addComponent(lblDesde))
-							.addGap(7)
-							.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(11)
-							.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblDocumento)
-								.addComponent(lblSerie))
-							.addGap(7)
-							.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
-								.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtSerie, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(11)
-							.addComponent(lblNmero)))
-					.addContainerGap())
-				.addGroup(Alignment.TRAILING, gl_pnlFiltros.createSequentialGroup()
-					.addContainerGap(24, Short.MAX_VALUE)
-					.addComponent(btnActualizar)
-					.addGap(19))
-		);
+		gl_pnlFiltros
+				.setHorizontalGroup(gl_pnlFiltros
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_pnlFiltros
+										.createSequentialGroup()
+										.addContainerGap(
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.TRAILING,
+																false)
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblDesde,
+																				GroupLayout.PREFERRED_SIZE,
+																				45,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(46))
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addComponent(
+																				txtDesde,
+																				GroupLayout.PREFERRED_SIZE,
+																				91,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)))
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				lblHasta,
+																				GroupLayout.PREFERRED_SIZE,
+																				37,
+																				GroupLayout.PREFERRED_SIZE))
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addGap(6)
+																		.addComponent(
+																				txtHasta,
+																				GroupLayout.PREFERRED_SIZE,
+																				90,
+																				GroupLayout.PREFERRED_SIZE)))
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.TRAILING,
+																false)
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblDocumento,
+																				GroupLayout.PREFERRED_SIZE,
+																				65,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(36))
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addComponent(
+																				cboDocumento,
+																				GroupLayout.PREFERRED_SIZE,
+																				101,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)))
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																lblSerie,
+																GroupLayout.PREFERRED_SIZE,
+																42,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																txtSerie,
+																GroupLayout.PREFERRED_SIZE,
+																61,
+																GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																lblNmero,
+																GroupLayout.PREFERRED_SIZE,
+																51,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																txtNumero,
+																GroupLayout.PREFERRED_SIZE,
+																66,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(169)
+										.addComponent(btnActualizar,
+												GroupLayout.DEFAULT_SIZE, 93,
+												Short.MAX_VALUE)
+										.addContainerGap()));
+		gl_pnlFiltros
+				.setVerticalGroup(gl_pnlFiltros
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_pnlFiltros
+										.createSequentialGroup()
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addGap(11)
+																		.addGroup(
+																				gl_pnlFiltros
+																						.createParallelGroup(
+																								Alignment.BASELINE)
+																						.addComponent(
+																								lblHasta)
+																						.addComponent(
+																								lblDesde))
+																		.addGap(7)
+																		.addGroup(
+																				gl_pnlFiltros
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								txtHasta,
+																								GroupLayout.PREFERRED_SIZE,
+																								23,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								txtDesde,
+																								GroupLayout.PREFERRED_SIZE,
+																								23,
+																								GroupLayout.PREFERRED_SIZE)))
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addGap(11)
+																		.addGroup(
+																				gl_pnlFiltros
+																						.createParallelGroup(
+																								Alignment.BASELINE)
+																						.addComponent(
+																								lblDocumento)
+																						.addComponent(
+																								lblSerie))
+																		.addGap(7)
+																		.addGroup(
+																				gl_pnlFiltros
+																						.createParallelGroup(
+																								Alignment.BASELINE)
+																						.addComponent(
+																								cboDocumento,
+																								GroupLayout.PREFERRED_SIZE,
+																								23,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								txtSerie,
+																								GroupLayout.PREFERRED_SIZE,
+																								23,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								txtNumero,
+																								GroupLayout.PREFERRED_SIZE,
+																								23,
+																								GroupLayout.PREFERRED_SIZE)))
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addGap(11)
+																		.addComponent(
+																				lblNmero)))
+										.addContainerGap())
+						.addGroup(
+								Alignment.TRAILING,
+								gl_pnlFiltros.createSequentialGroup()
+										.addContainerGap(24, Short.MAX_VALUE)
+										.addComponent(btnActualizar).addGap(19)));
 		pnlFiltros.setLayout(gl_pnlFiltros);
 
 		JPanel pnlOpciones = new JPanel();
-		pnlOpciones.setPreferredSize(new Dimension(130, 0));
-		pnlOpciones.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		pnlOpciones.setPreferredSize(new Dimension(120, 0));
+		pnlOpciones.setBorder(new TitledBorder(null, "Opciones", TitledBorder.CENTER, TitledBorder.TOP, null, null));
 		getContentPane().add(pnlOpciones, BorderLayout.WEST);
-		pnlOpciones.setLayout(new BoxLayout(pnlOpciones, BoxLayout.X_AXIS));
-		
-		JXCollapsiblePane collapsiblePane = new JXCollapsiblePane();
-		collapsiblePane.setBorder(new TitledBorder(null, "Opciones", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnlOpciones.add(collapsiblePane);
+		pnlOpciones
+				.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec
+						.decode("pref:grow"), }, new RowSpec[] {
+						FormFactory.LINE_GAP_ROWSPEC, FormFactory.PREF_ROWSPEC,
+						FormFactory.LINE_GAP_ROWSPEC, FormFactory.PREF_ROWSPEC,
+						FormFactory.RELATED_GAP_ROWSPEC,
+						FormFactory.DEFAULT_ROWSPEC, }));
+
+		JButton btnCrear = new JButton("Crear");
+		pnlOpciones.add(btnCrear, "1, 2, fill, fill");
+
+		btnCrear.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.getResource("/main/resources/iconos/nuevo.png")).getImage()
+				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
+
+		JButton btnVer = new JButton("Abrir");
+		pnlOpciones.add(btnVer, "1, 4, fill, fill");
+
+		btnVer.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.getResource("/main/resources/iconos/abrir.png")).getImage()
+				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 	}
 
 	/**
@@ -274,11 +439,13 @@ public abstract class AbstractDocList extends JInternalFrame {
 	public void setDocumentoDAO(IDocumentoDAO documentoDAO) {
 		this.documentoDAO = documentoDAO;
 	}
+
 	private class SwingAction extends AbstractAction {
 		public SwingAction() {
 			putValue(NAME, "SwingAction");
 			putValue(SHORT_DESCRIPTION, "Some short description");
 		}
+
 		public void actionPerformed(ActionEvent e) {
 		}
 	}
