@@ -50,7 +50,7 @@ public class MenuController {
 		om.setPosicion(1);
 		om.setDescripcion("Cuentas");
 		om.setImagen("/main/resources/salir.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmCuentas");
 		om.setPrioridad(1); //1, 2 o 3
 		
 		opciones.add(om);
@@ -58,9 +58,9 @@ public class MenuController {
 		
 		om = new OpcionMenu();
 		om.setPosicion(2);
-		om.setDescripcion("Consumidores");
+		om.setDescripcion("Centros de Costo");
 		om.setImagen("/main/resources/grabar.png");
-		om.setOpcion("Frm_Consumidor");
+		om.setOpcion("FrmConsumidor");
 		om.setPrioridad(2); //1, 2 o 3
 		
 		opciones.add(om);
@@ -70,34 +70,34 @@ public class MenuController {
 		om.setPosicion(3);
 		om.setDescripcion("Documentos");
 		om.setImagen("/main/resources/nuevo.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmDocumento");
 		om.setPrioridad(3); //1, 2 o 3
 		
 		opciones.add(om);
 		
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Otra tabla");
+		om.setDescripcion("Sucursales");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmSucursal");
 		om.setPrioridad(3); //1, 2 o 3
 		
 		opciones.add(om);
 		
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Otrass tabla");
+		om.setDescripcion("Puntos de Emisión");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmPtoEmision");
 		om.setPrioridad(3); //1, 2 o 3
 		
 		opciones.add(om);
 		
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Otratabla");
+		om.setDescripcion("SubDiario");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmSubdiario");
 		om.setPrioridad(3); //1, 2 o 3
 		
 		opciones.add(om);

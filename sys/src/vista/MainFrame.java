@@ -24,6 +24,8 @@ import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+import org.jvnet.substance.SubstanceLookAndFeel;
+import org.jvnet.substance.skin.OfficeSilver2007Skin;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
@@ -292,7 +294,7 @@ public class MainFrame extends JRibbonFrame {
 				JFrame.setDefaultLookAndFeelDecorated(true);
 				JDialog.setDefaultLookAndFeelDecorated(true);
 
-				//SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
+				SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
 				new MainFrame();				
 				/*		
 		        marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

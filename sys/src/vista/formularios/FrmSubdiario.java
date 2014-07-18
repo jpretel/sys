@@ -3,9 +3,6 @@ package vista.formularios;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.CuentaDAO;
-import entity.Cuenta;
-
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -20,21 +17,24 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public class FrmCuentas extends AbstractMaestro {
+import dao.SubdiarioDAO;
+import entity.Subdiario;
+
+public class FrmSubdiario extends AbstractMaestro {
 
 	private static final long serialVersionUID = 1L;
 
-	private Cuenta cuenta;
+	private Subdiario subdiario;
 
-	private CuentaDAO cuentaDAO = new CuentaDAO();
+	private SubdiarioDAO subdiarioDAO = new SubdiarioDAO();
 
-	private List<Cuenta> cuentas = new ArrayList<Cuenta>();
+	private List<Subdiario> subdiarios = new ArrayList<Subdiario>();
 	private JTable tblLista;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
 
-	public FrmCuentas() {
-		super("Cuentas Contables");
+	public FrmSubdiario() {
+		super("Sub diarios");
 
 		getBarra().setFormMaestro(this);
 
@@ -158,9 +158,9 @@ public class FrmCuentas extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent e) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setCuenta(getCuentas().get(selectedRow));
+							setSubdiario(getSubdiarios().get(selectedRow));
 						else
-							setCuenta(null);
+							setSubdiario(null);
 						llenar_datos();
 					}
 				});
@@ -169,7 +169,7 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public void nuevo() {
-		setCuenta(new Cuenta());
+		setSubdiario(new Subdiario());
 	}
 
 	@Override
@@ -179,13 +179,13 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		getCuentaDAO().crear_editar(getCuenta());
+		getSubdiarioDAO().crear_editar(getSubdiario());
 	}
 
 	@Override
 	public void llenarDesdeVista() {
-		getCuenta().setId(txtCodigo.getText());
-		getCuenta().setDescripcion(txtDescripcion.getText());
+		getSubdiario().setIdsubdiario(txtCodigo.getText());
+		getSubdiario().setDescripcion(txtDescripcion.getText());
 	};
 
 	@Override
@@ -194,27 +194,11 @@ public class FrmCuentas extends AbstractMaestro {
 		vista_noedicion();
 	}
 
-	public Cuenta getCuenta() {
-		return cuenta;
-	}
-
-	public void setCuenta(Cuenta cuenta) {
-		this.cuenta = cuenta;
-	}
-
-	public CuentaDAO getCuentaDAO() {
-		return cuentaDAO;
-	}
-
-	public void setCuentaDAO(CuentaDAO cuentaDAO) {
-		this.cuentaDAO = cuentaDAO;
-	}
-
 	@Override
 	public void llenar_datos() {
-		if (getCuenta() != null) {
-			txtCodigo.setText(getCuenta().getId());
-			txtDescripcion.setText(getCuenta().getDescripcion());
+		if (getSubdiario() != null) {
+			txtCodigo.setText(getSubdiario().getIdsubdiario());
+			txtDescripcion.setText(getSubdiario().getDescripcion());
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
@@ -227,28 +211,20 @@ public class FrmCuentas extends AbstractMaestro {
 
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
-		for (Cuenta cuenta : getCuentas()) {
-			model.addRow(new Object[] { cuenta.getId(), cuenta.getDescripcion() });
+		for (Subdiario obj: getSubdiarios()) {
+			model.addRow(new Object[] { obj.getIdsubdiario(), obj.getDescripcion() });
 		}
-		if (getCuentas().size() > 0) {
-			setCuenta(getCuentas().get(0));
+		if (getSubdiarios().size() > 0) {
+			setSubdiario(getSubdiarios().get(0));
 			tblLista.setRowSelectionInterval(0, 0);
 		}
 	}
 
 	@Override
 	public void llenar_tablas() {
-		setCuentas(getCuentaDAO().findAll());
+		setSubdiarios(getSubdiarioDAO().findAll());
 	}
-
-	public List<Cuenta> getCuentas() {
-		return cuentas;
-	}
-
-	public void setCuentas(List<Cuenta> cuentas) {
-		this.cuentas = cuentas;
-	}
-
+	
 	@Override
 	public void vista_edicion() {
 		if (getEstado().equals(NUEVO))
@@ -283,6 +259,30 @@ public class FrmCuentas extends AbstractMaestro {
 		if (txtDescripcion.getText().trim().isEmpty())
 			return false;
 		return true;
+	}
+
+	public SubdiarioDAO getSubdiarioDAO() {
+		return subdiarioDAO;
+	}
+
+	public void setSubdiarioDAO(SubdiarioDAO subdiarioDAO) {
+		this.subdiarioDAO = subdiarioDAO;
+	}
+
+	public Subdiario getSubdiario() {
+		return subdiario;
+	}
+
+	public void setSubdiario(Subdiario subdiario) {
+		this.subdiario = subdiario;
+	}
+
+	public List<Subdiario> getSubdiarios() {
+		return subdiarios;
+	}
+
+	public void setSubdiarios(List<Subdiario> subdiarios) {
+		this.subdiarios = subdiarios;
 	}
 
 }

@@ -91,7 +91,8 @@ public class FrmConsumidor extends AbstractMaestro {
 		txtDescripcion.setBounds(321, 37, 184, 20);
 
 		chkEsConsumidorInicial = new JCheckBox("Es Consumidor Inicial");
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
@@ -130,7 +131,7 @@ public class FrmConsumidor extends AbstractMaestro {
 					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
 					.addContainerGap())
 		);
-		getContentPane().setLayout(groupLayout);
+		pnlContenido.setLayout(groupLayout);
 		iniciar();
 	}
 

@@ -7,7 +7,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import vista.barras.BarraMaestro;
 import vista.utilitarios.MaestroTableModel;
 
 import javax.swing.JLabel;
@@ -16,18 +15,19 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import dao.DocumentoDAO;
-import dao.DocumentoNumeroDAO;
-import entity.Documento;
-import entity.DocumentoNumero;
-import entity.DocumentoNumeroPK;
 
 import javax.swing.JButton;
+
+import dao.AlmacenDAO;
+import dao.SucursalDAO;
+import entity.Almacen;
+import entity.AlmacenPK;
+import entity.Sucursal;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FrmDocumento extends AbstractMaestro {
+public class FrmSucursal extends AbstractMaestro {
 
 	/**
 	 * 
@@ -36,24 +36,25 @@ public class FrmDocumento extends AbstractMaestro {
 
 	private JTable tblLista;
 
-	private JTable tblnumeradores;
+	private JTable tblAlmacenes;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
-	private NumeradorTableModel numeradoresTM = new NumeradorTableModel();
-	private Documento documento;
+	private FrmSucursalTableModel almacenesTM = new FrmSucursalTableModel();
+	private Sucursal sucursal;
 
-	private List<Documento> documentos;
-	private List<DocumentoNumero> numeradores;
+	private List<Sucursal> sucursales;
+	private List<Almacen> almacenes;
 
-	private DocumentoDAO documentoDAO = new DocumentoDAO();
 
-	private DocumentoNumeroDAO docnumDAO = new DocumentoNumeroDAO();
+	private SucursalDAO sucursalDAO = new SucursalDAO();
+
+	private AlmacenDAO almacenDAO = new AlmacenDAO();
 
 	private JButton btnILinea;
 	private JButton btnBLinea;
 
-	public FrmDocumento() {
-		super("Documentos");
+	public FrmSucursal() {
+		super("Sucursal / Almacen");
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 199, 273);
@@ -65,9 +66,9 @@ public class FrmDocumento extends AbstractMaestro {
 		JScrollPane scrollPaneNum = new JScrollPane();
 		scrollPaneNum.setBounds(215, 65, 314, 219);
 
-		tblnumeradores = new JTable(numeradoresTM);
-		scrollPaneNum.setViewportView(tblnumeradores);
-		tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblAlmacenes = new JTable(almacenesTM);
+		scrollPaneNum.setViewportView(tblAlmacenes);
+		tblAlmacenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JLabel lblCdigo = new JLabel("Cdigo");
 		lblCdigo.setBounds(213, 18, 66, 14);
@@ -87,8 +88,8 @@ public class FrmDocumento extends AbstractMaestro {
 		btnILinea.setBounds(375, 15, 65, 20);
 		btnILinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				final Object fila[] = { "", "", "" };
-				numeradoresTM.addRow(fila);
+				final Object fila[] = { "", ""};
+				almacenesTM.addRow(fila);
 			}
 		});
 
@@ -96,9 +97,9 @@ public class FrmDocumento extends AbstractMaestro {
 		btnBLinea.setBounds(446, 15, 83, 20);
 		btnBLinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int ind = tblnumeradores.getSelectedRow();
+				int ind = tblAlmacenes.getSelectedRow();
 				if (ind >= 0)
-					numeradoresTM.removeRow(ind);
+					almacenesTM.removeRow(ind);
 			}
 		});
 		pnlContenido.setLayout(null);
@@ -116,9 +117,9 @@ public class FrmDocumento extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent e) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setDocumento(getDocumentos().get(selectedRow));
+							setSucursal(getSucursales().get(selectedRow));
 						else
-							setDocumento(null);
+							setSucursal(null);
 						llenar_datos();
 					}
 				});
@@ -127,7 +128,7 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public void nuevo() {
-		setDocumento(new Documento());
+		setSucursal(new Sucursal());
 	}
 
 	@Override
@@ -142,48 +143,46 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		documentoDAO.crear_editar(getDocumento());
-		docnumDAO.borrarPorDocumento(getDocumento());
-		for (DocumentoNumero num : getNumeradores()) {
-			docnumDAO.create(num);
+		sucursalDAO.crear_editar(getSucursal());
+		almacenDAO.borrarPorSucursal(getSucursal());
+		for (Almacen num : getAlmacenes()) {
+			almacenDAO.create(num);
 		}
 	}
 
 	@Override
 	public void llenarDesdeVista() {
-		getDocumento().setIddocumento(this.txtCodigo.getText().trim());
-		getDocumento().setDescripcion(this.txtDescripcion.getText().trim());
+		getSucursal().setIdsucursal(this.txtCodigo.getText().trim());
+		getSucursal().setDescripcion(this.txtDescripcion.getText().trim());
 
-		setNumeradores(new ArrayList<DocumentoNumero>());
+		setAlmacenes(new ArrayList<Almacen>());
 
-		for (int i = 0; i < numeradoresTM.getRowCount(); i++) {
-			DocumentoNumeroPK id = new DocumentoNumeroPK();
-			DocumentoNumero num = new DocumentoNumero();
+		for (int i = 0; i < almacenesTM.getRowCount(); i++) {
+			AlmacenPK id = new AlmacenPK();
+			Almacen alm = new Almacen();
 
-			id.setIddocumento(getDocumento().getIddocumento());
-			id.setIdptoemision(this.numeradoresTM.getValueAt(i, 0).toString());
-			id.setSerie(this.numeradoresTM.getValueAt(i, 1).toString());
-
-			num.setId(id);
-			num.setNumero(this.numeradoresTM.getValueAt(i, 2).toString());
-			getNumeradores().add(num);
+			id.setIdsucursal(getSucursal().getIdsucursal());
+			id.setIdalmacen(this.almacenesTM.getValueAt(i, 0).toString());
+			
+			alm.setId(id);
+			alm.setDescripcion(this.almacenesTM.getValueAt(i, 1).toString());
+			getAlmacenes().add(alm);
 		}
 
 	}
 
 	@Override
 	public void llenar_datos() {
-		numeradoresTM.limpiar();
-		setNumeradores(new ArrayList<DocumentoNumero>());
-		if (getDocumento() != null) {
-			txtCodigo.setText(getDocumento().getIddocumento());
-			txtDescripcion.setText(getDocumento().getDescripcion());
-			setNumeradores(docnumDAO.getPorDocumento(getDocumento()));
-
-			for (DocumentoNumero num : getNumeradores()) {
-				numeradoresTM.addRow(new Object[] {
-						num.getId().getIdptoemision(), num.getId().getSerie(),
-						num.getNumero() });
+		almacenesTM.limpiar();
+		setAlmacenes(new ArrayList<Almacen>());
+		if (getSucursal() != null) {
+			txtCodigo.setText(getSucursal().getIdsucursal());
+			txtDescripcion.setText(getSucursal().getDescripcion());
+			setAlmacenes(almacenDAO.getPorSucursal(getSucursal()));
+			
+			for (Almacen alm : getAlmacenes()) {
+				almacenesTM.addRow(new Object[] {
+						alm.getId().getIdsucursal(), alm.getDescripcion() });
 			}
 		} else {
 			txtCodigo.setText("");
@@ -206,19 +205,19 @@ public class FrmDocumento extends AbstractMaestro {
 
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
-		for (Documento cuenta : getDocumentos()) {
-			model.addRow(new Object[] { cuenta.getIddocumento(),
-					cuenta.getDescripcion() });
+		for (Sucursal obj : getSucursales()) {
+			model.addRow(new Object[] { obj.getIdsucursal(),
+					obj.getDescripcion()});
 		}
-		if (getDocumentos().size() > 0) {
-			setDocumento(getDocumentos().get(0));
+		if (getSucursales().size() > 0) {
+			setSucursal(getSucursales().get(0));
 			tblLista.setRowSelectionInterval(0, 0);
 		}
 	}
 
 	@Override
 	public void llenar_tablas() {
-		setDocumentos(getDocumentoDAO().findAll());
+		setSucursales(sucursalDAO.findAll());
 	}
 
 	@Override
@@ -228,7 +227,7 @@ public class FrmDocumento extends AbstractMaestro {
 		else
 			txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(true);
-		numeradoresTM.setEditar(true);
+		almacenesTM.setEditar(true);
 		btnILinea.setEnabled(true);
 		btnBLinea.setEnabled(true);
 
@@ -238,33 +237,51 @@ public class FrmDocumento extends AbstractMaestro {
 	public void vista_noedicion() {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
-		numeradoresTM.setEditar(false);
+		almacenesTM.setEditar(false);
 		btnILinea.setEnabled(false);
 		btnBLinea.setEnabled(false);
 	}
 
-	public Documento getDocumento() {
-		return documento;
+	/**
+	 * @return the sucursal
+	 */
+	public Sucursal getSucursal() {
+		return sucursal;
 	}
 
-	public void setDocumento(Documento documento) {
-		this.documento = documento;
+	/**
+	 * @param sucursal the sucursal to set
+	 */
+	public void setSucursal(Sucursal sucursal) {
+		this.sucursal = sucursal;
 	}
 
-	public List<Documento> getDocumentos() {
-		return documentos;
+	/**
+	 * @return the sucursales
+	 */
+	public List<Sucursal> getSucursales() {
+		return sucursales;
 	}
 
-	public void setDocumentos(List<Documento> documentos) {
-		this.documentos = documentos;
+	/**
+	 * @param sucursales the sucursales to set
+	 */
+	public void setSucursales(List<Sucursal> sucursales) {
+		this.sucursales = sucursales;
 	}
 
-	public DocumentoDAO getDocumentoDAO() {
-		return documentoDAO;
+	/**
+	 * @return the sucursalDAO
+	 */
+	public SucursalDAO getSucursalDAO() {
+		return sucursalDAO;
 	}
 
-	public void setDocumentoDAO(DocumentoDAO documentoDAO) {
-		this.documentoDAO = documentoDAO;
+	/**
+	 * @param sucursalDAO the sucursalDAO to set
+	 */
+	public void setSucursalDAO(SucursalDAO sucursalDAO) {
+		this.sucursalDAO = sucursalDAO;
 	}
 
 	@Override
@@ -279,41 +296,52 @@ public class FrmDocumento extends AbstractMaestro {
 
 	}
 
-	public DocumentoNumeroDAO getDocnumDAO() {
-		return docnumDAO;
+	public FrmSucursalTableModel getNumeradoresTM() {
+		return almacenesTM;
 	}
 
-	public void setDocnumDAO(DocumentoNumeroDAO docnumDAO) {
-		this.docnumDAO = docnumDAO;
+	public void setNumeradoresTM(FrmSucursalTableModel numeradoresTM) {
+		this.almacenesTM = numeradoresTM;
+	}
+	
+	/**
+	 * @return the almacenes
+	 */
+	public List<Almacen> getAlmacenes() {
+		return almacenes;
 	}
 
-	public NumeradorTableModel getNumeradoresTM() {
-		return numeradoresTM;
+	/**
+	 * @param almacenes the almacenes to set
+	 */
+	public void setAlmacenes(List<Almacen> almacenes) {
+		this.almacenes = almacenes;
 	}
 
-	public void setNumeradoresTM(NumeradorTableModel numeradoresTM) {
-		this.numeradoresTM = numeradoresTM;
+	/**
+	 * @return the almacenDAO
+	 */
+	public AlmacenDAO getAlmacenDAO() {
+		return almacenDAO;
 	}
 
-	public List<DocumentoNumero> getNumeradores() {
-		return numeradores;
-	}
-
-	public void setNumeradores(List<DocumentoNumero> numeradores) {
-		this.numeradores = numeradores;
+	/**
+	 * @param almacenDAO the almacenDAO to set
+	 */
+	public void setAlmacenDAO(AlmacenDAO almacenDAO) {
+		this.almacenDAO = almacenDAO;
 	}
 }
 
-class NumeradorTableModel extends DefaultTableModel {
+class FrmSucursalTableModel extends DefaultTableModel {
 
 	private static final long serialVersionUID = 1L;
 
 	private boolean editar = false;
 
-	public NumeradorTableModel() {
-		addColumn("Pto. Emisión");
-		addColumn("Serie");
-		addColumn("Número");
+	public FrmSucursalTableModel() {
+		addColumn("Cod. Almacen");
+		addColumn("Descripción");
 	}
 
 	public boolean isCellEditable(int row, int column) {
