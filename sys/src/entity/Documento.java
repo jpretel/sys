@@ -19,6 +19,9 @@ public class Documento implements Serializable {
 	@Column(unique=true, nullable=false, length=3)
 	private String iddocumento;
 
+	@Column(name="cod_sunat", length=4)
+	private String codSunat;
+
 	@Column(length=75)
 	private String descripcion;
 
@@ -35,6 +38,14 @@ public class Documento implements Serializable {
 
 	public void setIddocumento(String iddocumento) {
 		this.iddocumento = iddocumento;
+	}
+
+	public String getCodSunat() {
+		return this.codSunat;
+	}
+
+	public void setCodSunat(String codSunat) {
+		this.codSunat = codSunat;
 	}
 
 	public String getDescripcion() {

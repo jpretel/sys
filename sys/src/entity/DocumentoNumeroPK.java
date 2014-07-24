@@ -12,13 +12,13 @@ public class DocumentoNumeroPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	//@Column(insertable=false, updatable=false, unique=true, nullable=false, length=3)
+	@Column(unique=true, nullable=false, length=3)
 	private String iddocumento;
 
-	//@Column(insertable=false, updatable=false, unique=true, nullable=false, length=3)
+	@Column(unique=true, nullable=false, length=3)
 	private String idptoemision;
 
-	@Column(unique=true, nullable=false, length=4)
+	@Column(nullable=false, length=4, unique = true)
 	private String serie;
 
 	public DocumentoNumeroPK() {
