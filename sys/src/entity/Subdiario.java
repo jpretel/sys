@@ -9,13 +9,16 @@ import javax.persistence.*;
  * 
  */
 @Entity
+@Table(name="subdiario")
 @NamedQuery(name="Subdiario.findAll", query="SELECT s FROM Subdiario s")
 public class Subdiario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(unique=true, nullable=false, length=3)
 	private String idsubdiario;
 
+	@Column(length=75)
 	private String descripcion;
 
 	@Column(name="es_declarable")
