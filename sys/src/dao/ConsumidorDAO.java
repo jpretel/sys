@@ -21,5 +21,12 @@ public class ConsumidorDAO extends AbstractDAO<Consumidor> {
 		q.orderBy(cb.asc(c.get(Consumidor_.jerarquia)));
 		return getEntityManager().createQuery(q).getResultList();
 	}
-
+	
+	public List<Consumidor> borrarByJerarquia() {
+		CriteriaQuery<Consumidor> q = cb.createQuery(Consumidor.class);
+		Root<Consumidor> c = q.from(Consumidor.class);
+		q.select(c);
+		q.orderBy(cb.asc(c.get(Consumidor_.jerarquia)));
+		return getEntityManager().createQuery(q).getResultList();
+	}
 }

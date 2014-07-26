@@ -1,8 +1,9 @@
 package dao;
 
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,6 +12,9 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import core.inicio.ConectionManager;
+import vista.Sys;
 
 public abstract class AbstractDAO<T> {
 	private Class<T> entityClass;
@@ -22,8 +26,18 @@ public abstract class AbstractDAO<T> {
 	protected CriteriaBuilder cb;
 
 	public AbstractDAO(Class<T> entityClass) {
+
+		Map<String, String> persistenceMap = new HashMap<String, String>();
+
+		persistenceMap.put("javax.persistence.jdbc.url",
+				Sys.cfgInicio.getURL(ConectionManager._mysql));
+		persistenceMap.put("javax.persistence.jdbc.user",
+				Sys.cfgInicio.getUsuario());
+		persistenceMap.put("javax.persistence.jdbc.password",
+				Sys.cfgInicio.getClave());
+
 		this.entityClass = entityClass;
-		factory = Persistence.createEntityManagerFactory("sys");
+		factory = Persistence.createEntityManagerFactory("sys", persistenceMap);
 		em = factory.createEntityManager();
 		cb = getEntityManager().getCriteriaBuilder();
 	}
@@ -44,10 +58,10 @@ public abstract class AbstractDAO<T> {
 		getEntityManager().getTransaction().commit();
 	}
 
-	public void crear_editar (T entity){		
-			getEntityManager().getTransaction().begin();
-			getEntityManager().merge(entity);
-			getEntityManager().getTransaction().commit();
+	public void crear_editar(T entity) {
+		getEntityManager().getTransaction().begin();
+		getEntityManager().merge(entity);
+		getEntityManager().getTransaction().commit();
 	}
 
 	public void remove(T entity) {
@@ -57,13 +71,14 @@ public abstract class AbstractDAO<T> {
 	}
 
 	public T find(Object id) {
-		return getEntityManager().find(entityClass, id) ;
+		return getEntityManager().find(entityClass, id);
 	}
 
 	// Lista todos los objetos
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<T> findAll() {
-		CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+		CriteriaQuery cq = getEntityManager().getCriteriaBuilder()
+				.createQuery();
 		cq.select(cq.from(entityClass));
 		return getEntityManager().createQuery(cq).getResultList();
 	}
@@ -71,8 +86,8 @@ public abstract class AbstractDAO<T> {
 	// Lista los objetos por rango de busqueda
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<T> findRange(int[] range) {
-		CriteriaQuery cq = getEntityManager()
-				.getCriteriaBuilder().createQuery();
+		CriteriaQuery cq = getEntityManager().getCriteriaBuilder()
+				.createQuery();
 		cq.select(cq.from(entityClass));
 		Query q = getEntityManager().createQuery(cq);
 		q.setMaxResults(range[1] - range[0]);
@@ -82,18 +97,19 @@ public abstract class AbstractDAO<T> {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int count() {
-		CriteriaQuery cq = getEntityManager()
-				.getCriteriaBuilder().createQuery();
+		CriteriaQuery cq = getEntityManager().getCriteriaBuilder()
+				.createQuery();
 		Root<T> rt = cq.from(entityClass);
 		cq.select(getEntityManager().getCriteriaBuilder().count(rt));
 		Query q = getEntityManager().createQuery(cq);
 		return ((Long) q.getSingleResult()).intValue();
 	}
 
-	public List<T> rangeOfList (List<T> array, int[] range) {
+	public List<T> rangeOfList(List<T> array, int[] range) {
 		List<T> lista = new ArrayList<T>();
-		for(int i = range[0] ; i<range[1] ; i++){
-			if(i>=array.size()) break;
+		for (int i = range[0]; i < range[1]; i++) {
+			if (i >= array.size())
+				break;
 			lista.add(array.get(i));
 		}
 		return lista;
