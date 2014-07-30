@@ -15,7 +15,7 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 	public DefaultTableModel modeloLista = new DefaultTableModel();
 	private AbstractMaestro frmGeneral;
 	private int modo;
-	
+
 	public int getModo() {
 		return modo;
 	}
@@ -37,7 +37,7 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 	}
 
 	public AbstractMaestroLista(String titulo, BarraMaestro barra) {
-		super(titulo, barra);
+		super(titulo);
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 40, 547, 280);
 		getContentPane().add(scrollPane);
@@ -84,22 +84,22 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 			}
 		}
 	}
-	
-	public Object RetornarPk(){
+
+	public Object RetornarPk() {
 		Object id = null;
 		if (tblLista.getSelectedRow() >= 0) {
-			id = modeloLista.getValueAt(
-					tblLista.getSelectedRow(), 0).toString();			
+			id = modeloLista.getValueAt(tblLista.getSelectedRow(), 0)
+					.toString();
 		}
 		return id;
 	}
-	
-	public void nuevo(){
+
+	public void nuevo() {
 		setModo(1);
 		irFormulario();
 	}
-	
-	public void editar(){
+
+	public void editar() {
 		setModo(2);
 		irFormulario();
 	}

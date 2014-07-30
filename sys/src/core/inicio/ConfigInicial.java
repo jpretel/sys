@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import vista.Sys;
+
 
 
 public class ConfigInicial {
@@ -20,7 +22,7 @@ public class ConfigInicial {
 	public static String cfg_usuario;
 	public static String cfg_clave;
 	
-	public static void LlenarConfig() {
+	public static String[] LlenarConfig() {
 		Properties prop = new Properties();
 		InputStream input = null;
 
@@ -37,29 +39,24 @@ public class ConfigInicial {
 
 			if (servidor.equals("") || baseDatos.equals("")
 					|| usuario.equals("") || clave.equals("")) {
-				System.out.println("Error al obtener datos");
+				return null;
 			} else {
-				
+				if (input != null) {
+					try {
+						input.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				usuario = decrypt(usuario);
 				clave = decrypt(clave);
-				cfg_servidor = servidor;
-				cfg_basedatos = baseDatos;
-				cfg_usuario = usuario;
-				cfg_clave = clave;
-				cfg_url = "jdbc:mysql://" + servidor + "/" + baseDatos;
+				return new String[] {servidor, baseDatos, usuario, clave};
 			}
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+			return null;
+		} 
 	}
 
 	public static void CrearConfig() {
@@ -67,8 +64,8 @@ public class ConfigInicial {
 		OutputStream output = null;
 
 		try {
-			String usuario = "toor";
-			String clave = "toor";
+			String usuario = "root";
+			String clave = "root";
 
 			usuario = encrypt(usuario);
 			clave = encrypt(clave);
@@ -93,7 +90,36 @@ public class ConfigInicial {
 
 		}
 	}
+	
+	public static void CrearConfig(SysCfgInicio cfgInicio){
+		Properties prop = new Properties();
+		OutputStream output = null;
 
+		try {
+
+
+			output = new FileOutputStream(Sys.SYS_CONFIG);
+			prop.setProperty("Servidor", cfgInicio.getServidor());
+			prop.setProperty("BaseDatos", cfgInicio.getBase_datos());
+			prop.setProperty("Usuario", encrypt(cfgInicio.getUsuario()));
+			prop.setProperty("Clave", encrypt(cfgInicio.getClave()));
+			prop.store(output, null);
+
+		} catch (IOException io) {
+			io.printStackTrace();
+		} finally {
+			if (output != null) {
+				try {
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+	}
+	
+	
 	public static void main(String[] args) {
 		ConfigInicial.CrearConfig();
 		ConfigInicial.LlenarConfig();

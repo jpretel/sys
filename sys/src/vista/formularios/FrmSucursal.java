@@ -15,7 +15,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-
 import javax.swing.JButton;
 
 import dao.AlmacenDAO;
@@ -44,7 +43,6 @@ public class FrmSucursal extends AbstractMaestro {
 
 	private List<Sucursal> sucursales;
 	private List<Almacen> almacenes;
-
 
 	private SucursalDAO sucursalDAO = new SucursalDAO();
 
@@ -88,7 +86,7 @@ public class FrmSucursal extends AbstractMaestro {
 		btnILinea.setBounds(375, 15, 65, 20);
 		btnILinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				final Object fila[] = { "", ""};
+				final Object fila[] = { "", "" };
 				almacenesTM.addRow(fila);
 			}
 		});
@@ -163,7 +161,7 @@ public class FrmSucursal extends AbstractMaestro {
 
 			id.setIdsucursal(getSucursal().getIdsucursal());
 			id.setIdalmacen(this.almacenesTM.getValueAt(i, 0).toString());
-			
+
 			alm.setId(id);
 			alm.setDescripcion(this.almacenesTM.getValueAt(i, 1).toString());
 			getAlmacenes().add(alm);
@@ -179,10 +177,10 @@ public class FrmSucursal extends AbstractMaestro {
 			txtCodigo.setText(getSucursal().getIdsucursal());
 			txtDescripcion.setText(getSucursal().getDescripcion());
 			setAlmacenes(almacenDAO.getPorSucursal(getSucursal()));
-			
+
 			for (Almacen alm : getAlmacenes()) {
-				almacenesTM.addRow(new Object[] {
-						alm.getId().getIdsucursal(), alm.getDescripcion() });
+				almacenesTM.addRow(new Object[] { alm.getId().getIdsucursal(),
+						alm.getDescripcion() });
 			}
 		} else {
 			txtCodigo.setText("");
@@ -207,7 +205,7 @@ public class FrmSucursal extends AbstractMaestro {
 		model.limpiar();
 		for (Sucursal obj : getSucursales()) {
 			model.addRow(new Object[] { obj.getIdsucursal(),
-					obj.getDescripcion()});
+					obj.getDescripcion() });
 		}
 		if (getSucursales().size() > 0) {
 			setSucursal(getSucursales().get(0));
@@ -250,7 +248,8 @@ public class FrmSucursal extends AbstractMaestro {
 	}
 
 	/**
-	 * @param sucursal the sucursal to set
+	 * @param sucursal
+	 *            the sucursal to set
 	 */
 	public void setSucursal(Sucursal sucursal) {
 		this.sucursal = sucursal;
@@ -264,7 +263,8 @@ public class FrmSucursal extends AbstractMaestro {
 	}
 
 	/**
-	 * @param sucursales the sucursales to set
+	 * @param sucursales
+	 *            the sucursales to set
 	 */
 	public void setSucursales(List<Sucursal> sucursales) {
 		this.sucursales = sucursales;
@@ -278,7 +278,8 @@ public class FrmSucursal extends AbstractMaestro {
 	}
 
 	/**
-	 * @param sucursalDAO the sucursalDAO to set
+	 * @param sucursalDAO
+	 *            the sucursalDAO to set
 	 */
 	public void setSucursalDAO(SucursalDAO sucursalDAO) {
 		this.sucursalDAO = sucursalDAO;
@@ -303,7 +304,7 @@ public class FrmSucursal extends AbstractMaestro {
 	public void setNumeradoresTM(FrmSucursalTableModel numeradoresTM) {
 		this.almacenesTM = numeradoresTM;
 	}
-	
+
 	/**
 	 * @return the almacenes
 	 */
@@ -312,7 +313,8 @@ public class FrmSucursal extends AbstractMaestro {
 	}
 
 	/**
-	 * @param almacenes the almacenes to set
+	 * @param almacenes
+	 *            the almacenes to set
 	 */
 	public void setAlmacenes(List<Almacen> almacenes) {
 		this.almacenes = almacenes;
@@ -326,12 +328,24 @@ public class FrmSucursal extends AbstractMaestro {
 	}
 
 	/**
-	 * @param almacenDAO the almacenDAO to set
+	 * @param almacenDAO
+	 *            the almacenDAO to set
 	 */
 	public void setAlmacenDAO(AlmacenDAO almacenDAO) {
 		this.almacenDAO = almacenDAO;
 	}
+
+	@Override
+	public void eliminar() {
+		if (getSucursal() != null) {
+			getSucursalDAO().remove(getSucursal());
+			getAlmacenDAO().borrarPorSucursal(getSucursal());
+		}
+
+	}
 }
+
+
 
 class FrmSucursalTableModel extends DefaultTableModel {
 

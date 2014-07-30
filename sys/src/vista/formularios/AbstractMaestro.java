@@ -61,10 +61,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract void grabar();
 	
 
-	public void eliminar() {
-		setEstado(VISTA);
-		getBarra().enVista();
-	}
+	public abstract void eliminar();
 	
 	public abstract void llenar_datos();
 	public abstract void llenar_lista();
@@ -104,6 +101,16 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		getBarra().enEdicion();
 		llenar_datos();
 		vista_edicion();
+	}
+	
+	public void DoEliminar() {
+		eliminar();
+		setEstado(VISTA);
+		getBarra().enVista();
+		vista_noedicion();
+		llenar_tablas();
+		llenar_lista();
+		llenar_datos();
 	}
 	
 	public abstract void llenarDesdeVista();

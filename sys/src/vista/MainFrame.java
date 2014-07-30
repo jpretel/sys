@@ -6,7 +6,6 @@ import static org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority.LOW;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.KeyEventDispatcher;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -17,15 +16,11 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
-import org.jvnet.substance.skin.OfficeSilver2007Skin;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton.CommandButtonKind;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
@@ -41,41 +36,32 @@ import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 
 import controlador.ControladorOpciones;
-import dao.ModuloDAO;
+import dao.SysModuloDAO;
 import core.entity.GrupoMenu;
-import entity.Modulo;
+import entity.SysGrupo;
+import entity.SysModulo;
+import entity.SysOpcion;
+import entity.SysTitulo;
 import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
-import core.inicio.ConfigInicial;
-import vista.barras.BarraMaestro;
-import vista.formularios.FrmListaMarcas;
 import vista.utilitarios.MenuController;
 
-import java.awt.event.KeyEvent;
-
 public class MainFrame extends JRibbonFrame {
-	static BarraMaestro barraMaestro;
 	static JDesktopPane desktopPane;
 	static ControladorOpciones cOpciones;
-	
-	static ModuloDAO moduloDAO = new ModuloDAO();
-	static JFrame marco = new JFrame("Login: Sistema");
-	
+
+	static SysModuloDAO moduloDAO = new SysModuloDAO();
+
 	static {
 		cOpciones = new ControladorOpciones();
 	}
-	
+
 	public MainFrame() {
-		marco.setVisible(false);
 		desktopPane = new JDesktopPane();
 
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
-		barraMaestro = new BarraMaestro();
-		barraMaestro.setVisible(false);
-		
-		cOpciones.setBarraMaestro(barraMaestro);
+
 		cOpciones.setDesktopPane(getDesktopPane());
-		getContentPane().add(barraMaestro, BorderLayout.WEST);
 
 		setTitle("BRIGHT GLOBAL CHANGE ERP");
 
@@ -88,19 +74,18 @@ public class MainFrame extends JRibbonFrame {
 		tlbPie.setFloatable(false);
 		getContentPane().add(tlbPie, BorderLayout.SOUTH);
 
-		JLabel label = new JLabel("Cod Usuario");
+		JLabel label = new JLabel(Sys.usuario.getIdusuario());
 		tlbPie.add(label);
 
-		JSeparator separator = new JSeparator();
-		tlbPie.add(separator);
+		tlbPie.add(new JSeparator());
 
 		// Vtr Fecha Sistema
 		Date fecha = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		JLabel lblFecha = new JLabel();
 		lblFecha.setText(sdf.format(fecha));
-		// lblFecha.setAlignment(JLabel.RIGHT);
 		tlbPie.add(lblFecha);
+
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
 
 		pack();
@@ -155,8 +140,9 @@ public class MainFrame extends JRibbonFrame {
 						} else {
 							band.addCommandButton(button, LOW);
 						}
-						
-						button.addActionListener(cOpciones.returnAction(opcion.getOpcion()));
+
+						button.addActionListener(cOpciones.returnAction(opcion
+								.getOpcion()));
 					}
 
 					band.setResizePolicies((List) Arrays.asList(
@@ -191,16 +177,22 @@ public class MainFrame extends JRibbonFrame {
 				getResizableIconFromResource("/main/resources/salir.png"),
 				"Modulo", null, CommandButtonKind.POPUP_ONLY);
 
-		List<Modulo> modulos = moduloDAO.findAll();
+		List<SysModulo> modulos = moduloDAO.findAll();
 		RibbonApplicationMenuEntrySecondary[] modulos_vec = new RibbonApplicationMenuEntrySecondary[modulos
 				.size()];
+
 		int i = -1;
-		for (final Modulo m : modulos) {
+		for (final SysModulo m : modulos) {
 			i++;
-			System.out.println("Enlazando y creando botones..." + m.getDescripcion());
 			RibbonApplicationMenuEntrySecondary secondary = new RibbonApplicationMenuEntrySecondary(
 					getResizableIconFromResource16x16("/main/resources/salir.png"),
-					m.getDescripcion(), cOpciones.returnAction(m.getOpcion()),CommandButtonKind.ACTION_ONLY);
+					m.getDescripcion(), new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							CreaRibbonMenu(MenuController
+									.getTitulosPorModulo(m));
+						}
+					}, CommandButtonKind.ACTION_ONLY);
 			modulos_vec[i] = secondary;
 		}
 
@@ -212,30 +204,37 @@ public class MainFrame extends JRibbonFrame {
 
 		RibbonApplicationMenuEntryPrimary nn = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
-				"CRUD Ususarios", cOpciones.returnAction("FrmConsultarRUC"), CommandButtonKind.ACTION_ONLY);
+				"DashBoard", new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						CreaRibbonMenu();
+					}
+				}, CommandButtonKind.ACTION_ONLY);
 
 		ribbon.addMenuEntry(nn);
-		
-		for(int mas=0; mas<2;mas++){
-			
+
+		for (int mas = 0; mas < 2; mas++) {
+
 			nn = new RibbonApplicationMenuEntryPrimary(
-			getResizableIconFromResource("/main/resources/salir.png"), "Desactivado",
-			null, CommandButtonKind.ACTION_ONLY);
+					getResizableIconFromResource("/main/resources/salir.png"),
+					"Desactivado", null, CommandButtonKind.ACTION_ONLY);
 			nn.setEnabled(false);
 
 			ribbon.addMenuEntry(nn);
-			
+
 		}
-		for(int mas=0; mas<6;mas++){
-			
+		for (int mas = 0; mas < 6; mas++) {
+
 			nn = new RibbonApplicationMenuEntryPrimary(
-			getResizableIconFromResource("/main/resources/salir.png"), "Productos Lista",
-			cOpciones.returnAction("FrmListaProductos"), CommandButtonKind.ACTION_ONLY);
+					getResizableIconFromResource("/main/resources/salir.png"),
+					"Productos Lista",
+					cOpciones.returnAction("FrmListaProductos"),
+					CommandButtonKind.ACTION_ONLY);
 
 			ribbon.addMenuEntry(nn);
-			
+
 		}
-		
+
 		RibbonApplicationMenuEntryFooter footer = new RibbonApplicationMenuEntryFooter(
 				getResizableIconFromResource("/main/resources/salir.png"),
 				"Salir", null);
@@ -255,19 +254,77 @@ public class MainFrame extends JRibbonFrame {
 				.getImage());
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	public void CreaRibbonMenu(List<SysTitulo> titulos) {
+		getRibbon().removeAllTasks();
+		for (SysTitulo titulo : titulos) {
 
-	
-	ActionListener accion = new ActionListener() {
+			if (titulo.getSysGrupos() == null) {
+				titulo.setSysGrupos(new ArrayList<SysGrupo>());
+			}
 
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			FrmListaMarcas frmConsumidor = new FrmListaMarcas("Probando..",
-					barraMaestro);
-			getDesktopPane().add(frmConsumidor);
+			List<JRibbonBand> bandas_aux = new ArrayList<JRibbonBand>();
+			for (SysGrupo grupo : titulo.getSysGrupos()) {
 
+				if (grupo.getSysOpcions() == null) {
+					grupo.setSysOpcions(new ArrayList<SysOpcion>());
+				}
+
+				boolean dibujaGrupo = (grupo.getSysOpcions().size() > 0);
+
+				// System.out.println(dibujaGrupo);
+				JRibbonBand band = new JRibbonBand(
+						grupo.getDescripcion(),
+						getResizableIconFromResource("/main/resources/iconos/nuevo.png"));
+
+				if (dibujaGrupo) {
+
+					bandas_aux.add(band);
+
+					for (SysOpcion opcion : grupo.getSysOpcions()) {
+
+						opcion.setImagen("/main/resources/iconos/nuevo.png");
+
+						JCommandButton button = new JCommandButton(
+								opcion.getDescripcion(),
+								getResizableIconFromResource(opcion.getImagen()));
+
+						if (opcion.getPrioridad() == 1) {
+							band.addCommandButton(button, TOP);
+						} else if (opcion.getPrioridad() == 2) {
+							band.addCommandButton(button, MEDIUM);
+						} else {
+							band.addCommandButton(button, LOW);
+						}
+
+						button.addActionListener(cOpciones.returnAction(opcion
+								.getOpcion()));
+					}
+
+					band.setResizePolicies((List) Arrays.asList(
+							new CoreRibbonResizePolicies.Mid2Mid(band
+									.getControlPanel()),
+							new CoreRibbonResizePolicies.Mid2Low(band
+									.getControlPanel()),
+							new IconRibbonBandResizePolicy(band
+									.getControlPanel())));
+				}
+			}
+
+			if (bandas_aux.size() > 0) {
+				JRibbonBand[] bandas = new JRibbonBand[bandas_aux.size()];
+				for (int i = 0; i < bandas_aux.size(); i++) {
+					// System.out.println(bandas_aux.size());
+					bandas[i] = bandas_aux.get(i);
+				}
+
+				RibbonTask task = new RibbonTask(titulo.getDescripcion(),
+						bandas);
+
+				this.getRibbon().addTask(task);
+			}
 		}
-	};
+	}
 
 	/** Serial version unique id. */
 	private static final long serialVersionUID = 1L;
@@ -282,42 +339,13 @@ public class MainFrame extends JRibbonFrame {
 		return ImageWrapperResizableIcon.getIcon(
 				MainFrame.class.getResource(resource), new Dimension(10, 10));
 	}
-
-	public static void main(String[] args) {
-
-		// ConfigInicial.CrearConfig();
-		ConfigInicial.LlenarConfig();
-
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-
-				JFrame.setDefaultLookAndFeelDecorated(true);
-				JDialog.setDefaultLookAndFeelDecorated(true);
-
-				SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
-				new MainFrame();				
-				/*		
-		        marco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		        marco.getContentPane().add(new login(), BorderLayout.CENTER);
-		        marco.pack();
-		        marco.setLocationRelativeTo(null);
-		        marco.setVisible(true);
-					*/
-			}
-		});
-	}
 }
 
-class MyDispatcher2 implements KeyEventDispatcher {
-	@Override
-	public boolean dispatchKeyEvent(KeyEvent e) {
-		if (e.getID() == KeyEvent.KEY_PRESSED) {
-			System.out.println("tester");
-		} else if (e.getID() == KeyEvent.KEY_RELEASED) {
-			System.out.println("2test2");
-		} else if (e.getID() == KeyEvent.KEY_TYPED) {
-			System.out.println("3test3");
-		}
-		return false;
-	}
-}
+/*
+ * class MyDispatcher2 implements KeyEventDispatcher {
+ * 
+ * @Override public boolean dispatchKeyEvent(KeyEvent e) { if (e.getID() ==
+ * KeyEvent.KEY_PRESSED) { System.out.println("tester"); } else if (e.getID() ==
+ * KeyEvent.KEY_RELEASED) { System.out.println("2test2"); } else if (e.getID()
+ * == KeyEvent.KEY_TYPED) { System.out.println("3test3"); } return false; } }
+ */

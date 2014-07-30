@@ -74,11 +74,13 @@ public abstract class AbstractDAO<T> {
 		return getEntityManager().find(entityClass, id);
 	}
 
-	// Lista todos los objetos
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	/**
+	 * 
+	 * @return Todos los registros de una tabla SELECT * FROM 
+	 */
 	public List<T> findAll() {
-		CriteriaQuery cq = getEntityManager().getCriteriaBuilder()
-				.createQuery();
+		CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder()
+				.createQuery(entityClass);
 		cq.select(cq.from(entityClass));
 		return getEntityManager().createQuery(cq).getResultList();
 	}
@@ -94,15 +96,16 @@ public abstract class AbstractDAO<T> {
 		q.setFirstResult(range[0]);
 		return q.getResultList();
 	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	/**
+	 * 
+	 * @return El total de registros de una tabla SELECT COUNT(*) FROM
+	 */
 	public int count() {
-		CriteriaQuery cq = getEntityManager().getCriteriaBuilder()
-				.createQuery();
+		CriteriaQuery<Long> cq = getEntityManager().getCriteriaBuilder()
+				.createQuery(Long.class);
 		Root<T> rt = cq.from(entityClass);
 		cq.select(getEntityManager().getCriteriaBuilder().count(rt));
-		Query q = getEntityManager().createQuery(cq);
-		return ((Long) q.getSingleResult()).intValue();
+		return getEntityManager().createQuery(cq).getSingleResult().intValue();
 	}
 
 	public List<T> rangeOfList(List<T> array, int[] range) {

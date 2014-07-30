@@ -14,19 +14,18 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import dao.DocumentoDAO;
-import dao.DocumentoNumeroDAO;
-import entity.Documento;
-import entity.DocumentoNumero;
-import entity.DocumentoNumeroPK;
-
 import javax.swing.JButton;
+
+import dao.SysModuloDAO;
+import dao.SysTituloDAO;
+import entity.SysModulo;
+import entity.SysTitulo;
+import entity.SysTituloPK;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FrmDocumento extends AbstractMaestro {
+public class FrmSysModulo extends AbstractMaestro {
 
 	/**
 	 * 
@@ -35,23 +34,24 @@ public class FrmDocumento extends AbstractMaestro {
 
 	private JTable tblLista;
 
-	private JTable tblnumeradores;
+	private JTable tblTitulo;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
-	private Documento documento;
+	
+	private SysModulo sysModulo;
 
-	private List<Documento> documentos;
-	private List<DocumentoNumero> numeradores;
+	private List<SysModulo> sysModulos;
+	private List<SysTitulo> sysTitulos;
 
-	private DocumentoDAO documentoDAO = new DocumentoDAO();
+	private SysModuloDAO sysModuloDAO = new SysModuloDAO();
 
-	private DocumentoNumeroDAO docnumDAO = new DocumentoNumeroDAO();
+	private SysTituloDAO sysTituloDAO = new SysTituloDAO();
 
 	private JButton btnILinea;
 	private JButton btnBLinea;
 
-	public FrmDocumento() {
-		super("Documentos");
+	public FrmSysModulo() {
+		super("Sucursal / Almacen");
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 199, 273);
@@ -63,15 +63,20 @@ public class FrmDocumento extends AbstractMaestro {
 		JScrollPane scrollPaneNum = new JScrollPane();
 		scrollPaneNum.setBounds(215, 65, 314, 219);
 
-		tblnumeradores = new JTable(new DSGTableModel(new String[] {"Pto. Emisión", "Serie", "Nùmero"}) {
+		tblTitulo = new JTable(new DSGTableModel(new String [] {"Cod. Titulo", "Descripcion"}) {
+			
+			/**
+			 * 
+			 */
 			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean evaluaEdicion(int row, int column) {
 				return getEditar();
 			}
 		});
-		scrollPaneNum.setViewportView(tblnumeradores);
-		tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPaneNum.setViewportView(tblTitulo);
+		tblTitulo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JLabel lblCdigo = new JLabel("Cdigo");
 		lblCdigo.setBounds(213, 18, 66, 14);
@@ -91,8 +96,8 @@ public class FrmDocumento extends AbstractMaestro {
 		btnILinea.setBounds(375, 15, 65, 20);
 		btnILinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				final Object fila[] = { "", "", "" };
-				getNumeradorTM().addRow(fila);
+				final Object fila[] = { "", "" };
+				getTituloTM().addRow(fila);
 			}
 		});
 
@@ -100,9 +105,9 @@ public class FrmDocumento extends AbstractMaestro {
 		btnBLinea.setBounds(446, 15, 83, 20);
 		btnBLinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int ind = tblnumeradores.getSelectedRow();
+				int ind = tblTitulo.getSelectedRow();
 				if (ind >= 0)
-					getNumeradorTM().removeRow(ind);
+					getTituloTM().removeRow(ind);
 			}
 		});
 		pnlContenido.setLayout(null);
@@ -120,9 +125,9 @@ public class FrmDocumento extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent e) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setDocumento(getDocumentos().get(selectedRow));
+							setSysModulo(getSysModulos().get(selectedRow));
 						else
-							setDocumento(null);
+							setSysModulo(null);
 						llenar_datos();
 					}
 				});
@@ -131,7 +136,7 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public void nuevo() {
-		setDocumento(new Documento());
+		setSysModulo(new SysModulo());
 	}
 
 	@Override
@@ -146,48 +151,46 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		documentoDAO.crear_editar(getDocumento());
-		docnumDAO.borrarPorDocumento(getDocumento());
-		for (DocumentoNumero num : getNumeradores()) {
-			docnumDAO.create(num);
+		getSysModuloDAO().crear_editar(getSysModulo());
+		getSysTituloDAO().borrarPorModulo(getSysModulo());
+		for (SysTitulo obj : getSysTitulos()) {
+			getSysTituloDAO().create(obj);
 		}
 	}
 
 	@Override
 	public void llenarDesdeVista() {
-		getDocumento().setIddocumento(this.txtCodigo.getText().trim());
-		getDocumento().setDescripcion(this.txtDescripcion.getText().trim());
+		getSysModulo().setIdmodulo(this.txtCodigo.getText().trim());
+		getSysModulo().setDescripcion(this.txtDescripcion.getText().trim());
 
-		setNumeradores(new ArrayList<DocumentoNumero>());
+		setSysTitulos(new ArrayList<SysTitulo>());
 
-		for (int i = 0; i < getNumeradorTM().getRowCount(); i++) {
-			DocumentoNumeroPK id = new DocumentoNumeroPK();
-			DocumentoNumero num = new DocumentoNumero();
+		for (int i = 0; i < getTituloTM().getRowCount(); i++) {
+			SysTituloPK id = new SysTituloPK();
+			SysTitulo obj = new SysTitulo();
 
-			id.setIddocumento(getDocumento().getIddocumento());
-			id.setIdptoemision(getNumeradorTM().getValueAt(i, 0).toString());
-			id.setSerie(getNumeradorTM().getValueAt(i, 1).toString());
+			id.setIdmodulo(getSysModulo().getIdmodulo());
+			id.setIdtitulo(getTituloTM().getValueAt(i, 0).toString());
 
-			num.setId(id);
-			num.setNumero(getNumeradorTM().getValueAt(i, 2).toString());
-			getNumeradores().add(num);
+			obj.setId(id);
+			obj.setDescripcion(getTituloTM().getValueAt(i, 1).toString());
+			getSysTitulos().add(obj);
 		}
 
 	}
 
 	@Override
 	public void llenar_datos() {
-		getNumeradorTM().limpiar();
-		setNumeradores(new ArrayList<DocumentoNumero>());
-		if (getDocumento() != null) {
-			txtCodigo.setText(getDocumento().getIddocumento());
-			txtDescripcion.setText(getDocumento().getDescripcion());
-			setNumeradores(docnumDAO.getPorDocumento(getDocumento()));
+		getTituloTM().limpiar();
+		setSysTitulos(new ArrayList<SysTitulo>());
+		if (getSysModulo() != null) {
+			txtCodigo.setText(getSysModulo().getIdmodulo());
+			txtDescripcion.setText(getSysModulo().getDescripcion());
+			setSysTitulos(getSysTituloDAO().getPorModulo(getSysModulo()));
 
-			for (DocumentoNumero num : getNumeradores()) {
-				getNumeradorTM().addRow(new Object[] {
-						num.getId().getIdptoemision(), num.getId().getSerie(),
-						num.getNumero() });
+			for (SysTitulo obj : getSysTitulos()) {
+				getTituloTM().addRow(new Object[] { obj.getId().getIdtitulo(),
+						obj.getDescripcion() });
 			}
 		} else {
 			txtCodigo.setText("");
@@ -210,19 +213,19 @@ public class FrmDocumento extends AbstractMaestro {
 
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
-		for (Documento cuenta : getDocumentos()) {
-			model.addRow(new Object[] { cuenta.getIddocumento(),
-					cuenta.getDescripcion() });
+		for (SysModulo obj : getSysModulos()) {
+			model.addRow(new Object[] { obj.getIdmodulo(),
+					obj.getDescripcion() });
 		}
-		if (getDocumentos().size() > 0) {
-			setDocumento(getDocumentos().get(0));
+		if (getSysModulos().size() > 0) {
+			setSysModulo(getSysModulos().get(0));
 			tblLista.setRowSelectionInterval(0, 0);
 		}
 	}
 
 	@Override
 	public void llenar_tablas() {
-		setDocumentos(getDocumentoDAO().findAll());
+		setSysModulos(getSysModuloDAO().findAll());
 	}
 
 	@Override
@@ -232,7 +235,7 @@ public class FrmDocumento extends AbstractMaestro {
 		else
 			txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(true);
-		getNumeradorTM().setEditar(true);
+		getTituloTM().setEditar(true);
 		btnILinea.setEnabled(true);
 		btnBLinea.setEnabled(true);
 
@@ -242,71 +245,73 @@ public class FrmDocumento extends AbstractMaestro {
 	public void vista_noedicion() {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
-		getNumeradorTM().setEditar(false);
+		getTituloTM().setEditar(false);
 		btnILinea.setEnabled(false);
 		btnBLinea.setEnabled(false);
 	}
 
-	public Documento getDocumento() {
-		return documento;
-	}
+	@Override
+	public void eliminar() {
+		if (getSysModulo() != null) {
+			//getAlmacenDAO().borrarPorSucursal(getSucursal());
+			getSysModuloDAO().remove(getSysModulo());
+		}
 
-	public void setDocumento(Documento documento) {
-		this.documento = documento;
 	}
-
-	public List<Documento> getDocumentos() {
-		return documentos;
-	}
-
-	public void setDocumentos(List<Documento> documentos) {
-		this.documentos = documentos;
-	}
-
-	public DocumentoDAO getDocumentoDAO() {
-		return documentoDAO;
-	}
-
-	public void setDocumentoDAO(DocumentoDAO documentoDAO) {
-		this.documentoDAO = documentoDAO;
+	
+	private DSGTableModel getTituloTM(){
+		return (DSGTableModel) tblTitulo.getModel();
 	}
 
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
-	public DocumentoNumeroDAO getDocnumDAO() {
-		return docnumDAO;
+	public SysModulo getSysModulo() {
+		return sysModulo;
 	}
 
-	public void setDocnumDAO(DocumentoNumeroDAO docnumDAO) {
-		this.docnumDAO = docnumDAO;
+	public void setSysModulo(SysModulo sysModulo) {
+		this.sysModulo = sysModulo;
 	}
 
-	public List<DocumentoNumero> getNumeradores() {
-		return numeradores;
+	public List<SysModulo> getSysModulos() {
+		return sysModulos;
 	}
 
-	public void setNumeradores(List<DocumentoNumero> numeradores) {
-		this.numeradores = numeradores;
+	public void setSysModulos(List<SysModulo> sysModulos) {
+		this.sysModulos = sysModulos;
 	}
-	
-	public DSGTableModel getNumeradorTM(){
-		return ((DSGTableModel) tblnumeradores.getModel());
+
+	public SysModuloDAO getSysModuloDAO() {
+		return sysModuloDAO;
 	}
-	@Override
-	public void eliminar() {
-		if (getDocumento() != null) {
-			getDocnumDAO().borrarPorDocumento(getDocumento());
-			getDocumentoDAO().remove(getDocumento());
-		}
+
+	public void setSysModuloDAO(SysModuloDAO sysModuloDAO) {
+		this.sysModuloDAO = sysModuloDAO;
+	}
+
+	public SysTituloDAO getSysTituloDAO() {
+		return sysTituloDAO;
+	}
+
+	public void setSysTituloDAO(SysTituloDAO sysTituloDAO) {
+		this.sysTituloDAO = sysTituloDAO;
+	}
+
+	public List<SysTitulo> getSysTitulos() {
+		return sysTitulos;
+	}
+
+	public void setSysTitulos(List<SysTitulo> sysTitulos) {
+		this.sysTitulos = sysTitulos;
 	}
 }
