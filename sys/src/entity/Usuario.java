@@ -15,31 +15,31 @@ public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
-	@Column(unique=true, nullable=false)
-	private int id;
+	@Column(unique=true, nullable=false, length=50)
+	private String idusuario;
 
-	@Column(length=30)
+	@Column(length=200)
 	private String clave;
 
-	@Column(length=60)
-	private String encClave;
+	private int estado;
 
-	@Column(length=60)
-	private String encUsu;
+	@Column(length=250)
+	private String nombres;
 
-	@Column(length=25)
-	private String usuario;
+	//bi-directional many-to-one association to GrupoUsuario
+	@ManyToOne
+	@JoinColumn(name="idgrupo_usuario")
+	private GrupoUsuario grupoUsuario;
 
 	public Usuario() {
 	}
 
-	public int getId() {
-		return this.id;
+	public String getIdusuario() {
+		return this.idusuario;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setIdusuario(String idusuario) {
+		this.idusuario = idusuario;
 	}
 
 	public String getClave() {
@@ -50,28 +50,28 @@ public class Usuario implements Serializable {
 		this.clave = clave;
 	}
 
-	public String getEncClave() {
-		return this.encClave;
+	public int getEstado() {
+		return this.estado;
 	}
 
-	public void setEncClave(String encClave) {
-		this.encClave = encClave;
+	public void setEstado(int estado) {
+		this.estado = estado;
 	}
 
-	public String getEncUsu() {
-		return this.encUsu;
+	public String getNombres() {
+		return this.nombres;
 	}
 
-	public void setEncUsu(String encUsu) {
-		this.encUsu = encUsu;
+	public void setNombres(String nombres) {
+		this.nombres = nombres;
 	}
 
-	public String getUsuario() {
-		return this.usuario;
+	public GrupoUsuario getGrupoUsuario() {
+		return this.grupoUsuario;
 	}
 
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setGrupoUsuario(GrupoUsuario grupoUsuario) {
+		this.grupoUsuario = grupoUsuario;
 	}
 
 }
