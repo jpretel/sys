@@ -1,25 +1,19 @@
 package vista.formularios;
 import java.util.List;
 
-import dao.ProductoDAO;
-import entity.Grupo;
-import entity.Producto;
-import entity.Subgrupo;
-import vista.barras.BarraMaestro;
+import dao.ClieprovDAO;
+import entity.Clieprov;
 
-import java.awt.Component;
-
-public class FrmListaProductos extends AbstractMaestroLista {
+public class FrmListaClieProv extends AbstractMaestroLista {
 	private static final long serialVersionUID = 1L;
 	
-	private ProductoDAO pdao = new ProductoDAO();
+	private ClieprovDAO cdao = new ClieprovDAO();
 	private Object[] obj;
-	private List<Producto> prodList = pdao.findAllbyProducto();
-	private int nFilasP = prodList.size();
-	private Producto producto;
-	private Subgrupo sg;
-	private Grupo g;
-	public FrmListaProductos(String titulo) {
+	private List<Clieprov> clieprovL = cdao.findAll();
+	private int nFilasP = clieprovL.size();
+	private Clieprov clieprov;
+
+	public FrmListaClieProv(String titulo) {
 		super("Lista de Productos");
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
@@ -30,24 +24,19 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	@Override
 	public void irFormulario() {		
 		if (RetornarPk() instanceof Object){
-			producto = pdao.find(RetornarPk());
+			clieprov = cdao.find(RetornarPk());
 		}
-		FrmProductos frmproductos = new FrmProductos("Edicion de Productos");
-		super.init(frmproductos, getModo(), producto);
+		FrmClieprov frmclieprov = new FrmClieprov("Edicion de Clientes y Proveedores");
+		super.init(frmclieprov, getModo(), clieprov);
 	}
 
 	@Override
 	public void llenar_lista() {
 		for (int i = 0; i < nFilasP; i++) {
-			producto = new Producto();
-			sg = new Subgrupo();
-			g = new Grupo();
-			producto = (Producto) prodList.get(i);
-			sg = producto.getSubgrupo();
-			g = sg.getGrupo();
-			obj = new Object[] {producto.getIdproductos(),
-					producto.getDescripcion(), g.getDescripcion(),
-					sg.getDescripcion() };
+			clieprov = new Clieprov();
+			obj = new Object[] {clieprov.getIdclieprov(),
+					clieprov.getRazonSocial(),clieprov.getRuc(),
+					clieprov.getDireccion() };
 			modeloLista.addRow(obj);
 		}
 	}

@@ -63,7 +63,8 @@ public abstract class AbstractCntBuscar extends JPanel {
 					if (getSeleccionado() instanceof Object) {
 						Obj obj = (Obj) getSeleccionado();
 						txtCodigo.setText(obj.getCodigo());
-						txtDescripcion.setText(obj.getDescripcion());						
+						txtDescripcion.setText(obj.getDescripcion());
+						
 					}
 				}
 			}
@@ -74,7 +75,7 @@ public abstract class AbstractCntBuscar extends JPanel {
 		
 		txtDescripcion = new JTextField();		
 		txtDescripcion.setEnabled(false);
-		txtDescripcion.setColumns(20);
+		txtDescripcion.setColumns(15);
 		add(txtDescripcion);
 		
 		btnBuscar = new JButton("");	

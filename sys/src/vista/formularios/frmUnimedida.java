@@ -160,4 +160,28 @@ public class frmUnimedida extends AbstractMaestro {
 		this.llenar_datos();
 		this.vista_noedicion();	
 	}
+
+	@Override
+	public void nuevo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminar() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void llenarDesdeVista() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isValidaVista() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
