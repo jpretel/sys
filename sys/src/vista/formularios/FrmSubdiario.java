@@ -19,6 +19,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import dao.SubdiarioDAO;
 import entity.Subdiario;
+import javax.swing.JCheckBox;
 
 public class FrmSubdiario extends AbstractMaestro {
 
@@ -32,9 +33,9 @@ public class FrmSubdiario extends AbstractMaestro {
 	private JTable tblLista;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
-
+	private JCheckBox chkEsDeclarable;
 	public FrmSubdiario() {
-		super("Sub diarios");
+		super("SubDiarios");
 
 		getBarra().setFormMaestro(this);
 
@@ -58,98 +59,53 @@ public class FrmSubdiario extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
+		
+		chkEsDeclarable = new JCheckBox("Es declarable");
 
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(scrollPane,
-												GroupLayout.DEFAULT_SIZE, 226,
-												Short.MAX_VALUE)
-										.addPreferredGap(
-												ComponentPlacement.UNRELATED)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(lblCdigo)
-														.addComponent(
-																lblDescripcin))
-										.addGap(5)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(
-																txtDescripcion,
-																GroupLayout.DEFAULT_SIZE,
-																142,
-																Short.MAX_VALUE)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				txtCodigo,
-																				GroupLayout.DEFAULT_SIZE,
-																				98,
-																				Short.MAX_VALUE)
-																		.addGap(44)))
-										.addContainerGap()));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(26)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								lblCdigo)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addComponent(
-																												txtCodigo,
-																												GroupLayout.PREFERRED_SIZE,
-																												GroupLayout.DEFAULT_SIZE,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addPreferredGap(
-																												ComponentPlacement.RELATED)
-																										.addGroup(
-																												groupLayout
-																														.createParallelGroup(
-																																Alignment.BASELINE)
-																														.addComponent(
-																																txtDescripcion,
-																																GroupLayout.PREFERRED_SIZE,
-																																22,
-																																GroupLayout.PREFERRED_SIZE)
-																														.addComponent(
-																																lblDescripcin)))))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				scrollPane,
-																				GroupLayout.DEFAULT_SIZE,
-																				370,
-																				Short.MAX_VALUE)))
-										.addContainerGap()));
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCdigo)
+								.addComponent(lblDescripcin))
+							.addGap(5)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(txtCodigo, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+									.addGap(44))))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(chkEsDeclarable, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGap(153)))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(26)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCdigo)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblDescripcin))))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(chkEsDeclarable))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
 		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -186,12 +142,14 @@ public class FrmSubdiario extends AbstractMaestro {
 	public void llenarDesdeVista() {
 		getSubdiario().setIdsubdiario(txtCodigo.getText());
 		getSubdiario().setDescripcion(txtDescripcion.getText());
+		getSubdiario().setEsDeclarable(chkEsDeclarable.isSelected()? 1 : 0);
 	};
 
 	@Override
 	public void eliminar() {
-		setEstado(VISTA);
-		vista_noedicion();
+		if (getSubdiario()!= null) {
+			getSubdiarioDAO().remove(getSubdiario());
+		}
 	}
 
 	@Override
@@ -199,9 +157,11 @@ public class FrmSubdiario extends AbstractMaestro {
 		if (getSubdiario() != null) {
 			txtCodigo.setText(getSubdiario().getIdsubdiario());
 			txtDescripcion.setText(getSubdiario().getDescripcion());
+			chkEsDeclarable.setSelected(getSubdiario().getEsDeclarable() == 1);
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
+			chkEsDeclarable.setSelected(true);
 		}
 	}
 
@@ -230,6 +190,7 @@ public class FrmSubdiario extends AbstractMaestro {
 		if (getEstado().equals(NUEVO))
 			txtCodigo.setEditable(true);
 		txtDescripcion.setEditable(true);
+		chkEsDeclarable.setEnabled(true);
 		tblLista.setEnabled(false);
 	}
 
@@ -237,6 +198,7 @@ public class FrmSubdiario extends AbstractMaestro {
 	public void vista_noedicion() {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
+		chkEsDeclarable.setEnabled(false);
 		tblLista.setEnabled(true);
 	}
 
@@ -284,5 +246,4 @@ public class FrmSubdiario extends AbstractMaestro {
 	public void setSubdiarios(List<Subdiario> subdiarios) {
 		this.subdiarios = subdiarios;
 	}
-
 }
