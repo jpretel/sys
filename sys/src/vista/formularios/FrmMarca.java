@@ -184,4 +184,10 @@ public class FrmMarca extends AbstractMaestro {
 		return true;
 	}
 
+	@Override
+	public void eliminar() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -1,6 +1,4 @@
 package vista.formularios;
-
-import vista.barras.BarraMaestro;
 import vista.contenedores.cntGrupo;
 import vista.contenedores.cntMarca;
 import vista.contenedores.cntMedida;
@@ -21,10 +19,7 @@ import entity.Producto;
 import entity.Subgrupo;
 import entity.SubgrupoPK;
 import entity.Unimedida;
-
-import java.beans.PropertyVetoException;
 import java.util.List;
-
 import javax.swing.JTabbedPane;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -36,6 +31,8 @@ import controlador.VariablesGlobales;
 import java.awt.Window;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 public class FrmProductos extends AbstractMaestro {
 	/**
@@ -70,9 +67,8 @@ public class FrmProductos extends AbstractMaestro {
 	protected ProductoDAO pdao = new ProductoDAO();
 	private JTextField txtnomcorto;
 
-	public FrmProductos(String titulo, BarraMaestro barra) {
-		super(titulo, barra);
-
+	public FrmProductos(String titulo) {
+		super(titulo);
 		JTabbedPane tabPanel = new JTabbedPane(JTabbedPane.TOP);
 
 		JPanel panel_1 = new JPanel();
@@ -105,7 +101,7 @@ public class FrmProductos extends AbstractMaestro {
 				}
 			}
 		});
-		cntgrupo.setBounds(149, 10, 261, 25);
+		cntgrupo.setBounds(149, 10, 290, 25);
 		panel_1.add(cntgrupo);
 
 		JLabel lblSubgrupoDeProductos = new JLabel("SubFamilia de Productos");
@@ -133,7 +129,7 @@ public class FrmProductos extends AbstractMaestro {
 				}
 			}
 		});
-		cntSubGrupo.setBounds(149, 40, 261, 25);
+		cntSubGrupo.setBounds(149, 40, 290, 25);
 		panel_1.add(cntSubGrupo);
 
 		JLabel lblNewLabel = new JLabel("Codigo");
@@ -154,7 +150,7 @@ public class FrmProductos extends AbstractMaestro {
 		txtCodigo.setColumns(10);
 
 		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(149, 90, 263, 20);
+		txtDescripcion.setBounds(149, 90, 290, 20);
 		panel_1.add(txtDescripcion);
 		txtDescripcion.setColumns(10);
 
@@ -181,7 +177,7 @@ public class FrmProductos extends AbstractMaestro {
 				}
 			}
 		});
-		cntmedida.setBounds(149, 147, 261, 25);
+		cntmedida.setBounds(149, 147, 290, 25);
 		panel_1.add(cntmedida);
 
 		JLabel lblMarcas = new JLabel("Marca de Producto");
@@ -191,7 +187,7 @@ public class FrmProductos extends AbstractMaestro {
 		cntmarca = new cntMarca(){
 			private static final long serialVersionUID = 1L;
 			public Window getFormulario(){
-			return (Window) VariablesGlobales.home;
+				return (Window) VariablesGlobales.home;
 			}};
 		cntmarca.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
@@ -202,7 +198,7 @@ public class FrmProductos extends AbstractMaestro {
 				}
 			}
 		});
-		cntmarca.setBounds(149, 172, 261, 25);
+		cntmarca.setBounds(149, 172, 290, 25);
 		panel_1.add(cntmarca);
 
 		JPanel panel = new JPanel();
@@ -217,7 +213,7 @@ public class FrmProductos extends AbstractMaestro {
 		JCheckBox chckbxEsProductoTerminado = new JCheckBox(
 				"Es Producto Terminado");
 		panel.add(chckbxEsProductoTerminado);
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
 				Alignment.LEADING).addGroup(
 				Alignment.TRAILING,
@@ -233,7 +229,7 @@ public class FrmProductos extends AbstractMaestro {
 						.addContainerGap()
 						.addComponent(tabPanel, GroupLayout.DEFAULT_SIZE, 312,
 								Short.MAX_VALUE).addContainerGap()));
-		getContentPane().setLayout(groupLayout);
+		pnlContenido.setLayout(groupLayout);
 		llenar_contenedores();
 	}
 
@@ -261,7 +257,6 @@ public class FrmProductos extends AbstractMaestro {
 			getProducto().setUnimedida(this.cntmedida.getUnimedida());
 			getProducto().setMarca(this.cntmarca.getMarca());
 			pdao.crear_editar(getProducto());
-			super.grabar();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
 		}
@@ -382,34 +377,32 @@ public class FrmProductos extends AbstractMaestro {
 	}
 
 	@Override
-	protected void actualizaBarra() {
-		getBarra().setVisible(isSelected());
-		if (isSelected()) {
-			getBarra().setFormMaestro(this);
-		}
-		if (getEstado().equals(VISTA)) {
-			getBarra().enVista();
-		} else {
-			getBarra().enEdicion();
-		}
-
-	}
-
-	@Override
-	public void setSelected(boolean selected) throws PropertyVetoException {
-		controlador.VariablesGlobales.home.getBarraMaestro().setVisible(
-				selected);
-		if (selected) {
-			controlador.VariablesGlobales.home.getBarraMaestro()
-					.setFormMaestro(this);
-		}
-		super.setSelected(selected);
-	}
-
-	@Override
 	public void init() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void nuevo() {
+		setEstado(NUEVO);
+	}
+
+	@Override
+	public void llenarDesdeVista() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isValidaVista() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void eliminar() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
