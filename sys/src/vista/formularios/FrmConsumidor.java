@@ -1,6 +1,5 @@
 package vista.formularios;
 
-import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -260,18 +259,6 @@ public class FrmConsumidor extends AbstractMaestro {
 		tblLista.setEnabled(true);
 	}
 
-	@Override
-	public void setSelected(boolean selected) throws PropertyVetoException {
-		super.setSelected(selected);/*
-		controlador.VariablesGlobales.home.getBarraMaestro().setVisible(
-				selected);
-		if (selected) {
-			controlador.VariablesGlobales.home.getBarraMaestro()
-					.setFormMaestro(this);
-		}
-		super.setSelected(selected);*/
-	}
-
 	public Consumidor getConsumidor() {
 		return consumidor;
 	}
@@ -317,6 +304,12 @@ public class FrmConsumidor extends AbstractMaestro {
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void eliminar() {
 		// TODO Auto-generated method stub
 		
 	}
