@@ -1,15 +1,24 @@
 package vista.formularios;
 
-import java.beans.PropertyVetoException;
-
-import vista.barras.BarraMaestro;
+import java.util.ArrayList;
+import java.util.List;
+import vista.utilitarios.MaestroTableModel;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import dao.UnimedidaDAO;
 import entity.Unimedida;
+
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class frmUnimedida extends AbstractMaestro {
 	private static final long serialVersionUID = 1L;
@@ -17,7 +26,19 @@ public class frmUnimedida extends AbstractMaestro {
 	private JTextField txtDescripcion;
 	private JTextField txtNomenclatura;
 	private Unimedida unimedida;
+	private List<Unimedida> unimedidaL = new ArrayList<Unimedida>();
+	
+	public List<Unimedida> getUnimedidaL() {
+		return unimedidaL;
+	}
+
+	public void setUnimedidaL(List<Unimedida> unimedidaL) {
+		this.unimedidaL = unimedidaL;
+	}
+
+
 	private UnimedidaDAO udao = new UnimedidaDAO();
+	private JTable tblLista;
 
 	public Unimedida getUnimedida() {		 
 		return unimedida;
@@ -27,37 +48,85 @@ public class frmUnimedida extends AbstractMaestro {
 		this.unimedida = unimedida;
 	}
 
-	public frmUnimedida(String titulo, BarraMaestro barra) {
-		super(titulo, barra);
-		getContentPane().setLayout(null);
+	public frmUnimedida() {
+		super("Unidad de Medida");
 		
 		JLabel lblCodigo = new JLabel("Codigo");
-		lblCodigo.setBounds(32, 21, 46, 14);
-		getContentPane().add(lblCodigo);
 		
 		JLabel lblDescripcion = new JLabel("Descripcion");
-		lblDescripcion.setBounds(32, 46, 67, 14);
-		getContentPane().add(lblDescripcion);
 		
 		JLabel lblNomenclatura = new JLabel("Nomenclatura");
-		lblNomenclatura.setBounds(32, 71, 67, 14);
-		getContentPane().add(lblNomenclatura);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(108, 18, 86, 20);
-		getContentPane().add(txtCodigo);
 		txtCodigo.setColumns(10);
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(108, 43, 186, 20);
-		getContentPane().add(txtDescripcion);
 		
 		txtNomenclatura = new JTextField();
 		txtNomenclatura.setColumns(10);
-		txtNomenclatura.setBounds(108, 71, 86, 20);
-		getContentPane().add(txtNomenclatura);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setAlignmentY(0.0f);
+		scrollPane.setAlignmentX(0.0f);
 		// TODO Auto-generated constructor stub
+		
+		tblLista = new JTable(new MaestroTableModel());
+		scrollPane.setViewportView(tblLista);
+		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblDescripcion, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblNomenclatura, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
+					.addGap(9)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtNomenclatura, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblCodigo)
+							.addGap(11)
+							.addComponent(lblDescripcion)
+							.addGap(11)
+							.addComponent(lblNomenclatura))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(5)
+							.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(8)
+							.addComponent(txtNomenclatura, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
+		);
+		pnlContenido.setLayout(groupLayout);
+		tblLista.getSelectionModel().addListSelectionListener(
+		new ListSelectionListener() {
+			@Override					
+			public void valueChanged(ListSelectionEvent arg0) {
+				int selectedRow = tblLista.getSelectedRow();
+				if (selectedRow >= 0)
+					setUnimedida(getUnimedidaL().get(selectedRow));
+				else
+					setUnimedida(null);
+				llenar_datos();						
+			}
+		});	
+		iniciar();
 	}
 
 	public void grabar(){
@@ -70,7 +139,6 @@ public class frmUnimedida extends AbstractMaestro {
 			getUnimedida().setDescripcion(this.txtDescripcion.getText());
 			getUnimedida().setNomenclatura(this.txtNomenclatura.getText());			
 			udao.crear_editar(getUnimedida());		
-			super.grabar();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
 		}
@@ -97,13 +165,22 @@ public class frmUnimedida extends AbstractMaestro {
 
 	@Override
 	public void llenar_lista() {
-		// TODO Auto-generated method stub
+		tblLista.setFillsViewportHeight(true);
+		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
+		model.limpiar();
+		for (Unimedida medida : getUnimedidaL()) {
+			model.addRow(new Object[] { medida.getIdunimedida(), medida.getDescripcion() });
+		}
+		if (getUnimedidaL().size() > 0) {
+			setUnimedida(getUnimedidaL().get(0));
+			tblLista.setRowSelectionInterval(0, 0);
+		}
 
 	}
 
 	@Override
 	public void llenar_tablas() {
-		// TODO Auto-generated method stub
+		setUnimedidaL(udao.findAll());
 
 	}
 
@@ -123,35 +200,16 @@ public class frmUnimedida extends AbstractMaestro {
 	}
 
 	@Override
-	protected void actualizaBarra() {
-		getBarra().setVisible(isSelected());
-		if (isSelected()) {
-			getBarra().setFormMaestro(this);
-		}
-		if (getEstado().equals(VISTA)) {
-			getBarra().enVista();
-		} else {
-			getBarra().enEdicion();
-		}
-
-	}
-
-	@Override
-	public void setSelected(boolean selected) throws PropertyVetoException {
-		controlador.VariablesGlobales.home.getBarraMaestro().setVisible(
-				selected);
-		if (selected) {
-			controlador.VariablesGlobales.home.getBarraMaestro()
-					.setFormMaestro(this);
-		}
-		super.setSelected(selected);
-	}
-
-	@Override
 	public void init() {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void nuevo() {
+		setUnimedida(new Unimedida());			
+	}
+	
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
@@ -159,18 +217,6 @@ public class frmUnimedida extends AbstractMaestro {
 		this.setUnimedida(unimedida);
 		this.llenar_datos();
 		this.vista_noedicion();	
-	}
-
-	@Override
-	public void nuevo() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void eliminar() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -183,5 +229,11 @@ public class frmUnimedida extends AbstractMaestro {
 	public boolean isValidaVista() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void eliminar() {
+		// TODO Auto-generated method stub
+		
 	}
 }

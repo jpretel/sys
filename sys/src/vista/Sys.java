@@ -25,6 +25,8 @@ public class Sys {
 	
 	private FrmSysConfig frm = new FrmSysConfig();
 	
+	public static MainFrame mainF;
+	
 	public static void main(String[] args) {
 		try {
 			salir: for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager

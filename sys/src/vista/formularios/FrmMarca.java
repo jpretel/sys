@@ -1,14 +1,26 @@
 package vista.formularios;
 
 
+import java.awt.Component;
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import dao.MarcaDAO;
 import entity.Marca;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.JScrollPane;
+
+import vista.utilitarios.MaestroTableModel;
 
 public class FrmMarca extends AbstractMaestro {
 
@@ -16,9 +28,19 @@ public class FrmMarca extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
 	private JTextField txtNombreCorto;
+	private JTable tblLista;
 	private Marca marca;
 	private MarcaDAO mdao= new MarcaDAO();
+	private List<Marca> Marcas = new ArrayList<Marca>();
 	
+	public List<Marca> getMarcas() {
+		return Marcas;
+	}
+
+	public void setMarcas(List<Marca> marcas) {
+		Marcas = marcas;
+	}
+
 	public Marca getMarca() {
 		return marca;
 	}
@@ -27,8 +49,8 @@ public class FrmMarca extends AbstractMaestro {
 		this.marca = marca;
 	}
 
-	public FrmMarca(String titulo) {
-		super(titulo);
+	public FrmMarca() {
+		super("Marca de Productos");
 		
 		JLabel lblCodigo = new JLabel("Codigo");
 		lblCodigo.setBounds(32, 21, 46, 14);
@@ -50,46 +72,71 @@ public class FrmMarca extends AbstractMaestro {
 		txtNombreCorto = new JTextField();
 		txtNombreCorto.setColumns(10);
 		txtNombreCorto.setBounds(108, 71, 86, 20);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
+		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+		tblLista = new JTable(new MaestroTableModel());
+		scrollPane.setViewportView(tblLista);
+		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(51)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNomenclatura)
-						.addComponent(lblDescripcion)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblCodigo)
-							.addGap(106)
-							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(35)
-							.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(5)
-							.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addGap(51))
+							.addComponent(lblNomenclatura)
+							.addGap(18)
+							.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCodigo)
+								.addComponent(lblDescripcion))
+							.addGap(31)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()					
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(8)
-							.addComponent(lblCodigo)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblDescripcion))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(5)
 							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(5)
-							.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addGap(18)
-					.addComponent(lblNomenclatura)
-					.addContainerGap(182, Short.MAX_VALUE))
+								.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+								.addGap(50)
+								.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblDescripcion)
+								.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNomenclatura)
+								.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(39, Short.MAX_VALUE))
 		);
 		pnlContenido.setLayout(groupLayout);
+		tblLista.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					@Override					
+					public void valueChanged(ListSelectionEvent arg0) {
+						int selectedRow = tblLista.getSelectedRow();
+						if (selectedRow >= 0)
+							setMarca(getMarcas().get(selectedRow));
+						else
+							setMarca(null);
+						llenar_datos();						
+					}
+				});
+		iniciar();
 	}
 	
 	public void grabar(){
@@ -130,13 +177,21 @@ public class FrmMarca extends AbstractMaestro {
 
 	@Override
 	public void llenar_lista() {
-		// TODO Auto-generated method stub
-
+		tblLista.setFillsViewportHeight(true);
+		MaestroTableModel modelo = (MaestroTableModel)tblLista.getModel();
+		modelo.limpiar();
+		for(Marca marca: getMarcas()){
+			modelo.addRow(new Object[] {marca.getIdmarca(),marca.getDescripcion()});
+		}
+		if(getMarcas().size() > 0){
+			setMarca(getMarcas().get(0));
+			tblLista.setRowSelectionInterval(0, 0);
+		}
 	}
 
 	@Override
 	public void llenar_tablas() {
-		// TODO Auto-generated method stub
+		setMarcas(mdao.findAll());
 
 	}
 
@@ -189,5 +244,4 @@ public class FrmMarca extends AbstractMaestro {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

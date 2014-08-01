@@ -44,11 +44,11 @@ public abstract class AbstractMaestroLista extends AbstractMaestro{
 
 	protected JPanel pnlContenido;
 	private String estado;
-	public AbstractMaestroLista(String titulo) {		
-		super(titulo);
+	public AbstractMaestroLista() {		
+		super("aa");
 		barraLista = new PanelBarraMaestroLista();
 		setEstado(VISTA);
-		setTitle(titulo);
+		setTitle("Lista");
 		setMaximizable(true);
 		setIconifiable(true);
 		setClosable(true);

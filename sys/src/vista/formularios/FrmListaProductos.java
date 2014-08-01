@@ -19,8 +19,8 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	private Producto producto;
 	private Subgrupo sg;
 	private Grupo g;
-	public FrmListaProductos(String titulo) {
-		super("Lista de Productos");
+	public FrmListaProductos() {
+		super();
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);
@@ -32,7 +32,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 		if (RetornarPk() instanceof Object){
 			producto = pdao.find(RetornarPk());
 		}
-		FrmProductos frmproductos = new FrmProductos("Edicion de Productos");
+		FrmProductos frmproductos = new FrmProductos();
 		super.init(frmproductos, getModo(), producto);
 	}
 

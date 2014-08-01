@@ -14,7 +14,7 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 	private Clieprov clieprov;
 
 	public FrmListaClieProv(String titulo) {
-		super("Lista de Productos");
+		super();
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);

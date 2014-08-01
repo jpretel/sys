@@ -1,4 +1,5 @@
 package vista.formularios;
+import vista.Sys;
 import vista.contenedores.cntGrupo;
 import vista.contenedores.cntMarca;
 import vista.contenedores.cntMedida;
@@ -19,7 +20,9 @@ import entity.Producto;
 import entity.Subgrupo;
 import entity.SubgrupoPK;
 import entity.Unimedida;
+
 import java.util.List;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -31,6 +34,7 @@ import controlador.VariablesGlobales;
 import java.awt.Window;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 
@@ -67,8 +71,8 @@ public class FrmProductos extends AbstractMaestro {
 	protected ProductoDAO pdao = new ProductoDAO();
 	private JTextField txtnomcorto;
 
-	public FrmProductos(String titulo) {
-		super(titulo);
+	public FrmProductos() {
+		super("Productos");
 		JTabbedPane tabPanel = new JTabbedPane(JTabbedPane.TOP);
 
 		JPanel panel_1 = new JPanel();
@@ -81,7 +85,7 @@ public class FrmProductos extends AbstractMaestro {
 		cntgrupo = new cntGrupo(){
 			private static final long serialVersionUID = 1L;
 			public Window getFormulario(){
-			return (Window) VariablesGlobales.home;
+			return (Window) Sys.mainF;
 			}};
 		cntgrupo.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
@@ -111,7 +115,7 @@ public class FrmProductos extends AbstractMaestro {
 		cntSubGrupo = new cntSubGrupo(cntgrupo){
 			private static final long serialVersionUID = 1L;
 			public Window getFormulario(){
-			return (Window) VariablesGlobales.home;
+			return (Window) Sys.mainF;
 			}};
 		cntSubGrupo.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
@@ -166,7 +170,7 @@ public class FrmProductos extends AbstractMaestro {
 		cntmedida = new cntMedida(){
 			private static final long serialVersionUID = 1L;
 			public Window getFormulario(){
-			return (Window) VariablesGlobales.home;
+			return (Window) Sys.mainF;
 			}};
 		cntmedida.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
@@ -187,7 +191,7 @@ public class FrmProductos extends AbstractMaestro {
 		cntmarca = new cntMarca(){
 			private static final long serialVersionUID = 1L;
 			public Window getFormulario(){
-				return (Window) VariablesGlobales.home;
+				return (Window) Sys.mainF;
 			}};
 		cntmarca.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override

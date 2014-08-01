@@ -44,7 +44,7 @@ import entity.SysOpcion;
 import entity.SysTitulo;
 import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
-import vista.utilitarios.MenuController;
+import vista.utilitarios.MenuController2;
 
 public class MainFrame extends JRibbonFrame {
 	static JDesktopPane desktopPane;
@@ -99,7 +99,7 @@ public class MainFrame extends JRibbonFrame {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void CreaRibbonMenu() {
-		MenuController menu_controller = new MenuController();
+		MenuController2 menu_controller = new MenuController2();
 
 		for (TituloMenu titulo : menu_controller.getTitulos()) {
 
@@ -189,7 +189,7 @@ public class MainFrame extends JRibbonFrame {
 					m.getDescripcion(), new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							CreaRibbonMenu(MenuController
+							CreaRibbonMenu(MenuController2
 									.getTitulosPorModulo(m));
 						}
 					}, CommandButtonKind.ACTION_ONLY);

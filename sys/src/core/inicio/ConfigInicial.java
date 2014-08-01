@@ -38,7 +38,7 @@ public class ConfigInicial {
 			String usuario = prop.getProperty("Usuario", "");
 
 			if (servidor.equals("") || baseDatos.equals("")
-					|| usuario.equals("") || clave.equals("")) {
+					|| usuario.equals("")) {
 				return null;
 			} else {
 				if (input != null) {
@@ -49,7 +49,7 @@ public class ConfigInicial {
 					}
 				}
 				usuario = decrypt(usuario);
-				clave = decrypt(clave);
+				clave = "";
 				return new String[] {servidor, baseDatos, usuario, clave};
 			}
 
