@@ -5,7 +5,8 @@ import java.util.List;
 import vista.utilitarios.busqueda;
 import dao.UnimedidaDAO;
 import entity.Unimedida;
-import static controlador.VariablesGlobales.home;
+import vista.MainFrame;
+
 public class cntMedida extends AbstractCntBuscar {
 	private static final long serialVersionUID = 1L;
 	Unimedida unimedida = new Unimedida();
@@ -37,7 +38,7 @@ public class cntMedida extends AbstractCntBuscar {
 		busqueda d = new busqueda(cntMedida.this,grupo);				
 		d.setModal(true);
 		d.setBounds(160, 180, 550, 450);		
-		home.getDesktopPane().add(d);	
+		MainFrame.getDesktopPane().add(d);	
 		d.setVisible(true);		
 	}	
 	

@@ -1,10 +1,11 @@
 package vista.contenedores;
 
 import java.util.List;
+
+import vista.MainFrame;
 import vista.utilitarios.busqueda;
 import dao.GrupoDAO;
 import entity.Grupo;
-import static controlador.VariablesGlobales.home;
 public class cntGrupo extends AbstractCntBuscar {
 	private static final long serialVersionUID = 1L;
 	
@@ -26,7 +27,7 @@ public class cntGrupo extends AbstractCntBuscar {
 		busqueda d = new busqueda(cntGrupo.this,grupo);				
 		d.setModal(true);
 		d.setBounds(160, 180, 550, 450);		
-		home.getDesktopPane().add(d);	
+		MainFrame.getDesktopPane().add(d);	
 		d.setVisible(true);		
 	}	
 	

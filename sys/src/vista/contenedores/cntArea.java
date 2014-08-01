@@ -1,10 +1,11 @@
 package vista.contenedores;
 import java.util.List;
 
+import vista.MainFrame;
 import vista.utilitarios.busqueda;
 import dao.AreaDAO;
 import entity.Area;
-import static controlador.VariablesGlobales.home;
+
 public class cntArea extends AbstractCntBuscar {
 	private static final long serialVersionUID = 1L;
 	Area area = new Area();
@@ -34,7 +35,7 @@ public class cntArea extends AbstractCntBuscar {
 		busqueda d = new busqueda(cntArea.this,area);				
 		d.setModal(true);
 		d.setBounds(160, 180, 550, 450);		
-		home.getDesktopPane().add(d);	
+		MainFrame.getDesktopPane().add(d);	
 		d.setVisible(true);		
 	}	
 	

@@ -1,4 +1,5 @@
 package vista.formularios;
+import vista.MainFrame;
 import vista.Sys;
 import vista.contenedores.cntGrupo;
 import vista.contenedores.cntMarca;
@@ -29,14 +30,9 @@ import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
-import controlador.VariablesGlobales;
-
 import java.awt.Window;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
 
 public class FrmProductos extends AbstractMaestro {
 	/**

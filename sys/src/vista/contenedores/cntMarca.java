@@ -2,10 +2,10 @@ package vista.contenedores;
 
 import java.util.List;
 
+import vista.MainFrame;
 import vista.utilitarios.busqueda;
 import dao.MarcaDAO;
 import entity.Marca;
-import static controlador.VariablesGlobales.home;
 public class cntMarca extends AbstractCntBuscar {
 	private static final long serialVersionUID = 1L;
 	Marca marca = new Marca();
@@ -37,7 +37,7 @@ public class cntMarca extends AbstractCntBuscar {
 		busqueda d = new busqueda(cntMarca.this,grupo);				
 		d.setModal(true);
 		d.setBounds(160, 180, 550, 450);		
-		home.getDesktopPane().add(d);	
+		MainFrame.getDesktopPane().add(d);	
 		d.setVisible(true);		
 	}	
 	
