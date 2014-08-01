@@ -15,6 +15,8 @@ import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+
+import vista.Sys;
 import vista.contenedores.cntArea;
 import vista.utilitarios.MaestroTableModel;
 
@@ -24,8 +26,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-
-import controlador.VariablesGlobales;
 
 public class FrmResponsable extends AbstractMaestro {
 
@@ -98,7 +98,7 @@ public class FrmResponsable extends AbstractMaestro {
 		cntarea = new cntArea(){
 			private static final long serialVersionUID = 1L;
 			public Window getFormulario(){
-			return (Window) VariablesGlobales.home;
+			return (Window) Sys.mainF;
 			}};
 		cntarea.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override

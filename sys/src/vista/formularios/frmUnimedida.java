@@ -38,6 +38,15 @@ public class frmUnimedida extends AbstractMaestro {
 
 
 	private UnimedidaDAO udao = new UnimedidaDAO();
+	public UnimedidaDAO getUdao() {
+		return udao;
+	}
+
+	public void setUdao(UnimedidaDAO udao) {
+		this.udao = udao;
+	}
+
+
 	private JTable tblLista;
 
 	public Unimedida getUnimedida() {		 
@@ -130,15 +139,8 @@ public class frmUnimedida extends AbstractMaestro {
 	}
 
 	public void grabar(){
-		try {
-			if (getEstado().equals(NUEVO)){
-				Unimedida unim = new Unimedida();
-				setUnimedida(unim);
-			}
-			getUnimedida().setIdunimedida(this.txtCodigo.getText());
-			getUnimedida().setDescripcion(this.txtDescripcion.getText());
-			getUnimedida().setNomenclatura(this.txtNomenclatura.getText());			
-			udao.crear_editar(getUnimedida());		
+		try {						
+			getUdao().crear_editar(getUnimedida());		
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
 		}
@@ -221,8 +223,9 @@ public class frmUnimedida extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
-		// TODO Auto-generated method stub
-		
+		getUnimedida().setIdunimedida(this.txtCodigo.getText());
+		getUnimedida().setDescripcion(this.txtDescripcion.getText());
+		getUnimedida().setNomenclatura(this.txtNomenclatura.getText());		
 	}
 
 	@Override
