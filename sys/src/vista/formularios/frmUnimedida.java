@@ -231,7 +231,7 @@ public class frmUnimedida extends AbstractMaestro {
 	@Override
 	public boolean isValidaVista() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

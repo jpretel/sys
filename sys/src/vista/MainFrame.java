@@ -127,7 +127,7 @@ public class MainFrame extends JRibbonFrame {
 
 					for (OpcionMenu opcion : grupo.getOpciones()) {
 
-						// System.out.println(opcion);
+		
 
 						JCommandButton button = new JCommandButton(
 								opcion.getDescripcion(),
@@ -340,12 +340,3 @@ public class MainFrame extends JRibbonFrame {
 				MainFrame.class.getResource(resource), new Dimension(10, 10));
 	}
 }
-
-/*
- * class MyDispatcher2 implements KeyEventDispatcher {
- * 
- * @Override public boolean dispatchKeyEvent(KeyEvent e) { if (e.getID() ==
- * KeyEvent.KEY_PRESSED) { System.out.println("tester"); } else if (e.getID() ==
- * KeyEvent.KEY_RELEASED) { System.out.println("2test2"); } else if (e.getID()
- * == KeyEvent.KEY_TYPED) { System.out.println("3test3"); } return false; } }
- */

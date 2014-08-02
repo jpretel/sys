@@ -1,5 +1,4 @@
 package vista.formularios;
-import vista.MainFrame;
 import vista.Sys;
 import vista.contenedores.cntGrupo;
 import vista.contenedores.cntMarca;
@@ -204,7 +203,7 @@ public class FrmProductos extends AbstractMaestro {
 		JPanel panel = new JPanel();
 		tabPanel.addTab("Propiedades del Producto", null, panel, null);
 
-		JCheckBox chckbxEsDescrte = new JCheckBox("Es Descrte");
+		JCheckBox chckbxEsDescrte = new JCheckBox("Es Descarte");
 		panel.add(chckbxEsDescrte);
 
 		JCheckBox chckbxEsProductoVenta = new JCheckBox("Es Producto Venta");
@@ -246,16 +245,6 @@ public class FrmProductos extends AbstractMaestro {
 
 	public void grabar() {
 		try {
-			if (getEstado().equals(NUEVO)) {
-				Producto prod = new Producto();
-				setProducto(prod);
-			}
-			getProducto().setIdproductos(this.txtCodigo.getText());
-			getProducto().setDescripcion(this.txtDescripcion.getText());
-			getProducto().setDescCorta(this.txtnomcorto.getText());
-			getProducto().setSubgrupo(this.cntSubGrupo.getSg());
-			getProducto().setUnimedida(this.cntmedida.getUnimedida());
-			getProducto().setMarca(this.cntmarca.getMarca());
 			pdao.crear_editar(getProducto());
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
@@ -296,7 +285,7 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
-		if (getProducto() instanceof Producto) {
+		if (getProducto() instanceof Producto && !getEstado().equals(NUEVO)) {
 			grupo = this.getProducto().getSubgrupo().getGrupo();
 			subgrupo = this.getProducto().getSubgrupo();
 			this.cntgrupo.txtCodigo.setText(grupo.getIdgrupo());
@@ -384,13 +373,18 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void nuevo() {
-		setEstado(NUEVO);
+		producto = new Producto();
 	}
 
 	@Override
 	public void llenarDesdeVista() {
-		// TODO Auto-generated method stub
-		
+		getProducto().setIdproductos(this.txtCodigo.getText());
+		getProducto().setDescripcion(this.txtDescripcion.getText());
+		getProducto().setDescCorta(this.txtnomcorto.getText());
+		getProducto().setSubgrupo(this.cntSubGrupo.getSg());
+		getProducto().setUnimedida(this.cntmedida.getUnimedida());
+		getProducto().setMarca(this.cntmarca.getMarca());	
+		System.out.println(getProducto().toString());
 	}
 
 	@Override

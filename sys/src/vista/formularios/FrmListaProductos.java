@@ -5,9 +5,6 @@ import dao.ProductoDAO;
 import entity.Grupo;
 import entity.Producto;
 import entity.Subgrupo;
-import vista.barras.BarraMaestro;
-
-import java.awt.Component;
 
 public class FrmListaProductos extends AbstractMaestroLista {
 	private static final long serialVersionUID = 1L;
@@ -31,7 +28,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	public void irFormulario() {		
 		if (RetornarPk() instanceof Object){
 			producto = pdao.find(RetornarPk());
-		}
+		}			
 		FrmProductos frmproductos = new FrmProductos();
 		super.init(frmproductos, getModo(), producto);
 	}
@@ -54,7 +51,6 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	@Override
 	public void nuevo() {
-		// TODO Auto-generated method stub
 		
 	}
 

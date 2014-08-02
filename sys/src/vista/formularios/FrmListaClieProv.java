@@ -13,7 +13,7 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 	private int nFilasP = clieprovL.size();
 	private Clieprov clieprov;
 
-	public FrmListaClieProv(String titulo) {
+	public FrmListaClieProv() {
 		super();
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
@@ -26,7 +26,7 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 		if (RetornarPk() instanceof Object){
 			clieprov = cdao.find(RetornarPk());
 		}
-		FrmClieprov frmclieprov = new FrmClieprov("Edicion de Clientes y Proveedores");
+		FrmClieprov frmclieprov = new FrmClieprov();
 		super.init(frmclieprov, getModo(), clieprov);
 	}
 
