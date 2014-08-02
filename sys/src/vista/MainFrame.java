@@ -44,7 +44,8 @@ import entity.SysOpcion;
 import entity.SysTitulo;
 import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
-import vista.utilitarios.MenuController2;
+import vista.formularios.FrmSysModulo;
+import vista.utilitarios.MenuController;
 
 public class MainFrame extends JRibbonFrame {
 	static JDesktopPane desktopPane;
@@ -67,7 +68,7 @@ public class MainFrame extends JRibbonFrame {
 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		CreaRibbonMenu();
+		IniciarRibbon();
 
 		JToolBar tlbPie = new JToolBar();
 		tlbPie.setRollover(true);
@@ -97,9 +98,114 @@ public class MainFrame extends JRibbonFrame {
 		return desktopPane;
 	}
 
+	private void IniciarRibbon() {
+		SysModulo moduloIncial = null;
+
+		RibbonApplicationMenu ribbon = new RibbonApplicationMenu();
+
+		RibbonApplicationMenuEntryPrimary modulo_popup = new RibbonApplicationMenuEntryPrimary(
+				getResizableIconFromResource("/main/resources/salir.png"),
+				"Modulo", null, CommandButtonKind.POPUP_ONLY);
+
+		List<SysModulo> modulos = moduloDAO.findAll();
+		RibbonApplicationMenuEntrySecondary[] modulos_vec = new RibbonApplicationMenuEntrySecondary[modulos
+				.size()];
+
+		int i = -1;
+		for (final SysModulo m : modulos) {
+			i++;
+			if (i == 0) {
+				moduloIncial = m;
+			}
+			RibbonApplicationMenuEntrySecondary secondary = new RibbonApplicationMenuEntrySecondary(
+					getResizableIconFromResource16x16("/main/resources/salir.png"),
+					m.getDescripcion(), new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							CreaRibbonMenu(MenuController
+									.getTitulosPorModulo(m));
+						}
+					}, CommandButtonKind.ACTION_ONLY);
+			modulos_vec[i] = secondary;
+		}
+
+		modulo_popup.addSecondaryMenuGroup("Lista de Módulos", modulos_vec);
+
+		ribbon.addMenuEntry(modulo_popup);
+
+		ribbon.addMenuSeparator();
+
+		RibbonApplicationMenuEntryPrimary nn = new RibbonApplicationMenuEntryPrimary(
+				getResizableIconFromResource("/main/resources/favoritos.png"),
+				"DashBoard", new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						CreaRibbonMenu();
+					}
+				}, CommandButtonKind.ACTION_ONLY);
+
+		ribbon.addMenuEntry(nn);
+
+		RibbonApplicationMenuEntryPrimary config_popup = new RibbonApplicationMenuEntryPrimary(
+				getResizableIconFromResource("/main/resources/salir.png"),
+				"Configuración Inicial", null, CommandButtonKind.POPUP_ONLY);
+
+		RibbonApplicationMenuEntrySecondary[] configs = new RibbonApplicationMenuEntrySecondary[2];
+
+		configs[0] = new RibbonApplicationMenuEntrySecondary(
+				getResizableIconFromResource16x16("/main/resources/salir.png"),
+				"Gestion de Modulos", cOpciones.returnAction("FrmSysModulo"),
+				CommandButtonKind.ACTION_ONLY);
+
+		configs[1] = new RibbonApplicationMenuEntrySecondary(
+				getResizableIconFromResource16x16("/main/resources/salir.png"),
+				"Gestion de Modulos", cOpciones.returnAction("FrmSysModulo"),
+				CommandButtonKind.ACTION_ONLY);
+
+		config_popup.addSecondaryMenuGroup("Configuración Inicial", configs);
+
+		ribbon.addMenuEntry(config_popup);
+
+		RibbonApplicationMenuEntryPrimary cambiar_clave = new RibbonApplicationMenuEntryPrimary(
+				getResizableIconFromResource("/main/resources/favoritos.png"),
+				"Cambiar Clave", null, CommandButtonKind.ACTION_ONLY);
+		
+		ribbon.addMenuEntry(cambiar_clave);
+		
+		
+		RibbonApplicationMenuEntryPrimary cerrar_sesion = new RibbonApplicationMenuEntryPrimary(
+				getResizableIconFromResource("/main/resources/favoritos.png"),
+				"Cerrar Sesión", null, CommandButtonKind.ACTION_ONLY);
+		
+		ribbon.addMenuEntry(cerrar_sesion);
+		
+		RibbonApplicationMenuEntryPrimary salir = new RibbonApplicationMenuEntryPrimary(
+				getResizableIconFromResource("/main/resources/favoritos.png"),
+				"Salir", null, CommandButtonKind.ACTION_ONLY);
+		
+		ribbon.addMenuEntry(salir);
+		
+
+		RibbonApplicationMenuEntryFooter footer = new RibbonApplicationMenuEntryFooter(
+				getResizableIconFromResource("/main/resources/salir.png"),
+				"Acerca de", null);
+
+		ribbon.addFooterEntry(footer);
+
+		getRibbon().setApplicationMenu(ribbon);
+
+		setIconImage(new ImageIcon(
+				MainFrame.class.getResource("/main/resources/iconos/nuevo.png"))
+				.getImage());
+
+		if (moduloIncial != null) {
+			CreaRibbonMenu(MenuController.getTitulosPorModulo(moduloIncial));
+		}
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void CreaRibbonMenu() {
-		MenuController2 menu_controller = new MenuController2();
+		MenuController menu_controller = new MenuController();
 
 		for (TituloMenu titulo : menu_controller.getTitulos()) {
 
@@ -148,8 +254,6 @@ public class MainFrame extends JRibbonFrame {
 					band.setResizePolicies((List) Arrays.asList(
 							new CoreRibbonResizePolicies.Mid2Mid(band
 									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mid2Low(band
-									.getControlPanel()),
 							new IconRibbonBandResizePolicy(band
 									.getControlPanel())));
 				}
@@ -171,90 +275,9 @@ public class MainFrame extends JRibbonFrame {
 
 		// Comienzo del Contenido del Menu Desplegable
 
-		RibbonApplicationMenu ribbon = new RibbonApplicationMenu();
-
-		RibbonApplicationMenuEntryPrimary modulo_popup = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/salir.png"),
-				"Modulo", null, CommandButtonKind.POPUP_ONLY);
-
-		List<SysModulo> modulos = moduloDAO.findAll();
-		RibbonApplicationMenuEntrySecondary[] modulos_vec = new RibbonApplicationMenuEntrySecondary[modulos
-				.size()];
-
-		int i = -1;
-		for (final SysModulo m : modulos) {
-			i++;
-			RibbonApplicationMenuEntrySecondary secondary = new RibbonApplicationMenuEntrySecondary(
-					getResizableIconFromResource16x16("/main/resources/salir.png"),
-					m.getDescripcion(), new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							CreaRibbonMenu(MenuController2
-									.getTitulosPorModulo(m));
-						}
-					}, CommandButtonKind.ACTION_ONLY);
-			modulos_vec[i] = secondary;
-		}
-
-		modulo_popup.addSecondaryMenuGroup("Lista de Módulos", modulos_vec);
-
-		ribbon.addMenuEntry(modulo_popup);
-
-		ribbon.addMenuSeparator();
-
-		RibbonApplicationMenuEntryPrimary nn = new RibbonApplicationMenuEntryPrimary(
-				getResizableIconFromResource("/main/resources/favoritos.png"),
-				"DashBoard", new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						CreaRibbonMenu();
-					}
-				}, CommandButtonKind.ACTION_ONLY);
-
-		ribbon.addMenuEntry(nn);
-
-		for (int mas = 0; mas < 2; mas++) {
-
-			nn = new RibbonApplicationMenuEntryPrimary(
-					getResizableIconFromResource("/main/resources/salir.png"),
-					"Desactivado", null, CommandButtonKind.ACTION_ONLY);
-			nn.setEnabled(false);
-
-			ribbon.addMenuEntry(nn);
-
-		}
-		for (int mas = 0; mas < 6; mas++) {
-
-			nn = new RibbonApplicationMenuEntryPrimary(
-					getResizableIconFromResource("/main/resources/salir.png"),
-					"Productos Lista",
-					cOpciones.returnAction("FrmListaProductos"),
-					CommandButtonKind.ACTION_ONLY);
-
-			ribbon.addMenuEntry(nn);
-
-		}
-
-		RibbonApplicationMenuEntryFooter footer = new RibbonApplicationMenuEntryFooter(
-				getResizableIconFromResource("/main/resources/salir.png"),
-				"Salir", null);
-
-		ribbon.addFooterEntry(footer);
-
-		footer = new RibbonApplicationMenuEntryFooter(
-				getResizableIconFromResource("/main/resources/salir.png"),
-				"Salir2", null);
-
-		ribbon.addFooterEntry(footer);
-
-		getRibbon().setApplicationMenu(ribbon);
-
-		setIconImage(new ImageIcon(
-				MainFrame.class.getResource("/main/resources/iconos/nuevo.png"))
-				.getImage());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void CreaRibbonMenu(List<SysTitulo> titulos) {
 		getRibbon().removeAllTasks();
 		for (SysTitulo titulo : titulos) {
@@ -304,8 +327,6 @@ public class MainFrame extends JRibbonFrame {
 					band.setResizePolicies((List) Arrays.asList(
 							new CoreRibbonResizePolicies.Mid2Mid(band
 									.getControlPanel()),
-							new CoreRibbonResizePolicies.Mid2Low(band
-									.getControlPanel()),
 							new IconRibbonBandResizePolicy(band
 									.getControlPanel())));
 				}
@@ -314,7 +335,6 @@ public class MainFrame extends JRibbonFrame {
 			if (bandas_aux.size() > 0) {
 				JRibbonBand[] bandas = new JRibbonBand[bandas_aux.size()];
 				for (int i = 0; i < bandas_aux.size(); i++) {
-					// System.out.println(bandas_aux.size());
 					bandas[i] = bandas_aux.get(i);
 				}
 
