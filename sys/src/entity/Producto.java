@@ -31,6 +31,15 @@ public class Producto implements Serializable {
 	@Column(name="es_venta")
 	private int esVenta;
 
+	@Override
+	public String toString() {
+		return "Producto [idproductos=" + idproductos + ", descCorta="
+				+ descCorta + ", descripcion=" + descripcion + ", esDescarte="
+				+ esDescarte + ", esTerminado=" + esTerminado + ", esVenta="
+				+ esVenta + ", subgrupo=" + subgrupo + ", marca=" + marca
+				+ ", unimedida=" + unimedida + "]";
+	}
+
 	//bi-directional many-to-one association to Subgrupo
 	@ManyToOne
 	@JoinColumns({

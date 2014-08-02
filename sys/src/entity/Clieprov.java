@@ -24,6 +24,13 @@ public class Clieprov implements Serializable {
 	@Column(name="razon_social", nullable=false, length=200)
 	private String razonSocial;
 
+	@Override
+	public String toString() {
+		return "Clieprov [idclieprov=" + idclieprov + ", direccion="
+				+ direccion + ", razonSocial=" + razonSocial + ", ruc=" + ruc
+				+ ", tipo=" + tipo + "]";
+	}
+
 	@Column(nullable=false, length=11)
 	private String ruc;
 

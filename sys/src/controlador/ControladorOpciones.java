@@ -35,7 +35,6 @@ public class ControladorOpciones {
 		JInternalFrame frame = (JInternalFrame) Class.forName(urlClase)
 				.newInstance();
 		getDesktopPane().add(frame);
-
 		try {
 			frame.setSelected(true);
 		} catch (PropertyVetoException e) {

@@ -1,8 +1,7 @@
-package core.dao;
+package vista.utilitarios;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,20 +12,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import core.entity.Consultar;
-
-public class ConsultaRUC {
+public class ObjetoWeb {
 	
-	private static Consultar cons;
-	private static List<Consultar> consulta = new ArrayList<Consultar>();
-	
-	public ConsultaRUC(){
+	private static List<String> consulta = new ArrayList<String>();	
+	public ObjetoWeb(){
 		
 	}
 	
-	public List<Consultar> Consulta(String ruc){
+	public static List<String> ConsultaRUC(String ruc){
 		String captcha = "";
-		//String ruc = "10453688955";
+		
 		try {
 
 			Connection.Response res = Jsoup
@@ -50,28 +45,15 @@ public class ConsultaRUC {
 
 			Elements rows = table.select("tr");
 			
-			String lista[] = new String[rows.size()];
-			int cont = 1;
-			
+			String dato;
 			for (Element e : rows) {
 				Element te = e.child(0);
-				//System.out.println(te.text() + "\t");
 				if (e.children().size() > 1) {
-					Element td = e.child(1);
-					//System.out.println(td.text());
-					
-					lista[cont] = te.text() + " " + td.text();
-					cont++;
-					cons = new Consultar(te.text().toString(), td.text());
-					consulta.add(cons);
+					Element td = e.child(1);					
+					dato = te.text() + " " + td.text();	
+					consulta.add(dato);
 				}
-			}
-			
-			//System.out.println("COntenido: " + lista[1]);
-			//System.out.println("COntenido: " + cons);
-			
-			
-			
+			}			
 			return consulta;
 			
 		} catch (IOException e) {
@@ -80,5 +62,4 @@ public class ConsultaRUC {
 		}
 		return null;
 	}
-
 }

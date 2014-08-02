@@ -75,7 +75,8 @@ public class JXTextFieldAC extends JXTextField implements FocusListener {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					indice = table.getSelectedRow();
-					validarDatos();
+					if(validarDatos())
+					autoSuggestionPopUpWindow.setVisible(false);
 				}
 			}
 		});
@@ -90,7 +91,6 @@ public class JXTextFieldAC extends JXTextField implements FocusListener {
 					table.requestFocus();
 					if (table.getSelectedRow() == -1
 							&& autoSuggestionPopUpWindow.isVisible()) {
-						//table.setRowSelectionInterval(0, 0);
 					}
 				}
 
@@ -98,7 +98,7 @@ public class JXTextFieldAC extends JXTextField implements FocusListener {
 					autoSuggestionPopUpWindow.setVisible(false);
 				}
 
-				if (ev.getModifiers() == 2 && ev.getKeyCode() == 32) {
+				if (ev.getModifiers() == 2 && ev.getKeyCode() == 70) {
 					checkForAndShowSuggestions();
 				}
 
@@ -167,12 +167,10 @@ public class JXTextFieldAC extends JXTextField implements FocusListener {
 
 		DefaultTableModel model = new DefaultTableModel(data, cabeceras) {
 			private static final long serialVersionUID = 1L;
-
 			public boolean isCellEditable(int rowIndex, int vColIndex) {
 				return false;
 			}
 		};
-
 		table.setModel(model);
 
 		for (int i = 0; i < table.getColumnCount(); i++) {
@@ -189,15 +187,16 @@ public class JXTextFieldAC extends JXTextField implements FocusListener {
 
 	}
 
-	private void validarDatos() {
+	private boolean validarDatos() {
 		iSeleccionado = -1;
 		if (indice > -1 && sugerencias.size() > 0
 				&& indice <= sugerencias.size()) {
 			iSeleccionado = sugerencias.get(indice).indice;
 			seleccionado = data.get(iSeleccionado);
 			cargaDatos();
+			return true;
 		} else {
-
+			return false;
 		}
 	}
 
