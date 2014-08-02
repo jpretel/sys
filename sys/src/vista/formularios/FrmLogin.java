@@ -30,10 +30,14 @@ public class FrmLogin extends JFrame {
 	private List<ChangeListener> listenerList = new ArrayList<ChangeListener>();
 
 	public FrmLogin() {
-		setMaximumSize(new Dimension(150, 130));
-		setMinimumSize(new Dimension(150, 130));
+		setAlwaysOnTop(true);
+		setMinimumSize(new Dimension(330, 120));
+		getContentPane().setMinimumSize(new Dimension(600, 600));
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Inicio de Sesi\u00F3n");
 		getContentPane().setLayout(null);
+		
 
 		JLabel lblNewLabel = new JLabel("Usuario");
 		lblNewLabel.setBounds(10, 11, 46, 14);
@@ -44,25 +48,25 @@ public class FrmLogin extends JFrame {
 		getContentPane().add(lblClave);
 
 		txtUsuario = new JTextField();
-		txtUsuario.setBounds(66, 8, 217, 20);
+		txtUsuario.setBounds(83, 8, 217, 20);
 		getContentPane().add(txtUsuario);
 		txtUsuario.setColumns(10);
 
 		txtClave = new JPasswordField();
-		txtClave.setBounds(66, 33, 217, 20);
+		txtClave.setBounds(83, 33, 217, 20);
 		getContentPane().add(txtClave);
 
 		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.setBounds(62, 64, 89, 23);
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				iniciarSesion();
 			}
 		});
-		btnAceptar.setBounds(58, 72, 89, 23);
 		getContentPane().add(btnAceptar);
 
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(161, 72, 89, 23);
+		btnCancelar.setBounds(190, 64, 89, 23);
 		getContentPane().add(btnCancelar);
 	}
 
