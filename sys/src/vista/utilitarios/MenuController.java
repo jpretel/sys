@@ -98,59 +98,69 @@ public class MenuController {
 		opciones.add(om);
 
 		om = new OpcionMenu();
-		om.setPosicion(2);
-		om.setDescripcion("Centros de Costo");
-		om.setImagen("/main/resources/grabar.png");
-		om.setOpcion("FrmConsumidor");
-		om.setPrioridad(2); // 1, 2 o 3
-
-		opciones.add(om);
-
-		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Documentos");
+		om.setDescripcion("Grupos de Productos");
 		om.setImagen("/main/resources/nuevo.png");
-		om.setOpcion("FrmDocumento");
-		om.setPrioridad(3); // 1, 2 o 3
-
+		om.setOpcion("FrmGrupos");		
+		om.setPrioridad(3); 
+	
+		
 		opciones.add(om);
-
+		OpcionMenu om1 = new OpcionMenu();
+		om1 = new OpcionMenu();
+		om1.setPosicion(3);
+		om1.setDescripcion("Marcas de Productos");
+		om1.setImagen("/main/resources/editar.png");
+		om1.setOpcion("FrmMarca");
+		om1.setPrioridad(3); //1, 2 o 3
+		
+		opciones.add(om1);
+		
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Sucursales");
+		om.setDescripcion("Medidas");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("FrmSucursal");
-		om.setPrioridad(3); // 1, 2 o 3
-
+		om.setOpcion("frmUnimedida");
+		om.setPrioridad(3); //1, 2 o 3
+		
 		opciones.add(om);
-
+		
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Puntos de Emisión");
+		om.setDescripcion("Areas");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("FrmPtoEmision");
-		om.setPrioridad(3); // 1, 2 o 3
-
+		om.setOpcion("FrmAreas");
+		om.setPrioridad(3); //1, 2 o 3
+		
 		opciones.add(om);
-
+		
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("SubDiario");
+		om.setDescripcion("Responsable");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("FrmSubdiario");
-		om.setPrioridad(3); // 1, 2 o 3
-
+		om.setOpcion("FrmResponsable");
+		om.setPrioridad(3); //1, 2 o 3
+		
 		opciones.add(om);
-
+		
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Flujos de Aprob");
+		om.setDescripcion("Lista de Productos");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("FrmFlujo");
-		om.setPrioridad(3); // 1, 2 o 3
-
+		om.setOpcion("FrmListaProductos");
+		om.setPrioridad(3); //1, 2 o 3
+		
 		opciones.add(om);
-
+		
+		om = new OpcionMenu();
+		om.setPosicion(3);
+		om.setDescripcion("Lista de Clientes y Proveedores");
+		om.setImagen("/main/resources/editar.png");
+		om.setOpcion("FrmListaClieprov");
+		om.setPrioridad(3); //1, 2 o 3
+		
+		opciones.add(om);
+	
 		om = new OpcionMenu();
 		om.setPosicion(3);
 		om.setDescripcion("Cdf Form");
