@@ -44,6 +44,7 @@ import entity.SysOpcion;
 import entity.SysTitulo;
 import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
+import vista.formularios.FrmSysGrupo;
 import vista.formularios.FrmSysModulo;
 import vista.utilitarios.MenuController;
 
@@ -159,7 +160,7 @@ public class MainFrame extends JRibbonFrame {
 
 		configs[1] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
-				"Gestion de Modulos", cOpciones.returnAction("FrmSysModulo"),
+				"Gestion de Opciones", cOpciones.returnAction("FrmSysGrupo"),
 				CommandButtonKind.ACTION_ONLY);
 
 		config_popup.addSecondaryMenuGroup("Configuración Inicial", configs);
