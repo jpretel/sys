@@ -22,12 +22,12 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 	}
 	
 	@Override
-	public void irFormulario() {		
+	public void irFormulario(String opcion) {		
 		if (RetornarPk() instanceof Object){
 			clieprov = cdao.find(RetornarPk());
 		}
 		FrmClieprov frmclieprov = new FrmClieprov();
-		super.init(frmclieprov, getModo(), clieprov);
+		super.init(frmclieprov, opcion, clieprov);
 	}
 
 	@Override
@@ -39,12 +39,6 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 					clieprov.getDireccion() };
 			modeloLista.addRow(obj);
 		}
-	}
-
-	@Override
-	public void nuevo() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
