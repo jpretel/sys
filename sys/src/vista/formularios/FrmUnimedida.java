@@ -20,7 +20,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public class frmUnimedida extends AbstractMaestro {
+public class FrmUnimedida extends AbstractMaestro {
 	private static final long serialVersionUID = 1L;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
@@ -57,7 +57,7 @@ public class frmUnimedida extends AbstractMaestro {
 		this.unimedida = unimedida;
 	}
 
-	public frmUnimedida() {
+	public FrmUnimedida() {
 		super("Unidad de Medida");
 		
 		JLabel lblCodigo = new JLabel("Codigo");

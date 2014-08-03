@@ -56,6 +56,7 @@ public class FrmGrupos extends AbstractMaestro {
 	private JTable tblSubGrupo;
 	private DefaultTableModel subgrupo;
 	JButton button=new JButton("");
+	
 	public FrmGrupos(){
 		super("Familia de Productos");
 		setBounds(100, 100, 600, 353);
@@ -293,7 +294,7 @@ public class FrmGrupos extends AbstractMaestro {
 		while(subgrupo.getRowCount() != 0){			
 				subgrupo.removeRow(0);			
 		}		
-		for(Subgrupo subgrupoEnt : sgDAO.findAllbyGrupo()){			
+		for(Subgrupo subgrupoEnt : sgDAO.findAll()){			
 			if(Codigo.equals(subgrupoEnt.getId().getGrupoIdgrupo())){
 				subgrupo.addRow(new Object[] { subgrupoEnt.getId().getIdsubgrupo(), subgrupoEnt.getDescripcion()});
 			}

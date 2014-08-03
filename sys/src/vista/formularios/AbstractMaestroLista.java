@@ -6,45 +6,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTable;
 
-import vista.barras.BarraMaestro;
-import vista.barras.PanelBarraMaestro;
 import vista.barras.PanelBarraMaestroLista;
 
 import java.awt.Dimension;
 
-public abstract class AbstractMaestroLista extends AbstractMaestro{
+public abstract class AbstractMaestroLista extends AbstractMaestro {
 	private static final long serialVersionUID = 1L;
 	private JScrollPane scrollPane;
 	public JXTable tblLista;
 	public DefaultTableModel modeloLista = new DefaultTableModel();
-	private AbstractMaestroLista frmGeneral;
-	private int modo;		
-	
-	protected static final String EDICION = "EDICION";
-	protected static final String VISTA = "VISTA";
-	protected static final String NUEVO = "NUEVO";
 
 	private PanelBarraMaestroLista barraLista;
-	private PanelBarraMaestro barra = new PanelBarraMaestro();
-	private int abierto = 0;
-	public PanelBarraMaestro getBarra() {
-		return barra;
-	}
-
-	public void setBarra(PanelBarraMaestro barra) {
-		this.barra = barra;
-	}
 
 	protected JPanel pnlContenido;
-	private String estado;
-	public AbstractMaestroLista() {		
+
+	public AbstractMaestroLista() {
 		super("aa");
 		barraLista = new PanelBarraMaestroLista();
 		setEstado(VISTA);
@@ -53,7 +35,7 @@ public abstract class AbstractMaestroLista extends AbstractMaestro{
 		setIconifiable(true);
 		setClosable(true);
 		setVisible(true);
-		setResizable(true);		
+		setResizable(true);
 		barraLista.setFormMaestro(this);
 		FlowLayout flowLayout = (FlowLayout) barraLista.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
@@ -78,8 +60,7 @@ public abstract class AbstractMaestroLista extends AbstractMaestro{
 		tblLista.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					setModo(0);
-					irFormulario();
+					irFormulario(VISTA);
 				}
 			}
 		});
@@ -87,20 +68,18 @@ public abstract class AbstractMaestroLista extends AbstractMaestro{
 		tblLista.setColumnControlVisible(true);
 	}
 
-	public void init(AbstractMaestro obj, int modo, Object entidad) {
+	public void init(AbstractMaestro obj, String opcion, Object entidad) {
 		if (obj instanceof AbstractMaestro) {
 			getDesktopPane().add(obj);
-			if (modo == 1) {
+
+			if (opcion.equals(NUEVO))
 				obj.DoNuevo();
-				abierto = 1;
-			} else {
-				if (modo == 2) {					
-					obj.actualiza_objeto(entidad);
-					obj.editar();
-					abierto = 1;
-				} else {
-					obj.actualiza_objeto(entidad);
-				}
+			if (opcion.equals(VISTA)) {
+				obj.actualiza_objeto(entidad);
+			}
+			if (opcion.equals(EDICION)) {
+				obj.actualiza_objeto(entidad);
+				obj.editar();
 			}
 			try {
 				obj.setSelected(true);
@@ -109,53 +88,30 @@ public abstract class AbstractMaestroLista extends AbstractMaestro{
 			}
 		}
 	}
-	
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-	
-	public int getModo() {
-		return modo;
-	}
-
-	public void setModo(int modo) {
-		this.modo = modo;
-	}
-
-	public AbstractMaestroLista getFrmGeneral() {
-		return frmGeneral;
-	}
-
-	public void setFrmGeneral(AbstractMaestroLista frmGeneral) {
-		this.frmGeneral = frmGeneral;
-	}
 
 	public JXTable getTblLista() {
 		return tblLista;
 	}
-	
-	
-	public Object RetornarPk(){
+
+	public Object RetornarPk() {
 		Object id = null;
 		if (tblLista.getSelectedRow() >= 0) {
-			id = modeloLista.getValueAt(
-					tblLista.getSelectedRow(), 0).toString();			
+			id = modeloLista.getValueAt(tblLista.getSelectedRow(), 0);
 		}
 		return id;
 	}
 	
-	public void Nuevo() {
-		if (abierto == 0){
-			setModo(1);
-			irFormulario();
-		}
+	@Override
+	public void nuevo() {
+		irFormulario(NUEVO);
 	}
 	
-	public abstract void  llenar_lista();
+	@Override
+	public void editar() {
+		irFormulario(EDICION);
+	}
 
-	public abstract void  irFormulario();
+	public abstract void llenar_lista();
+
+	public abstract void irFormulario(String opcion);
 }

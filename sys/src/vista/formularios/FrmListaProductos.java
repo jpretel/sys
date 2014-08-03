@@ -1,4 +1,5 @@
 package vista.formularios;
+
 import java.util.List;
 
 import dao.ProductoDAO;
@@ -8,14 +9,12 @@ import entity.Subgrupo;
 
 public class FrmListaProductos extends AbstractMaestroLista {
 	private static final long serialVersionUID = 1L;
-	
+
 	private ProductoDAO pdao = new ProductoDAO();
 	private Object[] obj;
-	private List<Producto> prodList = pdao.findAllbyProducto();
-	private int nFilasP = prodList.size();
+	private List<Producto> prodList = pdao.findAll();
 	private Producto producto;
-	private Subgrupo sg;
-	private Grupo g;
+
 	public FrmListaProductos() {
 		super();
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
@@ -23,89 +22,84 @@ public class FrmListaProductos extends AbstractMaestroLista {
 		super.inicia_Lista(columnas, obj);
 		llenar_lista();
 	}
-	
+
 	@Override
-	public void irFormulario() {		
-		if (RetornarPk() instanceof Object){
+	public void irFormulario(String estado) {
+
+		if (RetornarPk() instanceof Object) {
 			producto = pdao.find(RetornarPk());
-		}			
+		}
+
 		FrmProductos frmproductos = new FrmProductos();
-		super.init(frmproductos, getModo(), producto);
+
+		init(frmproductos, estado, producto);
 	}
 
 	@Override
 	public void llenar_lista() {
-		for (int i = 0; i < nFilasP; i++) {
-			producto = new Producto();
-			sg = new Subgrupo();
-			g = new Grupo();
-			producto = (Producto) prodList.get(i);
-			sg = producto.getSubgrupo();
-			g = sg.getGrupo();
-			obj = new Object[] {producto.getIdproductos(),
-					producto.getDescripcion(), g.getDescripcion(),
-					sg.getDescripcion() };
-			modeloLista.addRow(obj);
-		}
-	}
+		for (Producto p : prodList) {
+			Subgrupo sg = p.getSubgrupo();
+			Grupo g = (sg == null) ? null : sg.getGrupo();
 
-	@Override
-	public void nuevo() {
-		
+			modeloLista.addRow(new Object[] { p.getIdproductos(),
+					p.getDescripcion(),
+					(g == null) ? null : g.getDescripcion(),
+					(sg == null) ? null : sg.getDescripcion() });
+		}
 	}
 
 	@Override
 	public void anular() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void grabar() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void llenar_datos() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void llenar_tablas() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void vista_edicion() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void vista_noedicion() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void llenarDesdeVista() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -117,6 +111,6 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

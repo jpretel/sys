@@ -1,55 +1,58 @@
 package vista.contenedores;
-import java.util.List;
 
-import vista.utilitarios.busqueda;
 import dao.SubgrupoDAO;
 import entity.Grupo;
 import entity.Subgrupo;
-import vista.MainFrame;
 
-public class cntSubGrupo extends AbstractCntBuscar {
-	private static final long serialVersionUID = 1L;	
-	cntGrupo cntgrupo;
-	Subgrupo sg = new Subgrupo();
-	public Subgrupo getSg() {
-		return sg;
-	}
+public class cntSubGrupo extends AbstractCntBuscar<Subgrupo> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	SubgrupoDAO subgrupoDAO = new SubgrupoDAO();
+	private Grupo grupo;
 
-	public void setSg(Subgrupo sg) {
-		this.sg = sg;
-	}
-
-	public cntSubGrupo(cntGrupo cntgrupo) {
+	public cntSubGrupo() {
 		super();
-		this.cntgrupo = cntgrupo;
+		refrescar();
 	}
 
 	@Override
-	public void buscar() { 
-		SubgrupoDAO sgDAO = new SubgrupoDAO(); 
-		Grupo grupo1 = new Grupo();
-		String idgrupo = cntgrupo.txtCodigo.getText();
-		String descgrupo = cntgrupo.txtDescripcion.getText();
-		grupo1.setIdgrupo(idgrupo);
-		grupo1.setDescripcion(descgrupo);
-		List<Subgrupo> grupoL = sgDAO.findAllbyGrupo1(grupo1);
-		int nFilas = grupoL.size();
-		String grupo[][] = new String[nFilas][2];		
-		for (int i = 0; i < nFilas; i++) {
-			Subgrupo subgrupo = new Subgrupo();
-			subgrupo = grupoL.get(i);
-			if (subgrupo.getId().getGrupoIdgrupo().equals(idgrupo)) {
-				this.setSg(subgrupo);
-				grupo[i][0] = subgrupo.getId().getIdsubgrupo();
-				grupo[i][1] = subgrupo.getDescripcion();
-			}
+	public void cargarDatos(Subgrupo entity) {
+		if (entity == null) {
+			txtCodigo.setText("");
+			txtDescripcion.setText("");
+		} else {
+			txtCodigo.setText(entity.getId().getIdsubgrupo());
+			txtDescripcion.setText(entity.getDescripcion());
 		}
-
-		busqueda d = new busqueda(cntSubGrupo.this, grupo);
-		d.setModal(true);
-		d.setBounds(160, 180, 550, 450);
-		MainFrame.getDesktopPane().add(d);
-		d.setVisible(true);
 	}
 
+	@Override
+	public boolean coincideBusqueda(Subgrupo entity, String cadena) {
+		String cad = cadena.toLowerCase();
+		if (entity.getId().getIdsubgrupo().toLowerCase().startsWith(cad)
+				|| entity.getDescripcion().toLowerCase().startsWith(cad))
+			return true;
+		return false;
+	}
+
+	@Override
+	public Object[] entity2Object(Subgrupo entity) {
+		return new Object[] { entity.getId().getIdsubgrupo(),
+				entity.getDescripcion() };
+	}
+
+	@Override
+	public void refrescar() {
+		setData(subgrupoDAO.findAllbyGrupo(getGrupo()));
+	}
+
+	public Grupo getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
+	}
 }

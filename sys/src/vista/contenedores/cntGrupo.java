@@ -1,35 +1,45 @@
 package vista.contenedores;
 
-import java.util.List;
-
-import vista.MainFrame;
-import vista.utilitarios.busqueda;
 import dao.GrupoDAO;
 import entity.Grupo;
-public class cntGrupo extends AbstractCntBuscar {
+
+public class cntGrupo extends AbstractCntBuscar<Grupo> {
 	private static final long serialVersionUID = 1L;
-	
+	private GrupoDAO grupoDAO = new GrupoDAO();
+
 	public cntGrupo() {
 		super();
+		refrescar();
 	}
 
 	@Override
-	public void buscar() {
-		GrupoDAO sgDAO = new	GrupoDAO();
-		List<Grupo> grupoL = sgDAO.findAllbyGrupo();
-		int nFilas = grupoL.size();
-		String grupo[][] = new String[nFilas][2];
-		for(int i = 0;i<nFilas;i++){					
-			grupo[i][0] = grupoL.get(i).getIdgrupo();
-			grupo[i][1] = grupoL.get(i).getDescripcion();
+	public void cargarDatos(Grupo entity) {
+		if (entity == null) {
+			txtCodigo.setText("");
+			txtDescripcion.setText("");
+		} else {
+			txtCodigo.setText(entity.getIdgrupo());
+			txtDescripcion.setText(entity.getDescripcion());
 		}
-		
-		busqueda d = new busqueda(cntGrupo.this,grupo);				
-		d.setModal(true);
-		d.setBounds(160, 180, 550, 450);		
-		MainFrame.getDesktopPane().add(d);	
-		d.setVisible(true);		
-	}	
-	
+	}
 
+	@Override
+	public boolean coincideBusqueda(Grupo entity, String cadena) {
+		String cad = cadena.toLowerCase();
+		if (entity.getIdgrupo().toLowerCase().startsWith(cad)
+				|| entity.getDescripcion().toLowerCase().startsWith(cad)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Object[] entity2Object(Grupo entity) {
+		return new Object[] { entity.getIdgrupo(), entity.getDescripcion() };
+	}
+
+	@Override
+	public void refrescar() {
+		setData(grupoDAO.findAll());
+	}
 }

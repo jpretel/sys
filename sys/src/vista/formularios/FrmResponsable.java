@@ -1,14 +1,9 @@
 package vista.formularios;
 
-import java.awt.Window;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.AreaDAO;
 import dao.ResponsableDAO;
-import entity.Area;
 import entity.Responsable;
 
 import javax.swing.JTable;
@@ -16,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import vista.Sys;
 import vista.contenedores.cntArea;
 import vista.utilitarios.MaestroTableModel;
 
@@ -63,15 +57,12 @@ public class FrmResponsable extends AbstractMaestro {
 
 	private JTable tblLista;
 	private JTextField txtCodigo;
-	private JTextField txtDescripcion;	
+	private JTextField txtDescripcion;
 	public final cntArea cntarea;
-	private AreaDAO adao;
-	private Area area = new Area();
-	private String datos[][];
 	
 	public FrmResponsable() {
-		super("Responsables");		
-		
+		super("Responsables");
+
 		JLabel lblCdigo = new JLabel("Codigo");
 		lblCdigo.setBounds(227, 11, 46, 14);
 
@@ -92,81 +83,154 @@ public class FrmResponsable extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
-		
+
 		JLabel lblArea = new JLabel("Area");
 		lblArea.setBounds(286, 80, 75, 14);
-		cntarea = new cntArea(){
-			private static final long serialVersionUID = 1L;
-			public Window getFormulario(){
-			return (Window) Sys.mainF;
-			}};
-		cntarea.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				if (!cntarea.txtCodigo.getText().equals("")) {					
-					area = adao.find(cntarea.txtCodigo.getText());
-					cntarea.setArea(area);
-				}
-			}
-		});
+		cntarea = new cntArea();
 		cntarea.setBounds(296, 80, 290, 25);
 		getContentPane().add(cntarea);
 		getContentPane().add(lblArea);
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(10)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(312)
-											.addComponent(lblCdigo))
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(312)
-											.addComponent(lblDescripcin)))
-									.addGap(5)
-									.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 218, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(lblArea, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(cntarea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(381)
-							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(11)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(15)
-									.addComponent(lblCdigo))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(45)
-									.addComponent(lblDescripcin)))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(cntarea, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblArea))
-							.addGap(180))))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(52)
-					.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(26)
-					.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-		);
+		groupLayout
+				.setHorizontalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(10)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addGroup(
+																												groupLayout
+																														.createParallelGroup(
+																																Alignment.LEADING)
+																														.addGroup(
+																																groupLayout
+																																		.createSequentialGroup()
+																																		.addGap(312)
+																																		.addComponent(
+																																				lblCdigo))
+																														.addGroup(
+																																groupLayout
+																																		.createSequentialGroup()
+																																		.addGap(312)
+																																		.addComponent(
+																																				lblDescripcin)))
+																										.addGap(5)
+																										.addComponent(
+																												txtDescripcion,
+																												GroupLayout.PREFERRED_SIZE,
+																												218,
+																												GroupLayout.PREFERRED_SIZE))
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addComponent(
+																												scrollPane,
+																												GroupLayout.PREFERRED_SIZE,
+																												302,
+																												GroupLayout.PREFERRED_SIZE)
+																										.addPreferredGap(
+																												ComponentPlacement.UNRELATED)
+																										.addComponent(
+																												lblArea,
+																												GroupLayout.PREFERRED_SIZE,
+																												42,
+																												GroupLayout.PREFERRED_SIZE)
+																										.addGap(18)
+																										.addComponent(
+																												cntarea,
+																												GroupLayout.PREFERRED_SIZE,
+																												GroupLayout.DEFAULT_SIZE,
+																												GroupLayout.PREFERRED_SIZE))))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(381)
+																		.addComponent(
+																				txtCodigo,
+																				GroupLayout.PREFERRED_SIZE,
+																				174,
+																				GroupLayout.PREFERRED_SIZE)))
+										.addContainerGap(
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)));
+		groupLayout
+				.setVerticalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGap(11)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																scrollPane,
+																GroupLayout.PREFERRED_SIZE,
+																274,
+																GroupLayout.PREFERRED_SIZE)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addGap(15)
+																										.addComponent(
+																												lblCdigo))
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addGap(45)
+																										.addComponent(
+																												lblDescripcin)))
+																		.addPreferredGap(
+																				ComponentPlacement.UNRELATED)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								cntarea,
+																								GroupLayout.PREFERRED_SIZE,
+																								24,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								lblArea))
+																		.addGap(180))))
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGap(52)
+										.addComponent(txtDescripcion,
+												GroupLayout.PREFERRED_SIZE, 22,
+												GroupLayout.PREFERRED_SIZE))
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGap(26)
+										.addComponent(txtCodigo,
+												GroupLayout.PREFERRED_SIZE,
+												GroupLayout.DEFAULT_SIZE,
+												GroupLayout.PREFERRED_SIZE)));
 		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -175,26 +239,13 @@ public class FrmResponsable extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent e) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setResponsable(getResponsableL().get(selectedRow));						
+							setResponsable(getResponsableL().get(selectedRow));
 						else
 							setResponsable(null);
 						llenar_datos();
 					}
 				});
-		llenar_cntarea();
 		iniciar();
-	}
-	
-	public void llenar_cntarea(){
-		adao = new AreaDAO();
-		List<Area> AreaL = adao.findAll();
-		datos = new String[AreaL.size()][2];
-		for (int i = 0; i < AreaL.size(); i++) {
-			area = (Area) AreaL.get(i);
-			datos[i][0] = area.getIdarea();
-			datos[i][1] = area.getDescripcion();
-		}
-		cntarea.cargar_informacion(datos);
 	}
 
 	@Override
@@ -208,7 +259,7 @@ public class FrmResponsable extends AbstractMaestro {
 	}
 
 	@Override
-	public void grabar() {		
+	public void grabar() {
 		getResponsableDAO().crear_editar(getResponsable());
 	}
 
@@ -236,7 +287,8 @@ public class FrmResponsable extends AbstractMaestro {
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
 		for (Responsable responsable : getResponsableL()) {
-			model.addRow(new Object[] { responsable.getIdresponsable(), responsable.getNombre()});
+			model.addRow(new Object[] { responsable.getIdresponsable(),
+					responsable.getNombre() });
 		}
 		if (getResponsableL().size() > 0) {
 			setResponsable(getResponsableL().get(0));
@@ -273,20 +325,19 @@ public class FrmResponsable extends AbstractMaestro {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void llenarDesdeVista() {
 		getResponsable().setIdresponsable(txtCodigo.getText());
 		getResponsable().setNombre(txtDescripcion.getText());
-		
 	}
 
 	@Override

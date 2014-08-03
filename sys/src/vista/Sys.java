@@ -17,16 +17,20 @@ import entity.GrupoUsuario;
 import entity.Usuario;
 
 public class Sys {
+	public static final String EDICION = "EDICION";
+	public static final String VISTA = "VISTA";
+	public static final String NUEVO = "NUEVO";
+
 	public final static String SYS_CONFIG = "config.properties";
 
 	public static SysCfgInicio cfgInicio;
-	
+
 	public static Usuario usuario;
-	
+
 	private FrmSysConfig frm = new FrmSysConfig();
-	
+
 	public static MainFrame mainF;
-	
+
 	public static void main(String[] args) {
 		try {
 			salir: for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
@@ -57,9 +61,11 @@ public class Sys {
 	public void iniciar() {
 		File sys_file = new File(SYS_CONFIG);
 		String[] datos = null;
+		frm = new FrmSysConfig();
 		frm.setLocationRelativeTo(null);
 		boolean isOK;
 		if (sys_file.exists()) {
+			System.out.println("Existe");
 			datos = ConfigInicial.LlenarConfig();
 			if (datos != null) {
 				cfgInicio = new SysCfgInicio();
@@ -99,7 +105,7 @@ public class Sys {
 
 	public void abrir() {
 		frm.dispose();
-		
+
 		GrupoUsuario grpAdmin = new GrupoUsuarioDAO().find("ADM");
 
 		if (grpAdmin == null) {
@@ -119,17 +125,18 @@ public class Sys {
 			u.setClave(Encryption.pss_encrypt("administrador"));
 			new UsuarioDAO().create(u);
 		}
-		
+
 		FrmLogin frm = new FrmLogin();
 		frm.setVisible(true);
-		
+
 		frm.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				iniciaMainFrame();
 			}
 		});
 	}
-	private void iniciaMainFrame () {
+
+	private void iniciaMainFrame() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 
@@ -138,5 +145,5 @@ public class Sys {
 
 		});
 	}
-	
+
 }

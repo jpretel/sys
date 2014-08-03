@@ -14,7 +14,7 @@ public class Cuenta implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private String id;
+	private String idcuenta;
 
 	private String descripcion;
 
@@ -22,14 +22,6 @@ public class Cuenta implements Serializable {
 	private String tcAjuste;
 
 	public Cuenta() {
-	}
-
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getDescripcion() {
@@ -46,6 +38,14 @@ public class Cuenta implements Serializable {
 
 	public void setTcAjuste(String tcAjuste) {
 		this.tcAjuste = tcAjuste;
+	}
+
+	public String getIdcuenta() {
+		return idcuenta;
+	}
+
+	public void setIdcuenta(String idcuenta) {
+		this.idcuenta = idcuenta;
 	}
 
 }

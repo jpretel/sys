@@ -184,7 +184,7 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
-		getCuenta().setId(txtCodigo.getText());
+		getCuenta().setIdcuenta(txtCodigo.getText());
 		getCuenta().setDescripcion(txtDescripcion.getText());
 	};
 
@@ -213,7 +213,7 @@ public class FrmCuentas extends AbstractMaestro {
 	@Override
 	public void llenar_datos() {
 		if (getCuenta() != null) {
-			txtCodigo.setText(getCuenta().getId());
+			txtCodigo.setText(getCuenta().getIdcuenta());
 			txtDescripcion.setText(getCuenta().getDescripcion());
 		} else {
 			txtCodigo.setText("");
@@ -228,7 +228,8 @@ public class FrmCuentas extends AbstractMaestro {
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
 		for (Cuenta cuenta : getCuentas()) {
-			model.addRow(new Object[] { cuenta.getId(), cuenta.getDescripcion() });
+			model.addRow(new Object[] { cuenta.getIdcuenta(),
+					cuenta.getDescripcion() });
 		}
 		if (getCuentas().size() > 0) {
 			setCuenta(getCuentas().get(0));

@@ -1,46 +1,44 @@
 package vista.contenedores;
 
-import java.util.List;
-
-import vista.utilitarios.busqueda;
 import dao.UnimedidaDAO;
 import entity.Unimedida;
-import vista.MainFrame;
 
-public class cntMedida extends AbstractCntBuscar {
+public class cntMedida extends AbstractCntBuscar<Unimedida> {
 	private static final long serialVersionUID = 1L;
-	Unimedida unimedida = new Unimedida();
-	public Unimedida getUnimedida() {
-		return unimedida;
-	}
-
-	public void setUnimedida(Unimedida unimedida) {
-		this.unimedida = unimedida;
-	}
+	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 
 	public cntMedida() {
 		super();
+		refrescar();
 	}
 
 	@Override
-	public void buscar() {
-		UnimedidaDAO sgDAO = new	UnimedidaDAO();
-		List<Unimedida> grupoL = sgDAO.findAll();
-		int nFilas = grupoL.size();
-		String grupo[][] = new String[nFilas][2];
-		for(int i = 0;i<nFilas;i++){
-			unimedida = (Unimedida)grupoL.get(i);
-			setUnimedida(unimedida);
-			grupo[i][0] = grupoL.get(i).getIdunimedida();
-			grupo[i][1] = grupoL.get(i).getDescripcion();
+	public void cargarDatos(Unimedida entity) {
+		if (entity == null) {
+			txtCodigo.setText("");
+			txtDescripcion.setText("");
+		} else {
+			txtCodigo.setText(entity.getIdunimedida());
+			txtDescripcion.setText(entity.getDescripcion());
 		}
-		
-		busqueda d = new busqueda(cntMedida.this,grupo);				
-		d.setModal(true);
-		d.setBounds(160, 180, 550, 450);		
-		MainFrame.getDesktopPane().add(d);	
-		d.setVisible(true);		
-	}	
-	
+	}
 
+	@Override
+	public boolean coincideBusqueda(Unimedida entity, String cadena) {
+		String cad = cadena.toLowerCase();
+		if (entity.getIdunimedida().toLowerCase().startsWith(cad)
+				|| entity.getDescripcion().toLowerCase().startsWith(cad))
+			return true;
+		return false;
+	}
+
+	@Override
+	public Object[] entity2Object(Unimedida entity) {
+		return new Object[] { entity.getIdunimedida(), entity.getDescripcion() };
+	}
+
+	@Override
+	public void refrescar() {
+		setData(unimedidaDAO.findAll());
+	}
 }

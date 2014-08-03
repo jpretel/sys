@@ -1,5 +1,8 @@
 package vista.formularios;
-import vista.Sys;
+
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+
 import vista.contenedores.cntGrupo;
 import vista.contenedores.cntMarca;
 import vista.contenedores.cntMedida;
@@ -9,29 +12,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import dao.GrupoDAO;
-import dao.MarcaDAO;
 import dao.ProductoDAO;
-import dao.SubgrupoDAO;
-import dao.UnimedidaDAO;
 import entity.Grupo;
 import entity.Marca;
 import entity.Producto;
 import entity.Subgrupo;
-import entity.SubgrupoPK;
 import entity.Unimedida;
-
-import java.util.List;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-
-import java.awt.Window;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class FrmProductos extends AbstractMaestro {
 	/**
@@ -45,15 +37,10 @@ public class FrmProductos extends AbstractMaestro {
 	public final cntMarca cntmarca;
 	public final cntMedida cntmedida;
 	private Producto producto;// = new Producto()
-	private GrupoDAO gdao;
-	private SubgrupoDAO sgdao;
-	private UnimedidaDAO udao;
-	private MarcaDAO mdao;
 	Grupo grupo = new Grupo();
 	Subgrupo subgrupo = new Subgrupo();
 	Unimedida umedida = new Unimedida();
 	Marca marca = new Marca();
-	private String datos[][];
 
 	public Producto getProducto() {
 		return producto;
@@ -77,29 +64,8 @@ public class FrmProductos extends AbstractMaestro {
 		lblGrupoDeProductos.setBounds(5, 10, 98, 14);
 		panel_1.add(lblGrupoDeProductos);
 
-		cntgrupo = new cntGrupo(){
-			private static final long serialVersionUID = 1L;
-			public Window getFormulario(){
-			return (Window) Sys.mainF;
-			}};
-		cntgrupo.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				if (!cntgrupo.txtCodigo.getText().equals("")) {
-					sgdao = new SubgrupoDAO();
-					Object id_grupo = cntgrupo.txtCodigo.getText();
-					grupo = gdao.find(id_grupo);
-					List<Subgrupo> subgrupoL = sgdao.findAllbyGrupo1(grupo);
-					datos = new String[subgrupoL.size()][2];
-					for (int i = 0; i < subgrupoL.size(); i++) {
-						subgrupo = (Subgrupo) subgrupoL.get(i);
-						datos[i][0] = subgrupo.getId().getIdsubgrupo();
-						datos[i][1] = subgrupo.getDescripcion();
-					}
-					cntSubGrupo.cargar_informacion(datos);
-				}
-			}
-		});
+		cntgrupo = new cntGrupo();
+
 		cntgrupo.setBounds(149, 10, 290, 25);
 		panel_1.add(cntgrupo);
 
@@ -107,27 +73,15 @@ public class FrmProductos extends AbstractMaestro {
 		lblSubgrupoDeProductos.setBounds(5, 40, 116, 14);
 		panel_1.add(lblSubgrupoDeProductos);
 
-		cntSubGrupo = new cntSubGrupo(cntgrupo){
-			private static final long serialVersionUID = 1L;
-			public Window getFormulario(){
-			return (Window) Sys.mainF;
-			}};
+		cntSubGrupo = new cntSubGrupo();
+
 		cntSubGrupo.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent e) {
-				if (!cntSubGrupo.txtCodigo.getText().equals("") && !cntSubGrupo.txtDescripcion.getText().equals("")) {
-					SubgrupoPK sgpk = new SubgrupoPK();
-					sgpk.setGrupoIdgrupo(cntgrupo.txtCodigo.getText());
-					sgpk.setIdsubgrupo(cntSubGrupo.txtCodigo.getText());
-					subgrupo.setId(sgpk);
-					sgdao = new SubgrupoDAO();
-					subgrupo = sgdao.find(subgrupo.getId());					
-					if (subgrupo instanceof Subgrupo) {						
-						cntSubGrupo.setSg(subgrupo);
-					}
-				}
+			public void focusGained(FocusEvent arg0) {
+				actualizaSubGrupo();
 			}
 		});
+
 		cntSubGrupo.setBounds(149, 40, 290, 25);
 		panel_1.add(cntSubGrupo);
 
@@ -162,20 +116,8 @@ public class FrmProductos extends AbstractMaestro {
 		lblUnidadDeMedida.setBounds(5, 147, 90, 14);
 		panel_1.add(lblUnidadDeMedida);
 
-		cntmedida = new cntMedida(){
-			private static final long serialVersionUID = 1L;
-			public Window getFormulario(){
-			return (Window) Sys.mainF;
-			}};
-		cntmedida.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (!cntmedida.txtCodigo.getText().equals("")) {
-					umedida = udao.find(cntmedida.txtCodigo.getText());
-					cntmedida.setUnimedida(umedida);
-				}
-			}
-		});
+		cntmedida = new cntMedida();
+
 		cntmedida.setBounds(149, 147, 290, 25);
 		panel_1.add(cntmedida);
 
@@ -183,20 +125,8 @@ public class FrmProductos extends AbstractMaestro {
 		lblMarcas.setBounds(5, 172, 90, 14);
 		panel_1.add(lblMarcas);
 
-		cntmarca = new cntMarca(){
-			private static final long serialVersionUID = 1L;
-			public Window getFormulario(){
-				return (Window) Sys.mainF;
-			}};
-		cntmarca.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (!cntmarca.txtCodigo.getText().equals("")) {
-					marca = mdao.find(cntmarca.txtCodigo.getText());
-					cntmarca.setMarca(marca);
-				}
-			}
-		});
+		cntmarca = new cntMarca();
+
 		cntmarca.setBounds(149, 172, 290, 25);
 		panel_1.add(cntmarca);
 
@@ -234,13 +164,9 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void actualiza_objeto(Object prod) {
-		producto = (Producto) prod;
-		this.setProducto(producto);
-		this.cntSubGrupo.setSg(producto.getSubgrupo());
-		this.cntmedida.setUnimedida(producto.getUnimedida());
-		this.cntmarca.setMarca(producto.getMarca());
-		this.llenar_datos();
-		this.vista_noedicion();
+		setProducto((Producto) prod);
+		llenar_datos();
+		vista_noedicion();
 	}
 
 	public void grabar() {
@@ -285,25 +211,19 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
-		if (getProducto() instanceof Producto && !getEstado().equals(NUEVO)) {
-			grupo = this.getProducto().getSubgrupo().getGrupo();
-			subgrupo = this.getProducto().getSubgrupo();
-			this.cntgrupo.txtCodigo.setText(grupo.getIdgrupo());
-			this.cntgrupo.txtDescripcion.setText(grupo.getDescripcion());
-			this.cntSubGrupo.txtCodigo
-					.setText(subgrupo.getId().getIdsubgrupo());
-			this.cntSubGrupo.txtDescripcion.setText(subgrupo.getDescripcion());
-			this.txtCodigo.setText(this.getProducto().getIdproductos());
-			this.txtDescripcion.setText(this.getProducto().getDescripcion());
-			this.txtnomcorto.setText(this.getProducto().getDescCorta());
-			this.cntmarca.txtCodigo.setText(this.getProducto().getMarca()
-					.getIdmarca());
-			this.cntmarca.txtDescripcion.setText(this.getProducto().getMarca()
-					.getDescripcion());
-			this.cntmedida.txtCodigo.setText(this.getProducto().getUnimedida()
-					.getIdunimedida());
-			this.cntmedida.txtDescripcion.setText(this.getProducto()
-					.getUnimedida().getDescripcion());
+		if (!getEstado().equals(NUEVO)) {
+			Subgrupo sg = getProducto().getSubgrupo();
+			Grupo g = (sg == null)? null : sg.getGrupo();
+			
+			txtCodigo.setText(this.getProducto().getIdproductos());
+			txtDescripcion.setText(this.getProducto().getDescripcion());
+			txtnomcorto.setText(this.getProducto().getDescCorta());
+			cntmarca.setSeleccionado(getProducto().getMarca());
+			cntmedida.setSeleccionado(getProducto().getUnimedida());
+			cntgrupo.setSeleccionado(g);
+			cntSubGrupo.setGrupo(g);
+			cntSubGrupo.setSeleccionado(sg);
+			
 		} else {
 			this.cntgrupo.txtCodigo.setText(null);
 			this.cntgrupo.txtDescripcion.setText(null);
@@ -320,33 +240,16 @@ public class FrmProductos extends AbstractMaestro {
 	}
 
 	public void llenar_contenedores() {
-		gdao = new GrupoDAO();
-		List<Grupo> grupoL = gdao.findAll();
-		datos = new String[grupoL.size()][2];
-		for (int i = 0; i < grupoL.size(); i++) {
-			grupo = (Grupo) grupoL.get(i);
-			datos[i][0] = grupo.getIdgrupo();
-			datos[i][1] = grupo.getDescripcion();
-		}
-		cntgrupo.cargar_informacion(datos);
-		udao = new UnimedidaDAO();
-		List<Unimedida> umedidaL = udao.findAll();
-		datos = new String[umedidaL.size()][2];
-		for (int i = 0; i < umedidaL.size(); i++) {
-			umedida = (Unimedida) umedidaL.get(i);
-			datos[i][0] = umedida.getIdunimedida();
-			datos[i][1] = umedida.getDescripcion();
-		}
-		cntmedida.cargar_informacion(datos);
-		mdao = new MarcaDAO();
-		List<Marca> marcaL = mdao.findAll();
-		datos = new String[marcaL.size()][2];
-		for (int i = 0; i < marcaL.size(); i++) {
-			marca = (Marca) marcaL.get(i);
-			datos[i][0] = marca.getIdmarca();
-			datos[i][1] = marca.getDescripcion();
-		}
-		cntmarca.cargar_informacion(datos);
+		cntgrupo.refrescar();
+		cntSubGrupo.setGrupo(null);
+		cntSubGrupo.refrescar();
+		cntmedida.refrescar();
+		cntmarca.refrescar();
+	}
+
+	public void actualizaSubGrupo() {
+		cntSubGrupo.setGrupo(cntgrupo.getSeleccionado());
+		cntSubGrupo.refrescar();
 	}
 
 	@Override
@@ -381,10 +284,9 @@ public class FrmProductos extends AbstractMaestro {
 		getProducto().setIdproductos(this.txtCodigo.getText());
 		getProducto().setDescripcion(this.txtDescripcion.getText());
 		getProducto().setDescCorta(this.txtnomcorto.getText());
-		getProducto().setSubgrupo(this.cntSubGrupo.getSg());
-		getProducto().setUnimedida(this.cntmedida.getUnimedida());
-		getProducto().setMarca(this.cntmarca.getMarca());	
-		System.out.println(getProducto().toString());
+		getProducto().setSubgrupo(this.cntSubGrupo.getSeleccionado());
+		getProducto().setUnimedida(this.cntmedida.getSeleccionado());
+		getProducto().setMarca(this.cntmarca.getSeleccionado());
 	}
 
 	@Override
@@ -396,7 +298,7 @@ public class FrmProductos extends AbstractMaestro {
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

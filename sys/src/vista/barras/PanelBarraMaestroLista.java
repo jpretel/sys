@@ -89,15 +89,14 @@ public class PanelBarraMaestroLista extends JPanel {
 		btnEditar = new JButton("");
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getFormMaestro().setModo(1);
-				getFormMaestro().irFormulario();
+				getFormMaestro().editar();
 			}
 		});
 
 		btnNuevo = new JButton("");
 		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
-				getFormMaestro().Nuevo();
+				getFormMaestro().nuevo();
 			}
 		});
 		
@@ -115,7 +114,7 @@ public class PanelBarraMaestroLista extends JPanel {
 		add(btnEditar);
 		btnBuscar
 				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
-						.getResource("/main/resources/iconos/find.png"))
+						.getResource("/main/resources/iconos/editar.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
 		btnBuscar.setToolTipText("Editar");
@@ -129,7 +128,7 @@ public class PanelBarraMaestroLista extends JPanel {
 		});
 		btnImprimir
 				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
-						.getResource("/main/resources/iconos/printer.png"))
+						.getResource("/main/resources/iconos/editar.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
 		btnImprimir.setToolTipText("Cancelar");

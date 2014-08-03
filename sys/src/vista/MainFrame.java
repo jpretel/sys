@@ -44,8 +44,6 @@ import entity.SysOpcion;
 import entity.SysTitulo;
 import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
-import vista.formularios.FrmSysGrupo;
-import vista.formularios.FrmSysModulo;
 import vista.utilitarios.MenuController;
 
 public class MainFrame extends JRibbonFrame {
