@@ -26,36 +26,17 @@ import org.jdesktop.swingx.JXDatePicker;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import org.jdesktop.swingx.JXCollapsiblePane;
-
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import org.jdesktop.swingx.JXTaskPaneContainer;
-
-import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JCheckBox;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.BevelBorder;
 
 public abstract class AbstractDocList extends JInternalFrame {
 
@@ -82,24 +63,26 @@ public abstract class AbstractDocList extends JInternalFrame {
 	private static final int _ancho = 20;
 	private static final int _alto = 20;
 
+	protected String[] cabeceras = new String[] { "Documento", "Serie",
+			"Numero" };
+
 	/**
 	 * Crea la lista del documento con los filtros por defecto.
 	 */
-	public AbstractDocList() {
-		setTitle("Lista de Documentos");
+	public AbstractDocList(String titulo) {
+		setTitle(titulo);
 		setIconifiable(true);
 		setMaximizable(true);
 		setClosable(true);
 		getContentPane().setLayout(new BorderLayout(0, 0));
-		calendar.set(Calendar.DATE, 1);
+		//calendar.set(Calendar.DATE, 1);
 		getContentPane().add(pnlDocumentos, BorderLayout.CENTER);
 
 		tblDocumentos = new JTable();
 		tblDocumentos.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
 				null));
 		tblDocumentos.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "Documento", "New column", "New column",
-						"New column" }));
+				cabeceras));
 		pnlDocumentos.setViewportView(tblDocumentos);
 
 		JPanel pnlFiltros = new JPanel();
@@ -115,13 +98,13 @@ public abstract class AbstractDocList extends JInternalFrame {
 		txtDesde = new JXDatePicker();
 		txtDesde.setFormats(dateFormatter);
 
-		txtDesde.setDate(calendar.getTime());
+		//txtDesde.setDate(calendar.getTime());
 
 		JLabel lblHasta = new JLabel("Hasta");
 
 		txtHasta = new JXDatePicker();
 		txtHasta.setFormats(dateFormatter);
-		txtHasta.setDate(calendar.getTime());
+		//txtHasta.setDate(calendar.getTime());
 
 		JLabel lblDocumento = new JLabel("Documento");
 
@@ -346,7 +329,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 		JPanel pnlOpciones = new JPanel();
 		pnlOpciones.setPreferredSize(new Dimension(120, 0));
-		pnlOpciones.setBorder(new TitledBorder(null, "Opciones", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		pnlOpciones.setBorder(new TitledBorder(null, "Opciones",
+				TitledBorder.CENTER, TitledBorder.TOP, null, null));
 		getContentPane().add(pnlOpciones, BorderLayout.WEST);
 		pnlOpciones
 				.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec
@@ -371,13 +355,13 @@ public abstract class AbstractDocList extends JInternalFrame {
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 	}
 
-	/**
+	/*
+	 * *
 	 * Metodo que retorna cabeceras de la lista
 	 * 
-	 * @return Cabeceras que se mostrarán en la cabecera de la lista
+	 * @return Cabeceras que se mostrarán en la cabecera de la lista / public
+	 * abstract String[] getCabeceras();
 	 */
-	public abstract String[] getCabeceras();
-
 	/**
 	 * Llena la lista del formulario con los datos de los documentos, usa un
 	 * tipo de datos <b> List </b> que deberá ser llenado desde se tomará la
@@ -400,8 +384,6 @@ public abstract class AbstractDocList extends JInternalFrame {
 		serie = txtSerie.getText();
 		numero = txtNumero.getText();
 
-		String[] cabeceras = getCabeceras();
-
 		columnas = cabeceras.length;
 
 		datos = getDocumentoDAO().getListaDocumentos(
@@ -412,7 +394,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 		modelo_lista = new DefaultTableModel();
 
-		for (String cabecera : getCabeceras()) {
+		for (String cabecera : cabeceras) {
 			modelo_lista.addColumn(cabecera);
 		}
 
@@ -438,15 +420,5 @@ public abstract class AbstractDocList extends JInternalFrame {
 	 */
 	public void setDocumentoDAO(IDocumentoDAO documentoDAO) {
 		this.documentoDAO = documentoDAO;
-	}
-
-	private class SwingAction extends AbstractAction {
-		public SwingAction() {
-			putValue(NAME, "SwingAction");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-
-		public void actionPerformed(ActionEvent e) {
-		}
 	}
 }
