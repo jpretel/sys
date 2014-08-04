@@ -2,10 +2,14 @@ package vista;
 
 import java.io.File;
 
+import static vista.utilitarios.UtilMensajes.mensaje_alterta;
+import static vista.utilitarios.UtilMensajes.mensaje_error;
+
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import controlador.Mensajes;
 import vista.formularios.FrmLogin;
 import core.inicio.ConectionManager;
 import core.inicio.ConfigInicial;
@@ -26,6 +30,8 @@ public class Sys {
 	public static SysCfgInicio cfgInicio;
 
 	public static Usuario usuario;
+	
+	public static Mensajes mensajes;
 
 	private FrmSysConfig frm = new FrmSysConfig();
 
@@ -59,6 +65,9 @@ public class Sys {
 	}
 
 	public void iniciar() {
+		
+		mensajes = new Mensajes("ESPANOL");
+		
 		File sys_file = new File(SYS_CONFIG);
 		String[] datos = null;
 		frm = new FrmSysConfig();
@@ -80,6 +89,7 @@ public class Sys {
 				if (isOK) {
 					abrir();
 				} else {
+					mensaje_alterta("ERROR_CONFIG");
 					frm.addChangeListener(new ChangeListener() {
 						public void stateChanged(ChangeEvent arg0) {
 							ConfigInicial.CrearConfig(frm.getCfgInicio());
@@ -91,7 +101,7 @@ public class Sys {
 				}
 			}
 		} else {
-
+			mensaje_alterta("NO_HAY_CONFIG");
 			frm.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
 					ConfigInicial.CrearConfig(frm.getCfgInicio());

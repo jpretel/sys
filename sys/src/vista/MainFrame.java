@@ -101,7 +101,7 @@ public class MainFrame extends JRibbonFrame {
 		SysModulo moduloIncial = null;
 
 		RibbonApplicationMenu ribbon = new RibbonApplicationMenu();
-
+		
 		RibbonApplicationMenuEntryPrimary modulo_popup = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/salir.png"),
 				"Modulo", null, CommandButtonKind.POPUP_ONLY);
@@ -192,9 +192,9 @@ public class MainFrame extends JRibbonFrame {
 		ribbon.addFooterEntry(footer);
 
 		getRibbon().setApplicationMenu(ribbon);
-
+		setApplicationIcon(getResizableIconFromResource("/main/resources/iconos/printer.png"));
 		setIconImage(new ImageIcon(
-				MainFrame.class.getResource("/main/resources/iconos/nuevo.png"))
+				MainFrame.class.getResource("/main/resources/iconos/printer.png"))
 				.getImage());
 
 		if (moduloIncial != null) {
