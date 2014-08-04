@@ -1,5 +1,7 @@
 package vista.formularios;
 
+import static vista.utilitarios.UtilMensajes.mensaje_alterta;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -87,7 +89,7 @@ public class FrmLogin extends JFrame {
 			}
 			this.dispose();
 		} else
-			System.out.println("Usuario o Clave incorrecta");
+			mensaje_alterta("CLAVEUSUARIO_INC");
 
 	}
 
