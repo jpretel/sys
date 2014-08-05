@@ -49,7 +49,7 @@ public class ConfigInicial {
 					}
 				}
 				usuario = decrypt(usuario);
-				clave = "";
+				clave = decrypt(clave);
 				return new String[] {servidor, baseDatos, usuario, clave};
 			}
 
