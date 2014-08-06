@@ -101,7 +101,7 @@ public class MainFrame extends JRibbonFrame {
 		SysModulo moduloIncial = null;
 
 		RibbonApplicationMenu ribbon = new RibbonApplicationMenu();
-		
+
 		RibbonApplicationMenuEntryPrimary modulo_popup = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/salir.png"),
 				"Modulo", null, CommandButtonKind.POPUP_ONLY);
@@ -168,22 +168,20 @@ public class MainFrame extends JRibbonFrame {
 		RibbonApplicationMenuEntryPrimary cambiar_clave = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
 				"Cambiar Clave", null, CommandButtonKind.ACTION_ONLY);
-		
+
 		ribbon.addMenuEntry(cambiar_clave);
-		
-		
+
 		RibbonApplicationMenuEntryPrimary cerrar_sesion = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
 				"Cerrar Sesión", null, CommandButtonKind.ACTION_ONLY);
-		
+
 		ribbon.addMenuEntry(cerrar_sesion);
-		
+
 		RibbonApplicationMenuEntryPrimary salir = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
 				"Salir", null, CommandButtonKind.ACTION_ONLY);
-		
+
 		ribbon.addMenuEntry(salir);
-		
 
 		RibbonApplicationMenuEntryFooter footer = new RibbonApplicationMenuEntryFooter(
 				getResizableIconFromResource("/main/resources/salir.png"),
@@ -192,9 +190,10 @@ public class MainFrame extends JRibbonFrame {
 		ribbon.addFooterEntry(footer);
 
 		getRibbon().setApplicationMenu(ribbon);
-		setApplicationIcon(getResizableIconFromResource("/main/resources/iconos/printer.png"));
+		setApplicationIcon(getResizableIconFromResource("/main/resources/iconos/logo.png"));
 		setIconImage(new ImageIcon(
-				MainFrame.class.getResource("/main/resources/iconos/printer.png"))
+				MainFrame.class
+						.getResource("/main/resources/iconos/logo.png"))
 				.getImage());
 
 		if (moduloIncial != null) {
@@ -219,10 +218,8 @@ public class MainFrame extends JRibbonFrame {
 				if (grupo.getOpciones() == null) {
 					grupo.setOpciones(new ArrayList<OpcionMenu>());
 				}
-				// System.out.println(grupo.getOpciones().size());
 				boolean dibujaGrupo = (grupo.getOpciones().size() > 0);
 
-				// System.out.println(dibujaGrupo);
 				JRibbonBand band = new JRibbonBand(grupo.getDescripcion(),
 						getResizableIconFromResource(grupo.getImagen()));
 
@@ -231,9 +228,6 @@ public class MainFrame extends JRibbonFrame {
 					bandas_aux.add(band);
 
 					for (OpcionMenu opcion : grupo.getOpciones()) {
-
-		
-
 						JCommandButton button = new JCommandButton(
 								opcion.getDescripcion(),
 								getResizableIconFromResource(opcion.getImagen()));
@@ -271,9 +265,6 @@ public class MainFrame extends JRibbonFrame {
 				this.getRibbon().addTask(task);
 			}
 		}
-
-		// Comienzo del Contenido del Menu Desplegable
-
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -293,8 +284,6 @@ public class MainFrame extends JRibbonFrame {
 				}
 
 				boolean dibujaGrupo = (grupo.getSysOpcions().size() > 0);
-
-				// System.out.println(dibujaGrupo);
 				JRibbonBand band = new JRibbonBand(
 						grupo.getDescripcion(),
 						getResizableIconFromResource("/main/resources/iconos/nuevo.png"));
