@@ -1,5 +1,7 @@
 package vista.formularios;
 
+import static vista.utilitarios.UtilMensajes.mensaje_alterta;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import entity.SysModulo;
 import entity.SysTitulo;
 import entity.SysTituloPK;
 
+import java.awt.SystemTray;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -33,7 +36,9 @@ public class FrmSysModulo extends AbstractMaestro {
 	private static final long serialVersionUID = 1L;
 
 	private JTable tblLista;
-
+	SysTituloDAO stdao = new SysTituloDAO();
+	List<SysTitulo> lista;
+	
 	private JTable tblTitulo;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
@@ -51,7 +56,7 @@ public class FrmSysModulo extends AbstractMaestro {
 	private JButton btnBLinea;
 
 	public FrmSysModulo() {
-		super("Sucursal / Almacen");
+		super("Gestión de Módulos");
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 199, 273);
@@ -63,7 +68,7 @@ public class FrmSysModulo extends AbstractMaestro {
 		JScrollPane scrollPaneNum = new JScrollPane();
 		scrollPaneNum.setBounds(215, 65, 314, 219);
 
-		tblTitulo = new JTable(new DSGTableModel(new String [] {"Cod. Titulo", "Descripcion"}) {
+		tblTitulo = new JTable(new DSGTableModel(new String [] {"Cod. Título", "Descripción"}) {
 			
 			/**
 			 * 
@@ -78,7 +83,7 @@ public class FrmSysModulo extends AbstractMaestro {
 		scrollPaneNum.setViewportView(tblTitulo);
 		tblTitulo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		JLabel lblCdigo = new JLabel("Cdigo");
+		JLabel lblCdigo = new JLabel("Codigo");
 		lblCdigo.setBounds(213, 18, 66, 14);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
@@ -132,6 +137,7 @@ public class FrmSysModulo extends AbstractMaestro {
 					}
 				});
 		iniciar();
+		cargar();
 	}
 
 	@Override
@@ -156,8 +162,84 @@ public class FrmSysModulo extends AbstractMaestro {
 		for (SysTitulo obj : getSysTitulos()) {
 			getSysTituloDAO().create(obj);
 		}
+			
+		
+		if(crear()){
+			//mensaje_alterta("CLAVEUSUARIO_INC");
+			crearTitulos();
+		}
 	}
 
+	public void cargar(){
+		lista = new ArrayList<SysTitulo>();
+		
+		for( SysTitulo st : stdao.findAll()){
+			lista.add(st);			
+		}
+		
+	}
+	public boolean crear(){
+		boolean crear = true;
+		System.out.println("Probando: " + lista.size() + " Probando el IDMod: "+ txtCodigo.getText().trim());
+		 
+		int con=1;
+		for( SysTitulo st : lista){
+			System.out.println(con + " "+st.getSysModulo().getDescripcion());
+			con++;
+		}
+		
+		for( SysTitulo st :lista){
+			//System.out.println("Modulo: "+ st.getSysModulo().getDescripcion());
+			if(st.getSysModulo().getIdmodulo().equals(txtCodigo.getText().trim())){
+				
+				crear = false;
+				break;
+			}
+		}
+		
+		return crear;
+	}
+ 	public void crearTitulos(){
+		SysTituloPK id = new SysTituloPK();
+		SysTitulo st = new SysTitulo();
+		//SysTituloDAO stdao = new SysTituloDAO();
+		
+		id.setIdmodulo(txtCodigo.getText().trim());
+		id.setIdtitulo("001");		
+		st.setId(id);
+		st.setDescripcion("TABLAS");
+		stdao.crear_editar(st);
+		lista.add(st);	
+		
+		id = new SysTituloPK();
+		st = new SysTitulo();
+		id.setIdmodulo(txtCodigo.getText().trim());
+		id.setIdtitulo("002");		
+		st.setId(id);
+		st.setDescripcion("DOCUMENTOS");
+		stdao.crear_editar(st);
+		lista.add(st);	
+		
+		
+		id = new SysTituloPK();
+		st = new SysTitulo();
+		id.setIdmodulo(txtCodigo.getText().trim());
+		id.setIdtitulo("003");		
+		st.setId(id);
+		st.setDescripcion("REPORTES");
+		stdao.crear_editar(st);
+		lista.add(st);	
+		
+		id = new SysTituloPK();
+		st = new SysTitulo();
+		id.setIdmodulo(txtCodigo.getText().trim());
+		id.setIdtitulo("004");		
+		st.setId(id);
+		st.setDescripcion("PROCESOS");
+		stdao.crear_editar(st);
+		lista.add(st);	
+	}
+	
 	@Override
 	public void llenarDesdeVista() {
 		getSysModulo().setIdmodulo(this.txtCodigo.getText().trim());

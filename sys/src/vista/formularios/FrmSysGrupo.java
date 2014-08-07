@@ -7,6 +7,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import vista.contenedores.ctnModulo;
+import vista.contenedores.ctnTitulo;
 import vista.controles.DSGTableModel;
 import vista.utilitarios.MaestroTableModel;
 
@@ -17,14 +19,22 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JButton;
 
 import dao.SysGrupoDAO;
+import dao.SysModuloDAO;
 import dao.SysOpcionDAO;
+import dao.SysTituloDAO;
 import entity.SysGrupo;
 import entity.SysGrupoPK;
+import entity.SysModulo;
 import entity.SysOpcion;
 import entity.SysOpcionPK;
+import entity.SysTitulo;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmSysGrupo extends AbstractMaestro {
 
@@ -33,6 +43,9 @@ public class FrmSysGrupo extends AbstractMaestro {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	ctnModulo ctnmodulo;
+	ctnTitulo ctntitulo;	
+	
 	private JTable tblLista;
 
 	private JTable tblOpciones;
@@ -40,7 +53,10 @@ public class FrmSysGrupo extends AbstractMaestro {
 	private JTextField txtDescripcion;
 
 	private SysGrupo sysGrupo;
-
+	private SysModulo sysModulo;
+	private SysModuloDAO sysModuloDAO = new SysModuloDAO();
+	private SysTituloDAO sysTituloDAO = new SysTituloDAO();
+	
 	private List<SysGrupo> sysGrupos;
 	private List<SysOpcion> sysOpciones;
 
@@ -50,26 +66,22 @@ public class FrmSysGrupo extends AbstractMaestro {
 
 	private JButton btnILinea;
 	private JButton btnBLinea;
-	private JTextField txtidmodulo;
 	private JLabel lblCdModulo;
-	private JTextField txtidtitulo;
 	private JLabel lblCdigo_1;
 
 	public FrmSysGrupo() {
-		super("Sucursal / Almacen");
+		super("Gestión de Opciones");
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 199, 331);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane scrollPaneNum = new JScrollPane();
-		scrollPaneNum.setBounds(219, 123, 314, 219);
 
 		tblOpciones = new JTable(new DSGTableModel(new String[] { "Código",
-				"Descripcion", "Prioridad", "Imagen", "Opción" }) {
+				"Descripción", "Prioridad", "Imagen", "Opción" }) {
 
 			/**
 			 * 
@@ -85,21 +97,16 @@ public class FrmSysGrupo extends AbstractMaestro {
 		tblOpciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JLabel lblCdigo = new JLabel("C\u00F3d Grupo");
-		lblCdigo.setBounds(219, 64, 66, 14);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(219, 95, 66, 14);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(298, 68, 67, 20);
 		txtCodigo.setColumns(10);
 
 		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(298, 92, 126, 20);
 		txtDescripcion.setColumns(10);
 
 		btnILinea = new JButton("I Linea");
-		btnILinea.setBounds(375, 15, 65, 20);
 		btnILinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				final Object fila[] = { "", "", "", "", "" };
@@ -108,7 +115,6 @@ public class FrmSysGrupo extends AbstractMaestro {
 		});
 
 		btnBLinea = new JButton("B Linea");
-		btnBLinea.setBounds(446, 15, 83, 20);
 		btnBLinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ind = tblOpciones.getSelectedRow();
@@ -116,33 +122,92 @@ public class FrmSysGrupo extends AbstractMaestro {
 					getDetalleTM().removeRow(ind);
 			}
 		});
-		pnlContenido.setLayout(null);
-		pnlContenido.add(scrollPane);
-		pnlContenido.add(lblDescripcin);
-		pnlContenido.add(lblCdigo);
-		pnlContenido.add(txtDescripcion);
-		pnlContenido.add(txtCodigo);
-		pnlContenido.add(btnILinea);
-		pnlContenido.add(btnBLinea);
-		pnlContenido.add(scrollPaneNum);
 		
-		txtidmodulo = new JTextField();
-		txtidmodulo.setColumns(10);
-		txtidmodulo.setBounds(298, 9, 67, 20);
-		pnlContenido.add(txtidmodulo);
+		ctnmodulo = new ctnModulo();
+		//txtidmodulo.setColumns(10);
 		
 		lblCdModulo = new JLabel("C\u00F3d. Modulo");
-		lblCdModulo.setBounds(219, 11, 66, 14);
-		pnlContenido.add(lblCdModulo);
 		
-		txtidtitulo = new JTextField();
-		txtidtitulo.setColumns(10);
-		txtidtitulo.setBounds(298, 40, 67, 20);
-		pnlContenido.add(txtidtitulo);
+		ctntitulo = new ctnTitulo();
+		//txtidtitulo.setColumns(10);
 		
 		lblCdigo_1 = new JLabel("C\u00F3d Titulo");
-		lblCdigo_1.setBounds(219, 42, 66, 14);
-		pnlContenido.add(lblCdigo_1);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 199, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPaneNum, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblCdModulo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+									.addGap(13)
+									.addComponent(ctnmodulo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblCdigo_1, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+									.addGap(13)
+									.addComponent(ctntitulo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+									.addGap(13)
+									.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+									.addGap(13)
+									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(btnILinea, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addComponent(btnBLinea, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(11)
+									.addComponent(lblCdModulo))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(9)
+									.addComponent(ctnmodulo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(8)
+									.addComponent(lblCdigo_1))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(ctntitulo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCdigo)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(4)
+									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+										.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnILinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))))
+							.addGap(4)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(3)
+									.addComponent(lblDescripcin))
+								.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+									.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
+							.addGap(11)
+							.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
+		pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -162,6 +227,11 @@ public class FrmSysGrupo extends AbstractMaestro {
 	public void nuevo() {
 		setSysGrupo(new SysGrupo());
 		getSysGrupo().setId(new SysGrupoPK());
+		
+		this.ctntitulo.txtCodigo.setText(null);
+		this.ctntitulo.txtDescripcion.setText(null);
+		this.ctnmodulo.txtCodigo.setText(null);
+		this.ctnmodulo.txtDescripcion.setText(null);
 	}
 
 	@Override
@@ -186,8 +256,8 @@ public class FrmSysGrupo extends AbstractMaestro {
 	@Override
 	public void llenarDesdeVista() {
 		String idmodulo, idtitulo, idgrupo;
-		idmodulo = txtidmodulo.getText().trim();
-		idtitulo = txtidtitulo.getText().trim();
+		idmodulo = ctnmodulo.getSeleccionado().getIdmodulo();
+		idtitulo = ctntitulo.getSeleccionado().getId().getIdtitulo();
 		idgrupo = this.txtCodigo.getText().trim();
 		SysGrupoPK id = new SysGrupoPK();
 		id.setIdmodulo(idmodulo);
@@ -224,8 +294,17 @@ public class FrmSysGrupo extends AbstractMaestro {
 		getDetalleTM().limpiar();
 		setSysOpciones(new ArrayList<SysOpcion>());
 		if (getSysGrupo() != null) {
-			txtidmodulo.setText(getSysGrupo().getId().getIdmodulo());
-			txtidtitulo.setText(getSysGrupo().getId().getIdtitulo());
+			
+			for(SysModulo sm : sysModuloDAO.findAll()){
+				if(sm.getIdmodulo().equals(getSysGrupo().getId().getIdmodulo())){
+					ctnmodulo.setSeleccionado(sm);
+				}
+			}			
+			for(SysTitulo st : sysTituloDAO.findAll()){
+				if(st.getId().getIdtitulo().equals(getSysGrupo().getId().getIdtitulo())){
+					ctntitulo.setSeleccionado(st);
+				}
+			}			
 			txtCodigo.setText(getSysGrupo().getId().getIdgrupo());
 			txtDescripcion.setText(getSysGrupo().getDescripcion());
 			setSysOpciones(getSysOpcionDAO().getPorGrupo(getSysGrupo()));
@@ -238,8 +317,10 @@ public class FrmSysGrupo extends AbstractMaestro {
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
-			txtidtitulo.setText("");
-			txtidmodulo.setText("");
+			this.ctntitulo.txtCodigo.setText(null);
+			this.ctntitulo.txtDescripcion.setText(null);
+			this.ctnmodulo.txtCodigo.setText(null);
+			this.ctnmodulo.txtDescripcion.setText(null);
 		}
 	}
 
@@ -280,11 +361,15 @@ public class FrmSysGrupo extends AbstractMaestro {
 		if (getEstado().equals(NUEVO))
 			txtCodigo.setEditable(true);
 		else
-			txtCodigo.setEditable(false);
+			txtCodigo.setEditable(true);
 		txtDescripcion.setEditable(true);
 		getDetalleTM().setEditar(true);
 		btnILinea.setEnabled(true);
 		btnBLinea.setEnabled(true);
+		this.ctntitulo.txtCodigo.setEditable(true);
+		this.ctntitulo.txtDescripcion.setEditable(true);
+		this.ctnmodulo.txtCodigo.setEditable(true);
+		this.ctnmodulo.txtDescripcion.setEditable(true);
 
 	}
 
@@ -295,6 +380,10 @@ public class FrmSysGrupo extends AbstractMaestro {
 		getDetalleTM().setEditar(false);
 		btnILinea.setEnabled(false);
 		btnBLinea.setEnabled(false);
+		this.ctntitulo.txtCodigo.setEditable(false);
+		this.ctntitulo.txtDescripcion.setEditable(false);
+		this.ctnmodulo.txtCodigo.setEditable(false);
+		this.ctnmodulo.txtDescripcion.setEditable(false);
 	}
 
 	@Override
@@ -328,6 +417,14 @@ public class FrmSysGrupo extends AbstractMaestro {
 
 	public void setSysGrupo(SysGrupo sysGrupo) {
 		this.sysGrupo = sysGrupo;
+	}
+
+	public SysModulo getSysModulo() {
+		return sysModulo;
+	}
+
+	public void setSysModulo(SysModulo sysModulo) {
+		this.sysModulo = sysModulo;
 	}
 
 	public List<SysGrupo> getSysGrupos() {
