@@ -3,10 +3,13 @@ package vista.formularios;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultCellEditor;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import vista.contenedores.txtidformulario;
 import vista.controles.DSGTableModel;
 import vista.utilitarios.MaestroTableModel;
 
@@ -15,8 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import dao.DocFormularioDAO;
 import dao.DocumentoDAO;
 import dao.DocumentoNumeroDAO;
+import entity.DocFormulario;
 import entity.Documento;
 import entity.DocumentoNumero;
 import entity.DocumentoNumeroPK;
@@ -25,6 +30,15 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JTabbedPane;
+import javax.swing.ImageIcon;
+
+import java.awt.Insets;
 
 public class FrmDocumento extends AbstractMaestro {
 
@@ -33,47 +47,37 @@ public class FrmDocumento extends AbstractMaestro {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private JTable tblLista;
+	private JTable tblLista;	
 
 	private JTable tblnumeradores;
+	private JTable tblFormularios;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
 	private Documento documento;
 
 	private List<Documento> documentos;
 	private List<DocumentoNumero> numeradores;
-
+	private List<DocFormulario> formularios;
 	private DocumentoDAO documentoDAO = new DocumentoDAO();
 
 	private DocumentoNumeroDAO docnumDAO = new DocumentoNumeroDAO();
-
+	private DocFormularioDAO docFormDAO = new DocFormularioDAO(); 
 	private JButton btnILinea;
 	private JButton btnBLinea;
+	private JTextField txtCodigoSunat;
 
 	public FrmDocumento() {
 		super("Documentos");
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 199, 273);
+		scrollPane.setBounds(10, 11, 199, 288);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
-		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);	
+		
 
-		JScrollPane scrollPaneNum = new JScrollPane();
-		scrollPaneNum.setBounds(215, 65, 314, 219);
-
-		tblnumeradores = new JTable(new DSGTableModel(new String[] {"Pto. Emisión", "Serie", "Nùmero"}) {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public boolean evaluaEdicion(int row, int column) {
-				return getEditar();
-			}
-		});
-		scrollPaneNum.setViewportView(tblnumeradores);
-		tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		JLabel lblCdigo = new JLabel("Cdigo");
+		JLabel lblCdigo = new JLabel("Codigo");
 		lblCdigo.setBounds(213, 18, 66, 14);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
@@ -86,25 +90,13 @@ public class FrmDocumento extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setBounds(298, 39, 126, 20);
 		txtDescripcion.setColumns(10);
-
-		btnILinea = new JButton("I Linea");
-		btnILinea.setBounds(375, 15, 65, 20);
-		btnILinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				final Object fila[] = { "", "", "" };
-				getNumeradorTM().addRow(fila);
-			}
-		});
-
+		btnILinea = new JButton("I LINEA");
+		btnILinea.setMargin(new Insets(0, 0, 0, 0));
+		btnILinea.setAlignmentY(0.0f);
+		btnILinea.setIcon(new ImageIcon(FrmDocumento.class.getResource("/main/resources/iconos/table_row_insert.png")));
+		btnILinea.setBounds(375, 65, 83, 37);
 		btnBLinea = new JButton("B Linea");
 		btnBLinea.setBounds(446, 15, 83, 20);
-		btnBLinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = tblnumeradores.getSelectedRow();
-				if (ind >= 0)
-					getNumeradorTM().removeRow(ind);
-			}
-		});
 		pnlContenido.setLayout(null);
 		pnlContenido.add(scrollPane);
 		pnlContenido.add(lblDescripcin);
@@ -113,7 +105,66 @@ public class FrmDocumento extends AbstractMaestro {
 		pnlContenido.add(txtCodigo);
 		pnlContenido.add(btnILinea);
 		pnlContenido.add(btnBLinea);
-		pnlContenido.add(scrollPaneNum);
+		final JTabbedPane tabPanel = new JTabbedPane(JTabbedPane.TOP);
+		tabPanel.setBounds(215, 106, 314, 193);
+
+		pnlContenido.add(tabPanel);
+		
+				JScrollPane scrollPaneNum = new JScrollPane();
+				tabPanel.addTab("Detalle", null, scrollPaneNum, null);
+				
+						tblnumeradores = new JTable(new DSGTableModel(new String[] {"Pto. Emisión", "Serie", "Nùmero"}) {
+							private static final long serialVersionUID = 1L;
+							@Override
+							public boolean evaluaEdicion(int row, int column) {
+								return getEditar();
+							}
+						});
+						scrollPaneNum.setViewportView(tblnumeradores);
+						tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+						
+				JScrollPane scrollPaneFormularios = new JScrollPane();
+				tabPanel.addTab("Formularios Asociados", null, scrollPaneFormularios, null);
+						
+						tblFormularios = new JTable(new DSGTableModel(new String[]{"idFormulario","Formulario","Activo"}){
+							private static final long serialVersionUID = 1L;
+							@Override
+							public boolean evaluaEdicion(int row, int column) {
+								return getEditar();
+							}
+						});
+						
+						scrollPaneFormularios.setViewportView(tblFormularios);
+						tblFormularios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+						
+						final txtidformulario txtidform = new txtidformulario();		
+						DefaultCellEditor editor = new DefaultCellEditor(txtidform);
+						tblFormularios.getColumn("idFormulario").setCellEditor(editor);
+						tblFormularios.getColumn("idFormulario").setPreferredWidth(120);
+						
+						txtidform.addFocusListener(new FocusAdapter() {
+							@Override
+							public void focusLost(FocusEvent arg0) {
+								getFormularioTM().setValueAt(txtidform.getDescripcion(), tblFormularios.getSelectedRow(), 1);
+							}
+						});
+						
+						
+						txtidform.addKeyListener(new KeyAdapter() {
+							@Override
+							public void keyPressed(KeyEvent ev) {			
+								txtidform.mostrar(txtidform.getText());
+							}
+						});
+						
+						JLabel lblCodigoSunat = new JLabel("Codigo Sunat");
+						lblCodigoSunat.setBounds(213, 68, 66, 14);
+						pnlContenido.add(lblCodigoSunat);
+						
+						txtCodigoSunat = new JTextField();
+						txtCodigoSunat.setColumns(10);
+						txtCodigoSunat.setBounds(298, 65, 67, 20);
+						pnlContenido.add(txtCodigoSunat);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -126,6 +177,27 @@ public class FrmDocumento extends AbstractMaestro {
 						llenar_datos();
 					}
 				});
+		btnILinea.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(isValidaVista()){
+					final Object fila[] = { "", "", "" };
+					if (tabPanel.getSelectedIndex() == 0)
+						getNumeradorTM().addRow(fila);
+					else 
+						getFormularioTM().addRow(fila);
+				}else{
+					JOptionPane.showMessageDialog(null, "Faltan datos en la Cabecera");
+				}
+			}
+		});
+		
+		btnBLinea.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int ind = tblnumeradores.getSelectedRow();
+				if (ind >= 0)
+					getNumeradorTM().removeRow(ind);
+			}
+		});
 		iniciar();
 	}
 
@@ -148,8 +220,12 @@ public class FrmDocumento extends AbstractMaestro {
 	public void grabar() {
 		documentoDAO.crear_editar(getDocumento());
 		docnumDAO.borrarPorDocumento(getDocumento());
+		docFormDAO.borrarPorDocumento(getDocumento());
 		for (DocumentoNumero num : getNumeradores()) {
-			docnumDAO.create(num);
+			//docnumDAO.create(num);
+		}
+		for(DocFormulario form : getFormularios()){
+			docFormDAO.create(form);
 		}
 	}
 
@@ -157,8 +233,9 @@ public class FrmDocumento extends AbstractMaestro {
 	public void llenarDesdeVista() {
 		getDocumento().setIddocumento(this.txtCodigo.getText().trim());
 		getDocumento().setDescripcion(this.txtDescripcion.getText().trim());
-
+		getDocumento().setCodSunat(this.txtCodigoSunat.getText().trim());
 		setNumeradores(new ArrayList<DocumentoNumero>());
+		setFormularios(new ArrayList<DocFormulario>());
 
 		for (int i = 0; i < getNumeradorTM().getRowCount(); i++) {
 			DocumentoNumeroPK id = new DocumentoNumeroPK();
@@ -172,6 +249,15 @@ public class FrmDocumento extends AbstractMaestro {
 			num.setNumero(getNumeradorTM().getValueAt(i, 2).toString());
 			getNumeradores().add(num);
 		}
+		
+		for(int i = 0;i < getFormularioTM().getRowCount();i++){
+			DocFormulario docFormulario = new DocFormulario();
+			docFormulario.setDocumento(getDocumento());
+			docFormulario.setIddocumento(getDocumento().getIddocumento());
+			docFormulario.setEstado(Integer.parseInt(getFormularioTM().getValueAt(i, 2).toString()));
+			docFormulario.setIdopcion(getFormularioTM().getValueAt(i, 0).toString());
+			getFormularios().add(docFormulario);
+		}
 
 	}
 
@@ -182,12 +268,18 @@ public class FrmDocumento extends AbstractMaestro {
 		if (getDocumento() != null) {
 			txtCodigo.setText(getDocumento().getIddocumento());
 			txtDescripcion.setText(getDocumento().getDescripcion());
+			txtCodigoSunat.setText(getDocumento().getCodSunat());
 			setNumeradores(docnumDAO.getPorDocumento(getDocumento()));
-
+			setFormularios(docFormDAO.getPorDocumento(getDocumento()));
 			for (DocumentoNumero num : getNumeradores()) {
 				getNumeradorTM().addRow(new Object[] {
 						num.getId().getIdptoemision(), num.getId().getSerie(),
 						num.getNumero() });
+			}
+			for (DocFormulario form: getFormularios()){
+				getFormularioTM().addColumn(new Object[]{
+						form.getIdopcion(),"Nombre form",form.getEstado()
+				});
 			}
 		} else {
 			txtCodigo.setText("");
@@ -200,6 +292,8 @@ public class FrmDocumento extends AbstractMaestro {
 		if (this.txtCodigo.getText().trim().isEmpty())
 			return false;
 		if (this.txtDescripcion.getText().trim().isEmpty())
+			return false;
+		if (this.txtCodigoSunat.getText().trim().isEmpty())
 			return false;
 		return true;
 	}
@@ -232,7 +326,9 @@ public class FrmDocumento extends AbstractMaestro {
 		else
 			txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(true);
+		txtCodigoSunat.setEditable(true);
 		getNumeradorTM().setEditar(true);
+		getFormularioTM().setEditar(true);
 		btnILinea.setEnabled(true);
 		btnBLinea.setEnabled(true);
 
@@ -242,7 +338,9 @@ public class FrmDocumento extends AbstractMaestro {
 	public void vista_noedicion() {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
+		txtCodigoSunat.setEditable(false);
 		getNumeradorTM().setEditar(false);
+		getFormularioTM().setEditar(false);
 		btnILinea.setEnabled(false);
 		btnBLinea.setEnabled(false);
 	}
@@ -273,8 +371,6 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -299,8 +395,20 @@ public class FrmDocumento extends AbstractMaestro {
 		this.numeradores = numeradores;
 	}
 	
+	public List<DocFormulario> getFormularios() {
+		return formularios;
+	}
+
+	public void setFormularios(List<DocFormulario> formularios) {
+		this.formularios = formularios;
+	}
+	
 	public DSGTableModel getNumeradorTM(){
 		return ((DSGTableModel) tblnumeradores.getModel());
+	}
+	
+	public DSGTableModel getFormularioTM(){
+		return ((DSGTableModel) tblFormularios.getModel());
 	}
 	@Override
 	public void eliminar() {
@@ -309,4 +417,5 @@ public class FrmDocumento extends AbstractMaestro {
 			getDocumentoDAO().remove(getDocumento());
 		}
 	}
+
 }

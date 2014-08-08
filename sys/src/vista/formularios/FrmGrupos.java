@@ -35,6 +35,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.SwingConstants;
+import java.awt.Insets;
+import java.awt.Dimension;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmGrupos extends AbstractMaestro {
 
@@ -87,7 +91,12 @@ public class FrmGrupos extends AbstractMaestro {
 		
 		JScrollPane scrollPane_SubGrupo = new JScrollPane();				
 		//AutoCompleteDecorator.decorate(txtDescCorta, validValues, true);		
-		btnInsertarLinea = new JButton("Insertar Linea");		
+		btnInsertarLinea = new JButton("I LINEA");
+		btnInsertarLinea.setMaximumSize(new Dimension(20, 9));
+		btnInsertarLinea.setMinimumSize(new Dimension(20, 9));
+		btnInsertarLinea.setPreferredSize(new Dimension(20, 9));
+		btnInsertarLinea.setMargin(new Insets(0, 0, 0, 0));
+		btnInsertarLinea.setAlignmentY(0.0f);
 		subgrupo = new DefaultTableModel();		
 		String columnNames[]=new String[] {"Codigo" , "Descripcion" , "Accion"};
 		subgrupo.setColumnIdentifiers(columnNames);
@@ -112,24 +121,27 @@ public class FrmGrupos extends AbstractMaestro {
 			public void actionPerformed(ActionEvent event){
 				int seleccion = JOptionPane.showOptionDialog(null, "Desea Eliminar el Registro Seleccionado", "Informacion del Sistema",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Si", "No"}, "Si");
-				if (seleccion == 0){								
-				
-					subgrupo.removeRow(tblSubGrupo.getSelectedRow());	
-					
+				if (seleccion == 0){	
+					int ind = tblSubGrupo.getSelectedRow();
+					if (ind>=0)
+						subgrupo.removeRow(tblSubGrupo.getSelectedRow());						
 				}
 			}
 		});
 		
 	
-		btnInsertarLinea.setIcon(new ImageIcon("C:\\SOLUTION\\Graphics\\insdetalle.bmp"));
+		btnInsertarLinea.setIcon(new ImageIcon(FrmGrupos.class.getResource("/main/resources/iconos/table_row_insert.png")));
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
 					.addGap(10)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(scrollPane_SubGrupo, GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
+							.addContainerGap())
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
 							.addGap(50)
@@ -138,25 +150,28 @@ public class FrmGrupos extends AbstractMaestro {
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(lblDescripcion, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
 							.addGap(33)
-							.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+							.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
 							.addGap(10))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblDescCorta, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-							.addGap(10)
-							.addComponent(txtDescCorta, GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
-							.addGap(107))
-						.addComponent(lblSubgrupos, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-						.addComponent(scrollPane_SubGrupo, GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(btnInsertarLinea, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
-							.addGap(198))))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblDescCorta, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)
+									.addComponent(txtDescCorta, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.RELATED))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(lblSubgrupos, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
+									.addGap(147)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnInsertarLinea, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap())))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(10)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 								.addGroup(groupLayout.createSequentialGroup()
@@ -172,17 +187,17 @@ public class FrmGrupos extends AbstractMaestro {
 							.addGap(7)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(3)
-									.addComponent(lblDescCorta))
-								.addComponent(txtDescCorta, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(8)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblSubgrupos)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(12)
-									.addComponent(scrollPane_SubGrupo, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)))
-							.addGap(11)
-							.addComponent(btnInsertarLinea)))
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(3)
+											.addComponent(lblDescCorta))
+										.addComponent(txtDescCorta, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGap(8)
+									.addComponent(lblSubgrupos))
+								.addComponent(btnInsertarLinea, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(scrollPane_SubGrupo, GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)))
 					.addGap(6))
 		);
 		pnlContenido.setLayout(groupLayout);

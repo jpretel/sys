@@ -3,6 +3,8 @@ import java.util.List;
 
 import dao.ClieprovDAO;
 import entity.Clieprov;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class FrmListaClieProv extends AbstractMaestroLista {
 	private static final long serialVersionUID = 1L;
@@ -15,6 +17,16 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 
 	public FrmListaClieProv() {
 		super();
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 607, Short.MAX_VALUE)
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 257, Short.MAX_VALUE)
+		);
+		pnlContenido.setLayout(groupLayout);
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);

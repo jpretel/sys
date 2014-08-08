@@ -32,6 +32,5 @@ public abstract class AbstractDocumento {
 	}
 	public void set_fecha(Date _fecha) {
 		this._fecha = _fecha;
-	}
-	
+	}	
 }

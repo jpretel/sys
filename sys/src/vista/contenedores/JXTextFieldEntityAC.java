@@ -65,8 +65,6 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 		scrollPane = new JScrollPane();
 		autoSuggestionPopUpWindow.add(scrollPane);
 		table = new JTable();
-		// new DefaultTableModel(cabeceras, 0);
-
 		scrollPane.setViewportView(table);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -78,6 +76,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 			@Override
 			public void keyPressed(KeyEvent ev) {
 				// Tecla hacia abajo
+				System.out.println(ev.getKeyCode());
 				if (ev.getKeyCode() == 40) {
 					if (autoSuggestionPopUpWindow.isVisible()) {
 						if (table.getRowCount() > 0
@@ -142,15 +141,32 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 		getDocument().addDocumentListener(documentListener);
 	}
 
-	public void checkForAndShowSuggestions() {
+	public void checkForAndShowSuggestions() {		
 		if (!this.isEditable() || !this.isEnabled()) {
 			autoSuggestionPopUpWindow.setVisible(false);
 			return;
 		}
-
+		
 		String typedWord = getText();
 		indice = -1;
-
+		boolean added = wordTyped(typedWord);
+		if (!added) {
+			indice = -1;
+			autoSuggestionPopUpWindow.setVisible(false);
+		} else {
+			showPopUpWindow();
+		}
+	}
+	
+	
+	public void checkForAndShowSuggestions(String dato) {		
+		if (!this.isEditable() || !this.isEnabled()) {
+			autoSuggestionPopUpWindow.setVisible(false);
+			return;
+		}
+		
+		String typedWord = dato;
+		indice = -1;
 		boolean added = wordTyped(typedWord);
 		if (!added) {
 			indice = -1;
@@ -173,7 +189,6 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 				hayCoincidencias = true;
 			}
 		}
-
 		return hayCoincidencias;
 	}
 
@@ -182,7 +197,6 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	}
 
 	private void showPopUpWindow() {
-
 		Object[][] data = new Object[sugerencias.size()][2];
 
 		int ind = 0;
@@ -218,7 +232,6 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	}
 
 	private boolean validarDatos() {
-
 		iSeleccionado = -1;
 		if (indice > -1 && sugerencias.size() > 0
 				&& indice <= sugerencias.size()) {

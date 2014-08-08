@@ -65,7 +65,7 @@ public class FrmProductos extends AbstractMaestro {
 		panel_1.add(lblGrupoDeProductos);
 
 		cntgrupo = new cntGrupo();
-
+		
 		cntgrupo.setBounds(149, 10, 290, 25);
 		panel_1.add(cntgrupo);
 
@@ -81,7 +81,7 @@ public class FrmProductos extends AbstractMaestro {
 				actualizaSubGrupo();
 			}
 		});
-
+		
 		cntSubGrupo.setBounds(149, 40, 290, 25);
 		panel_1.add(cntSubGrupo);
 

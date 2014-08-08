@@ -143,6 +143,9 @@ public class FrmSysModulo extends AbstractMaestro {
 	@Override
 	public void nuevo() {
 		setSysModulo(new SysModulo());
+		
+		final Object fila[] = { "001", "TABLA" };
+		getTituloTM().addRow(fila);
 	}
 
 	@Override
@@ -263,6 +266,8 @@ public class FrmSysModulo extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
+		if(!getEstado().equals(NUEVO)){		
+
 		getTituloTM().limpiar();
 		setSysTitulos(new ArrayList<SysTitulo>());
 		if (getSysModulo() != null) {
@@ -277,6 +282,7 @@ public class FrmSysModulo extends AbstractMaestro {
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
+		}
 		}
 	}
 

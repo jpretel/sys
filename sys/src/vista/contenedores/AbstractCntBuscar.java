@@ -6,7 +6,6 @@ import java.awt.Window;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 
 import vista.Sys;
@@ -18,12 +17,8 @@ import java.awt.Dimension;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
-import java.awt.Cursor;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 public abstract class AbstractCntBuscar<T> extends JPanel {
 	/**
 	 * 
@@ -106,7 +101,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 				.getImage().getScaledInstance(_dim, _dim,
 						java.awt.Image.SCALE_DEFAULT)));
 
-		btnBuscar.addMouseListener(new MouseAdapter() {
+		/*btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
 

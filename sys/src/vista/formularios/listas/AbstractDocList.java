@@ -26,11 +26,11 @@ import org.jdesktop.swingx.JXDatePicker;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.beans.PropertyVetoException;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-
 import javax.swing.border.TitledBorder;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -71,10 +71,12 @@ public abstract class AbstractDocList extends JInternalFrame {
 	 */
 	public AbstractDocList(String titulo) {
 		setTitle(titulo);
-		setIconifiable(true);
 		setMaximizable(true);
+		setIconifiable(true);
 		setClosable(true);
-		getContentPane().setLayout(new BorderLayout(0, 0));
+		setVisible(true);
+		setResizable(true);
+		//getContentPane().setLayout(new BorderLayout(0, 0));
 		//calendar.set(Calendar.DATE, 1);
 		getContentPane().add(pnlDocumentos, BorderLayout.CENTER);
 
@@ -333,26 +335,50 @@ public abstract class AbstractDocList extends JInternalFrame {
 				TitledBorder.CENTER, TitledBorder.TOP, null, null));
 		getContentPane().add(pnlOpciones, BorderLayout.WEST);
 		pnlOpciones
-				.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec
-						.decode("pref:grow"), }, new RowSpec[] {
-						FormFactory.LINE_GAP_ROWSPEC, FormFactory.PREF_ROWSPEC,
-						FormFactory.LINE_GAP_ROWSPEC, FormFactory.PREF_ROWSPEC,
-						FormFactory.RELATED_GAP_ROWSPEC,
-						FormFactory.DEFAULT_ROWSPEC, }));
+				.setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("pref:grow"),},
+			new RowSpec[] {
+				FormFactory.LINE_GAP_ROWSPEC,
+				FormFactory.PREF_ROWSPEC,
+				FormFactory.LINE_GAP_ROWSPEC,
+				FormFactory.PREF_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,}));
 
-		JButton btnCrear = new JButton("Crear");
+		JButton btnCrear = new JButton("Crear");	
+		btnCrear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				nuevo();
+			}
+		});
 		pnlOpciones.add(btnCrear, "1, 2, fill, fill");
 
 		btnCrear.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
 				.getResource("/main/resources/iconos/nuevo.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
-
-		JButton btnVer = new JButton("Abrir");
-		pnlOpciones.add(btnVer, "1, 4, fill, fill");
-
-		btnVer.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
-				.getResource("/main/resources/iconos/abrir.png")).getImage()
-				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
+				
+				JButton btnEditar = new JButton("Editar");
+				btnEditar.setIcon(new ImageIcon(AbstractDocList.class.getResource("/main/resources/iconos/editar_lista3.png")));
+				pnlOpciones.add(btnEditar, "1, 4");
+								
+								JButton btnImprimir = new JButton("Imprimir");
+								btnImprimir.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent arg0) {
+									}
+								});
+								pnlOpciones.add(btnImprimir, "1, 6");
+										
+												JButton btnVer = new JButton("Abrir");
+												pnlOpciones.add(btnVer, "1, 8, fill, fill");
+												
+														btnVer.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+																.getResource("/main/resources/iconos/abrir.png")).getImage()
+																.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
+		setBounds(100, 100, 555, 325);
 	}
 
 	/*
@@ -421,4 +447,26 @@ public abstract class AbstractDocList extends JInternalFrame {
 	public void setDocumentoDAO(IDocumentoDAO documentoDAO) {
 		this.documentoDAO = documentoDAO;
 	}
+	
+	public void init(AbstractDocForm obj, String opcion, Object entidad) {
+		if (obj instanceof AbstractDocForm) {
+			getDesktopPane().add(obj);
+			if (opcion.equals("NUEVO"))
+				obj.DoNuevo();
+			if (opcion.equals("VISTA")) {
+				obj.actualiza_objeto(entidad);
+			}
+			if (opcion.equals("EDICION")) {
+				obj.actualiza_objeto(entidad);
+				obj.editar();
+			}
+			try {
+				obj.setSelected(true);
+			} catch (PropertyVetoException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public abstract void nuevo();
 }

@@ -3,7 +3,6 @@ package vista;
 import java.io.File;
 
 import static vista.utilitarios.UtilMensajes.mensaje_alterta;
-import static vista.utilitarios.UtilMensajes.mensaje_error;
 
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -41,8 +40,6 @@ public class Sys {
 		try {
 			salir: for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
 					.getInstalledLookAndFeels()) {
-				System.out.println("Nombre del Estilo: " + info.getName());
-				System.out.println("Clase del Estilo: " + info.getClassName());
 				switch (info.getName()) {
 				case "GTK+":
 					javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -66,7 +63,7 @@ public class Sys {
 
 	public void iniciar() {
 		
-		mensajes = new Mensajes("ESPANOL");
+		//mensajes = new Mensajes("ESPANOL");
 		
 		File sys_file = new File(SYS_CONFIG);
 		String[] datos = null;
