@@ -43,5 +43,4 @@ public class ComboBox<T> extends JComboBox<ComboObject<T>> {
 			}
 		});
 	}
-
 }

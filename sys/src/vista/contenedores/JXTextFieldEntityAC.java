@@ -76,7 +76,6 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 			@Override
 			public void keyPressed(KeyEvent ev) {
 				// Tecla hacia abajo
-				System.out.println(ev.getKeyCode());
 				if (ev.getKeyCode() == 40) {
 					if (autoSuggestionPopUpWindow.isVisible()) {
 						if (table.getRowCount() > 0

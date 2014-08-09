@@ -26,6 +26,14 @@ public class DocFormularioDAO extends AbstractDAO<DocFormulario> {
 		return getEntityManager().createQuery(q).getResultList();
 	}
 	
+	public List<DocFormulario> getPorFormulario(String formulario){
+		CriteriaQuery<DocFormulario> q = cb.createQuery(DocFormulario.class);
+		Root<DocFormulario> c = q.from(DocFormulario.class);
+		Predicate condicion = cb.equal(c.get("opcion"), formulario);
+		q.select(c).where(condicion);
+		return getEntityManager().createQuery(q).getResultList();
+	}
+	
 	public void borrarPorDocumento (Documento documento) {
 		getEntityManager().getTransaction().begin();
 		CriteriaDelete<DocFormulario> delete = cb.createCriteriaDelete(DocFormulario.class);

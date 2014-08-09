@@ -31,9 +31,7 @@ public class Sys {
 	public static Usuario usuario;
 	
 	public static Mensajes mensajes;
-
 	private FrmSysConfig frm = new FrmSysConfig();
-
 	public static MainFrame mainF;
 
 	public static void main(String[] args) {

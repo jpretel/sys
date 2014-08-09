@@ -44,5 +44,14 @@ public class SysOpcionDAO extends AbstractDAO<SysOpcion> {
 		q.select(c).where(condicion);
 		return getEntityManager().createQuery(q).getResultList();
 	}
+	
+	public SysOpcion getPorOpcion(String opcion) {
+		CriteriaQuery<SysOpcion> q = cb.createQuery(SysOpcion.class);
+		Root<SysOpcion> c = q.from(SysOpcion.class);
+		Predicate condicion = cb.equal(c.get("opcion"), opcion);
+		q.select(c).where(condicion);
+		SysOpcion sysopcion = getEntityManager().createQuery(q).getSingleResult();
+		return sysopcion;
+	}
 
 }

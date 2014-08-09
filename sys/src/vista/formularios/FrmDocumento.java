@@ -21,10 +21,12 @@ import javax.swing.event.ListSelectionListener;
 import dao.DocFormularioDAO;
 import dao.DocumentoDAO;
 import dao.DocumentoNumeroDAO;
+import dao.SysOpcionDAO;
 import entity.DocFormulario;
 import entity.Documento;
 import entity.DocumentoNumero;
 import entity.DocumentoNumeroPK;
+import entity.SysOpcion;
 
 import javax.swing.JButton;
 
@@ -152,8 +154,9 @@ public class FrmDocumento extends AbstractMaestro {
 						
 						txtidform.addKeyListener(new KeyAdapter() {
 							@Override
-							public void keyPressed(KeyEvent ev) {			
-								txtidform.mostrar(txtidform.getText());
+							public void keyPressed(KeyEvent ev) {	
+								if(ev.getKeyCode() != 9)
+									txtidform.mostrar(txtidform.getText());
 							}
 						});
 						
@@ -224,6 +227,7 @@ public class FrmDocumento extends AbstractMaestro {
 		for (DocumentoNumero num : getNumeradores()) {
 			//docnumDAO.create(num);
 		}
+	
 		for(DocFormulario form : getFormularios()){
 			docFormDAO.create(form);
 		}
@@ -255,7 +259,7 @@ public class FrmDocumento extends AbstractMaestro {
 			docFormulario.setDocumento(getDocumento());
 			docFormulario.setIddocumento(getDocumento().getIddocumento());
 			docFormulario.setEstado(Integer.parseInt(getFormularioTM().getValueAt(i, 2).toString()));
-			docFormulario.setIdopcion(getFormularioTM().getValueAt(i, 0).toString());
+			docFormulario.setOpcion(getFormularioTM().getValueAt(i, 0).toString());
 			getFormularios().add(docFormulario);
 		}
 
@@ -263,8 +267,12 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
+		SysOpcionDAO sysopcionDAO = new SysOpcionDAO();
+		SysOpcion sysopcion;
 		getNumeradorTM().limpiar();
+		getFormularioTM().limpiar();
 		setNumeradores(new ArrayList<DocumentoNumero>());
+		setFormularios(new ArrayList<DocFormulario>());
 		if (getDocumento() != null) {
 			txtCodigo.setText(getDocumento().getIddocumento());
 			txtDescripcion.setText(getDocumento().getDescripcion());
@@ -277,8 +285,9 @@ public class FrmDocumento extends AbstractMaestro {
 						num.getNumero() });
 			}
 			for (DocFormulario form: getFormularios()){
-				getFormularioTM().addColumn(new Object[]{
-						form.getIdopcion(),"Nombre form",form.getEstado()
+				sysopcion = sysopcionDAO.getPorOpcion(form.getOpcion().trim());
+				getFormularioTM().addRow(new Object[]{
+						form.getOpcion(),sysopcion.getDescripcion(),form.getEstado()
 				});
 			}
 		} else {

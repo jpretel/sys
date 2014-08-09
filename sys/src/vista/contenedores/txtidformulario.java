@@ -17,7 +17,7 @@ public class txtidformulario extends AbstractTxtBuscar<SysOpcion>{
 		if(entity == null )
 			txtCodigo.setText("");
 		else{			
-			setText(entity.getId().getIdopcion());
+			setText(entity.getOpcion());
 			setDescripcion(entity.getDescripcion());
 		}
 	}
@@ -33,7 +33,7 @@ public class txtidformulario extends AbstractTxtBuscar<SysOpcion>{
 
 	@Override
 	public Object[] entity2Object(SysOpcion entity) {
-		return new Object[] { entity.getId().getIdopcion(),entity.getDescripcion()};
+		return new Object[] { entity.getOpcion(),entity.getDescripcion()};
 	}
 
 	@Override

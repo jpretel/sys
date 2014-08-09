@@ -10,11 +10,16 @@ import vista.barras.PanelBarraDocumento;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import javax.swing.JScrollPane;
+
 import javax.swing.border.MatteBorder;
+
 import java.awt.Color;
+
 import javax.swing.JComboBox;
+
 import org.jdesktop.swingx.JXDatePicker;
+import dao.PtoEmisionDAO;
+import entity.PtoEmision;
 
 public abstract class AbstractDocForm extends JInternalFrame{
 	/**
@@ -22,9 +27,6 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	protected JTextField txtPuntoEmision;
-	protected JTextField txtAnio;
-	protected JTextField txtMes;
-	protected JTextField txtEstado;
 	protected JTextField txtNumero;
 	private PanelBarraDocumento barra;
 	protected static final String EDICION = "EDICION";
@@ -32,6 +34,8 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected static final String NUEVO = "NUEVO";
 	private String estado;	
 	private JTextField textField;
+	private PtoEmisionDAO ptoemisionDAO = new PtoEmisionDAO();
+	private PtoEmision ptoemision = ptoemisionDAO.find("001");
 
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
@@ -66,68 +70,32 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		txtPuntoEmision.setBounds(84, 5, 70, 20);
 		pnlPrincipal.add(txtPuntoEmision);
 		txtPuntoEmision.setColumns(8);
-		
-		JLabel lblPeriodo = new JLabel("Periodo");
-		lblPeriodo.setBounds(159, 8, 36, 14);
-		pnlPrincipal.add(lblPeriodo);
-		
-		txtAnio = new JTextField();
-		txtAnio.setEditable(false);
-		txtAnio.setOpaque(false);
-		txtAnio.setBounds(204, 5, 46, 20);
-		pnlPrincipal.add(txtAnio);
-		txtAnio.setColumns(5);
-		
-		txtMes = new JTextField();
-		txtMes.setEditable(false);
-		txtMes.setOpaque(false);
-		txtMes.setBounds(249, 5, 62, 20);
-		pnlPrincipal.add(txtMes);
-		txtMes.setColumns(7);
-		
-		JLabel lblEstado = new JLabel("Estado");
-		lblEstado.setBounds(439, 8, 33, 14);
-		pnlPrincipal.add(lblEstado);
-		
-		txtEstado = new JTextField();
-		txtEstado.setEditable(false);
-		txtEstado.setOpaque(false);
-		txtEstado.setBounds(486, 5, 102, 20);
-		pnlPrincipal.add(txtEstado);
-		txtEstado.setColumns(10);
+		txtPuntoEmision.setText(ptoemision.getDescripcion());
 		
 		JLabel lblDocumento = new JLabel("Documento");
-		lblDocumento.setBounds(5, 33, 66, 14);
+		lblDocumento.setBounds(164, 8, 66, 14);
 		pnlPrincipal.add(lblDocumento);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(84, 30, 53, 20);
+		comboBox.setBounds(243, 5, 53, 20);
 		pnlPrincipal.add(comboBox);
 		
-		JLabel lblSerie = new JLabel("Serie");
-		lblSerie.setBounds(159, 33, 36, 14);
-		pnlPrincipal.add(lblSerie);
-		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(204, 30, 53, 20);
-		pnlPrincipal.add(comboBox_1);
-		
-		JLabel lblNumero = new JLabel("Numero");
-		lblNumero.setBounds(275, 33, 46, 14);
+		JLabel lblNumero = new JLabel("Correlativo");
+		lblNumero.setBounds(306, 8, 59, 14);
 		pnlPrincipal.add(lblNumero);
 		
 		textField = new JTextField();
-		textField.setBounds(331, 30, 86, 20);
+		textField.setBounds(363, 5, 86, 20);
 		pnlPrincipal.add(textField);
 		textField.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(439, 33, 46, 14);
+		lblFecha.setBounds(455, 8, 29, 14);
 		pnlPrincipal.add(lblFecha);
 		
 		JXDatePicker datePicker = new JXDatePicker();
 		datePicker.getEditor().setLocation(0, 27);
-		datePicker.setBounds(486, 29, 91, 23);
+		datePicker.setBounds(486, 5, 91, 23);
 		pnlPrincipal.add(datePicker);
 		setBounds(100, 100, 610, 325);
 	}
@@ -193,6 +161,7 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		llenar_datos();
 		vista_edicion();
 	}
+	
 	
 	public void DoEliminar() {
 		eliminar();

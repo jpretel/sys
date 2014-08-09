@@ -44,7 +44,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private ComboBox<Documento> cboDocumento = new ComboBox<Documento>();
+	protected ComboBox<Documento> cboDocumento = new ComboBox<Documento>();
 	private JTextField txtSerie;
 	private JTextField txtNumero;
 	private IDocumentoDAO documentoDAO;

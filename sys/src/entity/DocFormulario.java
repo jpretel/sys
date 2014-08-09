@@ -12,13 +12,6 @@ import javax.persistence.*;
 @Table(name="doc_formulario")
 @NamedQuery(name="DocFormulario.findAll", query="SELECT d FROM DocFormulario d")
 public class DocFormulario implements Serializable {
-	@Override
-	public String toString() {
-		return "DocFormulario [iddocumento=" + iddocumento + ", estado="
-				+ estado + ", idopcion=" + idopcion + ", documento="
-				+ documento + "]";
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -28,8 +21,8 @@ public class DocFormulario implements Serializable {
 	@Column(nullable=false)
 	private int estado;
 
-	@Column(nullable=false, length=3)
-	private String idopcion;
+	@Column(nullable=false, length=75)
+	private String opcion;
 
 	//bi-directional many-to-one association to Documento
 	@ManyToOne
@@ -55,12 +48,12 @@ public class DocFormulario implements Serializable {
 		this.estado = estado;
 	}
 
-	public String getIdopcion() {
-		return this.idopcion;
+	public String getOpcion() {
+		return this.opcion;
 	}
 
-	public void setIdopcion(String idopcion) {
-		this.idopcion = idopcion;
+	public void setOpcion(String opcion) {
+		this.opcion = opcion;
 	}
 
 	public Documento getDocumento() {
