@@ -225,7 +225,7 @@ public class FrmDocumento extends AbstractMaestro {
 		docnumDAO.borrarPorDocumento(getDocumento());
 		docFormDAO.borrarPorDocumento(getDocumento());
 		for (DocumentoNumero num : getNumeradores()) {
-			//docnumDAO.create(num);
+			docnumDAO.create(num);
 		}
 	
 		for(DocFormulario form : getFormularios()){
@@ -248,7 +248,6 @@ public class FrmDocumento extends AbstractMaestro {
 			id.setIddocumento(getDocumento().getIddocumento());
 			id.setIdptoemision(getNumeradorTM().getValueAt(i, 0).toString());
 			id.setSerie(getNumeradorTM().getValueAt(i, 1).toString());
-
 			num.setId(id);
 			num.setNumero(getNumeradorTM().getValueAt(i, 2).toString());
 			getNumeradores().add(num);

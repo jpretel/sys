@@ -8,6 +8,7 @@ import dao.CuentaDAO;
 import entity.Area;
 import entity.Cuenta;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -229,7 +230,17 @@ public class FrmAreas extends AbstractMaestro {
 	@Override
 	public boolean isValidaVista() {
 		// TODO Auto-generated method stub
-		return false;
+		if (this.txtCodigo.getText().trim().isEmpty()){	
+			JOptionPane.showMessageDialog(null, "Faltan Ingresar Dato Codigo");
+			this.txtCodigo.setFocusable(true);
+			return false;
+		}
+		if (this.txtDescripcion.getText().trim().isEmpty()){	
+			JOptionPane.showMessageDialog(null, "Faltan Ingresar Dato Descripcion");
+			this.txtDescripcion.setFocusable(true);
+			return false;
+		}
+		return true;	
 	}
 
 }

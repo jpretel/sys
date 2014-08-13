@@ -3,9 +3,12 @@ package vista.formularios;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.AreaDAO;
 import dao.ResponsableDAO;
+import entity.Area;
 import entity.Responsable;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -17,9 +20,6 @@ import vista.utilitarios.MaestroTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmResponsable extends AbstractMaestro {
 
@@ -57,24 +57,34 @@ public class FrmResponsable extends AbstractMaestro {
 
 	private JTable tblLista;
 	private JTextField txtCodigo;
-	private JTextField txtDescripcion;
+	private JTextField txtDescripcion;	
 	public final cntArea cntarea;
+	private AreaDAO adao = new AreaDAO();
+	private Area area = new Area();
+	private List<Area> areaL = adao.findAll();
 	
 	public FrmResponsable() {
-		super("Responsables");
-
+		super("Responsables");		
+		pnlContenido.setBounds(0, 0, 0, 0);
+		getBarra().setBounds(0, 0, 539, 39);
+		
 		JLabel lblCdigo = new JLabel("Codigo");
 		lblCdigo.setBounds(227, 11, 46, 14);
+		pnlContenido.add(lblCdigo);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(276, 8, 122, 20);
+		txtCodigo.setBounds(286, 8, 122, 20);
 		txtCodigo.setColumns(10);
+		
+		pnlContenido.add(txtCodigo);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(227, 36, 75, 14);
-
+		lblDescripcin.setBounds(227, 36, 54, 14);
+		pnlContenido.add(lblDescripcin);
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 10, 207, 273);
+		
+		pnlContenido.add(scrollPane);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -82,156 +92,16 @@ public class FrmResponsable extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(286, 33, 122, 20);
-
+		txtDescripcion.setBounds(286, 33, 122, 20);		
+		pnlContenido.add(txtDescripcion);
+		
 		JLabel lblArea = new JLabel("Area");
-		lblArea.setBounds(286, 80, 75, 14);
+		lblArea.setBounds(227, 61, 31, 14);
+		pnlContenido.setLayout(null);
 		cntarea = new cntArea();
-		cntarea.setBounds(296, 80, 290, 25);
-		getContentPane().add(cntarea);
-		getContentPane().add(lblArea);
-		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(10)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addGroup(
-																												groupLayout
-																														.createParallelGroup(
-																																Alignment.LEADING)
-																														.addGroup(
-																																groupLayout
-																																		.createSequentialGroup()
-																																		.addGap(312)
-																																		.addComponent(
-																																				lblCdigo))
-																														.addGroup(
-																																groupLayout
-																																		.createSequentialGroup()
-																																		.addGap(312)
-																																		.addComponent(
-																																				lblDescripcin)))
-																										.addGap(5)
-																										.addComponent(
-																												txtDescripcion,
-																												GroupLayout.PREFERRED_SIZE,
-																												218,
-																												GroupLayout.PREFERRED_SIZE))
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addComponent(
-																												scrollPane,
-																												GroupLayout.PREFERRED_SIZE,
-																												302,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addPreferredGap(
-																												ComponentPlacement.UNRELATED)
-																										.addComponent(
-																												lblArea,
-																												GroupLayout.PREFERRED_SIZE,
-																												42,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addGap(18)
-																										.addComponent(
-																												cntarea,
-																												GroupLayout.PREFERRED_SIZE,
-																												GroupLayout.DEFAULT_SIZE,
-																												GroupLayout.PREFERRED_SIZE))))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(381)
-																		.addComponent(
-																				txtCodigo,
-																				GroupLayout.PREFERRED_SIZE,
-																				174,
-																				GroupLayout.PREFERRED_SIZE)))
-										.addContainerGap(
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGap(11)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(
-																scrollPane,
-																GroupLayout.PREFERRED_SIZE,
-																274,
-																GroupLayout.PREFERRED_SIZE)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addGap(15)
-																										.addComponent(
-																												lblCdigo))
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addGap(45)
-																										.addComponent(
-																												lblDescripcin)))
-																		.addPreferredGap(
-																				ComponentPlacement.UNRELATED)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								cntarea,
-																								GroupLayout.PREFERRED_SIZE,
-																								24,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								lblArea))
-																		.addGap(180))))
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGap(52)
-										.addComponent(txtDescripcion,
-												GroupLayout.PREFERRED_SIZE, 22,
-												GroupLayout.PREFERRED_SIZE))
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGap(26)
-										.addComponent(txtCodigo,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)));
-		pnlContenido.setLayout(groupLayout);
+		cntarea.setBounds(286, 64, 104, 24);
+		pnlContenido.add(cntarea);
+		pnlContenido.add(lblArea);
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -239,14 +109,17 @@ public class FrmResponsable extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent e) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setResponsable(getResponsableL().get(selectedRow));
+							setResponsable(getResponsableL().get(selectedRow));						
 						else
 							setResponsable(null);
 						llenar_datos();
 					}
 				});
+		cntarea.setVisible(false);
+		lblArea.setVisible(false);
 		iniciar();
 	}
+
 
 	@Override
 	public void nuevo() {
@@ -259,7 +132,7 @@ public class FrmResponsable extends AbstractMaestro {
 	}
 
 	@Override
-	public void grabar() {
+	public void grabar() {	
 		getResponsableDAO().crear_editar(getResponsable());
 	}
 
@@ -287,8 +160,7 @@ public class FrmResponsable extends AbstractMaestro {
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
 		for (Responsable responsable : getResponsableL()) {
-			model.addRow(new Object[] { responsable.getIdresponsable(),
-					responsable.getNombre() });
+			model.addRow(new Object[] { responsable.getIdresponsable(), responsable.getNombre()});
 		}
 		if (getResponsableL().size() > 0) {
 			setResponsable(getResponsableL().get(0));
@@ -306,7 +178,7 @@ public class FrmResponsable extends AbstractMaestro {
 		if (getEstado().equals(NUEVO))
 			txtCodigo.setEditable(true);
 		txtDescripcion.setEditable(true);
-		tblLista.setEnabled(false);
+		tblLista.setEnabled(false);		
 		cntarea.btnBuscar.setEnabled(true);
 		cntarea.txtCodigo.setEditable(true);
 		cntarea.txtDescripcion.setEditable(true);
@@ -321,29 +193,38 @@ public class FrmResponsable extends AbstractMaestro {
 		cntarea.txtCodigo.setEditable(false);
 		cntarea.txtDescripcion.setEditable(false);
 	}
+	
+
 
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void llenarDesdeVista() {
 		getResponsable().setIdresponsable(txtCodigo.getText());
-		getResponsable().setNombre(txtDescripcion.getText());
+		getResponsable().setNombre(txtDescripcion.getText());		
 	}
 
 	@Override
 	public boolean isValidaVista() {
-		// TODO Auto-generated method stub
-		return false;
+		if(this.txtCodigo.getText().trim().isEmpty()){
+			JOptionPane.showMessageDialog(null, "Falta dato codigo");
+			return false;
+		}
+		if(this.txtDescripcion.getText().trim().isEmpty()){
+			JOptionPane.showMessageDialog(null, "Falta dato Descripcion");
+			return false;
+		}
+		return true;
 	}
 
 }

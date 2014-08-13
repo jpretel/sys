@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import vista.barras.PanelBarraDocumento;
+import vista.controles.ComboBox;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,7 +19,9 @@ import java.awt.Color;
 import javax.swing.JComboBox;
 
 import org.jdesktop.swingx.JXDatePicker;
+
 import dao.PtoEmisionDAO;
+import entity.Documento;
 import entity.PtoEmision;
 
 public abstract class AbstractDocForm extends JInternalFrame{
@@ -26,16 +29,15 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected JTextField txtPuntoEmision;
 	protected JTextField txtNumero;
 	private PanelBarraDocumento barra;
 	protected static final String EDICION = "EDICION";
 	protected static final String VISTA = "VISTA";
 	protected static final String NUEVO = "NUEVO";
 	private String estado;	
-	private JTextField textField;
-	private PtoEmisionDAO ptoemisionDAO = new PtoEmisionDAO();
-	private PtoEmision ptoemision = ptoemisionDAO.find("001");
+	protected JTextField txtCorrrelativo;
+	//private PtoEmisionDAO ptoemisionDAO = new PtoEmisionDAO();
+	//private PtoEmision ptoemision = ptoemisionDAO.find("001");
 
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
@@ -54,48 +56,27 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		getContentPane().add(barra, BorderLayout.NORTH);
 		
 		JPanel pnlPrincipal = new JPanel();
-		pnlPrincipal.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		pnlPrincipal.setBounds(0, 44, 598, 33);
 		pnlPrincipal.setPreferredSize(new Dimension(10, 50));
 		getContentPane().add(pnlPrincipal);
 		pnlPrincipal.setLayout(null);
 		
-		JLabel lblPuntoEmision = new JLabel("Punto Emision");
-		lblPuntoEmision.setBounds(5, 8, 66, 14);
-		pnlPrincipal.add(lblPuntoEmision);
-		
-		txtPuntoEmision = new JTextField();
-		txtPuntoEmision.setEditable(false);
-		txtPuntoEmision.setOpaque(false);
-		txtPuntoEmision.setBounds(84, 5, 70, 20);
-		pnlPrincipal.add(txtPuntoEmision);
-		txtPuntoEmision.setColumns(8);
-		txtPuntoEmision.setText(ptoemision.getDescripcion());
-		
-		JLabel lblDocumento = new JLabel("Documento");
-		lblDocumento.setBounds(164, 8, 66, 14);
-		pnlPrincipal.add(lblDocumento);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(243, 5, 53, 20);
-		pnlPrincipal.add(comboBox);
-		
 		JLabel lblNumero = new JLabel("Correlativo");
-		lblNumero.setBounds(306, 8, 59, 14);
+		lblNumero.setBounds(10, 11, 59, 14);
 		pnlPrincipal.add(lblNumero);
 		
-		textField = new JTextField();
-		textField.setBounds(363, 5, 86, 20);
-		pnlPrincipal.add(textField);
-		textField.setColumns(10);
+		txtCorrrelativo = new JTextField();
+		txtCorrrelativo.setBounds(67, 8, 86, 20);
+		pnlPrincipal.add(txtCorrrelativo);
+		txtCorrrelativo.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(455, 8, 29, 14);
+		lblFecha.setBounds(184, 11, 29, 14);
 		pnlPrincipal.add(lblFecha);
 		
 		JXDatePicker datePicker = new JXDatePicker();
-		datePicker.getEditor().setLocation(0, 27);
-		datePicker.setBounds(486, 5, 91, 23);
+		datePicker.getEditor().setLocation(0, 8);
+		datePicker.setBounds(225, 7, 91, 23);
 		pnlPrincipal.add(datePicker);
 		setBounds(100, 100, 610, 325);
 	}

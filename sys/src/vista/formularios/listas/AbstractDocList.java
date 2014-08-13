@@ -45,7 +45,6 @@ public abstract class AbstractDocList extends JInternalFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected ComboBox<Documento> cboDocumento = new ComboBox<Documento>();
-	private JTextField txtSerie;
 	private JTextField txtNumero;
 	private IDocumentoDAO documentoDAO;
 	private JXDatePicker txtDesde;
@@ -65,6 +64,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 	protected String[] cabeceras = new String[] { "Documento", "Serie",
 			"Numero" };
+	
+	protected JLabel lblDocumento;
 
 	/**
 	 * Crea la lista del documento con los filtros por defecto.
@@ -108,14 +109,9 @@ public abstract class AbstractDocList extends JInternalFrame {
 		txtHasta.setFormats(dateFormatter);
 		//txtHasta.setDate(calendar.getTime());
 
-		JLabel lblDocumento = new JLabel("Documento");
+		lblDocumento = new JLabel("Documento");
 
-		JLabel lblSerie = new JLabel("Serie");
-
-		txtSerie = new JTextField();
-		txtSerie.setColumns(10);
-
-		JLabel lblNmero = new JLabel("N\u00FAmero");
+		JLabel lblNmero = new JLabel("Correlativo");
 
 		txtNumero = new JTextField();
 		txtNumero.setColumns(10);
@@ -127,206 +123,66 @@ public abstract class AbstractDocList extends JInternalFrame {
 			}
 		});
 		GroupLayout gl_pnlFiltros = new GroupLayout(pnlFiltros);
-		gl_pnlFiltros
-				.setHorizontalGroup(gl_pnlFiltros
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_pnlFiltros
-										.createSequentialGroup()
-										.addContainerGap(
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addGroup(
-												gl_pnlFiltros
-														.createParallelGroup(
-																Alignment.TRAILING,
-																false)
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblDesde,
-																				GroupLayout.PREFERRED_SIZE,
-																				45,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(46))
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addComponent(
-																				txtDesde,
-																				GroupLayout.PREFERRED_SIZE,
-																				91,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)))
-										.addGroup(
-												gl_pnlFiltros
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)
-																		.addComponent(
-																				lblHasta,
-																				GroupLayout.PREFERRED_SIZE,
-																				37,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addGap(6)
-																		.addComponent(
-																				txtHasta,
-																				GroupLayout.PREFERRED_SIZE,
-																				90,
-																				GroupLayout.PREFERRED_SIZE)))
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addGroup(
-												gl_pnlFiltros
-														.createParallelGroup(
-																Alignment.TRAILING,
-																false)
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblDocumento,
-																				GroupLayout.PREFERRED_SIZE,
-																				65,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(36))
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addComponent(
-																				cboDocumento,
-																				GroupLayout.PREFERRED_SIZE,
-																				101,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addPreferredGap(
-																				ComponentPlacement.RELATED)))
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addGroup(
-												gl_pnlFiltros
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(
-																lblSerie,
-																GroupLayout.PREFERRED_SIZE,
-																42,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																txtSerie,
-																GroupLayout.PREFERRED_SIZE,
-																61,
-																GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(
-												ComponentPlacement.RELATED)
-										.addGroup(
-												gl_pnlFiltros
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(
-																lblNmero,
-																GroupLayout.PREFERRED_SIZE,
-																51,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																txtNumero,
-																GroupLayout.PREFERRED_SIZE,
-																66,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(169)
-										.addComponent(btnActualizar,
-												GroupLayout.DEFAULT_SIZE, 93,
-												Short.MAX_VALUE)
-										.addContainerGap()));
-		gl_pnlFiltros
-				.setVerticalGroup(gl_pnlFiltros
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								gl_pnlFiltros
-										.createSequentialGroup()
-										.addGroup(
-												gl_pnlFiltros
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addGap(11)
-																		.addGroup(
-																				gl_pnlFiltros
-																						.createParallelGroup(
-																								Alignment.BASELINE)
-																						.addComponent(
-																								lblHasta)
-																						.addComponent(
-																								lblDesde))
-																		.addGap(7)
-																		.addGroup(
-																				gl_pnlFiltros
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								txtHasta,
-																								GroupLayout.PREFERRED_SIZE,
-																								23,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								txtDesde,
-																								GroupLayout.PREFERRED_SIZE,
-																								23,
-																								GroupLayout.PREFERRED_SIZE)))
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addGap(11)
-																		.addGroup(
-																				gl_pnlFiltros
-																						.createParallelGroup(
-																								Alignment.BASELINE)
-																						.addComponent(
-																								lblDocumento)
-																						.addComponent(
-																								lblSerie))
-																		.addGap(7)
-																		.addGroup(
-																				gl_pnlFiltros
-																						.createParallelGroup(
-																								Alignment.BASELINE)
-																						.addComponent(
-																								cboDocumento,
-																								GroupLayout.PREFERRED_SIZE,
-																								23,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								txtSerie,
-																								GroupLayout.PREFERRED_SIZE,
-																								23,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								txtNumero,
-																								GroupLayout.PREFERRED_SIZE,
-																								23,
-																								GroupLayout.PREFERRED_SIZE)))
-														.addGroup(
-																gl_pnlFiltros
-																		.createSequentialGroup()
-																		.addGap(11)
-																		.addComponent(
-																				lblNmero)))
-										.addContainerGap())
-						.addGroup(
-								Alignment.TRAILING,
-								gl_pnlFiltros.createSequentialGroup()
-										.addContainerGap(24, Short.MAX_VALUE)
-										.addComponent(btnActualizar).addGap(19)));
+		gl_pnlFiltros.setHorizontalGroup(
+			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addComponent(lblDesde, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
+							.addGap(46))
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)))
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblHasta, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addGap(6)
+							.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addComponent(lblDocumento, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+							.addGap(36))
+						.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
+					.addGap(188)
+					.addComponent(btnActualizar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addContainerGap())
+		);
+		gl_pnlFiltros.setVerticalGroup(
+			gl_pnlFiltros.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addContainerGap(11, Short.MAX_VALUE)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_pnlFiltros.createSequentialGroup()
+									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblHasta)
+										.addComponent(lblDesde))
+									.addGap(7)
+									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+										.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
+								.addGroup(gl_pnlFiltros.createSequentialGroup()
+									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblDocumento)
+										.addComponent(lblNmero))
+									.addGap(7)
+									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
+										.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))))
+							.addContainerGap())
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addComponent(btnActualizar)
+							.addGap(19))))
+		);
 		pnlFiltros.setLayout(gl_pnlFiltros);
 
 		JPanel pnlOpciones = new JPanel();
@@ -407,7 +263,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 		iddocumento = cboDocumento.getModel()
 				.getElementAt(cboDocumento.getSelectedIndex()).getObject()
 				.getIddocumento();
-		serie = txtSerie.getText();
+		//serie = txtSerie.getText();
+		serie = "";
 		numero = txtNumero.getText();
 
 		columnas = cabeceras.length;
@@ -433,9 +290,6 @@ public abstract class AbstractDocList extends JInternalFrame {
 		}
 	}
 
-	/**
-	 * @return the documentoDAO
-	 */
 	public IDocumentoDAO getDocumentoDAO() {
 		return documentoDAO;
 	}
