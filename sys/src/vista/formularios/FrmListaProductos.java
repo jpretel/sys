@@ -25,7 +25,6 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	@Override
 	public void irFormulario(String estado) {
-
 		if (RetornarPk() instanceof Object) {
 			producto = pdao.find(RetornarPk());
 		}
@@ -40,7 +39,6 @@ public class FrmListaProductos extends AbstractMaestroLista {
 		for (Producto p : prodList) {
 			Subgrupo sg = p.getSubgrupo();
 			Grupo g = (sg == null) ? null : sg.getGrupo();
-
 			modeloLista.addRow(new Object[] { p.getIdproductos(),
 					p.getDescripcion(),
 					(g == null) ? null : g.getDescripcion(),
