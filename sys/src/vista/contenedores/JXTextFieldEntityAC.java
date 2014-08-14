@@ -21,6 +21,8 @@ import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTextField;
 
+import vista.Sys;
+
 public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 		FocusListener {
 	private static final long serialVersionUID = 1L;
@@ -34,21 +36,25 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	private int[] anchos;
 	private String[] cabeceras;
 	private T seleccionado;
+	private String oldValue;
 
 	private DocumentListener documentListener = new DocumentListener() {
 
 		@Override
 		public void insertUpdate(DocumentEvent de) {
+			System.out.println(JXTextFieldEntityAC.this.getText());
 			checkForAndShowSuggestions();
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent de) {
+			System.out.println(JXTextFieldEntityAC.this.getText());
 			checkForAndShowSuggestions();
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent de) {
+			System.out.println(JXTextFieldEntityAC.this.getText());
 			checkForAndShowSuggestions();
 		}
 	};
@@ -60,7 +66,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 		indice = -1;
 		autoSuggestionPopUpWindow = new JWindow(mainWindow);
-		autoSuggestionPopUpWindow.setOpacity(0.8f);
+		autoSuggestionPopUpWindow.setOpacity(0.95f);
 
 		scrollPane = new JScrollPane();
 		autoSuggestionPopUpWindow.add(scrollPane);
@@ -77,6 +83,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 			public void keyPressed(KeyEvent ev) {
 				// Tecla hacia abajo
 				if (ev.getKeyCode() == 40) {
+
 					if (autoSuggestionPopUpWindow.isVisible()) {
 						if (table.getRowCount() > 0
 								&& table.getSelectedRow() < table.getRowCount() - 1) {
@@ -140,12 +147,12 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 		getDocument().addDocumentListener(documentListener);
 	}
 
-	public void checkForAndShowSuggestions() {		
+	public void checkForAndShowSuggestions() {
 		if (!this.isEditable() || !this.isEnabled()) {
 			autoSuggestionPopUpWindow.setVisible(false);
 			return;
 		}
-		
+
 		String typedWord = getText();
 		indice = -1;
 		boolean added = wordTyped(typedWord);
@@ -156,14 +163,13 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 			showPopUpWindow();
 		}
 	}
-	
-	
-	public void checkForAndShowSuggestions(String dato) {		
+
+	public void checkForAndShowSuggestions(String dato) {
 		if (!this.isEditable() || !this.isEnabled()) {
 			autoSuggestionPopUpWindow.setVisible(false);
 			return;
 		}
-		
+
 		String typedWord = dato;
 		indice = -1;
 		boolean added = wordTyped(typedWord);
@@ -192,10 +198,11 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	}
 
 	public int getMinimoBusqueda() {
-		return 3;
+		return 1;
 	}
 
 	private void showPopUpWindow() {
+		int anchoTotal = 0;
 		Object[][] data = new Object[sugerencias.size()][2];
 
 		int ind = 0;
@@ -216,6 +223,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 		table.setModel(model);
 
 		for (int i = 0; i < table.getColumnCount(); i++) {
+			anchoTotal += anchos[i];
 			table.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
 		}
 
@@ -224,7 +232,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 		autoSuggestionPopUpWindow.setLocation(windowX, windowY);
 		autoSuggestionPopUpWindow.setMinimumSize(new Dimension(this.getParent()
-				.getWidth(), anchos[1]));
+				.getWidth(), anchoTotal));
 		autoSuggestionPopUpWindow.setAutoRequestFocus(false);
 		autoSuggestionPopUpWindow.setVisible(true);
 
@@ -273,6 +281,9 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 					|| (e.getComponent() == this && e.getOppositeComponent() == table)) {
 				band = true;
 			}
+			if (e.getComponent() == this && !band) {
+				cargaDatos();
+			}
 		}
 		if (!band) {
 			autoSuggestionPopUpWindow.setVisible(false);
@@ -296,13 +307,18 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	}
 
 	@Override
-	public void setText(String text) {
+	public void setText(String t) {
 		this.getDocument().removeDocumentListener(documentListener);
-		super.setText(text);
+		super.setText(t);
 		this.getDocument().addDocumentListener(documentListener);
+	}
+
+	public static Window getFormulario() {
+		return (Window) Sys.mainF;
 	}
 
 	public abstract boolean coincideBusqueda(T entity, String cadena);
 
 	public abstract Object[] entity2Object(T entity);
+
 }
