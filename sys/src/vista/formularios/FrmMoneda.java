@@ -1,6 +1,7 @@
 package vista.formularios;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import dao.MonedaDAO;
@@ -16,9 +17,12 @@ import vista.utilitarios.MaestroTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.AbstractButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 
 public class FrmMoneda extends AbstractMaestro {
 
@@ -32,6 +36,11 @@ public class FrmMoneda extends AbstractMaestro {
 	private JTable tblLista;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
+	private final ButtonGroup grpTipoMoneda = new ButtonGroup();
+	private JTextField txtSimbolo;
+	private JRadioButton optNac;
+	private JRadioButton optExt;
+	private JRadioButton optOtra;
 
 	public FrmMoneda() {
 		super("Monedas");
@@ -39,17 +48,17 @@ public class FrmMoneda extends AbstractMaestro {
 		getBarra().setFormMaestro(this);
 
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
-		lblCdigo.setBounds(227, 11, 46, 14);
+		lblCdigo.setBounds(287, 26, 33, 14);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(276, 8, 122, 20);
+		txtCodigo.setBounds(346, 26, 47, 20);
 		txtCodigo.setColumns(10);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(227, 36, 75, 14);
+		lblDescripcin.setBounds(287, 56, 54, 14);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 207, 273);
+		scrollPane.setBounds(10, 11, 267, 234);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -57,100 +66,41 @@ public class FrmMoneda extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(286, 33, 122, 20);
+		txtDescripcion.setBounds(346, 52, 183, 22);
 
-		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(scrollPane,
-												GroupLayout.DEFAULT_SIZE, 226,
-												Short.MAX_VALUE)
-										.addPreferredGap(
-												ComponentPlacement.UNRELATED)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(lblCdigo)
-														.addComponent(
-																lblDescripcin))
-										.addGap(5)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(
-																txtDescripcion,
-																GroupLayout.DEFAULT_SIZE,
-																142,
-																Short.MAX_VALUE)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				txtCodigo,
-																				GroupLayout.DEFAULT_SIZE,
-																				98,
-																				Short.MAX_VALUE)
-																		.addGap(44)))
-										.addContainerGap()));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(26)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								lblCdigo)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addComponent(
-																												txtCodigo,
-																												GroupLayout.PREFERRED_SIZE,
-																												GroupLayout.DEFAULT_SIZE,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addPreferredGap(
-																												ComponentPlacement.RELATED)
-																										.addGroup(
-																												groupLayout
-																														.createParallelGroup(
-																																Alignment.BASELINE)
-																														.addComponent(
-																																txtDescripcion,
-																																GroupLayout.PREFERRED_SIZE,
-																																22,
-																																GroupLayout.PREFERRED_SIZE)
-																														.addComponent(
-																																lblDescripcin)))))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				scrollPane,
-																				GroupLayout.DEFAULT_SIZE,
-																				370,
-																				Short.MAX_VALUE)))
-										.addContainerGap()));
-		pnlContenido.setLayout(groupLayout);
+		optNac = new JRadioButton("Moneda Nacional");
+		optNac.setSelected(true);
+		optNac.setBounds(284, 128, 107, 23);
+		optNac.setMnemonic(0);
+		grpTipoMoneda.add(optNac);
+
+		optExt = new JRadioButton("Primera moneda Extranjera");
+		optExt.setBounds(284, 154, 157, 23);
+		optExt.setMnemonic(1);
+		grpTipoMoneda.add(optExt);
+
+		optOtra = new JRadioButton("Otra Moneda");
+		optOtra.setMnemonic(2);
+		optOtra.setBounds(284, 180, 157, 23);
+		grpTipoMoneda.add(optOtra);
+		pnlContenido.setLayout(null);
+		pnlContenido.add(scrollPane);
+		pnlContenido.add(lblCdigo);
+		pnlContenido.add(lblDescripcin);
+		pnlContenido.add(txtDescripcion);
+		pnlContenido.add(txtCodigo);
+		pnlContenido.add(optNac);
+		pnlContenido.add(optExt);
+		pnlContenido.add(optOtra);
+
+		JLabel lblSimbolo = new JLabel("Simbolo");
+		lblSimbolo.setBounds(287, 89, 54, 14);
+		pnlContenido.add(lblSimbolo);
+
+		txtSimbolo = new JTextField();
+		txtSimbolo.setColumns(10);
+		txtSimbolo.setBounds(346, 85, 71, 22);
+		pnlContenido.add(txtSimbolo);
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -186,6 +136,8 @@ public class FrmMoneda extends AbstractMaestro {
 	public void llenarDesdeVista() {
 		getMoneda().setIdmoneda(txtCodigo.getText());
 		getMoneda().setDescripcion(txtDescripcion.getText());
+		getMoneda().setSimbolo(txtSimbolo.getText());
+		getMoneda().setTipo(grpTipoMoneda.getSelection().getMnemonic());
 	};
 
 	@Override
@@ -194,15 +146,27 @@ public class FrmMoneda extends AbstractMaestro {
 		vista_noedicion();
 	}
 
-
 	@Override
 	public void llenar_datos() {
 		if (getMoneda() != null) {
 			txtCodigo.setText(getMoneda().getIdmoneda());
 			txtDescripcion.setText(getMoneda().getDescripcion());
+			txtSimbolo.setText(getMoneda().getSimbolo());
+			switch (getMoneda().getTipo()) {
+			case 0:
+				optNac.setSelected(true);
+				break;
+			case 1:
+				optExt.setSelected(true);
+				break;
+			default:
+				optExt.setSelected(true);
+				break;
+			}
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
+			txtSimbolo.setText("");
 		}
 	}
 
@@ -213,8 +177,7 @@ public class FrmMoneda extends AbstractMaestro {
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
 		for (Moneda obj : getMonedas()) {
-			model.addRow(new Object[] { obj.getIdmoneda(),
-					obj.getDescripcion() });
+			model.addRow(new Object[] { obj.getIdmoneda(), obj.getDescripcion() });
 		}
 		if (getMonedas().size() > 0) {
 			setMoneda(getMonedas().get(0));
@@ -232,6 +195,13 @@ public class FrmMoneda extends AbstractMaestro {
 		if (getEstado().equals(NUEVO))
 			txtCodigo.setEditable(true);
 		txtDescripcion.setEditable(true);
+		txtSimbolo.setEditable(true);
+		Enumeration<AbstractButton> opts = grpTipoMoneda.getElements();
+		while (opts.hasMoreElements()) {
+			opts.nextElement().setEnabled(true);
+		}
+		
+		
 		tblLista.setEnabled(false);
 	}
 
@@ -239,6 +209,11 @@ public class FrmMoneda extends AbstractMaestro {
 	public void vista_noedicion() {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
+		txtSimbolo.setEditable(false);
+		Enumeration<AbstractButton> opts = grpTipoMoneda.getElements();
+		while (opts.hasMoreElements()) {
+			opts.nextElement().setEnabled(false);
+		}
 		tblLista.setEnabled(true);
 	}
 
@@ -286,5 +261,4 @@ public class FrmMoneda extends AbstractMaestro {
 	public void setMonedas(List<Moneda> monedas) {
 		this.monedas = monedas;
 	}
-
 }

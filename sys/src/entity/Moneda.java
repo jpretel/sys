@@ -19,6 +19,9 @@ public class Moneda implements Serializable {
 	private String descripcion;
 	@Column(length = 10)
 	private String simbolo;
+	@Column(precision=1, scale = 0)
+	private int tipo; //0 Nacional, 1ra Moneda Extranjera, 2 Otras Monedas Extranjera
+	
 	private static final long serialVersionUID = 1L;
 
 	public Moneda() {
@@ -47,6 +50,14 @@ public class Moneda implements Serializable {
 
 	public void setSimbolo(String simbolo) {
 		this.simbolo = simbolo;
+	}
+
+	public int getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
 	}
 
 }
