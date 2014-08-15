@@ -27,7 +27,7 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 	protected JPanel pnlContenido;
 
 	public AbstractMaestroLista() {
-		super("aa");
+		super("");
 		barraLista = new PanelBarraMaestroLista();
 		setEstado(VISTA);
 		setTitle("Lista");
@@ -63,7 +63,7 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 					irFormulario(VISTA);
 				}
 			}
-		});
+		});		
 		scrollPane.setViewportView(tblLista);
 		tblLista.setColumnControlVisible(true);
 	}
@@ -71,7 +71,6 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 	public void init(AbstractMaestro obj, String opcion, Object entidad) {
 		if (obj instanceof AbstractMaestro) {
 			getDesktopPane().add(obj);
-
 			if (opcion.equals(NUEVO))
 				obj.DoNuevo();
 			if (opcion.equals(VISTA)) {

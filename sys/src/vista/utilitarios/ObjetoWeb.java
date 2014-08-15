@@ -1,8 +1,6 @@
 package vista.utilitarios;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.jsoup.Connection;
@@ -12,14 +10,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import entity.Clieprov;
+
 public class ObjetoWeb {
 	
-	private static List<String> consulta = new ArrayList<String>();	
 	public ObjetoWeb(){
 		
 	}
 	
-	public static List<String> ConsultaRUC(String ruc){
+	public static Clieprov ConsultaRUC(String ruc){
 		String captcha = "";
 		
 		try {
@@ -44,17 +43,22 @@ public class ObjetoWeb {
 			Element table = dRuc.select("TABLE[class = form-table]").first();
 
 			Elements rows = table.select("tr");
-			
-			String dato;
-			for (Element e : rows) {
-				Element te = e.child(0);
+			int i = 0;
+			Clieprov c = new Clieprov();
+			c.setRuc(ruc);
+			for (Element e : rows) {				
 				if (e.children().size() > 1) {
 					Element td = e.child(1);					
-					dato = te.text() + " " + td.text();	
-					consulta.add(dato);
+					if(i==0)
+						c.setIdclieprov(td.text().substring(0, 11));
+					if(i==2)
+						c.setRazonSocial(td.text());
+					if(i==6)
+						c.setDireccion(td.text());
 				}
+				i +=1;
 			}			
-			return consulta;
+			return c;
 			
 		} catch (IOException e) {
 			e.printStackTrace();

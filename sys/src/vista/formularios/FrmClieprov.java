@@ -1,7 +1,6 @@
 package vista.formularios;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import dao.ClieprovDAO;
@@ -16,6 +15,9 @@ import java.awt.event.MouseEvent;
 
 import vista.combobox.ComboBox;
 import vista.utilitarios.ObjetoWeb;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmClieprov extends AbstractMaestro {
 
@@ -57,54 +59,26 @@ public class FrmClieprov extends AbstractMaestro {
 	public FrmClieprov() {
 		super("Edicion de Clientes y Proveedores");		
 		JLabel lblCodigo = new JLabel("idclieprov");
-		lblCodigo.setBounds(20, 10, 51, 14);
-		pnlContenido.add(lblCodigo);		
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(80, 10, 98, 20);
 		txtCodigo.setColumns(10);
-		pnlContenido.add(txtCodigo);
 		
 		JLabel lblRazon_Social = new JLabel("Razon Social");
-		lblRazon_Social.setBounds(5, 35, 66, 14);
-		pnlContenido.add(lblRazon_Social);		
 		
 		txtRazon_Social = new JTextField();
-		txtRazon_Social.setBounds(80, 35, 400, 20);
 		txtRazon_Social.setColumns(10);
-		pnlContenido.add(txtRazon_Social);
 		
 		JLabel lblDireccion = new JLabel("Direccion");
-		lblDireccion.setBounds(20, 58, 50, 14);
-		pnlContenido.add(lblDireccion);
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setBounds(80, 58, 400, 20);
 		txtDireccion.setColumns(10);
-		pnlContenido.add(txtDireccion);
 		
 		JLabel lblRuc = new JLabel("RUC");
-		lblRuc.setBounds(41, 83, 30, 14);
-		pnlContenido.add(lblRuc);
 		
 		txtRuc = new JTextField();
-		txtRuc.setBounds(80, 83, 98, 20);
 		txtRuc.setColumns(10);
-		pnlContenido.add(txtRuc);
 		
 		JButton button = new JButton("Consulta RUC");
-		button.setBounds(0, 0, 0, 0);
-		pnlContenido.add(button);
-		pnlContenido.setLayout(null);
-		pnlContenido.add(lblCodigo);
-		pnlContenido.add(txtCodigo);
-		pnlContenido.add(lblRazon_Social);
-		pnlContenido.add(txtRazon_Social);
-		pnlContenido.add(lblDireccion);
-		pnlContenido.add(txtDireccion);
-		pnlContenido.add(lblRuc);
-		pnlContenido.add(txtRuc);
-		pnlContenido.add(button);
 		
 		JButton btnConsultaRuc = new JButton("Consultar RUC");
 		btnConsultaRuc.addMouseListener(new MouseAdapter() {
@@ -113,19 +87,87 @@ public class FrmClieprov extends AbstractMaestro {
 				consultar_ruc();			
 			}	
 		});
-		btnConsultaRuc.setBounds(192, 79, 108, 23);
-		pnlContenido.add(btnConsultaRuc);			
 		
 		optionList.add(new String[]{"C","Cliente"});
 		optionList.add(new String[]{"P","Proveedor"});
 		
 		cboTipo = new vista.combobox.ComboBox(optionList,1);
-		cboTipo.setBounds(211, 7, 92, 20);
-		pnlContenido.add(cboTipo);
 		
 		JLabel lblTipo = new JLabel("tipo");
-		lblTipo.setBounds(183, 10, 18, 14);
-		pnlContenido.add(lblTipo);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(0, 0, Short.MAX_VALUE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(20)
+									.addComponent(lblDireccion, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(45)
+									.addComponent(lblRuc, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+							.addGap(5)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(txtRuc, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+									.addGap(18)
+									.addComponent(btnConsultaRuc, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtDireccion, GroupLayout.PREFERRED_SIZE, 392, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(5)
+							.addComponent(lblRazon_Social, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addGap(9)
+							.addComponent(txtRazon_Social))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(20)
+							.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+							.addGap(9)
+							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+							.addGap(5)
+							.addComponent(lblTipo)
+							.addGap(10)
+							.addComponent(cboTipo, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE))
+						.addComponent(button, GroupLayout.PREFERRED_SIZE, 0, GroupLayout.PREFERRED_SIZE))
+					.addGap(95))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(button, GroupLayout.PREFERRED_SIZE, 0, GroupLayout.PREFERRED_SIZE)
+							.addGap(7)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(3)
+									.addComponent(lblCodigo))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(3)
+									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(3)
+									.addComponent(lblTipo))
+								.addComponent(cboTipo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(5)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblRazon_Social)
+								.addComponent(txtRazon_Social, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblDireccion)
+								.addComponent(txtDireccion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(txtRuc, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnConsultaRuc)))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(84)
+							.addComponent(lblRuc)))
+					.addContainerGap(150, Short.MAX_VALUE))
+		);
+		pnlContenido.setLayout(groupLayout);
 		iniciar();
 	}
 	
@@ -160,14 +202,19 @@ public class FrmClieprov extends AbstractMaestro {
 	
 	@Override
 	public void llenar_datos() {
-		if (getClieprov() != null) {
+		int index = 0;
+		if (getClieprov() != null && !getEstado().equals(NUEVO)) {
 			txtCodigo.setText(getClieprov().getIdclieprov());
 			txtRazon_Social.setText(getClieprov().getRazonSocial());
 			txtDireccion.setText(getClieprov().getDireccion());
 			txtRuc.setText(getClieprov().getRuc());
+			index = (getClieprov().getTipo().trim().equals("C"))?0:1;
+			cboTipo.setSelectedIndex(index);
 		} else {
 			txtCodigo.setText("");
 			txtRazon_Social.setText("");
+			txtDireccion.setText("");
+			txtRuc.setText("");
 		}
 	}
 
@@ -187,7 +234,7 @@ public class FrmClieprov extends AbstractMaestro {
 		txtRazon_Social.setEditable(true);
 		txtDireccion.setEditable(true);
 		txtRuc.setEditable(true);
-		cboTipo.setEditable(true);
+		cboTipo.setEnabled(true);
 	}
 
 	@Override
@@ -197,17 +244,19 @@ public class FrmClieprov extends AbstractMaestro {
 		txtDireccion.setEditable(false);
 		txtRuc.setEditable(false);
 		cboTipo.setEditable(false);
+		cboTipo.setEnabled(false);
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
-
+		setClieprov((Clieprov) entidad);
+		llenar_datos();
+		vista_noedicion();
 	}
 
 	@Override
@@ -224,18 +273,12 @@ public class FrmClieprov extends AbstractMaestro {
 		return true;
 	}
 	
-	private void consultar_ruc() {
-		String[] listaRUC;
-		List<String> consulta = new ArrayList<String>();	
-		int cont = 0;	
-		consulta = ObjetoWeb.ConsultaRUC(txtRuc.getText().toString());		
-		
-		Iterator<String> nombreIterator = consulta.iterator();
-		listaRUC = new String[consulta.size()];
-		
-		while(nombreIterator.hasNext()){					
-			String elemento = nombreIterator.next();					
-			listaRUC[cont] = elemento.toString();	
-		}		
+	private void consultar_ruc() {		
+		clieprov = ObjetoWeb.ConsultaRUC(txtRuc.getText().toString());		
+		setClieprov(clieprov);
+		txtCodigo.setText(getClieprov().getIdclieprov());
+		txtRazon_Social.setText(getClieprov().getRazonSocial());
+		txtDireccion.setText(getClieprov().getDireccion());
+		txtRuc.setText(getClieprov().getRuc());
 	}
 }

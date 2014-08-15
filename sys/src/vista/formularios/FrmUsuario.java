@@ -17,8 +17,6 @@ import entity.GrupoUsuario;
 import entity.Usuario;
 import vista.utilitarios.MaestroTableModel;
 import core.security.Encryption;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
 
 public class FrmUsuario extends AbstractMaestro {
 
@@ -74,10 +72,10 @@ public class FrmUsuario extends AbstractMaestro {
 		txtidgrupo = new JTextField(8);
 		txtidgrupo.setBounds(384, 113, 108, 22);
 		pnlContenido.add(txtidgrupo);
-		pnlContenido.setFocusTraversalPolicy(new FocusTraversalOnArray(
+		/*pnlContenido.setFocusTraversalPolicy(new FocusTraversalOnArray(
 				new Component[] { scrollPane, tblLista, lblId, txtidUsuario,
 						lblUsuario, txtClave, lblCLave, txtNombres,
-						lblGrupoUsuario, txtidgrupo }));
+						lblGrupoUsuario, txtidgrupo }));*/
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {

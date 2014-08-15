@@ -3,8 +3,6 @@ import java.util.List;
 
 import dao.ClieprovDAO;
 import entity.Clieprov;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 
 public class FrmListaClieProv extends AbstractMaestroLista {
 	private static final long serialVersionUID = 1L;
@@ -12,23 +10,10 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 	private ClieprovDAO cdao = new ClieprovDAO();
 	private Object[] obj;
 	private List<Clieprov> clieprovL = cdao.findAll();
-	private int nFilasP = clieprovL.size();
 	private Clieprov clieprov;
-
 	public FrmListaClieProv() {
 		super();
-		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 607, Short.MAX_VALUE)
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 257, Short.MAX_VALUE)
-		);
-		pnlContenido.setLayout(groupLayout);
-		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
-				"Subgrupo de Producto" };
+		String columnas[] = {"Codigo", "RUC", "Razon Social", "Direccion"};
 		super.inicia_Lista(columnas, obj);
 		llenar_lista();
 	}
@@ -39,17 +24,13 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 			clieprov = cdao.find(RetornarPk());
 		}
 		FrmClieprov frmclieprov = new FrmClieprov();
-		super.init(frmclieprov, opcion, clieprov);
+		init(frmclieprov, opcion, clieprov);
 	}
 
 	@Override
 	public void llenar_lista() {
-		for (int i = 0; i < nFilasP; i++) {
-			clieprov = new Clieprov();
-			obj = new Object[] {clieprov.getIdclieprov(),
-					clieprov.getRazonSocial(),clieprov.getRuc(),
-					clieprov.getDireccion() };
-			modeloLista.addRow(obj);
+		for (Clieprov c: clieprovL) {
+			modeloLista.addRow(new Object[]{c.getIdclieprov(),c.getRuc(),c.getRazonSocial(),c.getDireccion()});
 		}
 	}
 
@@ -97,7 +78,7 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

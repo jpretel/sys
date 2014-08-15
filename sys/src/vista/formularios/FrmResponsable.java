@@ -2,10 +2,7 @@ package vista.formularios;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import dao.AreaDAO;
 import dao.ResponsableDAO;
-import entity.Area;
 import entity.Responsable;
 
 import javax.swing.JOptionPane;
@@ -59,10 +56,7 @@ public class FrmResponsable extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;	
 	public final cntArea cntarea;
-	private AreaDAO adao = new AreaDAO();
-	private Area area = new Area();
-	private List<Area> areaL = adao.findAll();
-	
+
 	public FrmResponsable() {
 		super("Responsables");		
 		pnlContenido.setBounds(0, 0, 0, 0);
@@ -198,13 +192,11 @@ public class FrmResponsable extends AbstractMaestro {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
-		// TODO Auto-generated method stub
 		
 	}
 

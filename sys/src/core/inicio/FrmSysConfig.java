@@ -15,8 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
 import java.awt.Dimension;
 
 public class FrmSysConfig extends JFrame {
@@ -105,7 +103,7 @@ public class FrmSysConfig extends JFrame {
 		getContentPane().add(lblClave);
 		getContentPane().add(txtClave);
 		getContentPane().add(txtUsuario);
-		getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblServidor, txtServidor, lblUsuario, txtUsuario, lblClave, txtClave, lblBaseDeDatos, txtBD, btnAceptar, btnCancelar}));
+		//getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblServidor, txtServidor, lblUsuario, txtUsuario, lblClave, txtClave, lblBaseDeDatos, txtBD, btnAceptar, btnCancelar}));
 	}
 
 	private boolean isCamposValidos() {
