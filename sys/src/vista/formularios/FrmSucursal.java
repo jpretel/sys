@@ -75,6 +75,9 @@ public class FrmSucursal extends AbstractMaestro {
 				return getEditar();
 			}
 		});
+
+		getAlmacenesTM().setNombre_detalle("Almacenes");
+		getAlmacenesTM().setObligatorios(0, 1, 2);
 		scrollPaneNum.setViewportView(tblAlmacenes);
 		tblAlmacenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -190,7 +193,6 @@ public class FrmSucursal extends AbstractMaestro {
 					.toString());
 			getAlmacenes().add(alm);
 		}
-
 	}
 
 	@Override
@@ -235,15 +237,19 @@ public class FrmSucursal extends AbstractMaestro {
 			return false;
 		}
 		if (this.txtDescCorta.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Nombre Corto");
+
 			this.txtDescCorta.requestFocus();
+			return false;
+		}
+
+		if (!validarDetalles()) {
 			return false;
 		}
 		return true;
 	}
-	
-	private void validarDetalles(){
-		
+
+	private boolean validarDetalles() {
+		return getAlmacenesTM().esValido();
 	}
 
 	@Override
