@@ -7,14 +7,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import vista.controles.DSGTableModel;
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-
 import javax.swing.JButton;
 
 import dao.AlmacenDAO;
@@ -38,7 +39,7 @@ public class FrmSucursal extends AbstractMaestro {
 	private JTable tblAlmacenes;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
-	private FrmSucursalTableModel almacenesTM = new FrmSucursalTableModel();
+	// private FrmSucursalTableModel almacenesTM = new FrmSucursalTableModel();
 	private Sucursal sucursal;
 
 	private List<Sucursal> sucursales;
@@ -50,6 +51,7 @@ public class FrmSucursal extends AbstractMaestro {
 
 	private JButton btnILinea;
 	private JButton btnBLinea;
+	private JTextField txtDescCorta;
 
 	public FrmSucursal() {
 		super("Sucursal / Almacen");
@@ -62,9 +64,17 @@ public class FrmSucursal extends AbstractMaestro {
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane scrollPaneNum = new JScrollPane();
-		scrollPaneNum.setBounds(215, 65, 314, 219);
+		scrollPaneNum.setBounds(215, 92, 314, 192);
 
-		tblAlmacenes = new JTable(almacenesTM);
+		tblAlmacenes = new JTable(new DSGTableModel(new String[] {
+				"Cod. Almacen", "Descripción", "Desc. Corta" }) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean evaluaEdicion(int row, int column) {
+				return getEditar();
+			}
+		});
 		scrollPaneNum.setViewportView(tblAlmacenes);
 		tblAlmacenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -77,17 +87,18 @@ public class FrmSucursal extends AbstractMaestro {
 		txtCodigo = new JTextField();
 		txtCodigo.setBounds(298, 15, 67, 20);
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(298, 39, 126, 20);
+		txtDescripcion.setBounds(298, 39, 184, 20);
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		btnILinea = new JButton("I Linea");
 		btnILinea.setBounds(375, 15, 65, 20);
 		btnILinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				final Object fila[] = { "", "" };
-				almacenesTM.addRow(fila);
+				getAlmacenesTM().addRow(new Object[] { "", "", "" });
 			}
 		});
 
@@ -97,7 +108,7 @@ public class FrmSucursal extends AbstractMaestro {
 			public void actionPerformed(ActionEvent arg0) {
 				int ind = tblAlmacenes.getSelectedRow();
 				if (ind >= 0)
-					almacenesTM.removeRow(ind);
+					getAlmacenesTM().removeRow(ind);
 			}
 		});
 		pnlContenido.setLayout(null);
@@ -109,6 +120,16 @@ public class FrmSucursal extends AbstractMaestro {
 		pnlContenido.add(btnILinea);
 		pnlContenido.add(btnBLinea);
 		pnlContenido.add(scrollPaneNum);
+
+		JLabel lblDescCorta = new JLabel("Desc. Corta");
+		lblDescCorta.setBounds(213, 67, 66, 14);
+		pnlContenido.add(lblDescCorta);
+
+		txtDescCorta = new JTextField();
+		txtDescCorta.setColumns(10);
+		txtDescCorta.setDocument(new JTextFieldLimit(50, true));
+		txtDescCorta.setBounds(298, 64, 96, 20);
+		pnlContenido.add(txtDescCorta);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -152,18 +173,21 @@ public class FrmSucursal extends AbstractMaestro {
 	public void llenarDesdeVista() {
 		getSucursal().setIdsucursal(this.txtCodigo.getText().trim());
 		getSucursal().setDescripcion(this.txtDescripcion.getText().trim());
-
+		getSucursal().setNombre_corto(this.txtDescCorta.getText().trim());
 		setAlmacenes(new ArrayList<Almacen>());
 
-		for (int i = 0; i < almacenesTM.getRowCount(); i++) {
+		for (int i = 0; i < getAlmacenesTM().getRowCount(); i++) {
 			AlmacenPK id = new AlmacenPK();
 			Almacen alm = new Almacen();
 
 			id.setIdsucursal(getSucursal().getIdsucursal());
-			id.setIdalmacen(this.almacenesTM.getValueAt(i, 0).toString());
+			id.setIdalmacen(this.getAlmacenesTM().getValueAt(i, 0).toString());
 
 			alm.setId(id);
-			alm.setDescripcion(this.almacenesTM.getValueAt(i, 1).toString());
+			alm.setDescripcion(this.getAlmacenesTM().getValueAt(i, 1)
+					.toString());
+			alm.setNombre_corto(this.getAlmacenesTM().getValueAt(i, 2)
+					.toString());
 			getAlmacenes().add(alm);
 		}
 
@@ -171,30 +195,55 @@ public class FrmSucursal extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
-		almacenesTM.limpiar();
+		getAlmacenesTM().limpiar();
 		setAlmacenes(new ArrayList<Almacen>());
 		if (getSucursal() != null) {
 			txtCodigo.setText(getSucursal().getIdsucursal());
 			txtDescripcion.setText(getSucursal().getDescripcion());
+			txtDescCorta.setText(getSucursal().getNombre_corto());
 			setAlmacenes(almacenDAO.getPorSucursal(getSucursal()));
 
 			for (Almacen alm : getAlmacenes()) {
-				almacenesTM.addRow(new Object[] { alm.getId().getIdsucursal(),
-						alm.getDescripcion() });
+				getAlmacenesTM().addRow(
+						new Object[] { alm.getId().getIdalmacen(),
+								alm.getDescripcion(), alm.getNombre_corto() });
 			}
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
+			txtDescCorta.setText("");
 		}
 	}
 
 	@Override
 	public boolean isValidaVista() {
-		if (this.txtCodigo.getText().trim().isEmpty())
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (this.txtDescripcion.getText().trim().isEmpty())
+		}
+		if (getEstado().equals(NUEVO)) {
+			if (sucursalDAO.find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
+		if (this.txtDescCorta.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Nombre Corto");
+			this.txtDescCorta.requestFocus();
+			return false;
+		}
 		return true;
+	}
+	
+	private void validarDetalles(){
+		
 	}
 
 	@Override
@@ -225,7 +274,8 @@ public class FrmSucursal extends AbstractMaestro {
 		else
 			txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(true);
-		almacenesTM.setEditar(true);
+		txtDescCorta.setEditable(true);
+		getAlmacenesTM().setEditar(true);
 		btnILinea.setEnabled(true);
 		btnBLinea.setEnabled(true);
 
@@ -235,7 +285,8 @@ public class FrmSucursal extends AbstractMaestro {
 	public void vista_noedicion() {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
-		almacenesTM.setEditar(false);
+		txtDescCorta.setEditable(false);
+		getAlmacenesTM().setEditar(false);
 		btnILinea.setEnabled(false);
 		btnBLinea.setEnabled(false);
 	}
@@ -297,12 +348,8 @@ public class FrmSucursal extends AbstractMaestro {
 
 	}
 
-	public FrmSucursalTableModel getNumeradoresTM() {
-		return almacenesTM;
-	}
-
-	public void setNumeradoresTM(FrmSucursalTableModel numeradoresTM) {
-		this.almacenesTM = numeradoresTM;
+	public DSGTableModel getAlmacenesTM() {
+		return ((DSGTableModel) tblAlmacenes.getModel());
 	}
 
 	/**
@@ -342,37 +389,5 @@ public class FrmSucursal extends AbstractMaestro {
 			getAlmacenDAO().borrarPorSucursal(getSucursal());
 		}
 
-	}
-}
-
-
-
-class FrmSucursalTableModel extends DefaultTableModel {
-
-	private static final long serialVersionUID = 1L;
-
-	private boolean editar = false;
-
-	public FrmSucursalTableModel() {
-		addColumn("Cod. Almacen");
-		addColumn("Descripción");
-	}
-
-	public boolean isCellEditable(int row, int column) {
-		return editar;
-	}
-
-	public void limpiar() {
-		while (getRowCount() != 0) {
-			removeRow(0);
-		}
-	}
-
-	public void setEditar(boolean editar) {
-		this.editar = editar;
-	}
-
-	public boolean getEditar() {
-		return this.editar;
 	}
 }
