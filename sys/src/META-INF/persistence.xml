@@ -51,13 +51,8 @@
 
 
 		<properties>
-			<!-- <property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml"/> -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd" />
-			<property name="javax.persistence.jdbc.user" value="root" />
-			<property name="javax.persistence.jdbc.password" value="123456" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<!-- <property name="eclipselink.ddl-generation" value="drop-and-create-tables" 
-				/> <property name="eclipselink.ddl-generation" value="create-or-extend-tables" 
+			<!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables" 
 				/> -->
 
 		</properties>
