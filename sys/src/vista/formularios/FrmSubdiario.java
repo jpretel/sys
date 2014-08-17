@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +20,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import dao.SubdiarioDAO;
 import entity.Subdiario;
+
 import javax.swing.JCheckBox;
 
 public class FrmSubdiario extends AbstractMaestro {
@@ -148,7 +150,12 @@ public class FrmSubdiario extends AbstractMaestro {
 	@Override
 	public void eliminar() {
 		if (getSubdiario()!= null) {
-			getSubdiarioDAO().remove(getSubdiario());
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getSubdiarioDAO().remove(getSubdiario());
+				iniciar();
+			}			
 		}
 	}
 
@@ -216,10 +223,26 @@ public class FrmSubdiario extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if (txtCodigo.getText().trim().isEmpty())
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (txtDescripcion.getText().trim().isEmpty())
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getSubdiarioDAO().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
+		
 		return true;
 	}
 

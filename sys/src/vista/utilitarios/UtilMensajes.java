@@ -28,4 +28,11 @@ public class UtilMensajes {
 		JOptionPane.showMessageDialog(null, grandTotal,
 				titulo, JOptionPane.INFORMATION_MESSAGE);
 	}
+	
+	public static int msj_error(String mensaje){
+		int seleccion = JOptionPane.showOptionDialog(null, Sys.mensajes.getProperty(mensaje), "Informacion del Sistema",
+			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Si", "No"}, "Si");
+			
+		return seleccion;			
+	}
 }

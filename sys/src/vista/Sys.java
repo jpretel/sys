@@ -61,7 +61,7 @@ public class Sys {
 
 	public void iniciar() {
 		
-		//mensajes = new Mensajes("ESPANOL");
+		mensajes = new Mensajes("ESPANOL");
 		
 		File sys_file = new File(SYS_CONFIG);
 		String[] datos = null;

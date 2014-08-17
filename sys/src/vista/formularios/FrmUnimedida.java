@@ -2,7 +2,9 @@ package vista.formularios;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -85,10 +87,10 @@ public class FrmUnimedida extends AbstractMaestro {
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
@@ -96,17 +98,23 @@ public class FrmUnimedida extends AbstractMaestro {
 						.addComponent(lblNomenclatura, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
 					.addGap(9)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtNomenclatura, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(txtCodigo)
+							.addGap(100))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+							.addGap(5))
+						.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+							.addComponent(txtNomenclatura)
+							.addGap(103)))
+					.addGap(0))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(11)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(3)
 							.addComponent(lblCodigo)
@@ -230,13 +238,42 @@ public class FrmUnimedida extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		// TODO Auto-generated method stub
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
+			return false;
+		}
+		if (getEstado().equals(NUEVO)) {
+			if (getUdao().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
+			return false;
+		}
+		if (this.txtNomenclatura.getText().trim().isEmpty()) {
+
+			this.txtNomenclatura.requestFocus();
+			return false;
+		}
+		
 		return true;
 	}
 
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
-		
+		if (getUnimedida() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getUdao().remove(getUnimedida());
+				iniciar();
+			}			
+		}
+
 	}
 }

@@ -6,6 +6,8 @@ import dao.ProductoDAO;
 import entity.Grupo;
 import entity.Producto;
 import entity.Subgrupo;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class FrmListaProductos extends AbstractMaestroLista {
 	private static final long serialVersionUID = 1L;
@@ -17,6 +19,16 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	public FrmListaProductos() {
 		super();
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 568, Short.MAX_VALUE)
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 277, Short.MAX_VALUE)
+		);
+		pnlContenido.setLayout(groupLayout);
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);

@@ -26,6 +26,8 @@ import entity.Sucursal;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class FrmSucursal extends AbstractMaestro {
 
@@ -57,14 +59,12 @@ public class FrmSucursal extends AbstractMaestro {
 		super("Sucursal / Almacen");
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 199, 273);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane scrollPaneNum = new JScrollPane();
-		scrollPaneNum.setBounds(215, 92, 314, 192);
 
 		tblAlmacenes = new JTable(new DSGTableModel(new String[] {
 				"Cod. Almacen", "Descripción", "Desc. Corta" }) {
@@ -82,23 +82,18 @@ public class FrmSucursal extends AbstractMaestro {
 		tblAlmacenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JLabel lblCdigo = new JLabel("Cdigo");
-		lblCdigo.setBounds(213, 18, 66, 14);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(213, 42, 66, 14);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(298, 15, 67, 20);
 		txtCodigo.setColumns(10);
 		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(298, 39, 184, 20);
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		btnILinea = new JButton("I Linea");
-		btnILinea.setBounds(375, 15, 65, 20);
 		btnILinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				getAlmacenesTM().addRow(new Object[] { "", "", "" });
@@ -106,7 +101,6 @@ public class FrmSucursal extends AbstractMaestro {
 		});
 
 		btnBLinea = new JButton("B Linea");
-		btnBLinea.setBounds(446, 15, 83, 20);
 		btnBLinea.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ind = tblAlmacenes.getSelectedRow();
@@ -114,25 +108,73 @@ public class FrmSucursal extends AbstractMaestro {
 					getAlmacenesTM().removeRow(ind);
 			}
 		});
-		pnlContenido.setLayout(null);
-		pnlContenido.add(scrollPane);
-		pnlContenido.add(lblDescripcin);
-		pnlContenido.add(lblCdigo);
-		pnlContenido.add(txtDescripcion);
-		pnlContenido.add(txtCodigo);
-		pnlContenido.add(btnILinea);
-		pnlContenido.add(btnBLinea);
-		pnlContenido.add(scrollPaneNum);
 
 		JLabel lblDescCorta = new JLabel("Desc. Corta");
-		lblDescCorta.setBounds(213, 67, 66, 14);
-		pnlContenido.add(lblDescCorta);
 
 		txtDescCorta = new JTextField();
 		txtDescCorta.setColumns(10);
 		txtDescCorta.setDocument(new JTextFieldLimit(50, true));
-		txtDescCorta.setBounds(298, 64, 96, 20);
-		pnlContenido.add(txtDescCorta);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+					.addGap(4)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addGap(19)
+							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)
+							.addGap(10)
+							.addComponent(btnILinea)
+							.addGap(6)
+							.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addGap(19)
+							.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 184, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblDescCorta, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addGap(19)
+							.addComponent(txtDescCorta, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(2)
+							.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)))
+					.addGap(10))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+					.addGap(11))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(15)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblCdigo))
+						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnILinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+					.addGap(4)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblDescripcin))
+						.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(5)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblDescCorta))
+						.addComponent(txtDescCorta, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(8)
+					.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+					.addGap(11))
+		);
+		pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -391,9 +433,13 @@ public class FrmSucursal extends AbstractMaestro {
 	@Override
 	public void eliminar() {
 		if (getSucursal() != null) {
-			getSucursalDAO().remove(getSucursal());
-			getAlmacenDAO().borrarPorSucursal(getSucursal());
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getAlmacenDAO().borrarPorSucursal(getSucursal());
+				getSucursalDAO().remove(getSucursal());
+				iniciar();
+			}			
 		}
-
 	}
 }

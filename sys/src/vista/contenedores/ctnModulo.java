@@ -6,13 +6,14 @@ import entity.SysModulo;
 public class ctnModulo extends AbstractCntBuscar<SysModulo>{
 
 	/**
-	 * gg
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	SysModuloDAO sysModuloDAO = new SysModuloDAO();
 
-	public ctnModulo() {
+	public ctnModulo(SysModuloDAO sysModuloDAO) {
 		super();
+		setSysModuloDAO(sysModuloDAO);
 		refrescar();
 	}
 	@Override
@@ -46,6 +47,12 @@ public class ctnModulo extends AbstractCntBuscar<SysModulo>{
 	@Override
 	public void refrescar() {
 		setData(sysModuloDAO.findAll());
+	}
+	public SysModuloDAO getSysModuloDAO() {
+		return sysModuloDAO;
+	}
+	public void setSysModuloDAO(SysModuloDAO sysModuloDAO) {
+		this.sysModuloDAO = sysModuloDAO;
 	}
 
 }

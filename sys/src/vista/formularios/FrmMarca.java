@@ -21,6 +21,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
 
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 public class FrmMarca extends AbstractMaestro {
 
@@ -53,25 +54,19 @@ public class FrmMarca extends AbstractMaestro {
 		super("Marca de Productos");
 		
 		JLabel lblCodigo = new JLabel("Codigo");
-		lblCodigo.setBounds(32, 21, 46, 14);
 		
 		JLabel lblDescripcion = new JLabel("Descripcion");
-		lblDescripcion.setBounds(32, 46, 67, 14);
 		
 		JLabel lblNomenclatura = new JLabel("Nombre Corto");
-		lblNomenclatura.setBounds(32, 71, 67, 14);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(108, 18, 86, 20);
 		txtCodigo.setColumns(10);
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(108, 43, 186, 20);
 		
 		txtNombreCorto = new JTextField();
 		txtNombreCorto.setColumns(10);
-		txtNombreCorto.setBounds(108, 71, 86, 20);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -79,49 +74,50 @@ public class FrmMarca extends AbstractMaestro {
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+					.addGap(10)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblNomenclatura)
-							.addGap(18)
-							.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(3)
+							.addComponent(lblCodigo))
+						.addComponent(lblDescripcion)
+						.addComponent(lblNomenclatura))
+					.addGap(21)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCodigo)
-								.addComponent(lblDescripcion))
-							.addGap(31)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap())
+							.addComponent(txtCodigo)
+							.addGap(105))
+						.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(txtNombreCorto)
+							.addGap(105)))
+					.addGap(10))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()					
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-								.addGap(50)
-								.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblDescripcion)
-								.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNomenclatura)
-								.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(39, Short.MAX_VALUE))
+					.addGap(11)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+					.addGap(15))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+					.addGap(1)
+					.addComponent(lblDescripcion)
+					.addGap(17)
+					.addComponent(lblNomenclatura))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(24)
+					.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 		);
 		pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -232,16 +228,45 @@ public class FrmMarca extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if (this.txtCodigo.getText().trim().isEmpty())
+		
+		if (this.txtCodigo.getText().trim().isEmpty()){
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (this.txtDescripcion.getText().trim().isEmpty())
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getMdao().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDescripcion.getText().trim().isEmpty()){
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
+		
+		if (this.txtNombreCorto.getText().trim().isEmpty()) {
+
+			this.txtNombreCorto.requestFocus();
+			return false;
+		}
+		
 		return true;
 	}
 
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
-		
+		if (getMarca() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getMdao().remove(getMarca());
+				iniciar();
+			}			
+		}		
 	}
 }
