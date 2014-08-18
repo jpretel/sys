@@ -1,7 +1,10 @@
 package vista.controles;
 
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import vista.utilitarios.JTableUtils;
 import vista.utilitarios.UtilMensajes;
 
 public abstract class DSGTableModel extends DefaultTableModel {
@@ -15,6 +18,9 @@ public abstract class DSGTableModel extends DefaultTableModel {
 
 	private int[] obligatorios;
 	private int[] repetidos;
+
+	private JScrollPane scrollPane;
+	private JTable table;
 
 	private String[] cabeceras;
 
@@ -63,7 +69,9 @@ public abstract class DSGTableModel extends DefaultTableModel {
 				for (int j = i + 1; j < getRowCount(); j++) {
 					String cad2 = getValoresUnidos(j, repetidos);
 					if (cad1.equals(cad2)) {
-						UtilMensajes.mensaje_alterta("DETALLE_NOIGUALES",
+						UtilMensajes.mensaje_alterta(
+								(repetidos.length == 1) ? "DETALLE_NOIGUAL"
+										: "DETALLE_NOIGUALES",
 								getNombre_detalle(),
 								getConcatenaCabeceras(this.repetidos), String
 										.valueOf(i + 1).toString(), String
@@ -100,6 +108,24 @@ public abstract class DSGTableModel extends DefaultTableModel {
 		return cadena;
 	}
 
+	@Override
+	public void addRow(Object[] rowData) {
+		super.addRow(rowData);
+		if (getScrollPane() != null && getTable() != null) {
+			getScrollPane().setRowHeaderView(
+					JTableUtils.buildRowHeader(getTable()));
+		}
+	}
+
+	@Override
+	public void removeRow(int row) {
+		super.removeRow(row);
+		if (getScrollPane() != null && getTable() != null) {
+			getScrollPane().setRowHeaderView(
+					JTableUtils.buildRowHeader(getTable()));
+		}
+	}
+
 	public void setEditar(boolean editar) {
 		this.editar = editar;
 	}
@@ -122,5 +148,27 @@ public abstract class DSGTableModel extends DefaultTableModel {
 
 	public void setRepetidos(int... repetidos) {
 		this.repetidos = repetidos;
+	}
+
+	public JScrollPane getScrollPane() {
+		return scrollPane;
+	}
+
+	public void setScrollPane(JScrollPane scrollPane) {
+		this.scrollPane = scrollPane;
+	}
+
+	public JTable getTable() {
+		return table;
+	}
+
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+	
+	public void setScrollAndTable(JScrollPane scrollPane, JTable table){
+		this.scrollPane = scrollPane;
+		this.table = table;
+		
 	}
 }
