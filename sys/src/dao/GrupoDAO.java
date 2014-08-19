@@ -6,5 +6,6 @@ public class GrupoDAO extends AbstractDAO<Grupo> {
 	public GrupoDAO(){
 		super(Grupo.class);
 	}
-
+	
+	
 }

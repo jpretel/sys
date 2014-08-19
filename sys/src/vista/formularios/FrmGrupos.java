@@ -2,9 +2,11 @@ package vista.formularios;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import vista.utilitarios.ButtonEditor;
 import vista.utilitarios.ButtonRenderer;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
@@ -36,8 +38,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.SwingConstants;
+
 import java.awt.Insets;
 import java.awt.Dimension;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmGrupos extends AbstractMaestro {
@@ -271,9 +275,18 @@ public class FrmGrupos extends AbstractMaestro {
 
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
+		if (getGrupo() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				sgDAO.borrarPorGrupo(getGrupo());
+				gdao.remove(getGrupo());
+				iniciar();
+			}			
+		}
 
 	}
+	
 	@Override
 	public void llenar_datos() {
 		if(getGrupo() instanceof Grupo){
@@ -375,7 +388,29 @@ public class FrmGrupos extends AbstractMaestro {
 	}
 	@Override
 	public boolean isValidaVista() {
-		// TODO Auto-generated method stub
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
+			return false;
+		}
+		if (getEstado().equals(NUEVO)) {
+			if (gdao.find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
+			return false;
+		}
+		if (this.txtDescCorta.getText().trim().isEmpty()) {
+
+			this.txtDescCorta.requestFocus();
+			return false;
+		}
+		
 		return true;
 	}
 }

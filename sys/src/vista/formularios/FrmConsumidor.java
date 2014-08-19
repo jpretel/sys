@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import org.jdesktop.swingx.JXTreeTable;
 
 import vista.utilitarios.MaestroTreeTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -188,10 +189,23 @@ public class FrmConsumidor extends AbstractMaestro {
 	
 	@Override
 	public boolean isValidaVista() {
-		if (this.txtCodigo.getText().trim().isEmpty())
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (this.txtDescripcion.getText().trim().isEmpty())
+		}
+		if (getEstado().equals(NUEVO)) {
+			if (getConsumidorDAO().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
 		return true;
 	}
 
@@ -310,8 +324,25 @@ public class FrmConsumidor extends AbstractMaestro {
 	
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
+		if (getConsumidor() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getConsumidorDAO().borrarByJerarquia();
+				getConsumidorDAO().remove(getConsumidor());
+				iniciar();
+			}			
+		}
 		
+		if (getConsumidorPADRE() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getConsumidorDAO().borrarPorConsumidor(getConsumidorPADRE());
+				getConsumidorDAO().remove(getConsumidorPADRE());
+				iniciar();
+			}			
+		}
 	}
 }
 

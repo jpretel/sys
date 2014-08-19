@@ -19,7 +19,9 @@ public class Almacen implements Serializable {
 
 	@Column(length=75)
 	private String descripcion;
-
+	
+	@Column(length=50)
+	private String nombre_corto;
 	//bi-directional many-to-one association to Sucursal
 	@ManyToOne
 	@JoinColumn(name="idsucursal", nullable=false, insertable=false, updatable=false)
@@ -50,6 +52,14 @@ public class Almacen implements Serializable {
 
 	public void setSucursal(Sucursal sucursal) {
 		this.sucursal = sucursal;
+	}
+
+	public String getNombre_corto() {
+		return nombre_corto;
+	}
+
+	public void setNombre_corto(String nombre_corto) {
+		this.nombre_corto = nombre_corto;
 	}
 
 }

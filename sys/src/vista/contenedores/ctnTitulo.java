@@ -1,6 +1,7 @@
 package vista.contenedores;
 
 import dao.SysTituloDAO;
+import entity.SysModulo;
 import entity.SysTitulo;
 
 public class ctnTitulo extends AbstractCntBuscar<SysTitulo>{
@@ -11,6 +12,7 @@ public class ctnTitulo extends AbstractCntBuscar<SysTitulo>{
 	private static final long serialVersionUID = 1L;
 	
 	SysTituloDAO sysTituloDAO = new SysTituloDAO();
+	SysModulo modulo = new SysModulo();
 
 	public ctnTitulo() {
 		super();
@@ -45,7 +47,23 @@ public class ctnTitulo extends AbstractCntBuscar<SysTitulo>{
 
 	@Override
 	public void refrescar() {
-		setData(sysTituloDAO.findAll());
+		setData(sysTituloDAO.getPorModulo(modulo));
+	}
+
+	public SysTituloDAO getSysTituloDAO() {
+		return sysTituloDAO;
+	}
+
+	public void setSysTituloDAO(SysTituloDAO sysTituloDAO) {
+		this.sysTituloDAO = sysTituloDAO;
+	}
+
+	public SysModulo getModulo() {
+		return modulo;
+	}
+
+	public void setModulo(SysModulo modulo) {
+		this.modulo = modulo;
 	}
 
 }

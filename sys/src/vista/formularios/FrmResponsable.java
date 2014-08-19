@@ -2,6 +2,7 @@ package vista.formularios;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import dao.ResponsableDAO;
 import entity.Responsable;
 
@@ -13,10 +14,13 @@ import javax.swing.ListSelectionModel;
 
 import vista.contenedores.cntArea;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class FrmResponsable extends AbstractMaestro {
 
@@ -63,22 +67,12 @@ public class FrmResponsable extends AbstractMaestro {
 		getBarra().setBounds(0, 0, 539, 39);
 		
 		JLabel lblCdigo = new JLabel("Codigo");
-		lblCdigo.setBounds(227, 11, 46, 14);
-		pnlContenido.add(lblCdigo);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(286, 8, 122, 20);
 		txtCodigo.setColumns(10);
-		
-		pnlContenido.add(txtCodigo);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(227, 36, 54, 14);
-		pnlContenido.add(lblDescripcin);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 207, 273);
-		
-		pnlContenido.add(scrollPane);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -86,16 +80,49 @@ public class FrmResponsable extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(286, 33, 122, 20);		
-		pnlContenido.add(txtDescripcion);
 		
 		JLabel lblArea = new JLabel("Area");
-		lblArea.setBounds(227, 61, 31, 14);
-		pnlContenido.setLayout(null);
 		cntarea = new cntArea();
-		cntarea.setBounds(286, 64, 104, 24);
-		pnlContenido.add(cntarea);
-		pnlContenido.add(lblArea);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblDescripcin)
+						.addComponent(lblArea, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
+					.addGap(5)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 122, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+						.addComponent(cntarea, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(10))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+					.addGap(11))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(lblCdigo)
+					.addGap(11)
+					.addComponent(lblDescripcin)
+					.addGap(11)
+					.addComponent(lblArea))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(8)
+					.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(5)
+					.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(cntarea, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+		);
+		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -132,6 +159,14 @@ public class FrmResponsable extends AbstractMaestro {
 
 	@Override
 	public void eliminar() {
+		if (getResponsable() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getResponsableDAO().remove(getResponsable());
+				iniciar();
+			}			
+		}
 		setEstado(VISTA);
 		vista_noedicion();
 	}
@@ -208,14 +243,24 @@ public class FrmResponsable extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if(this.txtCodigo.getText().trim().isEmpty()){
-			JOptionPane.showMessageDialog(null, "Falta dato codigo");
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
 		}
-		if(this.txtDescripcion.getText().trim().isEmpty()){
-			JOptionPane.showMessageDialog(null, "Falta dato Descripcion");
+		if (getEstado().equals(NUEVO)) {
+			if (getResponsableDAO().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
 		}
+		
 		return true;
 	}
 

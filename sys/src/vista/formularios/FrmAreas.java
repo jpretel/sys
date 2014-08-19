@@ -16,6 +16,7 @@ import javax.swing.ListSelectionModel;
 
 import vista.barras.BarraMaestro;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -143,6 +144,15 @@ public class FrmAreas extends AbstractMaestro {
 
 	@Override
 	public void eliminar() {
+		if (getArea() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				areaDAO.remove(getArea());
+				iniciar();
+			}			
+		}
+		
 		setEstado(VISTA);
 		vista_noedicion();
 	}
@@ -232,14 +242,24 @@ public class FrmAreas extends AbstractMaestro {
 		// TODO Auto-generated method stub
 		if (this.txtCodigo.getText().trim().isEmpty()){	
 			JOptionPane.showMessageDialog(null, "Faltan Ingresar Dato Codigo");
-			this.txtCodigo.setFocusable(true);
+			this.txtCodigo.requestFocus();
 			return false;
 		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (areaDAO.find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
 		if (this.txtDescripcion.getText().trim().isEmpty()){	
 			JOptionPane.showMessageDialog(null, "Faltan Ingresar Dato Descripcion");
-			this.txtDescripcion.setFocusable(true);
+			this.txtDescripcion.requestFocus();
 			return false;
 		}
+		
 		return true;	
 	}
 

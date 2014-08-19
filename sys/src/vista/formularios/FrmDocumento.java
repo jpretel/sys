@@ -12,6 +12,7 @@ import javax.swing.ListSelectionModel;
 import vista.contenedores.txtidformulario;
 import vista.controles.DSGTableModel;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -41,6 +42,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
 
 import java.awt.Insets;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class FrmDocumento extends AbstractMaestro {
 
@@ -72,7 +76,6 @@ public class FrmDocumento extends AbstractMaestro {
 		super("Documentos");
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 199, 288);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -80,37 +83,20 @@ public class FrmDocumento extends AbstractMaestro {
 		
 
 		JLabel lblCdigo = new JLabel("Codigo");
-		lblCdigo.setBounds(213, 18, 66, 14);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(213, 42, 66, 14);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(298, 15, 67, 20);
 		txtCodigo.setColumns(10);
 
 		txtDescripcion = new JTextField();
-		txtDescripcion.setBounds(298, 39, 126, 20);
 		txtDescripcion.setColumns(10);
 		btnILinea = new JButton("I LINEA");
 		btnILinea.setMargin(new Insets(0, 0, 0, 0));
 		btnILinea.setAlignmentY(0.0f);
 		btnILinea.setIcon(new ImageIcon(FrmDocumento.class.getResource("/main/resources/iconos/table_row_insert.png")));
-		btnILinea.setBounds(375, 65, 83, 37);
 		btnBLinea = new JButton("B Linea");
-		btnBLinea.setBounds(446, 15, 83, 20);
-		pnlContenido.setLayout(null);
-		pnlContenido.add(scrollPane);
-		pnlContenido.add(lblDescripcin);
-		pnlContenido.add(lblCdigo);
-		pnlContenido.add(txtDescripcion);
-		pnlContenido.add(txtCodigo);
-		pnlContenido.add(btnILinea);
-		pnlContenido.add(btnBLinea);
 		final JTabbedPane tabPanel = new JTabbedPane(JTabbedPane.TOP);
-		tabPanel.setBounds(215, 106, 314, 193);
-
-		pnlContenido.add(tabPanel);
 		
 				JScrollPane scrollPaneNum = new JScrollPane();
 				tabPanel.addTab("Detalle", null, scrollPaneNum, null);
@@ -161,13 +147,71 @@ public class FrmDocumento extends AbstractMaestro {
 						});
 						
 						JLabel lblCodigoSunat = new JLabel("Codigo Sunat");
-						lblCodigoSunat.setBounds(213, 68, 66, 14);
-						pnlContenido.add(lblCodigoSunat);
 						
 						txtCodigoSunat = new JTextField();
 						txtCodigoSunat.setColumns(10);
-						txtCodigoSunat.setBounds(298, 65, 67, 20);
-						pnlContenido.add(txtCodigoSunat);
+						GroupLayout groupLayout = new GroupLayout(pnlContenido);
+						groupLayout.setHorizontalGroup(
+							groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(10)
+									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+									.addGap(4)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+											.addGap(19)
+											.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
+											.addGap(10)
+											.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+											.addGap(19)
+											.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lblCodigoSunat, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+											.addGap(19)
+											.addComponent(txtCodigoSunat, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+											.addGap(10)
+											.addComponent(btnILinea, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(2)
+											.addComponent(tabPanel, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)))
+									.addGap(10))
+						);
+						groupLayout.setVerticalGroup(
+							groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(11)
+									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+									.addGap(5))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(15)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(3)
+											.addComponent(lblCdigo))
+										.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+									.addGap(4)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(3)
+											.addComponent(lblDescripcin))
+										.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+									.addGap(6)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(3)
+											.addComponent(lblCodigoSunat))
+										.addComponent(txtCodigoSunat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(3)
+											.addComponent(btnILinea)))
+									.addGap(1)
+									.addComponent(tabPanel, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE))
+						);
+						pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -297,12 +341,31 @@ public class FrmDocumento extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if (this.txtCodigo.getText().trim().isEmpty())
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (this.txtDescripcion.getText().trim().isEmpty())
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getDocumentoDAO().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
-		if (this.txtCodigoSunat.getText().trim().isEmpty())
+		}
+		
+		if (this.txtCodigoSunat.getText().trim().isEmpty()){
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Codigo Sunat");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
 		return true;
 	}
 
@@ -421,8 +484,13 @@ public class FrmDocumento extends AbstractMaestro {
 	@Override
 	public void eliminar() {
 		if (getDocumento() != null) {
-			getDocnumDAO().borrarPorDocumento(getDocumento());
-			getDocumentoDAO().remove(getDocumento());
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getDocnumDAO().borrarPorDocumento(getDocumento());
+				getDocumentoDAO().remove(getDocumento());
+				iniciar();
+			}			
 		}
 	}
 

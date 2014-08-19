@@ -21,7 +21,10 @@ public class Sucursal implements Serializable {
 
 	@Column(length=75)
 	private String descripcion;
-
+	
+	@Column(length=50)
+	private String nombre_corto;
+	
 	@Column(length=125)
 	private String direccion;
 
@@ -86,6 +89,14 @@ public class Sucursal implements Serializable {
 		almacen.setSucursal(null);
 
 		return almacen;
+	}
+
+	public String getNombre_corto() {
+		return nombre_corto;
+	}
+
+	public void setNombre_corto(String nombre_corto) {
+		this.nombre_corto = nombre_corto;
 	}
 
 }

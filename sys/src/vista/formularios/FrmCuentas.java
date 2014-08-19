@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -190,6 +191,14 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public void eliminar() {
+		if (getCuenta() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getCuentaDAO().remove(getCuenta());
+				iniciar();
+			}			
+		}
 		setEstado(VISTA);
 		vista_noedicion();
 	}
@@ -279,10 +288,26 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if (txtCodigo.getText().trim().isEmpty())
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (txtDescripcion.getText().trim().isEmpty())
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getCuentaDAO().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
+		
 		return true;
 	}
 

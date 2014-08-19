@@ -8,7 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +21,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import dao.SubdiarioDAO;
 import entity.Subdiario;
+
 import javax.swing.JCheckBox;
 
 public class FrmSubdiario extends AbstractMaestro {
@@ -45,7 +48,8 @@ public class FrmSubdiario extends AbstractMaestro {
 		txtCodigo = new JTextField();
 		txtCodigo.setBounds(276, 8, 122, 20);
 		txtCodigo.setColumns(10);
-
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
+		
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
 		lblDescripcin.setBounds(227, 36, 75, 14);
 
@@ -59,6 +63,7 @@ public class FrmSubdiario extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 		
 		chkEsDeclarable = new JCheckBox("Es declarable");
 
@@ -148,7 +153,12 @@ public class FrmSubdiario extends AbstractMaestro {
 	@Override
 	public void eliminar() {
 		if (getSubdiario()!= null) {
-			getSubdiarioDAO().remove(getSubdiario());
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getSubdiarioDAO().remove(getSubdiario());
+				iniciar();
+			}			
 		}
 	}
 
@@ -216,10 +226,26 @@ public class FrmSubdiario extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if (txtCodigo.getText().trim().isEmpty())
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (txtDescripcion.getText().trim().isEmpty())
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getSubdiarioDAO().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
+		
 		return true;
 	}
 

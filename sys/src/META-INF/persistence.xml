@@ -10,6 +10,8 @@
 		<class>entity.Clieprov</class>
 		<class>entity.Consumidor</class>
 		<class>entity.Cuenta</class>
+		<class>entity.DocFormulario</class>
+		<class>entity.DocIngreso</class>
 		<class>entity.Documento</class>
 		<class>entity.DocumentoNumero</class>
 		<class>entity.DocumentoNumeroPK</class>
@@ -20,6 +22,8 @@
 		<class>entity.Marca</class>
 		<class>entity.Menu</class>
 		<class>entity.Modulo</class>
+		<class>entity.Moneda</class>
+		<class>entity.Motivo</class>
 		<class>entity.Producto</class>
 		<class>entity.Prueba</class>
 		<class>entity.PtoEmision</class>
@@ -34,6 +38,7 @@
 		<class>entity.SysDocDocserPK</class>
 		<class>entity.SysDocFlujo</class>
 		<class>entity.SysDocFlujoPK</class>
+		<class>entity.SysFormulario</class>
 		<class>entity.SysGrupo</class>
 		<class>entity.SysGrupoPK</class>
 		<class>entity.SysModulo</class>
@@ -46,30 +51,11 @@
 
 
 		<properties>
-			<!-- <property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml"/> -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd" />
-			<property name="javax.persistence.jdbc.user" value="root" />
-			<property name="javax.persistence.jdbc.password" value="root" />
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<!-- <property name="eclipselink.ddl-generation" value="drop-and-create-tables" 
-				/> <property name="eclipselink.ddl-generation" value="create-or-extend-tables" 
+			<!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables" 
 				/> -->
 
 		</properties>
 	</persistence-unit>
 
-	<persistence-unit name="admin" transaction-type="RESOURCE_LOCAL">
-
-		<properties>
-			<!-- <property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml"/> -->
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd_sistema" />
-			<property name="javax.persistence.jdbc.user" value="root" />
-			<property name="javax.persistence.jdbc.password" value="root" />
-			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			<!-- <property name="eclipselink.ddl-generation" value="drop-and-create-tables" 
-				/> -->
-			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
-
-		</properties>
-	</persistence-unit>
 </persistence>

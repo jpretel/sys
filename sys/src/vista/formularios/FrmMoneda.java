@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -48,17 +49,13 @@ public class FrmMoneda extends AbstractMaestro {
 		getBarra().setFormMaestro(this);
 
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
-		lblCdigo.setBounds(287, 26, 33, 14);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(346, 26, 47, 20);
 		txtCodigo.setColumns(10);
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(287, 56, 54, 14);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 267, 234);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -66,41 +63,84 @@ public class FrmMoneda extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(346, 52, 183, 22);
 
 		optNac = new JRadioButton("Moneda Nacional");
 		optNac.setSelected(true);
-		optNac.setBounds(284, 128, 107, 23);
 		optNac.setMnemonic(0);
 		grpTipoMoneda.add(optNac);
 
 		optExt = new JRadioButton("Primera moneda Extranjera");
-		optExt.setBounds(284, 154, 157, 23);
 		optExt.setMnemonic(1);
 		grpTipoMoneda.add(optExt);
 
 		optOtra = new JRadioButton("Otra Moneda");
 		optOtra.setMnemonic(2);
-		optOtra.setBounds(284, 180, 157, 23);
 		grpTipoMoneda.add(optOtra);
-		pnlContenido.setLayout(null);
-		pnlContenido.add(scrollPane);
-		pnlContenido.add(lblCdigo);
-		pnlContenido.add(lblDescripcin);
-		pnlContenido.add(txtDescripcion);
-		pnlContenido.add(txtCodigo);
-		pnlContenido.add(optNac);
-		pnlContenido.add(optExt);
-		pnlContenido.add(optOtra);
 
 		JLabel lblSimbolo = new JLabel("Simbolo");
-		lblSimbolo.setBounds(287, 89, 54, 14);
-		pnlContenido.add(lblSimbolo);
 
 		txtSimbolo = new JTextField();
 		txtSimbolo.setColumns(10);
-		txtSimbolo.setBounds(346, 85, 71, 22);
-		pnlContenido.add(txtSimbolo);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+					.addGap(7)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblCdigo)
+							.addGap(26)
+							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblDescripcin)
+							.addGap(5)
+							.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblSimbolo, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
+							.addGap(5)
+							.addComponent(txtSimbolo, GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+							.addGap(112))
+						.addComponent(optNac)
+						.addComponent(optExt)
+						.addComponent(optOtra, GroupLayout.PREFERRED_SIZE, 157, GroupLayout.PREFERRED_SIZE))
+					.addGap(10))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+					.addGap(11))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(26)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblCdigo)
+						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(6)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(lblDescripcin))
+						.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+					.addGap(11)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(lblSimbolo))
+						.addComponent(txtSimbolo, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+					.addGap(21)
+					.addComponent(optNac)
+					.addGap(3)
+					.addComponent(optExt)
+					.addGap(3)
+					.addComponent(optOtra))
+		);
+		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -142,6 +182,14 @@ public class FrmMoneda extends AbstractMaestro {
 
 	@Override
 	public void eliminar() {
+		if (getMoneda() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getMonedaDAO().remove(getMoneda());
+				iniciar();
+			}			
+		}
 		setEstado(VISTA);
 		vista_noedicion();
 	}
@@ -231,10 +279,26 @@ public class FrmMoneda extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if (txtCodigo.getText().trim().isEmpty())
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
-		if (txtDescripcion.getText().trim().isEmpty())
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getMonedaDAO().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
+		}
+		
 		return true;
 	}
 

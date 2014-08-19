@@ -15,12 +15,15 @@ import dao.MotivosDAO;
 import entity.Motivo;
 import vista.combobox.ComboBox;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class FrmMotivos extends AbstractMaestro {
 	/**
@@ -63,28 +66,21 @@ public class FrmMotivos extends AbstractMaestro {
 		super("Motivos");
 		
 		JLabel lblCodigo = new JLabel("Codigo");
-		lblCodigo.setBounds(260, 11, 33, 46);
 		
 		JLabel lblDescripcion = new JLabel("Descripcion");
-		lblDescripcion.setBounds(260, 69, 54, 14);
 		
 		JLabel lblNomenclatura = new JLabel("Nombre Corto");
-		lblNomenclatura.setBounds(260, 104, 67, 14);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(345, 24, 86, 20);
 		txtCodigo.setColumns(10);
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(345, 63, 208, 20);
 		
 		txtNombreCorto = new JTextField();
 		txtNombreCorto.setColumns(10);
-		txtNombreCorto.setBounds(345, 101, 123, 20);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 230, 260);
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
 		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		tblLista = new JTable(new MaestroTableModel());
@@ -92,19 +88,14 @@ public class FrmMotivos extends AbstractMaestro {
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JLabel lblTipo = new JLabel("Tipo");
-		lblTipo.setBounds(260, 142, 33, 14);
 		
 		optionList.add(new String[]{"I","Ingreso"});
 		optionList.add(new String[]{"S","Salida"});
 		
 		cboTipo = new vista.combobox.ComboBox(optionList,1);
-		cboTipo.setBounds(345, 139, 123, 20);
-		pnlContenido.setLayout(null);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tabbedPane.setBounds(250, 170, 303, 101);
-		pnlContenido.add(tabbedPane);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Configuraciones", null, panel, null);
@@ -124,15 +115,73 @@ public class FrmMotivos extends AbstractMaestro {
 		
 		chckSolicitaRecepcion = new JCheckBox("Solicita Recepcion\r\n\r\n");
 		panel_1.add(chckSolicitaRecepcion);
-		pnlContenido.add(scrollPane);
-		pnlContenido.add(lblCodigo);
-		pnlContenido.add(txtCodigo);
-		pnlContenido.add(lblNomenclatura);
-		pnlContenido.add(cboTipo);
-		pnlContenido.add(txtNombreCorto);
-		pnlContenido.add(lblDescripcion);
-		pnlContenido.add(txtDescripcion);
-		pnlContenido.add(lblTipo);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addComponent(lblCodigo)
+							.addGap(52)
+							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addComponent(lblDescripcion)
+							.addGap(31)
+							.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addComponent(lblNomenclatura)
+							.addGap(18)
+							.addComponent(txtNombreCorto, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+							.addGap(85))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(10)
+							.addComponent(lblTipo, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+							.addGap(52)
+							.addComponent(cboTipo, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))
+						.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))
+					.addGap(11))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(13)
+									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addGap(6)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(6)
+									.addComponent(lblDescripcion))
+								.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(3)
+									.addComponent(lblNomenclatura))
+								.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(3)
+									.addComponent(lblTipo))
+								.addComponent(cboTipo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(11)
+							.addComponent(tabbedPane, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)))
+					.addGap(9))
+		);
+		pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override					
@@ -166,8 +215,14 @@ public class FrmMotivos extends AbstractMaestro {
 
 	@Override
 	public void eliminar() {
-		// TODO Auto-generated method stub
-
+		if (getMotivo() != null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getMdao().remove(getMotivo());
+				iniciar();
+			}			
+		}
 	}
 
 	@Override
@@ -275,16 +330,35 @@ public class FrmMotivos extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if(txtCodigo.getText().trim().isEmpty()){
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
 			return false;
 		}
-		if(txtDescripcion.getText().trim().isEmpty()){
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getMdao().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
 			return false;
 		}
-		if(txtNombreCorto.getText().trim().isEmpty()){
+		
+		if (this.txtNombreCorto.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Nombre corto");
+			this.txtNombreCorto.requestFocus();
 			return false;
 		}
+		
 		if(cboTipo.getSelectedIndex() == -1){
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Tipo");
+			this.cboTipo.requestFocus();
 			return false;
 		}
 		return true;
