@@ -11,6 +11,7 @@ import javax.swing.ListSelectionModel;
 
 import vista.contenedores.txtidformulario;
 import vista.controles.DSGTableModel;
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -88,9 +89,12 @@ public class FrmDocumento extends AbstractMaestro {
 
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
-
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
+		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		
 		btnILinea = new JButton("I LINEA");
 		btnILinea.setMargin(new Insets(0, 0, 0, 0));
 		btnILinea.setAlignmentY(0.0f);
@@ -150,6 +154,8 @@ public class FrmDocumento extends AbstractMaestro {
 						
 						txtCodigoSunat = new JTextField();
 						txtCodigoSunat.setColumns(10);
+						txtCodigoSunat.setDocument(new JTextFieldLimit(30, true));
+						
 						GroupLayout groupLayout = new GroupLayout(pnlContenido);
 						groupLayout.setHorizontalGroup(
 							groupLayout.createParallelGroup(Alignment.LEADING)

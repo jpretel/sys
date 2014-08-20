@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -52,6 +53,7 @@ public class FrmMoneda extends AbstractMaestro {
 
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
 
@@ -63,6 +65,7 @@ public class FrmMoneda extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
 
 		optNac = new JRadioButton("Moneda Nacional");
 		optNac.setSelected(true);
@@ -81,6 +84,8 @@ public class FrmMoneda extends AbstractMaestro {
 
 		txtSimbolo = new JTextField();
 		txtSimbolo.setColumns(10);
+		txtSimbolo.setDocument(new JTextFieldLimit(5, true));
+		
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)

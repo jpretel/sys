@@ -3,6 +3,7 @@ package vista.formularios;
 import java.util.ArrayList;
 import java.util.List;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.ButtonEditor;
 import vista.utilitarios.ButtonRenderer;
 import vista.utilitarios.MaestroTableModel;
@@ -80,17 +81,20 @@ public class FrmGrupos extends AbstractMaestro {
 		
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
-		//txtCodigo.
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 		
 		JLabel lblDescripcion = new JLabel("Descripcion");
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 		
 		JLabel lblDescCorta = new JLabel("Descripcion corta");
 		
 		txtDescCorta = new JTextField();
 		txtDescCorta.setColumns(10);
+		txtDescCorta.setDocument(new JTextFieldLimit(30, true));
+		
 		JLabel lblSubgrupos = new JLabel("SubGrupos");
 		
 		JScrollPane scrollPane_SubGrupo = new JScrollPane();				

@@ -13,6 +13,7 @@ import javax.swing.ListSelectionModel;
 import vista.contenedores.ctnModulo;
 import vista.contenedores.ctnTitulo;
 import vista.controles.DSGTableModel;
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.ButtonRenderer;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
@@ -124,9 +125,11 @@ public class FrmSysGrupo extends AbstractMaestro {
 
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		btnILinea = new JButton("I Linea");
 		btnILinea.addActionListener(new ActionListener() {

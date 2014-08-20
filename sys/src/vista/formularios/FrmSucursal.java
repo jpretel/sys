@@ -87,7 +87,7 @@ public class FrmSucursal extends AbstractMaestro {
 
 		tblAlmacenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		JLabel lblCdigo = new JLabel("Cdigo");
+		JLabel lblCdigo = new JLabel("Código");
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
 
@@ -120,6 +120,7 @@ public class FrmSucursal extends AbstractMaestro {
 		txtDescCorta = new JTextField();
 		txtDescCorta.setColumns(10);
 		txtDescCorta.setDocument(new JTextFieldLimit(50, true));
+		
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout
 				.setHorizontalGroup(groupLayout

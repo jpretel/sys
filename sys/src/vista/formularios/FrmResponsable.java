@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import vista.contenedores.cntArea;
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -70,6 +71,7 @@ public class FrmResponsable extends AbstractMaestro {
 
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
 		JScrollPane scrollPane = new JScrollPane();
@@ -80,6 +82,7 @@ public class FrmResponsable extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 		
 		JLabel lblArea = new JLabel("Area");
 		cntarea = new cntArea();

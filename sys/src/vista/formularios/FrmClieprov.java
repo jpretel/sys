@@ -14,7 +14,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import vista.combobox.ComboBox;
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.ObjetoWeb;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -62,6 +64,7 @@ public class FrmClieprov extends AbstractMaestro {
 		
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(11));
 		
 		JLabel lblRazon_Social = new JLabel("Razon Social");
 		
@@ -77,6 +80,8 @@ public class FrmClieprov extends AbstractMaestro {
 		
 		txtRuc = new JTextField();
 		txtRuc.setColumns(10);
+		txtRuc.setDocument(new JTextFieldLimit(11));
+
 		
 		JButton button = new JButton("Consulta RUC");
 		
