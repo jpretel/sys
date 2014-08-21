@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
@@ -27,8 +28,7 @@ public class AlmacenDAO extends AbstractDAO<Almacen> {
 
 	public void borrarPorSucursal(Sucursal sucursal) {
 		getEntityManager().getTransaction().begin();
-		CriteriaDelete<Almacen> delete = cb
-				.createCriteriaDelete(Almacen.class);
+		CriteriaDelete<Almacen> delete = cb.createCriteriaDelete(Almacen.class);
 		Root<Almacen> c = delete.from(Almacen.class);
 		delete.where(cb.equal(c.get("sucursal"), sucursal));
 		Query query = getEntityManager().createQuery(delete);
@@ -36,4 +36,19 @@ public class AlmacenDAO extends AbstractDAO<Almacen> {
 		getEntityManager().getTransaction().commit();
 	}
 
+	public List<Almacen> aEliminar(Sucursal sucursal, List<Almacen> almacenes) {
+		List<Almacen> eliminar = new ArrayList<Almacen>();
+		for (Almacen o1 : getPorSucursal(sucursal)) {
+			boolean existe = false;
+			salir: for (Almacen o2 : almacenes) {
+				if (o1.getId().equals(o2.getId())) {
+					existe = true;
+					break salir;
+				}
+			}
+			if (!existe)
+				eliminar.add(o1);
+		}
+		return eliminar;
+	}
 }
