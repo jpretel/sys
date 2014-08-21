@@ -16,16 +16,12 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.JButton;
 
 import dao.AlmacenDAO;
 import dao.SucursalDAO;
 import entity.Almacen;
 import entity.AlmacenPK;
 import entity.Sucursal;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -42,7 +38,7 @@ public class FrmSucursal extends AbstractMaestro {
 	private JTable tblAlmacenes;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
-	// private FrmSucursalTableModel almacenesTM = new FrmSucursalTableModel();
+
 	private Sucursal sucursal;
 
 	private List<Sucursal> sucursales;
@@ -51,9 +47,6 @@ public class FrmSucursal extends AbstractMaestro {
 	private SucursalDAO sucursalDAO = new SucursalDAO();
 
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
-
-	private JButton btnILinea;
-	private JButton btnBLinea;
 	private JTextField txtDescCorta;
 	private JScrollPane scrollPaneNum;
 
@@ -66,8 +59,6 @@ public class FrmSucursal extends AbstractMaestro {
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		scrollPaneNum = new JScrollPane();
-
 		tblAlmacenes = new JTable(new DSGTableModel(new String[] {
 				"Cod. Almacen", "Descripción", "Desc. Corta" }) {
 			private static final long serialVersionUID = 1L;
@@ -76,16 +67,21 @@ public class FrmSucursal extends AbstractMaestro {
 			public boolean evaluaEdicion(int row, int column) {
 				return getEditar();
 			}
+
+			@Override
+			public void addRow() {
+				addRow(new Object[] { "", "", "" });
+			}
 		});
+
+		tblAlmacenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		scrollPaneNum = new JScrollPane(tblAlmacenes);
 
 		getAlmacenesTM().setNombre_detalle("Almacenes");
 		getAlmacenesTM().setObligatorios(0, 1, 2);
-
+		getAlmacenesTM().setRepetidos(0);
 		getAlmacenesTM().setScrollAndTable(scrollPaneNum, tblAlmacenes);
-
-		scrollPaneNum.setViewportView(tblAlmacenes);
-
-		tblAlmacenes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JLabel lblCdigo = new JLabel("Código");
 
@@ -99,28 +95,11 @@ public class FrmSucursal extends AbstractMaestro {
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
-		btnILinea = new JButton("I Linea");
-		btnILinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				getAlmacenesTM().addRow(new Object[] { "", "", "" });
-			}
-		});
-
-		btnBLinea = new JButton("B Linea");
-		btnBLinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = tblAlmacenes.getSelectedRow();
-				if (ind >= 0)
-					getAlmacenesTM().removeRow(ind);
-			}
-		});
-
 		JLabel lblDescCorta = new JLabel("Desc. Corta");
 
 		txtDescCorta = new JTextField();
 		txtDescCorta.setColumns(10);
 		txtDescCorta.setDocument(new JTextFieldLimit(50, true));
-		
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout
 				.setHorizontalGroup(groupLayout
@@ -150,15 +129,6 @@ public class FrmSucursal extends AbstractMaestro {
 																				txtCodigo,
 																				GroupLayout.PREFERRED_SIZE,
 																				67,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(10)
-																		.addComponent(
-																				btnILinea)
-																		.addGap(6)
-																		.addComponent(
-																				btnBLinea,
-																				GroupLayout.PREFERRED_SIZE,
-																				83,
 																				GroupLayout.PREFERRED_SIZE))
 														.addGroup(
 																groupLayout
@@ -204,14 +174,6 @@ public class FrmSucursal extends AbstractMaestro {
 						.addGroup(
 								groupLayout
 										.createSequentialGroup()
-										.addGap(11)
-										.addComponent(scrollPane,
-												GroupLayout.DEFAULT_SIZE, 234,
-												Short.MAX_VALUE).addGap(11))
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGap(15)
 										.addGroup(
 												groupLayout
 														.createParallelGroup(
@@ -219,60 +181,70 @@ public class FrmSucursal extends AbstractMaestro {
 														.addGroup(
 																groupLayout
 																		.createSequentialGroup()
-																		.addGap(3)
+																		.addGap(11)
 																		.addComponent(
-																				lblCdigo))
-														.addComponent(
-																txtCodigo,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																btnILinea,
-																GroupLayout.PREFERRED_SIZE,
-																20,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																btnBLinea,
-																GroupLayout.PREFERRED_SIZE,
-																20,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(4)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
+																				scrollPane,
+																				GroupLayout.DEFAULT_SIZE,
+																				274,
+																				Short.MAX_VALUE))
 														.addGroup(
 																groupLayout
 																		.createSequentialGroup()
-																		.addGap(3)
+																		.addGap(15)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addGap(3)
+																										.addComponent(
+																												lblCdigo))
+																						.addComponent(
+																								txtCodigo,
+																								GroupLayout.PREFERRED_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addGap(4)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addGap(3)
+																										.addComponent(
+																												lblDescripcin))
+																						.addComponent(
+																								txtDescripcion,
+																								GroupLayout.PREFERRED_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addGap(5)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addGap(3)
+																										.addComponent(
+																												lblDescCorta))
+																						.addComponent(
+																								txtDescCorta,
+																								GroupLayout.PREFERRED_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addGap(8)
 																		.addComponent(
-																				lblDescripcin))
-														.addComponent(
-																txtDescripcion,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(5)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(3)
-																		.addComponent(
-																				lblDescCorta))
-														.addComponent(
-																txtDescCorta,
-																GroupLayout.PREFERRED_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(8)
-										.addComponent(scrollPaneNum,
-												GroupLayout.DEFAULT_SIZE, 153,
-												Short.MAX_VALUE).addGap(11)));
+																				scrollPaneNum,
+																				GroupLayout.DEFAULT_SIZE,
+																				193,
+																				Short.MAX_VALUE)))
+										.addGap(11)));
 		pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -295,11 +267,6 @@ public class FrmSucursal extends AbstractMaestro {
 	}
 
 	@Override
-	public void editar() {
-		super.editar();
-	}
-
-	@Override
 	public void anular() {
 
 	}
@@ -307,9 +274,13 @@ public class FrmSucursal extends AbstractMaestro {
 	@Override
 	public void grabar() {
 		sucursalDAO.crear_editar(getSucursal());
-		almacenDAO.borrarPorSucursal(getSucursal());
-		for (Almacen num : getAlmacenes()) {
-			almacenDAO.create(num);
+
+		for (Almacen obj : almacenDAO.aEliminar(getSucursal(), getAlmacenes())) {
+			almacenDAO.remove(obj);
+		}
+		System.out.println("Crear-editar");
+		for (Almacen obj : getAlmacenes()) {
+			almacenDAO.crear_editar(obj);
 		}
 	}
 
@@ -318,6 +289,7 @@ public class FrmSucursal extends AbstractMaestro {
 		getSucursal().setIdsucursal(this.txtCodigo.getText().trim());
 		getSucursal().setDescripcion(this.txtDescripcion.getText().trim());
 		getSucursal().setNombre_corto(this.txtDescCorta.getText().trim());
+
 		setAlmacenes(new ArrayList<Almacen>());
 
 		for (int i = 0; i < getAlmacenesTM().getRowCount(); i++) {
@@ -347,11 +319,11 @@ public class FrmSucursal extends AbstractMaestro {
 			setAlmacenes(almacenDAO.getPorSucursal(getSucursal()));
 
 			for (Almacen alm : getAlmacenes()) {
-
 				getAlmacenesTM().addRow(
 						new Object[] { alm.getId().getIdalmacen(),
 								alm.getDescripcion(), alm.getNombre_corto() });
 			}
+
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
@@ -424,8 +396,6 @@ public class FrmSucursal extends AbstractMaestro {
 		txtDescripcion.setEditable(true);
 		txtDescCorta.setEditable(true);
 		getAlmacenesTM().setEditar(true);
-		btnILinea.setEnabled(true);
-		btnBLinea.setEnabled(true);
 
 	}
 
@@ -435,51 +405,28 @@ public class FrmSucursal extends AbstractMaestro {
 		txtDescripcion.setEditable(false);
 		txtDescCorta.setEditable(false);
 		getAlmacenesTM().setEditar(false);
-		btnILinea.setEnabled(false);
-		btnBLinea.setEnabled(false);
 	}
 
-	/**
-	 * @return the sucursal
-	 */
 	public Sucursal getSucursal() {
 		return sucursal;
 	}
 
-	/**
-	 * @param sucursal
-	 *            the sucursal to set
-	 */
 	public void setSucursal(Sucursal sucursal) {
 		this.sucursal = sucursal;
 	}
 
-	/**
-	 * @return the sucursales
-	 */
 	public List<Sucursal> getSucursales() {
 		return sucursales;
 	}
 
-	/**
-	 * @param sucursales
-	 *            the sucursales to set
-	 */
 	public void setSucursales(List<Sucursal> sucursales) {
 		this.sucursales = sucursales;
 	}
 
-	/**
-	 * @return the sucursalDAO
-	 */
 	public SucursalDAO getSucursalDAO() {
 		return sucursalDAO;
 	}
 
-	/**
-	 * @param sucursalDAO
-	 *            the sucursalDAO to set
-	 */
 	public void setSucursalDAO(SucursalDAO sucursalDAO) {
 		this.sucursalDAO = sucursalDAO;
 	}
@@ -500,32 +447,18 @@ public class FrmSucursal extends AbstractMaestro {
 		return ((DSGTableModel) tblAlmacenes.getModel());
 	}
 
-	/**
-	 * @return the almacenes
-	 */
 	public List<Almacen> getAlmacenes() {
 		return almacenes;
 	}
 
-	/**
-	 * @param almacenes
-	 *            the almacenes to set
-	 */
 	public void setAlmacenes(List<Almacen> almacenes) {
 		this.almacenes = almacenes;
 	}
 
-	/**
-	 * @return the almacenDAO
-	 */
 	public AlmacenDAO getAlmacenDAO() {
 		return almacenDAO;
 	}
 
-	/**
-	 * @param almacenDAO
-	 *            the almacenDAO to set
-	 */
 	public void setAlmacenDAO(AlmacenDAO almacenDAO) {
 		this.almacenDAO = almacenDAO;
 	}
@@ -538,7 +471,7 @@ public class FrmSucursal extends AbstractMaestro {
 			if (seleccion == 0) {
 				getAlmacenDAO().borrarPorSucursal(getSucursal());
 				getSucursalDAO().remove(getSucursal());
-				iniciar();
+
 			}
 		}
 	}
