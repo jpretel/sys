@@ -1,5 +1,6 @@
 package vista.utilitarios;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import vista.Sys;
@@ -20,6 +21,11 @@ public class UtilMensajes {
 	
 	public static void mensaje_alterta(String mensaje) {
 		JOptionPane.showMessageDialog(null, Sys.mensajes.getProperty(mensaje),
+				titulo, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public static void mensaje_alterta(JFrame frame, String mensaje) {
+		JOptionPane.showMessageDialog(frame, Sys.mensajes.getProperty(mensaje),
 				titulo, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
