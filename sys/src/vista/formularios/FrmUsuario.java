@@ -17,6 +17,10 @@ import entity.GrupoUsuario;
 import entity.Usuario;
 import vista.utilitarios.MaestroTableModel;
 import core.security.Encryption;
+//import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class FrmUsuario extends AbstractMaestro {
 
@@ -30,52 +34,88 @@ public class FrmUsuario extends AbstractMaestro {
 
 	private List<Usuario> usuarios = new ArrayList<Usuario>();
 
-	private JTextField txtidUsuario = new JTextField(8);
-	private JTextField txtNombres = new JTextField(15);
-	private JPasswordField txtClave = new JPasswordField(15);
+	private JTextField txtidUsuario = new JTextField();
+	private JTextField txtNombres = new JTextField();
+	private JPasswordField txtClave = new JPasswordField();
 
-	JLabel lblId = new JLabel("Cod. Usuario");
-	JLabel lblUsuario = new JLabel("Clave");
-	JLabel lblCLave = new JLabel("Nombres");
+	JLabel lblId = new JLabel("Cod. Usuario:");
+	JLabel lblUsuario = new JLabel("Nombre:");
+	JLabel lblCLave = new JLabel("Clave:");
 
 	private JTable tblLista = new JTable(new MaestroTableModel());
 	JScrollPane scrollPane = new JScrollPane();
 
 	private JTextField txtidgrupo;
+	private JPasswordField txtClaveR;
 
 	public FrmUsuario() {
 		super("Usuarios");
 		getBarra().setBounds(0, 0, 0, 0);
-		pnlContenido.setLayout(null);
-		scrollPane.setBounds(10, 11, 274, 262);
 
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		pnlContenido.add(scrollPane);
-		lblUsuario.setBounds(294, 43, 27, 14);
-		pnlContenido.add(lblUsuario);
-		lblId.setBounds(294, 12, 62, 14);
-		pnlContenido.add(lblId);
-		lblCLave.setBounds(294, 76, 42, 14);
-		pnlContenido.add(lblCLave);
-		txtidUsuario.setBounds(364, 11, 108, 22);
-		pnlContenido.add(txtidUsuario);
-		txtNombres.setBounds(346, 72, 175, 22);
-		pnlContenido.add(txtNombres);
-		txtClave.setBounds(331, 39, 95, 22);
-		pnlContenido.add(txtClave);
 
 		JLabel lblGrupoUsuario = new JLabel("Grupo Usuario");
-		lblGrupoUsuario.setBounds(294, 117, 80, 14);
-		pnlContenido.add(lblGrupoUsuario);
 
-		txtidgrupo = new JTextField(8);
-		txtidgrupo.setBounds(384, 113, 108, 22);
-		pnlContenido.add(txtidgrupo);
-		/*pnlContenido.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { scrollPane, tblLista, lblId, txtidUsuario,
-						lblUsuario, txtClave, lblCLave, txtNombres,
-						lblGrupoUsuario, txtidgrupo }));*/
+		txtidgrupo = new JTextField();
+		
+		txtClaveR = new JPasswordField();
+		
+		JLabel lblRepitaLaClave = new JLabel("Repita Clave:");
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblUsuario, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblCLave, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblRepitaLaClave, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblGrupoUsuario, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+					.addGap(3)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(txtNombres, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+						.addComponent(txtClave, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+						.addComponent(txtClaveR, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+						.addComponent(txtidgrupo, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+						.addComponent(txtidUsuario, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+					.addGap(11))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(15)
+					.addComponent(lblId)
+					.addGap(19)
+					.addComponent(lblUsuario)
+					.addGap(19)
+					.addComponent(lblCLave)
+					.addGap(19)
+					.addComponent(lblRepitaLaClave)
+					.addGap(19)
+					.addComponent(lblGrupoUsuario))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(txtidUsuario, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(txtNombres, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(txtClave, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(txtClaveR, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+					.addGap(11)
+					.addComponent(txtidgrupo, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+		);
+		pnlContenido.setLayout(groupLayout);
+		//pnlContenido.setFocusTraversalPolicy(new FocusTraversalOnArray(	
+		//		new Component[] { scrollPane, tblLista, lblId, txtidUsuario, lblUsuario, txtClave, lblCLave, txtNombres,	lblGrupoUsuario, txtidgrupo }));
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -108,12 +148,13 @@ public class FrmUsuario extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
-		if (getusuario() != null) {
+		if (getusuario() != null) {			
 			txtidUsuario.setText(getusuario().getIdusuario());
 			txtNombres.setText(getusuario().getNombres());
-			txtClave.setText(Encryption.pss_decrypt(getusuario().getClave()));
-			txtidgrupo.setText(getusuario().getGrupoUsuario()
-					.getIdgrupoUsuario());
+			txtidgrupo.setText(getusuario().getGrupoUsuario().getDescripcion());
+			txtClave.setText(Encryption.decrypt(getusuario().getClave()));
+			txtClaveR.setText(Encryption.decrypt(getusuario().getClave()));
+			
 		} else {
 			txtidUsuario.setText("");
 			txtNombres.setText("");
@@ -157,6 +198,7 @@ public class FrmUsuario extends AbstractMaestro {
 			txtidUsuario.setEditable(true);
 		txtNombres.setEditable(true);
 		txtClave.setEditable(true);
+		txtClaveR.setEditable(true);
 		txtidgrupo.setEditable(true);
 		tblLista.setEnabled(false);
 	}
@@ -166,6 +208,7 @@ public class FrmUsuario extends AbstractMaestro {
 		txtidUsuario.setEditable(false);
 		txtNombres.setEditable(false);
 		txtClave.setEditable(false);
+		txtClaveR.setEditable(false);
 		txtidgrupo.setEditable(false);
 		tblLista.setEnabled(true);
 	}
@@ -186,8 +229,7 @@ public class FrmUsuario extends AbstractMaestro {
 		u.setIdgrupoUsuario(txtidgrupo.getText());
 
 		getusuario().setIdusuario(txtidUsuario.getText());
-		getusuario().setClave(
-				Encryption.pss_encrypt(new String(txtClave.getPassword())));
+		getusuario().setClave(Encryption.encrypt(txtClave.getText()));
 		getusuario().setNombres(txtNombres.getText());
 		getusuario().setGrupoUsuario(u);
 	}
