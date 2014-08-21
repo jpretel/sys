@@ -23,7 +23,8 @@ public abstract class DSGTableModel extends DefaultTableModel {
 	private JTable table;
 
 	private String[] cabeceras;
-
+	
+	
 	public DSGTableModel() {
 		this("Campo 1", "Campo 2");
 	}
@@ -55,8 +56,9 @@ public abstract class DSGTableModel extends DefaultTableModel {
 					if (getValueAt(i, columna) == null
 							|| getValueAt(i, columna).toString().isEmpty()) {
 						UtilMensajes.mensaje_alterta("DETALLE_REQUERIDO",
-								getNombre_detalle(), this.cabeceras[columna],
-								String.valueOf(i + 1).toString());
+								getNombre_detalle().toUpperCase(),
+								this.cabeceras[columna].toUpperCase(), String
+										.valueOf(i + 1).toString());
 						return false;
 					}
 				}
@@ -72,7 +74,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 						UtilMensajes.mensaje_alterta(
 								(repetidos.length == 1) ? "DETALLE_NOIGUAL"
 										: "DETALLE_NOIGUALES",
-								getNombre_detalle(),
+								getNombre_detalle().toUpperCase(),
 								getConcatenaCabeceras(this.repetidos), String
 										.valueOf(i + 1).toString(), String
 										.valueOf(j + 1).toString());
@@ -98,7 +100,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 	private String getConcatenaCabeceras(int[] columnas) {
 		String cadena = "";
 		if (columnas.length == 1) {
-			cadena = cabeceras[columnas[0]];
+			cadena = cabeceras[columnas[0]].toUpperCase();
 		} else
 			for (int i = 0; i < columnas.length; i++) {
 				cadena = cadena.concat(((i == 0) ? ""
@@ -111,19 +113,13 @@ public abstract class DSGTableModel extends DefaultTableModel {
 	@Override
 	public void addRow(Object[] rowData) {
 		super.addRow(rowData);
-		if (getScrollPane() != null && getTable() != null) {
-			getScrollPane().setRowHeaderView(
-					JTableUtils.buildRowHeader(getTable()));
-		}
+		refrescarRowHeader();
 	}
 
 	@Override
 	public void removeRow(int row) {
 		super.removeRow(row);
-		if (getScrollPane() != null && getTable() != null) {
-			getScrollPane().setRowHeaderView(
-					JTableUtils.buildRowHeader(getTable()));
-		}
+		refrescarRowHeader();
 	}
 
 	public void setEditar(boolean editar) {
@@ -165,10 +161,19 @@ public abstract class DSGTableModel extends DefaultTableModel {
 	public void setTable(JTable table) {
 		this.table = table;
 	}
-	
-	public void setScrollAndTable(JScrollPane scrollPane, JTable table){
+
+	public void setScrollAndTable(JScrollPane scrollPane, JTable table) {
 		this.scrollPane = scrollPane;
 		this.table = table;
-		
+		refrescarRowHeader();
 	}
+	
+	private void refrescarRowHeader() {
+		if (getScrollPane() != null && getTable() != null) {
+			getScrollPane().setRowHeaderView(
+					JTableUtils.buildRowHeader(getTable(), this));
+		}
+	}
+	
+	public abstract void addRow();
 }
