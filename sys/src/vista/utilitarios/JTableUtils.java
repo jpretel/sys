@@ -11,30 +11,40 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.EventObject;
 import java.util.Vector;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import vista.controles.DSGTableModel;
+import vista.controles.JTextFieldLimit;
 
 public class JTableUtils {
 	private static final int MIN_ROW_HEIGHT = 12;
 
-	public static JList buildRowHeader(final JTable table,
+	public static JList<String> buildRowHeader(final JTable table,
 			final DSGTableModel model) {
 		final Vector<String> headers = new Vector<String>();
 		for (int i = 0; i < table.getRowCount(); i++) {
@@ -81,26 +91,17 @@ public class JTableUtils {
 				if (model.getEditar()) {
 					if (previ == table.getRowCount()) {
 						model.addRow();
-					} else if (previ > -1 && previ < table.getRowCount()) {
-						if (e.getButton() != MouseEvent.BUTTON1) {
-							JPopupMenu menu = getnNewPopup(previ, model);
-							menu.show(rowHeader, e.getX(), e.getY());
-						}
-
 					}
-					// if (e.getClickCount() == 2) {
-					//
-					// int seleccion = JOptionPane.showOptionDialog(null,
-					// "Desea Eliminar el Registro Seleccionado",
-					// "Informacion del Sistema",
-					// JOptionPane.YES_NO_OPTION,
-					// JOptionPane.QUESTION_MESSAGE, null,
-					// new Object[] { "Si", "No" }, "Si");
-					// if (seleccion == 0) {
-					// model.removeRow(previ);
-					// }
-					// } else if (e.getButton() == MouseEvent.BUTTON2)
 				}
+
+				if (previ > -1 && previ < table.getRowCount()) {
+					if (e.getButton() != MouseEvent.BUTTON1) {
+						JPopupMenu menu = getnNewPopup(previ, model);
+						menu.show(rowHeader, e.getX(), e.getY());
+					}
+
+				}
+
 			}
 
 			private boolean isResizeCursor() {
@@ -155,8 +156,13 @@ public class JTableUtils {
 		return rowHeader;
 	}
 
-	static class RowHeaderRenderer extends JLabel implements ListCellRenderer {
+	static class RowHeaderRenderer extends JLabel implements
+			ListCellRenderer<String> {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private JTable table;
 
 		public RowHeaderRenderer(JTable table, DSGTableModel model) {
@@ -171,8 +177,10 @@ public class JTableUtils {
 			setDoubleBuffered(true);
 		}
 
-		public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus) {
+		@Override
+		public Component getListCellRendererComponent(
+				JList<? extends String> list, String value, int index,
+				boolean isSelected, boolean cellHasFocus) {
 			setText((value == null) ? "" : value.toString());
 			setPreferredSize(null);
 			setPreferredSize(new Dimension((int) getPreferredSize().getWidth(),
@@ -246,7 +254,12 @@ public class JTableUtils {
 				}
 			}
 		});
+
+		if (!model.getEditar()) {
+			item.setEnabled(false);
+		}
 		menu.addSeparator();
+
 		menu.add(item = new JMenuItem("Eliminar"));
 		item.addActionListener(new ActionListener() {
 
@@ -262,6 +275,150 @@ public class JTableUtils {
 				}
 			}
 		});
+
+		if (!model.getEditar()) {
+			item.setEnabled(false);
+		}
+
 		return menu;
+	}
+
+	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
+		JTable table;
+		SpinnerNumberModel model = new SpinnerNumberModel(0, 0, null, 1);
+		JSpinner spinner = new JSpinner(model);
+		int clickCountToStart = 1;
+
+		public Component getTableCellEditorComponent(JTable table,
+				Object value, boolean isSelected, int row, int column) {
+			spinner.setValue(((Integer) value).intValue());
+			return spinner;
+		}
+
+		public Object getCellEditorValue() {
+			return (Integer) spinner.getValue();
+		}
+
+		public boolean isCellEditable(EventObject anEvent) {
+			if (anEvent instanceof MouseEvent) {
+				return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
+			}
+			return true;
+		}
+
+		public boolean shouldSelectCell(EventObject anEvent) {
+			return true;
+		}
+
+		public boolean stopCellEditing() {
+			return super.stopCellEditing();
+		}
+
+		public void cancelCellEditing() {
+			super.cancelCellEditing();
+		}
+	}
+
+	class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
+			ActionListener {
+		JTable table;
+		JButton button = new JButton();
+		NumberFormat nf = NumberFormat.getCurrencyInstance();
+		int clickCountToStart = 1;
+
+		public ButtonEditor(JTable table) {
+			this.table = table;
+			button.addActionListener(this);
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			StringBuilder sb = new StringBuilder();
+			int row = table.getEditingRow();
+			int col = table.getEditingColumn();
+			// System.out.printf("row = %d  col = %d%n", row, col);
+			sb.append((String) table.getValueAt(row, 6));
+			sb.append(" has ");
+			sb.append(((col == 4) ? "bought " : "sold "));
+			sb.append(((Integer) table.getValueAt(row, 3)).toString());
+			sb.append(" shares of " + (String) table.getValueAt(row, 0));
+			sb.append(" at "
+					+ nf.format(((Double) table.getValueAt(row, 1))
+							.doubleValue()));
+			stopCellEditing();
+			System.out.println(sb.toString());
+		}
+
+		public Component getTableCellEditorComponent(JTable table,
+				Object value, boolean isSelected, int row, int column) {
+			button.setText(value.toString());
+			return button;
+		}
+
+		public Object getCellEditorValue() {
+			return button.getText();
+		}
+
+		public boolean isCellEditable(EventObject anEvent) {
+			if (anEvent instanceof MouseEvent) {
+				return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
+			}
+			return true;
+		}
+
+		public boolean shouldSelectCell(EventObject anEvent) {
+			return true;
+		}
+
+		public boolean stopCellEditing() {
+			return super.stopCellEditing();
+		}
+
+		public void cancelCellEditing() {
+			super.cancelCellEditing();
+		}
+	}
+
+	class SpinnerRenderer implements TableCellRenderer {
+		SpinnerNumberModel model = new SpinnerNumberModel(0, 0, null, 1);
+		JSpinner spinner = new JSpinner(model);
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			spinner.setValue(((Integer) value).intValue());
+			return spinner;
+		}
+	}
+
+	class ButtonRenderer implements TableCellRenderer {
+		JButton button = new JButton();
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			button.setText(value.toString());
+			return button;
+		}
+	}
+
+	public class DoubleRenderer extends DefaultTableCellRenderer {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		NumberFormat nf = NumberFormat.getCurrencyInstance();
+
+		public DoubleRenderer() {
+			setHorizontalAlignment(RIGHT);
+		}
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			super.getTableCellRendererComponent(table, value, isSelected,
+					hasFocus, row, column);
+			setText(nf.format(((Double) value).doubleValue()));
+			return this;
+		}
 	}
 }

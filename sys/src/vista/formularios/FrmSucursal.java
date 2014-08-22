@@ -11,11 +11,13 @@ import vista.controles.DSGTableModel;
 import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
+import vista.utilitarios.editores.TableTextEditor;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumnModel;
 
 import dao.AlmacenDAO;
 import dao.SucursalDAO;
@@ -82,7 +84,10 @@ public class FrmSucursal extends AbstractMaestro {
 		getAlmacenesTM().setObligatorios(0, 1, 2);
 		getAlmacenesTM().setRepetidos(0);
 		getAlmacenesTM().setScrollAndTable(scrollPaneNum, tblAlmacenes);
-
+		
+		TableColumnModel cModel = tblAlmacenes.getColumnModel();
+		cModel.getColumn(0).setCellEditor(new TableTextEditor(3, true));
+		
 		JLabel lblCdigo = new JLabel("Código");
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
