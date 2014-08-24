@@ -7,6 +7,7 @@ import vista.contenedores.cntGrupo;
 import vista.contenedores.cntMarca;
 import vista.contenedores.cntMedida;
 import vista.contenedores.cntSubGrupo;
+import vista.controles.JTextFieldLimit;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -101,17 +102,20 @@ public class FrmProductos extends AbstractMaestro {
 		txtCodigo.setBounds(149, 65, 96, 20);
 		panel_1.add(txtCodigo);
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setBounds(149, 90, 290, 20);
 		panel_1.add(txtDescripcion);
 		txtDescripcion.setColumns(10);
-
+		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		
 		txtnomcorto = new JTextField();
 		txtnomcorto.setBounds(149, 115, 86, 20);
 		panel_1.add(txtnomcorto);
 		txtnomcorto.setColumns(10);
-
+		txtnomcorto.setDocument(new JTextFieldLimit(30, true));
+		
 		JLabel lblUnidadDeMedida = new JLabel("Unidad de Medida");
 		lblUnidadDeMedida.setBounds(5, 147, 90, 14);
 		panel_1.add(lblUnidadDeMedida);

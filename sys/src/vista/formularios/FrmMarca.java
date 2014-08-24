@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JScrollPane;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -61,12 +62,15 @@ public class FrmMarca extends AbstractMaestro {
 		
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
 		
 		txtNombreCorto = new JTextField();
 		txtNombreCorto.setColumns(10);
+		txtNombreCorto.setDocument(new JTextFieldLimit(30, true));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);

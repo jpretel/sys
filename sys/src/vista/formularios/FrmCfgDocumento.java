@@ -7,6 +7,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 
 import javax.swing.JLabel;
@@ -27,6 +28,7 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 
@@ -83,10 +85,12 @@ public class FrmCfgDocumento extends AbstractMaestro {
 		txtCodigo = new JTextField();
 		txtCodigo.setBounds(298, 15, 67, 20);
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setBounds(298, 39, 126, 20);
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		btnILinea = new JButton("I Linea");
 		btnILinea.setBounds(375, 15, 65, 20);

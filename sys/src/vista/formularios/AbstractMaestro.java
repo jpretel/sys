@@ -54,33 +54,67 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		inputMap.put(grabarKey, "grabar");
 		inputMap.put(cancelarKey, "cancelar");
 		inputMap.put(elminarKey, "eliminar");
-
+		
 		getRootPane().getActionMap().put("editar", new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent evt) {
 
 			}
 		});
 		getRootPane().getActionMap().put("nuevo", new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent evt) {
 				DoNuevo();
 			}
 		});
+		getRootPane().getActionMap().put("editar", new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent evt) {
+				editar();
+			}
+		});
 		getRootPane().getActionMap().put("grabar", new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent evt) {
 				DoGrabar();
 			}
 		});
 		getRootPane().getActionMap().put("cancelar", new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent evt) {
 				cancelar();
 			}
 		});
 		getRootPane().getActionMap().put("eliminar", new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void actionPerformed(ActionEvent evt) {
 				DoEliminar();
 			}
 		});
-
 	}
 
 	public void iniciar() {
@@ -159,6 +193,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		llenar_tablas();
 		llenar_lista();
 		llenar_datos();
+		iniciar();
 	}
 
 	public abstract void llenarDesdeVista();

@@ -1,5 +1,6 @@
 package vista.utilitarios;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import vista.Sys;
@@ -23,6 +24,11 @@ public class UtilMensajes {
 				titulo, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
+	public static void mensaje_alterta(JFrame frame, String mensaje) {
+		JOptionPane.showMessageDialog(frame, Sys.mensajes.getProperty(mensaje),
+				titulo, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public static void mensaje_alterta(String mensaje, String... params){
 		String grandTotal = String.format(Sys.mensajes.getProperty(mensaje), params);
 		JOptionPane.showMessageDialog(null, grandTotal,
@@ -30,7 +36,7 @@ public class UtilMensajes {
 	}
 	
 	public static int msj_error(String mensaje){
-		int seleccion = JOptionPane.showOptionDialog(null, Sys.mensajes.getProperty(mensaje), "Informacion del Sistema",
+		int seleccion = JOptionPane.showOptionDialog(null, Sys.mensajes.getProperty(mensaje), titulo,
 			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Si", "No"}, "Si");
 			
 		return seleccion;			

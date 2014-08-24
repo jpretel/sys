@@ -3,6 +3,7 @@ package vista.formularios;
 import java.util.ArrayList;
 import java.util.List;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -70,12 +71,15 @@ public class FrmUnimedida extends AbstractMaestro {
 		
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 		
 		txtNomenclatura = new JTextField();
 		txtNomenclatura.setColumns(10);
+		txtNomenclatura.setDocument(new JTextFieldLimit(50, true));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setAlignmentY(0.0f);

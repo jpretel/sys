@@ -10,6 +10,7 @@ import javax.swing.ListSelectionModel;
 
 import vista.Sys;
 import vista.controles.DSGTableModel;
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 
 import javax.swing.JLabel;
@@ -97,9 +98,11 @@ public class FrmSysModulo extends AbstractMaestro {
 
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
-
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
+		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		btnILinea = new JButton("I Linea");
 		btnILinea.addActionListener(new ActionListener() {

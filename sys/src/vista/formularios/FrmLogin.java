@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FrmLogin extends JFrame {
 	/**
@@ -33,10 +35,11 @@ public class FrmLogin extends JFrame {
 
 	public FrmLogin() {
 		setAlwaysOnTop(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setMinimumSize(new Dimension(330, 120));
 		getContentPane().setMinimumSize(new Dimension(600, 600));
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setTitle("Inicio de Sesi\u00F3n");
 		getContentPane().setLayout(null);
 		
@@ -68,6 +71,12 @@ public class FrmLogin extends JFrame {
 		getContentPane().add(btnAceptar);
 
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+			}
+		});
 		btnCancelar.setBounds(190, 64, 89, 23);
 		getContentPane().add(btnCancelar);
 	}
@@ -77,10 +86,10 @@ public class FrmLogin extends JFrame {
 		String idusuario, clave;
 		idusuario = txtUsuario.getText();
 		clave = new String(txtClave.getPassword());
-
+		
 		Usuario usuario = getUsuarioDAO().getPorUsuarioClave(idusuario,
 				Encryption.encrypt(clave));
-
+		
 		if (usuario != null) {
 			Sys.usuario = usuario;
 			ChangeEvent ce = new ChangeEvent(this);
@@ -88,8 +97,8 @@ public class FrmLogin extends JFrame {
 				listener.stateChanged(ce);
 			}
 			this.dispose();
-		} else
-			mensaje_alterta("CLAVEUSUARIO_INC");
+		} else{
+			mensaje_alterta(this, "CLAVEUSUARIO_INC");}
 
 	}
 

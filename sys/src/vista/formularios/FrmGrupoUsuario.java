@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 
 import javax.swing.JScrollPane;
@@ -48,7 +49,8 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 		txtCodigo = new JTextField();
 		txtCodigo.setBounds(276, 8, 122, 20);
 		txtCodigo.setColumns(10);
-
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
+		
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
 		lblDescripcin.setBounds(227, 36, 75, 14);
 
@@ -62,6 +64,7 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
+		txtDescripcion.setDocument(new JTextFieldLimit(3, true));
 		
 		chkEsAdministrador = new JCheckBox("Es Administrador");
 

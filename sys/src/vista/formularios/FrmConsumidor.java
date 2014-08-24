@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.JXTreeTable;
 
+import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTreeTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -85,10 +86,12 @@ public class FrmConsumidor extends AbstractMaestro {
 		txtCodigo = new JTextField();
 		txtCodigo.setBounds(294, 9, 86, 20);
 		txtCodigo.setColumns(10);
+		txtCodigo.setDocument(new JTextFieldLimit(6, true));
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(321, 37, 184, 20);
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		chkEsConsumidorInicial = new JCheckBox("Es Consumidor Inicial");
 		
