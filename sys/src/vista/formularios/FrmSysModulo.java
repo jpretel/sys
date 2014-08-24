@@ -88,6 +88,12 @@ public class FrmSysModulo extends AbstractMaestro {
 			public boolean evaluaEdicion(int row, int column) {
 				return getEditar();
 			}
+
+			@Override
+			public void addRow() {
+				// TODO Auto-generated method stub
+				
+			}
 		});
 		scrollPaneNum.setViewportView(tblTitulo);
 		tblTitulo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

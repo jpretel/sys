@@ -110,6 +110,12 @@ public class FrmSysGrupo extends AbstractMaestro {
 			public boolean evaluaEdicion(int row, int column) {
 				return getEditar();
 			}
+
+			@Override
+			public void addRow() {
+				// TODO Auto-generated method stub
+				
+			}
 			
 			
 		});

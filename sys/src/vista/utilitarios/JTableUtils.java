@@ -1,5 +1,6 @@
 package vista.utilitarios;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -27,7 +28,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
@@ -39,16 +39,13 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import vista.controles.DSGTableModel;
-import vista.controles.JTextFieldLimit;
 
 public class JTableUtils {
-	private static final int MIN_ROW_HEIGHT = 12;
 
 	public static JList<String> buildRowHeader(final JTable table,
 			final DSGTableModel model) {
 		final Vector<String> headers = new Vector<String>();
 		for (int i = 0; i < table.getRowCount(); i++) {
-			// headers.add(String.valueOf((char) (i + 65)).toUpperCase());
 			headers.add(String.valueOf(i + 1).toUpperCase());
 		}
 
@@ -70,11 +67,8 @@ public class JTableUtils {
 		rowHeader.setFixedCellWidth(30);
 
 		MouseInputAdapter mouseAdapter = new MouseInputAdapter() {
-			Cursor oldCursor;
 			Cursor RESIZE_CURSOR = Cursor
 					.getPredefinedCursor(Cursor.S_RESIZE_CURSOR);
-			int index = -1;
-			int oldY = -1;
 
 			private int getLocationToIndex(Point point) {
 				int i = rowHeader.locationToIndex(point);
@@ -99,11 +93,19 @@ public class JTableUtils {
 						JPopupMenu menu = getnNewPopup(previ, model);
 						menu.show(rowHeader, e.getX(), e.getY());
 					}
-
 				}
-
+				
+			}
+			
+			public void mouseClicked(MouseEvent e){
+				super.mouseClicked(e);
+				int previ = getLocationToIndex(new Point(e.getX(), e.getY() - 3));
+				System.out.println(previ);
+				model.getTable().getSelectionModel().setSelectionInterval(previ, previ);
+				rowHeader.setSelectionBackground(Color.YELLOW);
 			}
 
+			@SuppressWarnings("unused")
 			private boolean isResizeCursor() {
 				return rowHeader.getCursor() == RESIZE_CURSOR;
 			}
@@ -152,7 +154,6 @@ public class JTableUtils {
 		rowHeader.setCellRenderer(new RowHeaderRenderer(table, model));
 		rowHeader.setBackground(table.getBackground());
 		rowHeader.setForeground(table.getForeground());
-
 		return rowHeader;
 	}
 
@@ -192,7 +193,7 @@ public class JTableUtils {
 		}
 	}
 
-	static JPopupMenu getnNewPopup(int row, DSGTableModel model) {
+	static JPopupMenu getnNewPopup(final int row, final DSGTableModel model) {
 		JPopupMenu menu = new JPopupMenu();
 		JMenuItem item;
 		menu.add(item = new JMenuItem("Copiar"));
@@ -209,7 +210,7 @@ public class JTableUtils {
 									.getValueAt(row, i).toString().trim());
 				}
 				StringSelection dataClip = new StringSelection(data);
-
+				
 				clipboar.setContents(dataClip, dataClip);
 			}
 		});
@@ -284,6 +285,10 @@ public class JTableUtils {
 	}
 
 	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		JTable table;
 		SpinnerNumberModel model = new SpinnerNumberModel(0, 0, null, 1);
 		JSpinner spinner = new JSpinner(model);

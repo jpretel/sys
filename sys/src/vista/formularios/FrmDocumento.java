@@ -111,6 +111,11 @@ public class FrmDocumento extends AbstractMaestro {
 							public boolean evaluaEdicion(int row, int column) {
 								return getEditar();
 							}
+							@Override
+							public void addRow() {
+								// TODO Auto-generated method stub
+								
+							}
 						});
 						scrollPaneNum.setViewportView(tblnumeradores);
 						tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -123,6 +128,11 @@ public class FrmDocumento extends AbstractMaestro {
 							@Override
 							public boolean evaluaEdicion(int row, int column) {
 								return getEditar();
+							}
+							@Override
+							public void addRow() {
+								// TODO Auto-generated method stub
+								
 							}
 						});
 						
