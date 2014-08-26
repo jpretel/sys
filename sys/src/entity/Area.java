@@ -18,7 +18,7 @@ public class Area implements Serializable {
 	@Column(unique=true, nullable=false, length=3)
 	private String idarea;
 
-	@Column(nullable=false, length=100)
+	@Column(nullable=false, length=75)
 	private String descripcion;
 
 	public Area() {

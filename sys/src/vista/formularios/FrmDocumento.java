@@ -87,7 +87,7 @@ public class FrmDocumento extends AbstractMaestro {
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 		tabPanel = new JTabbedPane(JTabbedPane.TOP);
 		
 		scrollPaneNum = new JScrollPane();
@@ -168,7 +168,7 @@ public class FrmDocumento extends AbstractMaestro {
 						
 		txtCodigoSunat = new JTextField();
 		txtCodigoSunat.setColumns(10);
-		txtCodigoSunat.setDocument(new JTextFieldLimit(30, true));
+		txtCodigoSunat.setDocument(new JTextFieldLimit(4, true));
 						
 						GroupLayout groupLayout = new GroupLayout(pnlContenido);
 						groupLayout.setHorizontalGroup(

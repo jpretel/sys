@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -17,6 +19,7 @@ public class Subgrupo implements Serializable {
 	@EmbeddedId
 	private SubgrupoPK id;
 
+	@Column(nullable=false, length=75)
 	private String descripcion;
 
 	//bi-directional many-to-one association to Producto

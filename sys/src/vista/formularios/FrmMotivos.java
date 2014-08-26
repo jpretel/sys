@@ -78,11 +78,11 @@ public class FrmMotivos extends AbstractMaestro {
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		txtDescripcion.setDocument(new JTextFieldLimit(200, true));
 		
 		txtNombreCorto = new JTextField();
 		txtNombreCorto.setColumns(10);
-		txtNombreCorto.setDocument(new JTextFieldLimit(30, true));
+		txtNombreCorto.setDocument(new JTextFieldLimit(100, true));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);

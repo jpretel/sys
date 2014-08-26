@@ -70,10 +70,10 @@ public class SysDesarrollo extends JFrame {
 		frm.setVisible(true);
 		
 		
-		FrmDocumento frame2 = new FrmDocumento();
+		FrmListaProductos frame2 = new FrmListaProductos();
 		frm.getDesktopPane().add(frame2);	
 		
-		FrmSucursal frame1 = new FrmSucursal();
+		FrmProductos frame1 = new FrmProductos();
 		frm.getDesktopPane().add(frame1);	
 	}
 	

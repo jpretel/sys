@@ -100,7 +100,7 @@ public class FrmGrupos extends AbstractMaestro {
 		
 		txtDescCorta = new JTextField();
 		txtDescCorta.setColumns(10);
-		txtDescCorta.setDocument(new JTextFieldLimit(30, true));
+		txtDescCorta.setDocument(new JTextFieldLimit(50, true));
 		
 		JLabel lblSubgrupos = new JLabel("SubGrupos");
 		

@@ -85,7 +85,7 @@ public class FrmFlujo extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
-		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 		
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout

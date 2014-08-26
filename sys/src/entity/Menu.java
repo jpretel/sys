@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -16,16 +17,19 @@ public class Menu implements Serializable {
 	@Id
 	private int idmenu;
 
+	@Column(nullable=false, length=75)
 	private String descripcion;
 
 	@Column(name="indice_ubi")
 	private int indiceUbi;
 
+	@Column(length=200)
 	private String modulo;
 
 	@Column(name="nombre_form")
 	private String nombreForm;
 
+	@Column(length=20)
 	private String posicion;
 
 	public Menu() {
