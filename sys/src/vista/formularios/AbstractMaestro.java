@@ -11,6 +11,7 @@ import vista.barras.PanelBarraMaestro;
 import javax.swing.JPanel;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -37,6 +38,9 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
+		//Se establece el tamaño minimo del Formulario
+		setMinimumSize(new Dimension(555, 325)); 
+		
 		barra = new PanelBarraMaestro();
 		barra.setFormMaestro(this);
 		FlowLayout flowLayout = (FlowLayout) barra.getLayout();

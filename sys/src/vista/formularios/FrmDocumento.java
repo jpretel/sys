@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultCellEditor;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -14,11 +13,13 @@ import vista.controles.DSGTableModel;
 import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
+import vista.utilitarios.editores.TableTextEditor;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumnModel;
 
 import dao.DocFormularioDAO;
 import dao.DocumentoDAO;
@@ -30,20 +31,12 @@ import entity.DocumentoNumero;
 import entity.DocumentoNumeroPK;
 import entity.SysOpcion;
 
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTabbedPane;
-import javax.swing.ImageIcon;
-
-import java.awt.Insets;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -69,10 +62,11 @@ public class FrmDocumento extends AbstractMaestro {
 
 	private DocumentoNumeroDAO docnumDAO = new DocumentoNumeroDAO();
 	private DocFormularioDAO docFormDAO = new DocFormularioDAO(); 
-	private JButton btnILinea;
-	private JButton btnBLinea;
 	private JTextField txtCodigoSunat;
-
+	
+	private final JTabbedPane tabPanel;
+	private JScrollPane scrollPaneNum;
+	
 	public FrmDocumento() {
 		super("Documentos");
 
@@ -94,19 +88,13 @@ public class FrmDocumento extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		tabPanel = new JTabbedPane(JTabbedPane.TOP);
 		
-		btnILinea = new JButton("I LINEA");
-		btnILinea.setMargin(new Insets(0, 0, 0, 0));
-		btnILinea.setAlignmentY(0.0f);
-		btnILinea.setIcon(new ImageIcon(FrmDocumento.class.getResource("/main/resources/iconos/table_row_insert.png")));
-		btnBLinea = new JButton("B Linea");
-		final JTabbedPane tabPanel = new JTabbedPane(JTabbedPane.TOP);
-		
-				JScrollPane scrollPaneNum = new JScrollPane();
-				tabPanel.addTab("Detalle", null, scrollPaneNum, null);
+		scrollPaneNum = new JScrollPane();
+		tabPanel.addTab("Detalle", null, scrollPaneNum, null);
 				
-						tblnumeradores = new JTable(new DSGTableModel(new String[] {"Pto. Emisión", "Serie", "Nùmero"}) {
-							private static final long serialVersionUID = 1L;
+		tblnumeradores = new JTable(new DSGTableModel(new String[] {"Pto. Emisión", "Serie", "Nùmero"}) {
+					private static final long serialVersionUID = 1L;
 							@Override
 							public boolean evaluaEdicion(int row, int column) {
 								return getEditar();
@@ -117,54 +105,70 @@ public class FrmDocumento extends AbstractMaestro {
 								
 							}
 						});
-						scrollPaneNum.setViewportView(tblnumeradores);
-						tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPaneNum.setViewportView(tblnumeradores);
+		tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		getNumeradorTM().setNombre_detalle("Numeradores");
+		getNumeradorTM().setObligatorios(0, 1, 2);
+		getNumeradorTM().setRepetidos(0);
+		getNumeradorTM().setScrollAndTable(scrollPaneNum, tblnumeradores);
+		
+		TableColumnModel cModel = tblnumeradores.getColumnModel();
+		cModel.getColumn(0).setCellEditor(new TableTextEditor(15, true));
+				
+		JScrollPane scrollPaneFormularios = new JScrollPane();
+		tabPanel.addTab("Formularios Asociados", null, scrollPaneFormularios, null);
 						
-				JScrollPane scrollPaneFormularios = new JScrollPane();
-				tabPanel.addTab("Formularios Asociados", null, scrollPaneFormularios, null);
+		tblFormularios = new JTable(new DSGTableModel(new String[]{"idFormulario","Formulario","Activo"}){
+				private static final long serialVersionUID = 1L;
+					@Override
+					public boolean evaluaEdicion(int row, int column) {
+						return getEditar();
+					}
+					@Override
+					public void addRow() {
+						// TODO Auto-generated method stub
 						
-						tblFormularios = new JTable(new DSGTableModel(new String[]{"idFormulario","Formulario","Activo"}){
-							private static final long serialVersionUID = 1L;
-							@Override
-							public boolean evaluaEdicion(int row, int column) {
-								return getEditar();
-							}
-							@Override
-							public void addRow() {
-								// TODO Auto-generated method stub
-								
-							}
-						});
+					}
+				});
 						
-						scrollPaneFormularios.setViewportView(tblFormularios);
-						tblFormularios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPaneFormularios.setViewportView(tblFormularios);
+		tblFormularios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 						
-						final txtidformulario txtidform = new txtidformulario();		
-						DefaultCellEditor editor = new DefaultCellEditor(txtidform);
-						tblFormularios.getColumn("idFormulario").setCellEditor(editor);
-						tblFormularios.getColumn("idFormulario").setPreferredWidth(120);
+		getFormularioTM().setNombre_detalle("Formulario");
+		getFormularioTM().setObligatorios(0, 1, 2);
+		getFormularioTM().setRepetidos(0);
+		getFormularioTM().setScrollAndTable(scrollPaneFormularios, tblFormularios);
+		
+		TableColumnModel cModel2 = tblnumeradores.getColumnModel();
+		cModel2.getColumn(0).setCellEditor(new TableTextEditor(15, true));
+		
+		final txtidformulario txtidform = new txtidformulario();		
+		DefaultCellEditor editor = new DefaultCellEditor(txtidform);
+		tblFormularios.getColumn("idFormulario").setCellEditor(editor);
+		tblFormularios.getColumn("idFormulario").setPreferredWidth(120);
 						
-						txtidform.addFocusListener(new FocusAdapter() {
-							@Override
-							public void focusLost(FocusEvent arg0) {
-								getFormularioTM().setValueAt(txtidform.getDescripcion(), tblFormularios.getSelectedRow(), 1);
-							}
-						});
+		txtidform.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusLost(FocusEvent arg0) {
+						getFormularioTM().setValueAt(txtidform.getDescripcion(), tblFormularios.getSelectedRow(), 1);
+					}
+		});
 						
 						
-						txtidform.addKeyListener(new KeyAdapter() {
-							@Override
-							public void keyPressed(KeyEvent ev) {	
-								if(ev.getKeyCode() != 9)
-									txtidform.mostrar(txtidform.getText());
-							}
-						});
+		txtidform.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent ev) {	
+					if(ev.getKeyCode() != 9)
+						txtidform.mostrar(txtidform.getText());
+				}
+		});
+				
+		JLabel lblCodigoSunat = new JLabel("Codigo Sunat");
 						
-						JLabel lblCodigoSunat = new JLabel("Codigo Sunat");
-						
-						txtCodigoSunat = new JTextField();
-						txtCodigoSunat.setColumns(10);
-						txtCodigoSunat.setDocument(new JTextFieldLimit(30, true));
+		txtCodigoSunat = new JTextField();
+		txtCodigoSunat.setColumns(10);
+		txtCodigoSunat.setDocument(new JTextFieldLimit(30, true));
 						
 						GroupLayout groupLayout = new GroupLayout(pnlContenido);
 						groupLayout.setHorizontalGroup(
@@ -177,9 +181,7 @@ public class FrmDocumento extends AbstractMaestro {
 										.addGroup(groupLayout.createSequentialGroup()
 											.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 											.addGap(19)
-											.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
-											.addGap(10)
-											.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
+											.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE))
 										.addGroup(groupLayout.createSequentialGroup()
 											.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 											.addGap(19)
@@ -188,8 +190,7 @@ public class FrmDocumento extends AbstractMaestro {
 											.addComponent(lblCodigoSunat, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 											.addGap(19)
 											.addComponent(txtCodigoSunat, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-											.addGap(10)
-											.addComponent(btnILinea, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
+											.addGap(93))
 										.addGroup(groupLayout.createSequentialGroup()
 											.addGap(2)
 											.addComponent(tabPanel, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)))
@@ -199,7 +200,7 @@ public class FrmDocumento extends AbstractMaestro {
 							groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(11)
-									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
 									.addGap(5))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(15)
@@ -207,8 +208,7 @@ public class FrmDocumento extends AbstractMaestro {
 										.addGroup(groupLayout.createSequentialGroup()
 											.addGap(3)
 											.addComponent(lblCdigo))
-										.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+										.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 									.addGap(4)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addGroup(groupLayout.createSequentialGroup()
@@ -220,10 +220,7 @@ public class FrmDocumento extends AbstractMaestro {
 										.addGroup(groupLayout.createSequentialGroup()
 											.addGap(3)
 											.addComponent(lblCodigoSunat))
-										.addComponent(txtCodigoSunat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(3)
-											.addComponent(btnILinea)))
+										.addComponent(txtCodigoSunat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 									.addGap(1)
 									.addComponent(tabPanel, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE))
 						);
@@ -240,27 +237,6 @@ public class FrmDocumento extends AbstractMaestro {
 						llenar_datos();
 					}
 				});
-		btnILinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(isValidaVista()){
-					final Object fila[] = { "", "", "" };
-					if (tabPanel.getSelectedIndex() == 0)
-						getNumeradorTM().addRow(fila);
-					else 
-						getFormularioTM().addRow(fila);
-				}else{
-					JOptionPane.showMessageDialog(null, "Faltan datos en la Cabecera");
-				}
-			}
-		});
-		
-		btnBLinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = tblnumeradores.getSelectedRow();
-				if (ind >= 0)
-					getNumeradorTM().removeRow(ind);
-			}
-		});
 		iniciar();
 	}
 
@@ -416,8 +392,9 @@ public class FrmDocumento extends AbstractMaestro {
 		txtCodigoSunat.setEditable(true);
 		getNumeradorTM().setEditar(true);
 		getFormularioTM().setEditar(true);
-		btnILinea.setEnabled(true);
-		btnBLinea.setEnabled(true);
+		tblnumeradores.setEnabled(true);	
+		tblFormularios.setEnabled(true);	
+		scrollPaneNum.setEnabled(true);
 
 	}
 
@@ -428,8 +405,9 @@ public class FrmDocumento extends AbstractMaestro {
 		txtCodigoSunat.setEditable(false);
 		getNumeradorTM().setEditar(false);
 		getFormularioTM().setEditar(false);
-		btnILinea.setEnabled(false);
-		btnBLinea.setEnabled(false);
+		tblnumeradores.setEnabled(false);
+		tblFormularios.setEnabled(false);
+		scrollPaneNum.setEnabled(false);
 	}
 
 	public Documento getDocumento() {

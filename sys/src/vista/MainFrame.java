@@ -61,6 +61,9 @@ public class MainFrame extends JRibbonFrame {
 
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
 
+		//Se establece el tamaño minimo del MainFrame
+		setMinimumSize(new Dimension(800, 600)); 
+		
 		cOpciones.setDesktopPane(getDesktopPane());
 
 		setTitle("BRIGHT GLOBAL CHANGE ERP");
@@ -86,7 +89,7 @@ public class MainFrame extends JRibbonFrame {
 		lblFecha.setText(sdf.format(fecha));
 		tlbPie.add(lblFecha);
 
-		getContentPane().add(desktopPane, BorderLayout.CENTER);
+		//getContentPane().add(desktopPane, BorderLayout.CENTER);
 
 		pack();
 		setVisible(true);
@@ -167,19 +170,19 @@ public class MainFrame extends JRibbonFrame {
 
 		RibbonApplicationMenuEntryPrimary cambiar_clave = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
-				"Cambiar Clave", null, CommandButtonKind.ACTION_ONLY);
+				"Cambiar Clave", cOpciones.returnAction("FrmCambioClave"), CommandButtonKind.ACTION_ONLY);
 
 		ribbon.addMenuEntry(cambiar_clave);
 
 		RibbonApplicationMenuEntryPrimary cerrar_sesion = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
-				"Cerrar Sesión", null, CommandButtonKind.ACTION_ONLY);
+				"Cerrar Sesión", returnAction2(), CommandButtonKind.ACTION_ONLY);
 
 		ribbon.addMenuEntry(cerrar_sesion);
 
 		RibbonApplicationMenuEntryPrimary salir = new RibbonApplicationMenuEntryPrimary(
 				getResizableIconFromResource("/main/resources/favoritos.png"),
-				"Salir", null, CommandButtonKind.ACTION_ONLY);
+				"Salir", returnAction(), CommandButtonKind.ACTION_ONLY);
 
 		ribbon.addMenuEntry(salir);
 
@@ -264,6 +267,35 @@ public class MainFrame extends JRibbonFrame {
 
 				this.getRibbon().addTask(task);
 			}
+		}
+	}
+	
+	//Metodo para Salir
+	public ActionListener returnAction() {
+		try {
+			return new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {					
+					dispose();						
+				}
+			};
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public ActionListener returnAction2() {
+		try {
+			return new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {	
+					//setVisible(false);
+					new vista.Sys().iniciar();
+					dispose();						
+				}
+			};
+		} catch (Exception e) {
+			return null;
 		}
 	}
 
