@@ -12,9 +12,10 @@ public class SubgrupoPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
+	@Column(length=3)
 	private String idsubgrupo;
 
-	@Column(name="grupo_idgrupo", insertable=false, updatable=false)
+	@Column(name="grupo_idgrupo", insertable=false, updatable=false, length=3)
 	private String grupoIdgrupo;
 
 	public SubgrupoPK() {

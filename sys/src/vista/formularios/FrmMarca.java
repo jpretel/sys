@@ -66,7 +66,7 @@ public class FrmMarca extends AbstractMaestro {
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 		
 		txtNombreCorto = new JTextField();
 		txtNombreCorto.setColumns(10);

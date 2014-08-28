@@ -82,7 +82,7 @@ public class FrmResponsable extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
+		txtDescripcion.setDocument(new JTextFieldLimit(100, true));
 		
 		JLabel lblArea = new JLabel("Area");
 		cntarea = new cntArea();

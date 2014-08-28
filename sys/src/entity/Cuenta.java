@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -14,11 +15,13 @@ public class Cuenta implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(unique=true, nullable=false, length=10)
 	private String idcuenta;
 
+	@Column(nullable=false, length=75)
 	private String descripcion;
 
-	@Column(name="tc_ajuste")
+	@Column(name="tc_ajuste", length=40)
 	private String tcAjuste;
 
 	public Cuenta() {

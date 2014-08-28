@@ -65,7 +65,7 @@ public class FrmMoneda extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
+		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		optNac = new JRadioButton("Moneda Nacional");
 		optNac.setSelected(true);
@@ -84,7 +84,7 @@ public class FrmMoneda extends AbstractMaestro {
 
 		txtSimbolo = new JTextField();
 		txtSimbolo.setColumns(10);
-		txtSimbolo.setDocument(new JTextFieldLimit(5, true));
+		txtSimbolo.setDocument(new JTextFieldLimit(10, true));
 		
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(

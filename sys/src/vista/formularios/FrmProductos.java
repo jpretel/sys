@@ -8,6 +8,7 @@ import vista.contenedores.cntMarca;
 import vista.contenedores.cntMedida;
 import vista.contenedores.cntSubGrupo;
 import vista.controles.JTextFieldLimit;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -295,7 +296,55 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		// TODO Auto-generated method stub
+		if (this.cntgrupo.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Familia de Productos");
+			this.cntgrupo.txtCodigo.requestFocus();
+			return false;
+		}
+		
+		if (this.cntSubGrupo.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "SubFamilia de Productos");
+			this.cntSubGrupo.txtCodigo.requestFocus();
+			return false;
+		}
+		
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
+			return false;
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (pdao.find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
+			this.txtDescripcion.requestFocus();
+			return false;
+		}
+		
+		if (this.txtnomcorto.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Nombre corto");
+			this.txtnomcorto.requestFocus();
+			return false;
+		}
+		
+		if (this.cntmedida.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Unidad de Medida");
+			this.cntmedida.txtCodigo.requestFocus();
+			return false;
+		}
+		
+		if (this.cntmarca.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Marca de Producto");
+			this.cntmarca.txtCodigo.requestFocus();
+			return false;
+		}
+		
 		return true;
 	}
 

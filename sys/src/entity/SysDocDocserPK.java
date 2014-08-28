@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -12,11 +13,13 @@ public class SysDocDocserPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="sys_doc")
+	@Column(name="sys_doc", unique=true, nullable=false, length=3)
 	private String sysDoc;
 
+	@Column(nullable=false, length=3)
 	private String iddocumento;
 
+	@Column(nullable=false, length=5)
 	private String serie;
 
 	public SysDocDocserPK() {

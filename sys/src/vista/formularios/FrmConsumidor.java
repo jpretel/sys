@@ -86,7 +86,7 @@ public class FrmConsumidor extends AbstractMaestro {
 		txtCodigo = new JTextField();
 		txtCodigo.setBounds(294, 9, 86, 20);
 		txtCodigo.setColumns(10);
-		txtCodigo.setDocument(new JTextFieldLimit(6, true));
+		txtCodigo.setDocument(new JTextFieldLimit(5, true));
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);

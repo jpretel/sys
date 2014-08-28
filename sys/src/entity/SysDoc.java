@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -16,9 +18,10 @@ public class SysDoc implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="sys_doc")
+	@Column(name="sys_doc", unique=true, nullable=false, length=3)
 	private String sysDoc;
 
+	@Column(nullable=false, length=75)
 	private String descripcion;
 
 	//bi-directional many-to-one association to SysDocDocser

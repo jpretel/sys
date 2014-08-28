@@ -1,7 +1,9 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -15,11 +17,13 @@ public class Grupo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(unique=true, nullable=false, length=3)
 	private String idgrupo;
 
-	@Column(name="desc_corta")
+	@Column(name="desc_corta", length=50)
 	private String descCorta;
 
+	@Column(nullable=false, length=75)
 	private String descripcion;
 
 	//bi-directional many-to-one association to Subgrupo

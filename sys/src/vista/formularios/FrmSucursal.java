@@ -94,7 +94,7 @@ public class FrmSucursal extends AbstractMaestro {
 
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
-		txtCodigo.setDocument(new JTextFieldLimit(3, true));
+		txtCodigo.setDocument(new JTextFieldLimit(4, true));
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
