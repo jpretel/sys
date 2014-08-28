@@ -4,7 +4,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -13,6 +12,7 @@ import javax.swing.border.EtchedBorder;
 
 import entity.Documento;
 import vista.barras.BarraMaestro;
+import vista.contenedores.TxtDocFormulario;
 import vista.controles.ComboBox;
 import vista.controles.IDocumentoDAO;
 
@@ -45,13 +45,13 @@ public abstract class AbstractDocList extends JInternalFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected ComboBox<Documento> cboDocumento = new ComboBox<Documento>();
-	private JTextField txtNumero;
+	protected TxtDocFormulario txtNumero;
 	private IDocumentoDAO documentoDAO;
 	private JXDatePicker txtDesde;
 	private JXDatePicker txtHasta;
 	private JScrollPane pnlDocumentos = new JScrollPane();
 	private JTable tblDocumentos;
-	private Calendar calendar;
+	//private Calendar calendar;
 
 	private String datePattern = "dd/MM/yyyy";
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
@@ -101,7 +101,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 		txtDesde = new JXDatePicker();
 		txtDesde.setFormats(dateFormatter);
 
-		//txtDesde.setDate(calendar.getTime());
+		//txtDesde.setDate(Calendar.DAY_OF_MONTH);
 
 		JLabel lblHasta = new JLabel("Hasta");
 
@@ -113,7 +113,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 		JLabel lblNmero = new JLabel("Correlativo");
 
-		txtNumero = new JTextField();
+		txtNumero = new TxtDocFormulario();
 		txtNumero.setColumns(10);
 
 		JButton btnActualizar = new JButton("Actualizar");

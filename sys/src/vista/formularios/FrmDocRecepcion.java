@@ -1,5 +1,13 @@
 package vista.formularios;
 
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import vista.contenedores.TxtDocFormulario;
 import vista.contenedores.TxtProducto;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntMotivo;
@@ -14,11 +22,19 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.table.TableColumnModel;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+
+import dao.DetDocIngresoDAO;
+import dao.DocingresoDAO;
+import entity.DetDocingreso;
+import entity.DetDocingresoPK;
+import entity.DocFormulario;
+import entity.Docingreso;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 
@@ -32,6 +48,19 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private cntAlmacen cntalmacen;
 	private JTable tblDetalle;
 	private JScrollPane scrollPaneDetalle;
+	private Docingreso docIngreso;
+	private List<DetDocingreso> DetDocingresoL;
+	private DocingresoDAO docIngresoDAO = new DocingresoDAO();
+	private DetDocIngresoDAO detDocingresoDAO = new DetDocIngresoDAO(); 
+	
+	public List<DetDocingreso> getDetDocingresoL() {
+		return DetDocingresoL;
+	}
+
+	public void setDetDocingresoL(List<DetDocingreso> detDocingresoL) {
+		DetDocingresoL = detDocingresoL;
+	}
+
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");
 		
@@ -81,6 +110,18 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		cntalmacen.setBounds(379, 44, 222, 21);
 		panel.add(cntalmacen);
 		
+		cntalmacen.txtCodigo.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				actualizaSucursal();
+			}
+
+			private void actualizaSucursal() {
+				cntalmacen.setSucursal(cntsucursal.getSeleccionado());
+				cntalmacen.refrescar();				
+			}
+		});
+		
 		JLabel lblGlosa = new JLabel("Glosa");
 		lblGlosa.setBounds(10, 79, 46, 14);
 		panel.add(lblGlosa);
@@ -89,15 +130,21 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		textArea.setBounds(66, 76, 222, 66);
 		panel.add(textArea);		
 		 
-		tblDetalle = new JTable(new DSGTableModel(new String[]{"Item","IdProducto","Producto","IdMedida","Medida","Cantidad","Precio","Importe"}){
+		tblDetalle = new JTable(new DSGTableModel(new String[]{"IdProducto","Producto","IdMedida","Medida","Cantidad","Precio","Importe"}){
 			private static final long serialVersionUID = 1L;
 			@Override
 			public boolean evaluaEdicion(int row, int column) {
-				return getEditar();
+				if(column != 1 || column != 3)
+					return getEditar();
+				else
+					return false;
 			}
 			@Override
 			public void addRow() {
-				addRow(new Object[] { "", "","","" ,"",0.00,0.00,0.00});				
+				if (validaCabecera())
+					addRow(new Object[] {"","","" ,"",0.00,0.00,0.00});
+				else
+					JOptionPane.showMessageDialog(null, "Faltan datos en la cabecera");
 			}
 		});
 		
@@ -114,8 +161,18 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		getDetalleTM().setRepetidos(0);
 		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
 		
-		TableColumnModel cModel = tblDetalle.getColumnModel();
-		cModel.getColumn(0).setCellEditor(new TableTextEditor(3, true));
+		/*TableColumnModel cModel = tblDetalle.getColumnModel();
+		cModel.getColumn(0).setCellEditor(new TableTextEditor(15, true));*/
+		
+		
+		txtProducto.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				getDetalleTM().setValueAt(txtProducto.getSeleccionado().getDescripcion(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn());
+				getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getIdunimedida(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 1);
+				getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getDescripcion(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 2);
+			}
+		});
 		
 		panel.add(scrollPaneDetalle);
 		getContentPane().setLayout(groupLayout);
@@ -123,8 +180,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void nuevo() {
-		// TODO Auto-generated method stub
-
+		docIngreso = new Docingreso();		
 	}
 
 	@Override
@@ -135,20 +191,33 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void grabar() {
-		// TODO Auto-generated method stub
-
+		docIngresoDAO.crear_editar(docIngreso);
+		for (DetDocingreso det : getDetDocingresoL()){
+			detDocingresoDAO.crear_editar(det);
+		}
 	}
 
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void llenar_datos() {
-		// TODO Auto-generated method stub
-
+		if (docIngreso instanceof Docingreso){
+			this.txtCorrrelativo.setText(docIngreso.getCorrelativo());
+			this.datePicker.setDate(docIngreso.getFecha());
+			this.cntmotivo.txtCodigo.setText(docIngreso.getIdmotivo());
+			this.cntresponsable.txtCodigo.setText(docIngreso.getIdresponsable());
+			this.cntalmacen.txtCodigo.setText(docIngreso.getIdalmacen());
+		}
+		if(getEstado().equals(NUEVO)){
+			TxtDocFormulario txtDocFormulario = new TxtDocFormulario();
+			txtCorrrelativo.setText(txtDocFormulario.getCorrelativo("FrmListaRecepcion"));
+		
+			Date xfecha = new Date();
+	        datePicker.setDate(xfecha);
+		}
 	}
 
 	@Override
@@ -158,14 +227,13 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	}
 
 	@Override
-	public void llenar_tablas() {
-		// TODO Auto-generated method stub
-
+	public void llenar_tablas() {		
 	}
 
 	@Override
 	public void vista_edicion() {
 		this.txtCorrrelativo.setEditable(true);
+		this.datePicker.setEditable(true);
 		this.txtTcMoneda.setEditable(true);
 		this.txtTipoCambio.setEditable(true);
 		this.cntmotivo.txtCodigo.setEditable(true);
@@ -178,6 +246,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void vista_noedicion() {
 		this.txtCorrrelativo.setEditable(false);
+		this.datePicker.setEditable(false);
 		this.txtTcMoneda.setEditable(false);
 		this.txtTipoCambio.setEditable(false);
 		this.cntmotivo.txtCodigo.setEditable(false);
@@ -199,13 +268,51 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenarDesdeVista() {
-
+		docIngreso.setIddocingreso(1);
+		docIngreso.setCorrelativo(this.txtCorrrelativo.getText());
+		docIngreso.setSerie(this.txtCorrrelativo.getText().substring(0, 3));
+		docIngreso.setNumero(this.txtCorrrelativo.getText().substring(5, this.txtCorrrelativo.getText().trim().length()));
+		docIngreso.setFecha(this.datePicker.getDate());
+		docIngreso.setIdmotivo(this.cntmotivo.txtCodigo.getText());
+		docIngreso.setIdresponsable(this.cntresponsable.txtCodigo.getText());
+		docIngreso.setIdsucursal(this.cntsucursal.txtCodigo.getText());
+		docIngreso.setIdalmacen(this.cntalmacen.txtCodigo.getText());
+		docIngreso.setGlosa("");
+		setDetDocingresoL(new ArrayList<DetDocingreso>());
+		for(int i = 0;i < getDetalleTM().getRowCount();i++){
+			DetDocingresoPK detPK = new DetDocingresoPK();
+			DetDocingreso det = new DetDocingreso();
+			detPK.setIdingreso(1);
+			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
+			det.setId(detPK);
+			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
+			det.setIdmedida(getDetalleTM().getValueAt(i, 2).toString());
+			det.setPrecio(BigDecimal.valueOf(Double.parseDouble((getDetalleTM().getValueAt(i, 4).toString()))));
+			det.setImporte(BigDecimal.valueOf(Double.parseDouble((getDetalleTM().getValueAt(i, 5).toString()))));
+			DetDocingresoL.add(det);
+		}
 	}
 
 	@Override
 	public boolean isValidaVista() {
+		boolean band = validaCabecera();
+		return band;
+	}
+	
+	public boolean validaCabecera(){
+		if (this.cntmotivo.txtCodigo.getText().isEmpty())
+			return false;
 		
-		return false;
+		if (this.cntresponsable.txtCodigo.getText().isEmpty())
+			return false;
+		
+		if (this.cntsucursal.txtCodigo.getText().isEmpty())
+			return false;
+		
+		if (this.cntalmacen.txtCodigo.getText().isEmpty())
+			return false;
+		
+		return true;
 	}
 	
 	public DSGTableModel getDetalleTM(){

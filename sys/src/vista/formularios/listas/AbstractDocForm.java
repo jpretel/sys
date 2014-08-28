@@ -28,6 +28,7 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected JTextField txtTcMoneda;
 	protected JLabel lblTcMoneda;
 	protected JLabel lblTipoCambio;
+	protected JXDatePicker datePicker;
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -63,7 +64,7 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		lblFecha.setBounds(163, 11, 29, 14);
 		pnlPrincipal.add(lblFecha);
 		
-		JXDatePicker datePicker = new JXDatePicker();
+		datePicker = new JXDatePicker();
 		datePicker.setBounds(202, 7, 91, 23);
 		datePicker.getEditor().setLocation(0, 8);
 		pnlPrincipal.add(datePicker);
