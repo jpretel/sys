@@ -1,8 +1,6 @@
 package vista.utilitarios;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -67,10 +65,7 @@ public class JTableUtils {
 		rowHeader.setFixedCellWidth(30);
 
 		MouseInputAdapter mouseAdapter = new MouseInputAdapter() {
-			Cursor RESIZE_CURSOR = Cursor
-					.getPredefinedCursor(Cursor.S_RESIZE_CURSOR);
-
-			private int getLocationToIndex(Point point) {
+				private int getLocationToIndex(Point point) {
 				int i = rowHeader.locationToIndex(point);
 				if (!rowHeader.getCellBounds(i, i).contains(point)) {
 					i = -1;
@@ -100,15 +95,11 @@ public class JTableUtils {
 			public void mouseClicked(MouseEvent e){
 				super.mouseClicked(e);
 				int previ = getLocationToIndex(new Point(e.getX(), e.getY() - 3));
-				System.out.println(previ);
-				model.getTable().getSelectionModel().setSelectionInterval(previ, previ);
-				rowHeader.setSelectionBackground(Color.YELLOW);
-			}
-
-			@SuppressWarnings("unused")
-			private boolean isResizeCursor() {
-				return rowHeader.getCursor() == RESIZE_CURSOR;
-			}
+				if (previ > -1 && previ < table.getRowCount()) {
+					model.getTable().getSelectionModel().setSelectionInterval(previ, previ);
+				}
+			
+			}			
 
 			/*
 			 * (non-Javadoc)
@@ -326,6 +317,10 @@ public class JTableUtils {
 
 	class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
 			ActionListener {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		JTable table;
 		JButton button = new JButton();
 		NumberFormat nf = NumberFormat.getCurrencyInstance();

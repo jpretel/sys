@@ -6,23 +6,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import vista.barras.PanelBarraDocumento;
-import vista.controles.ComboBox;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-
-import javax.swing.border.MatteBorder;
-
-import java.awt.Color;
-
-import javax.swing.JComboBox;
-
 import org.jdesktop.swingx.JXDatePicker;
-
-import dao.PtoEmisionDAO;
-import entity.Documento;
-import entity.PtoEmision;
 
 public abstract class AbstractDocForm extends JInternalFrame{
 	/**
@@ -36,9 +24,10 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected static final String NUEVO = "NUEVO";
 	private String estado;	
 	protected JTextField txtCorrrelativo;
-	//private PtoEmisionDAO ptoemisionDAO = new PtoEmisionDAO();
-	//private PtoEmision ptoemision = ptoemisionDAO.find("001");
-
+	protected JTextField txtTipoCambio;
+	protected JTextField txtTcMoneda;
+	protected JLabel lblTcMoneda;
+	protected JLabel lblTipoCambio;
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -71,14 +60,32 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		txtCorrrelativo.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(184, 11, 29, 14);
+		lblFecha.setBounds(163, 11, 29, 14);
 		pnlPrincipal.add(lblFecha);
 		
 		JXDatePicker datePicker = new JXDatePicker();
+		datePicker.setBounds(202, 7, 91, 23);
 		datePicker.getEditor().setLocation(0, 8);
-		datePicker.setBounds(225, 7, 91, 23);
 		pnlPrincipal.add(datePicker);
-		setBounds(100, 100, 610, 325);
+		
+		txtTipoCambio = new JTextField();
+		txtTipoCambio.setBounds(391, 8, 43, 20);
+		txtTipoCambio.setColumns(10);
+		pnlPrincipal.add(txtTipoCambio);
+		
+		lblTipoCambio = new JLabel("Tipo de Cambio");
+		lblTipoCambio.setBounds(303, 11, 78, 14);
+		pnlPrincipal.add(lblTipoCambio);
+		
+		lblTcMoneda = new JLabel("T.C. Moneda");
+		lblTcMoneda.setBounds(444, 11, 62, 14);
+		pnlPrincipal.add(lblTcMoneda);
+		
+		txtTcMoneda = new JTextField();
+		txtTcMoneda.setBounds(518, 8, 43, 20);
+		txtTcMoneda.setColumns(10);
+		pnlPrincipal.add(txtTcMoneda);
+		setBounds(100, 100, 627, 325);
 	}
 	public void iniciar() {
 		llenar_tablas();
