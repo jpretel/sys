@@ -16,10 +16,12 @@ import java.awt.event.MouseEvent;
 import vista.combobox.ComboBox;
 import vista.controles.JTextFieldLimit;
 import vista.utilitarios.ObjetoWeb;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JCheckBox;
 
 public class FrmClieprov extends AbstractMaestro {
 
@@ -47,8 +49,10 @@ public class FrmClieprov extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDireccion;
 	private JTextField txtRuc;
-	private ComboBox cboTipo;
 	private List<String[]> optionList = new ArrayList<String[]>();
+	
+	private JCheckBox chkCliente;		
+	private JCheckBox chkProveedor;
 	
 	public List<Clieprov> getClieprovL() {
 		return clieprovL;
@@ -59,19 +63,19 @@ public class FrmClieprov extends AbstractMaestro {
 	}
 	
 	public FrmClieprov() {
-		super("Edicion de Clientes y Proveedores");		
+		super("Edición de Clientes y Proveedores");		
 		JLabel lblCodigo = new JLabel("idclieprov");
 		
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
 		txtCodigo.setDocument(new JTextFieldLimit(11));
 		
-		JLabel lblRazon_Social = new JLabel("Razon Social");
+		JLabel lblRazon_Social = new JLabel("Razón Social");
 		
 		txtRazon_Social = new JTextField();
 		txtRazon_Social.setColumns(10);
 		
-		JLabel lblDireccion = new JLabel("Direccion");
+		JLabel lblDireccion = new JLabel("Dirección");
 		
 		txtDireccion = new JTextField();
 		txtDireccion.setColumns(10);
@@ -93,12 +97,12 @@ public class FrmClieprov extends AbstractMaestro {
 			}	
 		});
 		
-		optionList.add(new String[]{"C","Cliente"});
-		optionList.add(new String[]{"P","Proveedor"});
+				
+		JLabel lblTipo = new JLabel("tipo:");
 		
-		cboTipo = new vista.combobox.ComboBox(optionList,1);
+		chkCliente = new JCheckBox("Cliente");			
+		chkProveedor = new JCheckBox("Proveedor");
 		
-		JLabel lblTipo = new JLabel("tipo");
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -110,8 +114,11 @@ public class FrmClieprov extends AbstractMaestro {
 					.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
 					.addGap(5)
 					.addComponent(lblTipo)
-					.addGap(10)
-					.addComponent(cboTipo, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(chkCliente)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(chkProveedor)
+					.addGap(198))
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(5)
 					.addComponent(lblRazon_Social, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
@@ -146,8 +153,10 @@ public class FrmClieprov extends AbstractMaestro {
 							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(3)
-							.addComponent(lblTipo))
-						.addComponent(cboTipo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblTipo)
+								.addComponent(chkCliente)
+								.addComponent(chkProveedor))))
 					.addGap(5)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblRazon_Social)
@@ -195,6 +204,14 @@ public class FrmClieprov extends AbstractMaestro {
 
 	@Override
 	public void eliminar() {
+		if (getClieprov()!= null) {
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			
+			if (seleccion == 0){
+				getCdao().remove(getClieprov());
+				//iniciar();
+			}			
+		}
 		setEstado(VISTA);
 		vista_noedicion();
 	}
@@ -207,8 +224,16 @@ public class FrmClieprov extends AbstractMaestro {
 			txtRazon_Social.setText(getClieprov().getRazonSocial());
 			txtDireccion.setText(getClieprov().getDireccion());
 			txtRuc.setText(getClieprov().getRuc());
-			index = (getClieprov().getTipo().trim().equals("C"))?0:1;
-			cboTipo.setSelectedIndex(index);
+			//index = (getClieprov().getTipo().trim().equals("C"))?0:1;
+			if(getClieprov().getTipo().trim().equals("1")){
+				chkCliente.setSelected(true);
+			}else if(getClieprov().getTipo().trim().equals("2")){
+				chkProveedor.setSelected(true);
+			}else{
+				chkCliente.setSelected(true);
+				chkProveedor.setSelected(true);
+			}
+			//cboTipo.setSelectedIndex(index);
 		} else {
 			txtCodigo.setText("");
 			txtRazon_Social.setText("");
@@ -233,7 +258,8 @@ public class FrmClieprov extends AbstractMaestro {
 		txtRazon_Social.setEditable(true);
 		txtDireccion.setEditable(true);
 		txtRuc.setEditable(true);
-		cboTipo.setEnabled(true);
+		chkCliente.setEnabled(true);
+		chkProveedor.setEnabled(true);
 	}
 
 	@Override
@@ -242,8 +268,8 @@ public class FrmClieprov extends AbstractMaestro {
 		txtRazon_Social.setEditable(false);
 		txtDireccion.setEditable(false);
 		txtRuc.setEditable(false);
-		cboTipo.setEditable(false);
-		cboTipo.setEnabled(false);
+		chkCliente.setEnabled(false);
+		chkProveedor.setEnabled(false);
 	}
 
 	@Override
@@ -260,15 +286,54 @@ public class FrmClieprov extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
+		int a=0,b=0;
 		getClieprov().setIdclieprov(txtCodigo.getText());
 		getClieprov().setRazonSocial(txtRazon_Social.getText());
 		getClieprov().setDireccion(txtDireccion.getText());
 		getClieprov().setRuc(txtRuc.getText());
-		getClieprov().setTipo(((String[])cboTipo.getSelectedItem())[0]);		
+		//getClieprov().setTipo(((String[])cboTipo.getSelectedItem())[0]);
+		if(chkCliente.isSelected()){
+			a = 1;
+		}
+		if(chkProveedor.isSelected()){
+			b = 2;
+		}
+		getClieprov().setTipo(""+(a+b));
 	}
 
 	@Override
 	public boolean isValidaVista() {
+		if (this.txtCodigo.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
+			this.txtCodigo.requestFocus();
+			return false;
+		}
+		
+		if (getEstado().equals(NUEVO)) {
+			if (getCdao().find(this.txtCodigo.getText().trim()) != null) {
+				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
+				this.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		
+		if (this.txtDireccion.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Dirección");
+			this.txtDireccion.requestFocus();
+			return false;
+		}
+		
+		if (this.txtRazon_Social.getText().trim().isEmpty()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Razón Social");
+			this.txtRazon_Social.requestFocus();
+			return false;
+		}
+		
+		if (!chkCliente.isSelected() && !chkProveedor.isSelected()) {
+			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Tipo");
+			this.chkCliente.requestFocus();
+			return false;
+		}
 		return true;
 	}
 	
