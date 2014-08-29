@@ -55,4 +55,5 @@ public class cntAlmacen extends AbstractCntBuscar<Almacen> {
 	public void setSucursal(Sucursal sucursal) {
 		this.sucursal = sucursal;
 	}
+	
 }

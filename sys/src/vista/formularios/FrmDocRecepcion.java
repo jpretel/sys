@@ -180,7 +180,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void nuevo() {
-		docIngreso = new Docingreso();		
+		docIngreso = new Docingreso();
+		Date otro = new Date();
+		
+		System.out.println();
 	}
 
 	@Override
