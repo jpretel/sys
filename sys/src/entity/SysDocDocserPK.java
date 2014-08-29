@@ -13,7 +13,7 @@ public class SysDocDocserPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="sys_doc", unique=true, nullable=false, length=3)
+	@Column(name="sys_doc", nullable=false, length=3)
 	private String sysDoc;
 
 	@Column(nullable=false, length=3)

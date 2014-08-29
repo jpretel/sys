@@ -13,10 +13,10 @@ public class SysTituloPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(unique=true)
+	@Column(nullable=false)
 	private String idmodulo;
 
-	@Column(unique=true, nullable=false, length=3)
+	@Column(nullable=false, length=3)
 	private String idtitulo;
 
 	public SysTituloPK() {

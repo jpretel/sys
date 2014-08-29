@@ -16,7 +16,7 @@ public class Modulo implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.TABLE)
-	@Column(unique=true, nullable=false)
+	@Column(nullable=false)
 	private int id;
 
 	@Column(length=50)

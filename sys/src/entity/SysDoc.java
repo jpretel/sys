@@ -18,7 +18,7 @@ public class SysDoc implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="sys_doc", unique=true, nullable=false, length=3)
+	@Column(name="sys_doc", nullable=false, length=3)
 	private String sysDoc;
 
 	@Column(nullable=false, length=75)

@@ -16,7 +16,7 @@ public class GrupoUsuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="idgrupo_usuario", unique=true, nullable=false, length=3)
+	@Column(name="idgrupo_usuario", nullable=false, length=3)
 	private String idgrupoUsuario;
 
 	@Column(length=75)

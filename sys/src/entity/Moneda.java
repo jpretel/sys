@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Moneda implements Serializable {
 
 	@Id
-	@Column(length = 2)
+	@Column(nullable=false, length = 2)
 	private String idmoneda;
 	@Column(length = 75)
 	private String descripcion;

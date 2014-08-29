@@ -15,7 +15,7 @@ public class Clieprov implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(unique=true, nullable=false, length=11)
+	@Column(nullable=false, length=11)
 	private String idclieprov;
 
 	@Column(nullable=false, length=200)

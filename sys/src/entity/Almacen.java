@@ -15,8 +15,7 @@ import javax.persistence.*;
 public class Almacen implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	@Column(unique=true, nullable=false, length=3)
+	@EmbeddedId	
 	private AlmacenPK id;
 
 	@Column(length=75)
