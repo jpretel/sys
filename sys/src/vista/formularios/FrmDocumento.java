@@ -39,6 +39,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTabbedPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmDocumento extends AbstractMaestro {
 
@@ -101,7 +102,7 @@ public class FrmDocumento extends AbstractMaestro {
 							}
 							@Override
 							public void addRow() {
-								// TODO Auto-generated method stub
+								addRow(new Object[] { "", "", "" });
 								
 							}
 						});
@@ -127,7 +128,7 @@ public class FrmDocumento extends AbstractMaestro {
 					}
 					@Override
 					public void addRow() {
-						// TODO Auto-generated method stub
+						addRow(new Object[] { "", "", "" });
 						
 					}
 				});
@@ -174,9 +175,9 @@ public class FrmDocumento extends AbstractMaestro {
 						groupLayout.setHorizontalGroup(
 							groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(10)
+									.addContainerGap()
 									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-									.addGap(4)
+									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addGroup(groupLayout.createSequentialGroup()
 											.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
@@ -199,10 +200,6 @@ public class FrmDocumento extends AbstractMaestro {
 						groupLayout.setVerticalGroup(
 							groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(11)
-									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-									.addGap(5))
-								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(15)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addGroup(groupLayout.createSequentialGroup()
@@ -223,6 +220,10 @@ public class FrmDocumento extends AbstractMaestro {
 										.addComponent(txtCodigoSunat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 									.addGap(1)
 									.addComponent(tabPanel, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addContainerGap()
+									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+									.addContainerGap())
 						);
 						pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -238,6 +239,7 @@ public class FrmDocumento extends AbstractMaestro {
 					}
 				});
 		iniciar();
+				
 	}
 
 	@Override
