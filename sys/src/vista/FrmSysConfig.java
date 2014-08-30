@@ -114,9 +114,7 @@ public class FrmSysConfig extends JFrame {
 			return false;
 		}
 		
-		if (new String(txtClave.getPassword()).isEmpty()) {
-			return false;
-		}
+	
 		if (txtUsuario.getText().trim().isEmpty()) {
 			return false;
 		}

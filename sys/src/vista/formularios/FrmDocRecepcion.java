@@ -52,7 +52,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private List<DetDocingreso> DetDocingresoL;
 	private DocingresoDAO docIngresoDAO = new DocingresoDAO();
 	private DetDocIngresoDAO detDocingresoDAO = new DetDocIngresoDAO(); 
-	
+	private long Id;
 	public List<DetDocingreso> getDetDocingresoL() {
 		return DetDocingresoL;
 	}
@@ -181,9 +181,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void nuevo() {
 		docIngreso = new Docingreso();
-		Date otro = new Date();
-		
-		System.out.println();
+		Id = System.nanoTime();
 	}
 
 	@Override
@@ -270,8 +268,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	}
 
 	@Override
-	public void llenarDesdeVista() {
-		docIngreso.setIddocingreso(1);
+	public void llenarDesdeVista() {		
+		docIngreso.setIddocingreso(Id);
 		docIngreso.setCorrelativo(this.txtCorrrelativo.getText());
 		docIngreso.setSerie(this.txtCorrrelativo.getText().substring(0, 3));
 		docIngreso.setNumero(this.txtCorrrelativo.getText().substring(5, this.txtCorrrelativo.getText().trim().length()));
@@ -285,13 +283,14 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		for(int i = 0;i < getDetalleTM().getRowCount();i++){
 			DetDocingresoPK detPK = new DetDocingresoPK();
 			DetDocingreso det = new DetDocingreso();
-			detPK.setIdingreso(1);
+			detPK.setIdingreso(Id);
 			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
 			det.setId(detPK);
 			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
 			det.setIdmedida(getDetalleTM().getValueAt(i, 2).toString());
-			det.setPrecio(BigDecimal.valueOf(Double.parseDouble((getDetalleTM().getValueAt(i, 4).toString()))));
-			det.setImporte(BigDecimal.valueOf(Double.parseDouble((getDetalleTM().getValueAt(i, 5).toString()))));
+			det.setCantidad(BigDecimal.valueOf(Double.parseDouble((getDetalleTM().getValueAt(i, 4).toString()))));
+			det.setPrecio(BigDecimal.valueOf(Double.parseDouble((getDetalleTM().getValueAt(i, 5).toString()))));
+			det.setImporte(BigDecimal.valueOf(Double.parseDouble((getDetalleTM().getValueAt(i, 6).toString()))));
 			DetDocingresoL.add(det);
 		}
 	}

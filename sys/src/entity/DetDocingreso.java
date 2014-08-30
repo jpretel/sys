@@ -18,16 +18,19 @@ public class DetDocingreso implements Serializable {
 	@EmbeddedId
 	private DetDocingresoPK id;
 
+	@Column(nullable=false, precision=10, scale=2)
+	private BigDecimal cantidad;
+
 	@Column(length=200)
 	private String descripcion;
 
 	@Column(nullable=false, length=4)
 	private String idmedida;
 
-	@Column(nullable=false, precision=17, scale=2)
+	@Column(nullable=false, precision=10, scale=2)
 	private BigDecimal importe;
 
-	@Column(nullable=false, precision=17, scale=2)
+	@Column(nullable=false, precision=10, scale=2)
 	private BigDecimal precio;
 
 	public DetDocingreso() {
@@ -39,6 +42,14 @@ public class DetDocingreso implements Serializable {
 
 	public void setId(DetDocingresoPK id) {
 		this.id = id;
+	}
+
+	public BigDecimal getCantidad() {
+		return this.cantidad;
+	}
+
+	public void setCantidad(BigDecimal cantidad) {
+		this.cantidad = cantidad;
 	}
 
 	public String getDescripcion() {

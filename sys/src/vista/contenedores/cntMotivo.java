@@ -29,7 +29,7 @@ public class cntMotivo extends AbstractCntBuscar<Motivo> {
 		if (entity.getIdmotivo().toLowerCase().startsWith(cad)
 				|| entity.getDescripcion().toLowerCase().startsWith(cad))
 			return true;
-		return true;
+		return false;
 	}
 
 	@Override

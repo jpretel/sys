@@ -13,17 +13,17 @@ public class DetDocingresoPK implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(unique=true, nullable=false)
-	private int idingreso;
+	private long idingreso;
 
 	@Column(unique=true, nullable=false, length=15)
 	private String idproducto;
 
 	public DetDocingresoPK() {
 	}
-	public int getIdingreso() {
+	public long getIdingreso() {
 		return this.idingreso;
 	}
-	public void setIdingreso(int idingreso) {
+	public void setIdingreso(long idingreso) {
 		this.idingreso = idingreso;
 	}
 	public String getIdproducto() {
@@ -49,7 +49,6 @@ public class DetDocingresoPK implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + this.idingreso;
 		hash = hash * prime + this.idproducto.hashCode();
 		
 		return hash;

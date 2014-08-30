@@ -17,7 +17,7 @@ public class Docingreso implements Serializable {
 
 	@Id
 	@Column(unique=true, nullable=false)
-	private int iddocingreso;
+	private long iddocingreso;
 
 	@Column(nullable=false, length=15)
 	private String correlativo;
@@ -50,11 +50,11 @@ public class Docingreso implements Serializable {
 	public Docingreso() {
 	}
 
-	public int getIddocingreso() {
+	public long getIddocingreso() {
 		return this.iddocingreso;
 	}
 
-	public void setIddocingreso(int iddocingreso) {
+	public void setIddocingreso(long iddocingreso) {
 		this.iddocingreso = iddocingreso;
 	}
 
