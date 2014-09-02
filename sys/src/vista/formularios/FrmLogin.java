@@ -143,11 +143,14 @@ public class FrmLogin extends JFrame {
 				listener.stateChanged(ce);
 			}
 			
-			if(chkGuardar.isSelected()){
-				gupk.setIdusuario(usuario.getIdusuario());
-				gupk.setNamehost(localHost.getHostName());
-				gu.setId(gupk);
-				new GuardarUsuarioDAO().crear_editar(gu);
+			gupk.setIdusuario(usuario.getIdusuario());
+			gupk.setNamehost(localHost.getHostName());
+			gu.setId(gupk);
+			
+			if(chkGuardar.isSelected()){				
+				gudao.crear_editar(gu);
+			}else{
+				gudao.remove(gu);
 			}
 			
 			this.dispose();
