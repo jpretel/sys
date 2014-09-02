@@ -12,16 +12,23 @@ import javax.swing.event.ChangeListener;
 
 import vista.Sys;
 import core.security.Encryption;
+import dao.GuardarUsuarioDAO;
 import dao.UsuarioDAO;
+import entity.GuardarUsuario;
+import entity.GuardarUsuarioPK;
 import entity.Usuario;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import javax.swing.JCheckBox;
 
 public class FrmLogin extends JFrame {
 	/**
@@ -32,11 +39,17 @@ public class FrmLogin extends JFrame {
 	private JPasswordField txtClave;
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 	private List<ChangeListener> listenerList = new ArrayList<ChangeListener>();
-
+	private JCheckBox chkGuardar;
+	
+	GuardarUsuario gu;
+	GuardarUsuarioPK gupk;
+	GuardarUsuarioDAO gudao = new GuardarUsuarioDAO();
+	InetAddress localHost;
+	
 	public FrmLogin() {
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(330, 120));
+		setMinimumSize(new Dimension(330, 150));
 		getContentPane().setMinimumSize(new Dimension(600, 600));
 		setResizable(false);
 		setLocationRelativeTo(null);
@@ -62,10 +75,15 @@ public class FrmLogin extends JFrame {
 		getContentPane().add(txtClave);
 
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(62, 64, 89, 23);
+		btnAceptar.setBounds(62, 92, 89, 23);
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				iniciarSesion();
+				try {
+					iniciarSesion();
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		getContentPane().add(btnAceptar);
@@ -77,29 +95,66 @@ public class FrmLogin extends JFrame {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(190, 64, 89, 23);
+		btnCancelar.setBounds(190, 92, 89, 23);
 		getContentPane().add(btnCancelar);
+		
+		chkGuardar = new JCheckBox("Guardar datos");
+		chkGuardar.setBounds(79, 60, 221, 20);
+		getContentPane().add(chkGuardar);
+		
+		try {
+			datosGuardados();
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		}
 	}
 
-	private void iniciarSesion() {
+	private void datosGuardados() throws UnknownHostException{
+		
+		localHost = InetAddress.getLocalHost();
+		
+		for(GuardarUsuario gusu : gudao.findAll()){
+			if(gusu.getId().getNamehost().equals(localHost.getHostName())){
+				Usuario usuario = getUsuarioDAO().find(gusu.getId().getIdusuario());
+				txtUsuario.setText(usuario.getIdusuario());
+				txtClave.setText(Encryption.decrypt(usuario.getClave()));
+				chkGuardar.setSelected(true);
+			}
+		}
+	}
+	
+	private void iniciarSesion() throws UnknownHostException {
 		Sys.usuario = null;
 		String idusuario, clave;
 		idusuario = txtUsuario.getText();
 		clave = new String(txtClave.getPassword());
 		
-		Usuario usuario = getUsuarioDAO().getPorUsuarioClave(idusuario,
-				Encryption.encrypt(clave));
+		localHost = InetAddress.getLocalHost();
+		gu = new GuardarUsuario();
+		gupk = new GuardarUsuarioPK();
 		
+		Usuario usuario = getUsuarioDAO().getPorUsuarioClave(idusuario,
+				Encryption.encrypt(clave));		
+						
 		if (usuario != null) {
 			Sys.usuario = usuario;
 			ChangeEvent ce = new ChangeEvent(this);
 			for (ChangeListener listener : listenerList) {
 				listener.stateChanged(ce);
 			}
+			
+			if(chkGuardar.isSelected()){
+				gupk.setIdusuario(usuario.getIdusuario());
+				gupk.setNamehost(localHost.getHostName());
+				gu.setId(gupk);
+				new GuardarUsuarioDAO().crear_editar(gu);
+			}
+			
 			this.dispose();
+			
 		} else{
-			mensaje_alterta(this, "CLAVEUSUARIO_INC");}
-
+			mensaje_alterta(this, "CLAVEUSUARIO_INC");
+		}
 	}
 
 	public UsuarioDAO getUsuarioDAO() {
