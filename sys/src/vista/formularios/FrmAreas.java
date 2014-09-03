@@ -30,7 +30,6 @@ public class FrmAreas extends AbstractMaestro {
 
 	private static final long serialVersionUID = 1L;
 
-	
 	private Area area;
 
 	private AreaDAO areaDAO = new AreaDAO();
@@ -141,17 +140,30 @@ public class FrmAreas extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
+		String bkEntidad = null;
+		if(getAreaDAO().find(txtCodigo.getText()) != null){
+			bkEntidad = getAreaDAO().find(txtCodigo.getText()).historial();			
+		}
+		
 		getArea().setIdarea(txtCodigo.getText());
-		getArea().setDescripcion(txtDescripcion.getText());
-		getAreaDAO().crear_editar(getArea());		
+		getArea().setDescripcion(txtDescripcion.getText());			
+		
+		if(getAreaDAO().find(getArea().getIdarea()) != null){
+			Historial.validar("Modificar", bkEntidad , getArea().historial(), getTitle());
+		}else{			
+			Historial.validar("Nuevo", getArea().historial(), getTitle() );
+		}	
+		
+		getAreaDAO().crear_editar(getArea());
 	}
 
 	@Override
 	public void eliminar() {
 		if (getArea() != null) {
-			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
 			
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");			
 			if (seleccion == 0){
+				Historial.validar("Eliminar", getArea().historial(), getTitle() );
 				areaDAO.remove(getArea());
 				iniciar();
 			}			

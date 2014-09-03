@@ -34,6 +34,7 @@ public class FrmMarca extends AbstractMaestro {
 	private Marca marca;
 	private MarcaDAO mdao= new MarcaDAO();
 	private List<Marca> Marcas = new ArrayList<Marca>();
+	String bkEntidad = null;
 	
 	public List<Marca> getMarcas() {
 		return Marcas;
@@ -140,6 +141,13 @@ public class FrmMarca extends AbstractMaestro {
 	}
 	
 	public void grabar(){
+		
+		if(getMdao().find(getMarca().getIdmarca()) != null){
+			Historial.validar("Modificar", bkEntidad , getMarca().historial(), getTitle() );
+		}else{			
+			Historial.validar("Nuevo", getMarca().historial(), getTitle());
+		}	
+		
 		 getMdao().crear_editar(getMarca());
 	}
 	public MarcaDAO getMdao() {
@@ -151,6 +159,10 @@ public class FrmMarca extends AbstractMaestro {
 	}
 
 	public void llenarDesdeVista() {
+		if(getMdao().find(txtCodigo.getText()) != null){
+			bkEntidad = getMdao().find(txtCodigo.getText()).historial();			
+		}
+		
 		getMarca().setIdmarca(this.txtCodigo.getText());
 		getMarca().setDescripcion(this.txtDescripcion.getText());
 		getMarca().setNomcorto(this.txtNombreCorto.getText());
@@ -268,6 +280,7 @@ public class FrmMarca extends AbstractMaestro {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
 			
 			if (seleccion == 0){
+				Historial.validar("Eliminar", getMarca().historial(), getTitle() );
 				getMdao().remove(getMarca());
 				iniciar();
 			}			

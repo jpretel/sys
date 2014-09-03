@@ -39,5 +39,9 @@ public class Area implements Serializable {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+	
+	public String historial(){
+        return "Codigo: "+this.idarea + " Descripcion: " + this.descripcion;
+     }
 
 }

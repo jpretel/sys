@@ -79,4 +79,7 @@ public class Marca implements Serializable {
 		return producto;
 	}
 
+	public String historial(){
+        return "Codigo: "+this.idmarca + " Descripcion: " + this.descripcion + " Nombre corto: " + this.nomcorto;
+     }
 }
