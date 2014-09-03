@@ -17,6 +17,12 @@ public class GuardarUsuario implements Serializable {
 	@EmbeddedId
 	private GuardarUsuarioPK id;
 
+	@Column(nullable=false, length=100)
+	private String contra;
+
+	@Column(nullable=false, length=30)
+	private String usuario;
+
 	public GuardarUsuario() {
 	}
 
@@ -26,6 +32,22 @@ public class GuardarUsuario implements Serializable {
 
 	public void setId(GuardarUsuarioPK id) {
 		this.id = id;
+	}
+
+	public String getContra() {
+		return this.contra;
+	}
+
+	public void setContra(String contra) {
+		this.contra = contra;
+	}
+
+	public String getUsuario() {
+		return this.usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 
 }

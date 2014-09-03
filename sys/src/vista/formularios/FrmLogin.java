@@ -115,9 +115,9 @@ public class FrmLogin extends JFrame {
 		
 		for(GuardarUsuario gusu : gudao.findAll()){
 			if(gusu.getId().getNamehost().equals(localHost.getHostName())){
-				Usuario usuario = getUsuarioDAO().find(gusu.getId().getIdusuario());
-				txtUsuario.setText(usuario.getIdusuario());
-				txtClave.setText(Encryption.decrypt(usuario.getClave()));
+				//Usuario usuario = getUsuarioDAO().find(gusu.getId().getIdusuario());
+				txtUsuario.setText(gusu.getUsuario());
+				txtClave.setText(Encryption.decrypt(gusu.getContra()));
 				chkGuardar.setSelected(true);
 			}
 		}
@@ -144,8 +144,10 @@ public class FrmLogin extends JFrame {
 			}
 			
 			gupk.setIdusuario(usuario.getIdusuario());
-			gupk.setNamehost(localHost.getHostName());
+			gupk.setNamehost(localHost.getHostName());			
 			gu.setId(gupk);
+			gu.setUsuario(idusuario);
+			gu.setContra(Encryption.encrypt(clave));
 			
 			if(chkGuardar.isSelected()){				
 				gudao.crear_editar(gu);
