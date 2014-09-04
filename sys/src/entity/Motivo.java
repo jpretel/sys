@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -106,4 +107,7 @@ public class Motivo implements Serializable {
 		this.tipo = tipo;
 	}
 
+	public String historial(){
+        return "Codigo: "+this.idmotivo + " Descripcion: " + this.descripcion;
+     }
 }

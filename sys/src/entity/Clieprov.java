@@ -79,5 +79,18 @@ public class Clieprov implements Serializable {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-
+	
+	public String historial() {
+		String tipoCambio = null;
+		if(tipo.trim().equals("1")){
+			tipoCambio = "Cliente";
+		}else if(tipo.trim().equals("2")){
+			tipoCambio = "Proveedor";
+		}else{
+			tipoCambio = "Ambos";
+		}
+		return "Código: " + idclieprov + ", dirección: "
+				+ direccion + ", razonSocial: " + razonSocial + ", ruc: " + ruc
+				+ ", tipo=" + tipoCambio;
+	}
 }

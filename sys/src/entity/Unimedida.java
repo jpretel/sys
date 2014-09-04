@@ -79,4 +79,7 @@ public class Unimedida implements Serializable {
 		return producto;
 	}
 
+	public String historial(){
+        return "Codigo: "+this.idunimedida + " Descripcion: " + this.descripcion + " Nomenclaruta: " + this.nomenclatura;
+    }
 }

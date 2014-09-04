@@ -61,6 +61,7 @@ public class FrmClieprov extends AbstractMaestro {
 	public void setClieprovL(List<Clieprov> clieprovL) {
 		this.clieprovL = clieprovL;
 	}
+	String bkEntidad = null;
 	
 	public FrmClieprov() {
 		super("Edición de Clientes y Proveedores");		
@@ -194,6 +195,11 @@ public class FrmClieprov extends AbstractMaestro {
 	public void grabar() {	
 		try{
 			if(getClieprov() instanceof Clieprov){
+				if(getCdao().find(getClieprov().getIdclieprov()) != null){
+					Historial.validar("Modificar", bkEntidad , getClieprov().historial(), getTitle() );
+				}else{			
+					Historial.validar("Nuevo", getClieprov().historial(), getTitle());
+				}	
 				getCdao().crear_editar(getClieprov());	
 			}			
 		}catch(Exception ex){
@@ -208,6 +214,7 @@ public class FrmClieprov extends AbstractMaestro {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
 			
 			if (seleccion == 0){
+				Historial.validar("Eliminar", getClieprov().historial(), getTitle() );
 				getCdao().remove(getClieprov());
 				//iniciar();
 			}			
@@ -286,6 +293,10 @@ public class FrmClieprov extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
+		if(getCdao().find(txtCodigo.getText()) != null){
+			bkEntidad = getCdao().find(txtCodigo.getText()).historial();			
+		}
+		
 		int a=0,b=0;
 		getClieprov().setIdclieprov(txtCodigo.getText());
 		getClieprov().setRazonSocial(txtRazon_Social.getText());

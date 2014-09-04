@@ -31,6 +31,8 @@ public class FrmUnimedida extends AbstractMaestro {
 	private Unimedida unimedida;
 	private List<Unimedida> unimedidaL = new ArrayList<Unimedida>();
 	
+	String bkEntidad = null;
+	
 	public List<Unimedida> getUnimedidaL() {
 		return unimedidaL;
 	}
@@ -151,8 +153,16 @@ public class FrmUnimedida extends AbstractMaestro {
 	}
 
 	public void grabar(){
-		try {						
-			getUdao().crear_editar(getUnimedida());		
+		try {		
+			
+			if(getUdao().find(getUnimedida().getIdunimedida()) != null){
+				Historial.validar("Modificar", bkEntidad , getUnimedida().historial(), getTitle() );
+			}else{			
+				Historial.validar("Nuevo", getUnimedida().historial(), getTitle());
+			}
+			
+			getUdao().crear_editar(getUnimedida());	
+			
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
 		}
@@ -235,6 +245,11 @@ public class FrmUnimedida extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
+		
+		if(getUdao().find(txtCodigo.getText()) != null){
+			bkEntidad = getUdao().find(txtCodigo.getText()).historial();			
+		}
+		
 		getUnimedida().setIdunimedida(this.txtCodigo.getText());
 		getUnimedida().setDescripcion(this.txtDescripcion.getText());
 		getUnimedida().setNomenclatura(this.txtNomenclatura.getText());		
@@ -274,6 +289,7 @@ public class FrmUnimedida extends AbstractMaestro {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
 			
 			if (seleccion == 0){
+				Historial.validar("Eliminar", getUnimedida().historial(), getTitle() );
 				getUdao().remove(getUnimedida());
 				iniciar();
 			}			

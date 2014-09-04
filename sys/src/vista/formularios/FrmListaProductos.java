@@ -29,6 +29,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 				.addGap(0, 277, Short.MAX_VALUE)
 		);
 		pnlContenido.setLayout(groupLayout);
+		pnlContenido.setLayout(null);
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);

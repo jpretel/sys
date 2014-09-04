@@ -28,6 +28,7 @@ public class FrmResponsable extends AbstractMaestro {
 	private static final long serialVersionUID = 1L;
 
 	private Responsable responsable;
+	String bkEntidad = null;
 
 	public Responsable getResponsable() {
 		return responsable;
@@ -157,6 +158,11 @@ public class FrmResponsable extends AbstractMaestro {
 
 	@Override
 	public void grabar() {	
+		if(getResponsableDAO().find(getResponsable().getIdresponsable()) != null){
+			Historial.validar("Modificar", bkEntidad , getResponsable().historial(), getTitle() );
+		}else{			
+			Historial.validar("Nuevo", getResponsable().historial(), getTitle());
+		}	
 		getResponsableDAO().crear_editar(getResponsable());
 	}
 
@@ -166,6 +172,7 @@ public class FrmResponsable extends AbstractMaestro {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
 			
 			if (seleccion == 0){
+				Historial.validar("Eliminar", getResponsable().historial(), getTitle() );
 				getResponsableDAO().remove(getResponsable());
 				iniciar();
 			}			
@@ -240,6 +247,9 @@ public class FrmResponsable extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
+		if(getResponsableDAO().find(txtCodigo.getText()) != null){
+			bkEntidad = getResponsableDAO().find(txtCodigo.getText()).historial();			
+		}
 		getResponsable().setIdresponsable(txtCodigo.getText());
 		getResponsable().setNombre(txtDescripcion.getText());		
 	}

@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -51,4 +52,7 @@ public class Responsable implements Serializable {
 		this.nombre = nombre;
 	}
 
+	public String historial(){
+        return "Código: "+this.idresponsable + " Descripción: " + this.nombre + "idArea: "+this.idarea;
+     }
 }

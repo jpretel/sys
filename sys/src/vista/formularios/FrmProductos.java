@@ -43,6 +43,7 @@ public class FrmProductos extends AbstractMaestro {
 	Subgrupo subgrupo = new Subgrupo();
 	Unimedida umedida = new Unimedida();
 	Marca marca = new Marca();
+	String bkEntidad = null;
 
 	public Producto getProducto() {
 		return producto;
@@ -176,6 +177,12 @@ public class FrmProductos extends AbstractMaestro {
 
 	public void grabar() {
 		try {
+			if(pdao.find(getProducto().getIdproductos()) != null){
+				Historial.validar("Modificar", bkEntidad , getProducto().historial(), getTitle() );
+			}else{			
+				Historial.validar("Nuevo", getProducto().historial(), getTitle());
+			}	
+			
 			pdao.crear_editar(getProducto());
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex);
@@ -286,6 +293,10 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
+		if(pdao.find(txtCodigo.getText()) != null){
+			bkEntidad = pdao.find(txtCodigo.getText()).historial();			
+		}
+		
 		getProducto().setIdproductos(this.txtCodigo.getText());
 		getProducto().setDescripcion(this.txtDescripcion.getText());
 		getProducto().setDescCorta(this.txtnomcorto.getText());

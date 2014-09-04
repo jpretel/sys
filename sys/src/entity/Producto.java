@@ -133,5 +133,13 @@ public class Producto implements Serializable {
 	public void setUnimedida(Unimedida unimedida) {
 		this.unimedida = unimedida;
 	}
+	
+	public String historial() {
+		return "Código: " + idproductos + ", descCorta: "
+				+ descCorta + ", descripcion=" + descripcion + ", esDescarte: "
+				+ esDescarte + ", esTerminado: " + esTerminado + ", esVenta: "
+				+ esVenta + ", subgrupo: " + subgrupo.getDescripcion() + ", marca: " + marca.getIdmarca()
+				+ ", unimedida: " + unimedida.getDescripcion();
+	}
 
 }

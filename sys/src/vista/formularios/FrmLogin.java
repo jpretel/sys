@@ -115,7 +115,6 @@ public class FrmLogin extends JFrame {
 		
 		for(GuardarUsuario gusu : gudao.findAll()){
 			if(gusu.getId().getNamehost().equals(localHost.getHostName())){
-				//Usuario usuario = getUsuarioDAO().find(gusu.getId().getIdusuario());
 				txtUsuario.setText(gusu.getUsuario());
 				txtClave.setText(Encryption.decrypt(gusu.getContra()));
 				chkGuardar.setSelected(true);
