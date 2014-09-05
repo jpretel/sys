@@ -19,11 +19,17 @@ public class Documento implements Serializable {
 	@Column(nullable=false, length=3)
 	private String iddocumento;
 
+	@Column(name="nomenclatura", length=50)
+	private String nomenclatura;
+	
 	@Column(name="cod_sunat", length=4)
 	private String codSunat;
 
-	@Column(length=75)
+	@Column(name="descripcion", length=200)
 	private String descripcion;
+	
+	@Column(name="formulario", length=200)
+	private String formulario;
 
 	//bi-directional many-to-one association to DocumentoNumero
 	@OneToMany(mappedBy="documento")
@@ -54,6 +60,22 @@ public class Documento implements Serializable {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	
+	public String getNomenclatura() {
+		return nomenclatura;
+	}
+
+	public void setNomenclatura(String nomenclatura) {
+		this.nomenclatura = nomenclatura;
+	}
+	
+	public String getFormulario() {
+		return formulario;
+	}
+
+	public void setFormulario(String formulario) {
+		this.formulario = formulario;
 	}
 
 	public List<DocumentoNumero> getDocumentoNumeros() {

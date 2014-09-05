@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import dao.DocFormularioDAO;
@@ -31,6 +32,7 @@ import entity.DocumentoNumero;
 import entity.DocumentoNumeroPK;
 import entity.SysOpcion;
 
+import java.awt.ScrollPane;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -42,31 +44,27 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmDocumento extends AbstractMaestro {
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	private JTable tblLista;	
-
-	private JTable tblnumeradores;
-	private JTable tblFormularios;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
 	private Documento documento;
-
+	private JTable tblnumeradores;
+	private JScrollPane scrollPaneNum;
 	private List<Documento> documentos;
 	private List<DocumentoNumero> numeradores;
 	private List<DocFormulario> formularios;
 	private DocumentoDAO documentoDAO = new DocumentoDAO();
-
+	private DefaultTableModel numerador;
 	private DocumentoNumeroDAO docnumDAO = new DocumentoNumeroDAO();
 	private DocFormularioDAO docFormDAO = new DocFormularioDAO(); 
 	private JTextField txtCodigoSunat;
-	
-	private final JTabbedPane tabPanel;
-	private JScrollPane scrollPaneNum;
+	private JTextField textField;
+	private JTextField textField_1;
 	
 	public FrmDocumento() {
 		super("Documentos");
@@ -89,81 +87,34 @@ public class FrmDocumento extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
-		tabPanel = new JTabbedPane(JTabbedPane.TOP);
 		
 		scrollPaneNum = new JScrollPane();
-		tabPanel.addTab("Detalle", null, scrollPaneNum, null);
-				
-		tblnumeradores = new JTable(new DSGTableModel(new String[] {"Pto. Emisión", "Serie", "Nùmero"}) {
-					private static final long serialVersionUID = 1L;
-							@Override
-							public boolean evaluaEdicion(int row, int column) {
-								return getEditar();
-							}
-							@Override
-							public void addRow() {
-								addRow(new Object[] { "", "", "" });
-								
-							}
-						});
+		numerador = new DefaultTableModel();		
+		String columnNames[]=new String[] {"Serie" , "Numero"};
+		numerador.setColumnIdentifiers(columnNames);
+		tblnumeradores = new JTable(new DSGTableModel(new String[] {
+				"Serie" , "Numero" }) {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public boolean evaluaEdicion(int row, int column) {
+				return getEditar();
+			}
+
+			@Override
+			public void addRow() {
+				addRow(new Object[] { "", "" });
+			}
+		});
+		
 		scrollPaneNum.setViewportView(tblnumeradores);
 		tblnumeradores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
 		getNumeradorTM().setNombre_detalle("Numeradores");
 		getNumeradorTM().setObligatorios(0, 1, 2);
 		getNumeradorTM().setRepetidos(0);
-		getNumeradorTM().setScrollAndTable(scrollPaneNum, tblnumeradores);
-		
 		TableColumnModel cModel = tblnumeradores.getColumnModel();
 		cModel.getColumn(0).setCellEditor(new TableTextEditor(15, true));
-				
-		JScrollPane scrollPaneFormularios = new JScrollPane();
-		tabPanel.addTab("Formularios Asociados", null, scrollPaneFormularios, null);
-						
-		tblFormularios = new JTable(new DSGTableModel(new String[]{"idFormulario","Formulario","Activo"}){
-				private static final long serialVersionUID = 1L;
-					@Override
-					public boolean evaluaEdicion(int row, int column) {
-						return getEditar();
-					}
-					@Override
-					public void addRow() {
-						addRow(new Object[] { "", "", "" });
-						
-					}
-				});
-						
-		scrollPaneFormularios.setViewportView(tblFormularios);
-		tblFormularios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-						
-		getFormularioTM().setNombre_detalle("Formulario");
-		getFormularioTM().setObligatorios(0, 1, 2);
-		getFormularioTM().setRepetidos(0);
-		getFormularioTM().setScrollAndTable(scrollPaneFormularios, tblFormularios);
 		
-		TableColumnModel cModel2 = tblnumeradores.getColumnModel();
-		cModel2.getColumn(0).setCellEditor(new TableTextEditor(15, true));
-		
-		final txtidformulario txtidform = new txtidformulario();		
-		DefaultCellEditor editor = new DefaultCellEditor(txtidform);
-		tblFormularios.getColumn("idFormulario").setCellEditor(editor);
-		tblFormularios.getColumn("idFormulario").setPreferredWidth(120);
-						
-		txtidform.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusLost(FocusEvent arg0) {
-						getFormularioTM().setValueAt(txtidform.getDescripcion(), tblFormularios.getSelectedRow(), 1);
-					}
-		});
-						
-						
-		txtidform.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyPressed(KeyEvent ev) {	
-					if(ev.getKeyCode() != 9)
-						txtidform.mostrar(txtidform.getText());
-				}
-		});
+
 				
 		JLabel lblCodigoSunat = new JLabel("Codigo Sunat");
 						
@@ -171,58 +122,77 @@ public class FrmDocumento extends AbstractMaestro {
 		txtCodigoSunat.setColumns(10);
 		txtCodigoSunat.setDocument(new JTextFieldLimit(4, true));
 						
+										JLabel lblFormulario = new JLabel("Formulario");
+						
+						JLabel lblNomenclatura = new JLabel("Nomenclatura");
+						
+						textField = new JTextField();
+						textField.setColumns(10);
+						
+						textField_1 = new JTextField();
+						textField_1.setColumns(10);
+						
 						GroupLayout groupLayout = new GroupLayout(pnlContenido);
 						groupLayout.setHorizontalGroup(
 							groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addContainerGap()
-									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-											.addGap(19)
-											.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE))
-										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-											.addGap(19)
-											.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
-										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(lblCodigoSunat, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-											.addGap(19)
-											.addComponent(txtCodigoSunat, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-											.addGap(93))
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(2)
-											.addComponent(tabPanel, GroupLayout.PREFERRED_SIZE, 314, GroupLayout.PREFERRED_SIZE)))
+										.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblFormulario, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblNomenclatura, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblCodigoSunat, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+										.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtCodigoSunat, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(textField, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
+									.addContainerGap())
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(198)
+									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
 									.addGap(10))
 						);
 						groupLayout.setVerticalGroup(
 							groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(15)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(3)
-											.addComponent(lblCdigo))
-										.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(4)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addGroup(groupLayout.createSequentialGroup()
+													.addGap(18)
+													.addComponent(lblCdigo))
+												.addGroup(groupLayout.createSequentialGroup()
+													.addGap(15)
+													.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addGroup(groupLayout.createSequentialGroup()
+													.addGap(3)
+													.addComponent(lblDescripcin))
+												.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+												.addComponent(lblFormulario)
+												.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+												.addComponent(lblNomenclatura)
+												.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addPreferredGap(ComponentPlacement.UNRELATED)
+											.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+												.addComponent(lblCodigoSunat)
+												.addComponent(txtCodigoSunat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addGap(18)
+											.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
 										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(3)
-											.addComponent(lblDescripcin))
-										.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(6)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(3)
-											.addComponent(lblCodigoSunat))
-										.addComponent(txtCodigoSunat, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(1)
-									.addComponent(tabPanel, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+											.addContainerGap()
+											.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)))
 									.addContainerGap())
 						);
 						pnlContenido.setLayout(groupLayout);
@@ -264,11 +234,7 @@ public class FrmDocumento extends AbstractMaestro {
 		docFormDAO.borrarPorDocumento(getDocumento());
 		for (DocumentoNumero num : getNumeradores()) {
 			docnumDAO.create(num);
-		}
-	
-		for(DocFormulario form : getFormularios()){
-			docFormDAO.create(form);
-		}
+		}		
 	}
 
 	@Override
@@ -276,28 +242,16 @@ public class FrmDocumento extends AbstractMaestro {
 		getDocumento().setIddocumento(this.txtCodigo.getText().trim());
 		getDocumento().setDescripcion(this.txtDescripcion.getText().trim());
 		getDocumento().setCodSunat(this.txtCodigoSunat.getText().trim());
-		setNumeradores(new ArrayList<DocumentoNumero>());
-		setFormularios(new ArrayList<DocFormulario>());
-
+		setNumeradores(new ArrayList<DocumentoNumero>());		
 		for (int i = 0; i < getNumeradorTM().getRowCount(); i++) {
 			DocumentoNumeroPK id = new DocumentoNumeroPK();
 			DocumentoNumero num = new DocumentoNumero();
-
 			id.setIddocumento(getDocumento().getIddocumento());
 			id.setIdptoemision(getNumeradorTM().getValueAt(i, 0).toString());
 			id.setSerie(getNumeradorTM().getValueAt(i, 1).toString());
 			num.setId(id);
 			num.setNumero(getNumeradorTM().getValueAt(i, 2).toString());
 			getNumeradores().add(num);
-		}
-		
-		for(int i = 0;i < getFormularioTM().getRowCount();i++){
-			DocFormulario docFormulario = new DocFormulario();
-			docFormulario.setDocumento(getDocumento());
-			docFormulario.setIddocumento(getDocumento().getIddocumento());
-			docFormulario.setEstado(Integer.parseInt(getFormularioTM().getValueAt(i, 2).toString()));
-			docFormulario.setOpcion(getFormularioTM().getValueAt(i, 0).toString());
-			getFormularios().add(docFormulario);
 		}
 
 	}
@@ -307,26 +261,18 @@ public class FrmDocumento extends AbstractMaestro {
 		SysOpcionDAO sysopcionDAO = new SysOpcionDAO();
 		SysOpcion sysopcion;
 		getNumeradorTM().limpiar();
-		getFormularioTM().limpiar();
 		setNumeradores(new ArrayList<DocumentoNumero>());
-		setFormularios(new ArrayList<DocFormulario>());
 		if (getDocumento() != null) {
 			txtCodigo.setText(getDocumento().getIddocumento());
 			txtDescripcion.setText(getDocumento().getDescripcion());
 			txtCodigoSunat.setText(getDocumento().getCodSunat());
 			setNumeradores(docnumDAO.getPorDocumento(getDocumento()));
-			setFormularios(docFormDAO.getPorDocumento(getDocumento()));
 			for (DocumentoNumero num : getNumeradores()) {
 				getNumeradorTM().addRow(new Object[] {
 						num.getId().getIdptoemision(), num.getId().getSerie(),
 						num.getNumero() });
 			}
-			for (DocFormulario form: getFormularios()){
-				sysopcion = sysopcionDAO.getPorOpcion(form.getOpcion().trim());
-				getFormularioTM().addRow(new Object[]{
-						form.getOpcion(),sysopcion.getDescripcion(),form.getEstado()
-				});
-			}
+			
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
@@ -393,9 +339,7 @@ public class FrmDocumento extends AbstractMaestro {
 		txtDescripcion.setEditable(true);
 		txtCodigoSunat.setEditable(true);
 		getNumeradorTM().setEditar(true);
-		getFormularioTM().setEditar(true);
-		tblnumeradores.setEnabled(true);	
-		tblFormularios.setEnabled(true);	
+		tblnumeradores.setEnabled(true);		
 		scrollPaneNum.setEnabled(true);
 
 	}
@@ -406,9 +350,7 @@ public class FrmDocumento extends AbstractMaestro {
 		txtDescripcion.setEditable(false);
 		txtCodigoSunat.setEditable(false);
 		getNumeradorTM().setEditar(false);
-		getFormularioTM().setEditar(false);
-		tblnumeradores.setEnabled(false);
-		tblFormularios.setEnabled(false);
+		tblnumeradores.setEnabled(false);	
 		scrollPaneNum.setEnabled(false);
 	}
 
@@ -462,21 +404,12 @@ public class FrmDocumento extends AbstractMaestro {
 		this.numeradores = numeradores;
 	}
 	
-	public List<DocFormulario> getFormularios() {
-		return formularios;
-	}
-
-	public void setFormularios(List<DocFormulario> formularios) {
-		this.formularios = formularios;
-	}
-	
 	public DSGTableModel getNumeradorTM(){
-		return ((DSGTableModel) tblnumeradores.getModel());
+		return ((DSGTableModel)tblnumeradores.getModel());
 	}
 	
-	public DSGTableModel getFormularioTM(){
-		return ((DSGTableModel) tblFormularios.getModel());
-	}
+	
+	
 	@Override
 	public void eliminar() {
 		if (getDocumento() != null) {
@@ -489,5 +422,4 @@ public class FrmDocumento extends AbstractMaestro {
 			}			
 		}
 	}
-
 }

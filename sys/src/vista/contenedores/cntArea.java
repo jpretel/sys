@@ -29,7 +29,8 @@ public class cntArea extends AbstractCntBuscar<Area> {
 		if (entity.getIdarea().toLowerCase().startsWith(cad)
 				|| entity.getDescripcion().toLowerCase().startsWith(cad))
 			return true;
-		return true;
+		else
+			return false;
 	}
 
 	@Override

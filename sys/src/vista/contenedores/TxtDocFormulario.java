@@ -53,10 +53,4 @@ public class TxtDocFormulario extends JXTextFieldEntityAC<DocFormulario> {
 	public int getMinimoBusqueda() {
 		return 1;
 	}
-	
-	public String getCorrelativo(String formulario){
-		DocFormulario docFormulario = docFormularioDAO.getPorFormulario(formulario); 
-		return docFormulario.getDocumento().getDocumentoNumeros().get(0).getId().getSerie()+'-'+
-				docFormulario.getDocumento().getDocumentoNumeros().get(0).getNumero();
-	}
 }
