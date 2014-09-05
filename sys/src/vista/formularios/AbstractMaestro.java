@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import vista.barras.PanelBarraMaestro;
+import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JPanel;
 
@@ -216,7 +217,6 @@ public abstract class AbstractMaestro extends JInternalFrame {
 			Historial.validar("Modificar", logBD.historial(),
 					logActual.historial(), getTitle());
 		}
-
 	}
 
 	public abstract void llenarDesdeVista();
@@ -227,6 +227,17 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		for (JTextField text : texts) {
 			text.setEditable(band);
 		}
+	}
+	
+	public boolean TextFieldObligatorios (JTextField... texts) {
+		for (JTextField text : texts) {
+			if (text.getText().trim().isEmpty()) {
+				UtilMensajes.mensaje_alterta("DATO_REQUERIDO", text.getName());
+				text.requestFocus();
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void salir() {
