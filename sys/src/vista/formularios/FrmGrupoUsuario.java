@@ -1,35 +1,47 @@
 package vista.formularios;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import vista.controles.JTextFieldLimit;
+import vista.controles.DSGTableModel;
 import vista.utilitarios.MaestroTableModel;
+import vista.utilitarios.MaestroTreeTableModel;
 
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import dao.GrupoUsuarioDAO;
 import dao.SubdiarioDAO;
+import entity.Consumidor;
 import entity.GrupoUsuario;
 import entity.Subdiario;
+import entity.SysOpcion;
 
 import javax.swing.JCheckBox;
+import javax.swing.JButton;
+
+import org.jdesktop.swingx.JXTreeTable;
 
 public class FrmGrupoUsuario extends AbstractMaestro {
 
 	private static final long serialVersionUID = 1L;
 
 	private GrupoUsuario grupoUsuario;
+	private SysOpcion sysopcion = new SysOpcion();
 
 	private GrupoUsuarioDAO grupoUsuarioDAO = new GrupoUsuarioDAO();
 
@@ -38,24 +50,49 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
 	private JCheckBox chkEsAdministrador;
+	private JXTreeTable tblOpciones;
+	private MaestroTreeTableModel mttm = new MaestroTreeTableModel(new String[] { "Código", "Descripción" }){
+
+		@Override
+		public Object getValueAt(Object node, int column) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Object getChild(Object parent, int index) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public int getChildCount(Object parent) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getIndexOfChild(Object parent, Object child) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+		
+	};
+	JScrollPane scrollPane2 = new JScrollPane();
+	private JLabel lblIngreseOpciones;
 	public FrmGrupoUsuario() {
-		super("SubDiarios");
+		super("Perfil de Grupos");
 
 		getBarra().setFormMaestro(this);
 
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
-		lblCdigo.setBounds(227, 11, 46, 14);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(276, 8, 122, 20);
 		txtCodigo.setColumns(10);
-		txtCodigo.setDocument(new JTextFieldLimit(3, true));
-		
+
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(227, 36, 75, 14);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 207, 273);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -63,54 +100,79 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(286, 33, 122, 20);
-		txtDescripcion.setDocument(new JTextFieldLimit(3, true));
 		
 		chkEsAdministrador = new JCheckBox("Es Administrador");
-
+		chkEsAdministrador.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(chkEsAdministrador.isSelected()){
+					getAlmacenesTM().setEditar(false);
+				}
+			}
+		});
+		
+		
+		tblOpciones = new JXTreeTable();
+		tblOpciones.setTreeTableModel(mttm);
+		tblOpciones.setFillsViewportHeight(true);
+		scrollPane2.setViewportView(tblOpciones);
+		tblOpciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		getAlmacenesTM().setNombre_detalle("Código");
+		getAlmacenesTM().setObligatorios(0, 1);
+		getAlmacenesTM().setRepetidos(0);
+		getAlmacenesTM().setScrollAndTable(scrollPane2, tblOpciones);
+		
+		lblIngreseOpciones = new JLabel("Ingrese Opciones");
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 251, GroupLayout.PREFERRED_SIZE)
+					.addGap(6)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCdigo)
-								.addComponent(lblDescripcin))
-							.addGap(5)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(txtCodigo, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-									.addGap(44))))
+							.addGap(4)
+							.addComponent(lblCdigo)
+							.addGap(26)
+							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(chkEsAdministrador, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addGap(153)))
-					.addContainerGap())
+							.addGap(4)
+							.addComponent(lblDescripcin)
+							.addGap(5)
+							.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+							.addContainerGap())
+						.addComponent(chkEsAdministrador)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(lblIngreseOpciones, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(4)
+							.addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 258, GroupLayout.PREFERRED_SIZE))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(26)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblCdigo)
+						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(26)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCdigo)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblDescripcin))))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(chkEsAdministrador))
+							.addGap(10)
+							.addComponent(lblDescripcin))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)))
-					.addContainerGap())
+							.addGap(6)
+							.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)))
+					.addGap(7)
+					.addComponent(chkEsAdministrador)
+					.addGap(7)
+					.addComponent(lblIngreseOpciones)
+					.addGap(3)
+					.addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE))
 		);
 		pnlContenido.setLayout(groupLayout);
 
@@ -127,8 +189,10 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 					}
 				});
 		iniciar();
+		//getDetalleTM().setEditar(true);
+		
 	}
-
+		
 	@Override
 	public void nuevo() {
 		setGrupoUsuario(new GrupoUsuario());
@@ -168,6 +232,8 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 
 	@Override
 	public void llenar_lista() {
+		
+		
 		tblLista.setFillsViewportHeight(true);
 
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
@@ -193,6 +259,7 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 		txtDescripcion.setEditable(true);
 		chkEsAdministrador.setEnabled(true);
 		tblLista.setEnabled(false);
+		getAlmacenesTM().setEditar(true);
 	}
 
 	@Override
@@ -201,12 +268,18 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 		txtDescripcion.setEditable(false);
 		chkEsAdministrador.setEnabled(false);
 		tblLista.setEnabled(true);
+		getAlmacenesTM().setEditar(false);
 	}
 	
 	@Override
 	public void anular() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void limpiarDetalle() {		
+		getAlmacenesTM().limpiar();
 	}
 
 	@Override
@@ -252,9 +325,11 @@ public class FrmGrupoUsuario extends AbstractMaestro {
 
 	public void setGruposUsuario(List<GrupoUsuario> gruposUsuario) {
 		this.gruposUsuario = gruposUsuario;
+	}	
+	
+	public DSGTableModel getAlmacenesTM() {
+		return ((DSGTableModel) tblOpciones.getModel());
 	}
-
-
-
 	
 }
+

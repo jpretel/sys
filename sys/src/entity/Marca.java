@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import vista.formularios.EntidadLog;
+
 import java.util.List;
 
 
@@ -13,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Marca.findAll", query="SELECT m FROM Marca m")
-public class Marca implements Serializable {
+public class Marca implements Serializable, EntidadLog {
 	private static final long serialVersionUID = 1L;
 
 	@Id

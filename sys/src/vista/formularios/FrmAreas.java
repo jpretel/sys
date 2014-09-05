@@ -29,7 +29,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class FrmAreas extends AbstractMaestro {
 
 	private static final long serialVersionUID = 1L;
-
+	String bkEntidad = null;
 	private Area area;
 
 	private AreaDAO areaDAO = new AreaDAO();
@@ -140,7 +140,7 @@ public class FrmAreas extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		String bkEntidad = null;
+		
 		if(getAreaDAO().find(txtCodigo.getText()) != null){
 			bkEntidad = getAreaDAO().find(txtCodigo.getText()).historial();			
 		}
@@ -163,7 +163,8 @@ public class FrmAreas extends AbstractMaestro {
 			
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");			
 			if (seleccion == 0){
-				Historial.validar("Eliminar", getArea().historial(), getTitle() );
+				logEliminar(getArea());
+				//Historial.validar("Eliminar", getArea().historial(), getTitle() );
 				areaDAO.remove(getArea());
 				iniciar();
 			}			
@@ -277,6 +278,12 @@ public class FrmAreas extends AbstractMaestro {
 		}
 		
 		return true;	
+	}
+
+	@Override
+	public void limpiarDetalle() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
