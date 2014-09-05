@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EtchedBorder;
 
@@ -45,7 +46,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected ComboBox<Documento> cboDocumento = new ComboBox<Documento>();
-	protected TxtDocFormulario txtNumero;
+	protected JTextField txtSerie;
+	protected JTextField txtNumero;
 	private IDocumentoDAO documentoDAO;
 	private JXDatePicker txtDesde;
 	private JXDatePicker txtHasta;
@@ -66,6 +68,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 			"Numero" };
 	
 	protected JLabel lblDocumento;
+	private JTextField textField;
+	private JLabel label;
 
 	/**
 	 * Crea la lista del documento con los filtros por defecto.
@@ -113,75 +117,85 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 		JLabel lblNmero = new JLabel("Correlativo");
 
-		txtNumero = new TxtDocFormulario();
-		txtNumero.setColumns(10);
-
+		txtSerie = new JTextField(10);
+		
+		txtNumero = new JTextField(10);
+		
 		JButton btnActualizar = new JButton("Actualizar");
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				llenarLista();
 			}
 		});
+		
+		this.textField = new JTextField(10);
 		GroupLayout gl_pnlFiltros = new GroupLayout(pnlFiltros);
 		gl_pnlFiltros.setHorizontalGroup(
 			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(lblDesde, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
-							.addGap(46))
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)))
+					.addGap(22)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblHasta, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
+							.addGap(12)
+							.addComponent(lblDesde, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+						.addComponent(this.txtDesde, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
+					.addGap(12)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblHasta, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_pnlFiltros.createSequentialGroup()
 							.addGap(6)
-							.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(lblDocumento, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
-							.addGap(36))
-						.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+							.addComponent(this.txtHasta, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+					.addGap(12)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
-					.addGap(188)
-					.addComponent(btnActualizar, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addContainerGap())
+						.addComponent(this.lblDocumento)
+						.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
+					.addGap(12)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
+						.addComponent(this.txtNumero, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
+					.addGap(3)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addGap(9)
+							.addComponent(this.textField, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getLabel(), GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+					.addGap(116)
+					.addComponent(btnActualizar, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
 		);
 		gl_pnlFiltros.setVerticalGroup(
-			gl_pnlFiltros.createParallelGroup(Alignment.TRAILING)
+			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addContainerGap(11, Short.MAX_VALUE)
+					.addGap(12)
+					.addComponent(lblDesde)
+					.addGap(7)
+					.addComponent(this.txtDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addGap(12)
+					.addComponent(lblHasta)
+					.addGap(7)
+					.addComponent(this.txtHasta, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addGap(12)
+					.addComponent(this.lblDocumento)
+					.addGap(7)
+					.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addGap(12)
+					.addComponent(lblNmero)
+					.addGap(7)
+					.addComponent(this.txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addGap(36)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
+						.addComponent(this.textField, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_pnlFiltros.createSequentialGroup()
-									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblHasta)
-										.addComponent(lblDesde))
-									.addGap(7)
-									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-										.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_pnlFiltros.createSequentialGroup()
-									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblDocumento)
-										.addComponent(lblNmero))
-									.addGap(7)
-									.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.BASELINE)
-										.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))))
-							.addContainerGap())
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(btnActualizar)
-							.addGap(19))))
+							.addGap(3)
+							.addComponent(getLabel()))))
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addGap(12)
+					.addComponent(btnActualizar))
 		);
 		pnlFiltros.setLayout(gl_pnlFiltros);
 
@@ -234,7 +248,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 														btnVer.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
 																.getResource("/main/resources/iconos/abrir.png")).getImage()
 																.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
-		setBounds(100, 100, 555, 325);
+		setBounds(100, 100, 763, 325);
 	}
 
 	/*
@@ -323,4 +337,10 @@ public abstract class AbstractDocList extends JInternalFrame {
 	}
 	
 	public abstract void nuevo();
+	private JLabel getLabel() {
+		if (label == null) {
+			label = new JLabel("-");
+		}
+		return label;
+	}
 }
