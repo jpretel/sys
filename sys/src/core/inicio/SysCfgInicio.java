@@ -5,7 +5,8 @@ public class SysCfgInicio {
 	private String base_datos;
 	private String usuario;
 	private String clave;
-
+	private String tipo_creacion;
+	
 	public String getServidor() {
 		return servidor;
 	}
@@ -49,4 +50,13 @@ public class SysCfgInicio {
 		return getServidor() + " - " + getBase_datos() + "| Usr:"
 				+ getUsuario() + ", Pass: " + getClave();
 	}
+
+	public String getTipo_creacion() {
+		return tipo_creacion;
+	}
+
+	public void setTipo_creacion(String tipo_creacion) {
+		this.tipo_creacion = tipo_creacion;
+	}
+
 }
