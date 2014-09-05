@@ -1,7 +1,5 @@
 package dao;
 
-import java.util.List;
-
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,12 +15,12 @@ public class DocumentoNumeroDAO extends AbstractDAO<DocumentoNumero> {
 		super(DocumentoNumero.class);
 	}
 	
-	public List<DocumentoNumero> getPorDocumento(Documento documento){
+	public DocumentoNumero getPorDocumento(Documento documento){
 		CriteriaQuery<DocumentoNumero> q = cb.createQuery(DocumentoNumero.class);
 		Root<DocumentoNumero> c = q.from(DocumentoNumero.class);
-		Predicate condicion = cb.equal(c.get("documento"), documento);
+		Predicate condicion = cb.equal(c.get("documento"),documento);
 		q.select(c).where(condicion);
-		return getEntityManager().createQuery(q).getResultList();
+		return getEntityManager().createQuery(q).getSingleResult();
 	}
 	
 	public void borrarPorDocumento (Documento documento) {

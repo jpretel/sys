@@ -1,5 +1,4 @@
 package vista.formularios;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.math.BigDecimal;
@@ -7,20 +6,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import vista.contenedores.TxtDocFormulario;
+import vista.contenedores.CntConcepto;
 import vista.contenedores.TxtProducto;
 import vista.contenedores.cntAlmacen;
-import vista.contenedores.cntMotivo;
 import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
 import vista.formularios.listas.AbstractDocForm;
-import vista.utilitarios.editores.TableTextEditor;
 
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.table.TableColumnModel;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,11 +26,16 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import dao.DetDocIngresoDAO;
+import dao.DocFormularioDAO;
 import dao.DocingresoDAO;
+import dao.DocumentoDAO;
+import dao.DocumentoNumeroDAO;
 import entity.DetDocingreso;
 import entity.DetDocingresoPK;
 import entity.DocFormulario;
 import entity.Docingreso;
+import entity.Documento;
+import entity.DocumentoNumero;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 
@@ -42,7 +43,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private cntMotivo cntmotivo;
 	private cntResponsable cntresponsable;
 	private cntSucursal cntsucursal;
 	private cntAlmacen cntalmacen;
@@ -51,8 +51,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private Docingreso docIngreso;
 	private List<DetDocingreso> DetDocingresoL;
 	private DocingresoDAO docIngresoDAO = new DocingresoDAO();
-	private DetDocIngresoDAO detDocingresoDAO = new DetDocIngresoDAO(); 
+	private DetDocIngresoDAO detDocingresoDAO = new DetDocIngresoDAO();
+	private CntConcepto cntmotivo; 
 	private long Id;
+	private String IdDocumento;
 	public List<DetDocingreso> getDetDocingresoL() {
 		return DetDocingresoL;
 	}
@@ -62,8 +64,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	}
 
 	public FrmDocRecepcion() {
-		super("Nota de Ingreso");
-		
+		super("Nota de Ingreso");		
 		JPanel panel = new JPanel();
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -82,7 +83,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		lblConcepto.setBounds(10, 11, 46, 14);
 		panel.add(lblConcepto);
 		
-		cntmotivo = new cntMotivo();
+		cntmotivo = new CntConcepto();
 		cntmotivo.setBounds(66, 11, 222, 21);
 		panel.add(cntmotivo);
 		
@@ -159,18 +160,16 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
 		getDetalleTM().setRepetidos(0);
-		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
-		
-		/*TableColumnModel cModel = tblDetalle.getColumnModel();
-		cModel.getColumn(0).setCellEditor(new TableTextEditor(15, true));*/
-		
+		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);		
 		
 		txtProducto.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				getDetalleTM().setValueAt(txtProducto.getSeleccionado().getDescripcion(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn());
-				getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getIdunimedida(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 1);
-				getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getDescripcion(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 2);
+				if(txtProducto.getText().trim().length() > 0){
+					getDetalleTM().setValueAt(txtProducto.getSeleccionado().getDescripcion(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn());
+					getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getIdunimedida(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 1);
+					getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getDescripcion(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 2);
+				}
 			}
 		});
 		
@@ -193,9 +192,18 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void grabar() {
 		docIngresoDAO.crear_editar(docIngreso);
+		/*if(!docSerieNumeroDAO.getRetornaSerieNumero(IdDocumento, docIngreso.getSerie(), docIngreso.getNumero()) && getEstado().equals(NUEVO)){
+			DocSerieNumero docSerieNumero = new DocSerieNumero();
+			docSerieNumero.setIddocumento(IdDocumento);
+			docSerieNumero.setSerie(docIngreso.getSerie());
+			docSerieNumero.setNumero(docIngreso.getNumero());
+			docSerieNumeroDAO.crear_editar(docSerieNumero);
+		}*/
 		for (DetDocingreso det : getDetDocingresoL()){
 			detDocingresoDAO.crear_editar(det);
 		}
+		
+		
 	}
 
 	@Override
@@ -205,19 +213,20 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		if (docIngreso instanceof Docingreso){
-			this.txtCorrrelativo.setText(docIngreso.getCorrelativo());
-			this.datePicker.setDate(docIngreso.getFecha());
+		if (docIngreso instanceof Docingreso){		
+			this.txtNumero_2.setText(docIngreso.getNumero());
+			this.txtSerie.setText(docIngreso.getSerie());
 			this.cntmotivo.txtCodigo.setText(docIngreso.getIdmotivo());
 			this.cntresponsable.txtCodigo.setText(docIngreso.getIdresponsable());
 			this.cntalmacen.txtCodigo.setText(docIngreso.getIdalmacen());
 		}
 		if(getEstado().equals(NUEVO)){
-			TxtDocFormulario txtDocFormulario = new TxtDocFormulario();
-			txtCorrrelativo.setText(txtDocFormulario.getCorrelativo("FrmListaRecepcion"));
-		
-			Date xfecha = new Date();
-	        datePicker.setDate(xfecha);
+			DocumentoDAO documentoDAO = new DocumentoDAO();
+			Documento documento = documentoDAO.getPorDocumento("FrmListaRecepcion");
+			DocumentoNumeroDAO documentoNDAO = new  DocumentoNumeroDAO();
+			DocumentoNumero documentoN = documentoNDAO.getPorDocumento(documento);
+			this.txtSerie.setText(documentoN.getId().getSerie());
+			this.txtNumero_2.setText(documentoN.getNumero());
 		}
 	}
 
@@ -233,7 +242,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void vista_edicion() {
-		this.txtCorrrelativo.setEditable(true);
+		this.txtSerie.setEditable(true);
 		this.datePicker.setEditable(true);
 		this.txtTcMoneda.setEditable(true);
 		this.txtTipoCambio.setEditable(true);
@@ -246,7 +255,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void vista_noedicion() {
-		this.txtCorrrelativo.setEditable(false);
+		this.txtSerie.setEditable(false);
 		this.datePicker.setEditable(false);
 		this.txtTcMoneda.setEditable(false);
 		this.txtTipoCambio.setEditable(false);
@@ -269,11 +278,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenarDesdeVista() {		
-		docIngreso.setIddocingreso(Id);
-		docIngreso.setCorrelativo(this.txtCorrrelativo.getText());
-		docIngreso.setSerie(this.txtCorrrelativo.getText().substring(0, 3));
-		docIngreso.setNumero(this.txtCorrrelativo.getText().substring(5, this.txtCorrrelativo.getText().trim().length()));
-		docIngreso.setFecha(this.datePicker.getDate());
+		docIngreso.setSerie(this.txtSerie.getText());
+		docIngreso.setNumero(this.txtNumero_2.getText());
 		docIngreso.setIdmotivo(this.cntmotivo.txtCodigo.getText());
 		docIngreso.setIdresponsable(this.cntresponsable.txtCodigo.getText());
 		docIngreso.setIdsucursal(this.cntsucursal.txtCodigo.getText());

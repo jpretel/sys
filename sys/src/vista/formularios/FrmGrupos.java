@@ -225,7 +225,7 @@ public class FrmGrupos extends AbstractMaestro {
 		{			
 			String lcCodigo = this.txtCodigo.getText();				
 			gdao.crear_editar(getGrupo());
-			//sgDAO.borrarPorGrupo(getGrupo());
+			sgDAO.borrarPorGrupo(getGrupo());
 			int nFilas = this.getSubgrupoTM().getRowCount();
 			for(int i = 0;i < nFilas;i++){
 				SubgrupoPK sgpk1 = new SubgrupoPK();
@@ -235,7 +235,7 @@ public class FrmGrupos extends AbstractMaestro {
 				sg1.setDescripcion(getSubgrupoTM().getValueAt(i, 1).toString());
 				sg1.setId(sgpk1);
 				sg1.setGrupo(getGrupo());			
-				sgDAO.crear_editar(sg1);
+				sgDAO.create(sg1);
 			}
 			
 		}catch(Exception ex){
