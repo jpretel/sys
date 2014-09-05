@@ -64,7 +64,7 @@ public class FrmConcepto extends AbstractMaestro {
 	private JTabbedPane tabbedPane;
 	
 	public FrmConcepto() {
-		super("Motivos");
+		super("Conceptos");
 		
 		JLabel lblCodigo = new JLabel("Codigo");
 		
