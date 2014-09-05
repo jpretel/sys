@@ -23,12 +23,13 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected static final String VISTA = "VISTA";
 	protected static final String NUEVO = "NUEVO";
 	private String estado;	
-	protected JTextField txtCorrrelativo;
+	protected JTextField txtNumero_2;
 	protected JTextField txtTipoCambio;
 	protected JTextField txtTcMoneda;
 	protected JLabel lblTcMoneda;
 	protected JLabel lblTipoCambio;
 	protected JXDatePicker datePicker;
+	protected JTextField txtSerie;
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -55,37 +56,43 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		lblNumero.setBounds(10, 11, 59, 14);
 		pnlPrincipal.add(lblNumero);
 		
-		txtCorrrelativo = new JTextField();
-		txtCorrrelativo.setBounds(67, 8, 86, 20);
-		pnlPrincipal.add(txtCorrrelativo);
-		txtCorrrelativo.setColumns(10);
+		txtNumero_2 = new JTextField();
+		txtNumero_2.setEnabled(false);
+		txtNumero_2.setBounds(122, 8, 71, 20);
+		pnlPrincipal.add(txtNumero_2);
+		txtNumero_2.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(163, 11, 29, 14);
+		lblFecha.setBounds(203, 11, 29, 14);
 		pnlPrincipal.add(lblFecha);
 		
 		datePicker = new JXDatePicker();
-		datePicker.setBounds(202, 7, 91, 23);
+		datePicker.setBounds(242, 8, 91, 23);
 		datePicker.getEditor().setLocation(0, 8);
 		pnlPrincipal.add(datePicker);
 		
 		txtTipoCambio = new JTextField();
-		txtTipoCambio.setBounds(391, 8, 43, 20);
+		txtTipoCambio.setBounds(431, 8, 43, 20);
 		txtTipoCambio.setColumns(10);
 		pnlPrincipal.add(txtTipoCambio);
 		
 		lblTipoCambio = new JLabel("Tipo de Cambio");
-		lblTipoCambio.setBounds(303, 11, 78, 14);
+		lblTipoCambio.setBounds(343, 11, 78, 14);
 		pnlPrincipal.add(lblTipoCambio);
 		
 		lblTcMoneda = new JLabel("T.C. Moneda");
-		lblTcMoneda.setBounds(444, 11, 62, 14);
+		lblTcMoneda.setBounds(484, 11, 62, 14);
 		pnlPrincipal.add(lblTcMoneda);
 		
 		txtTcMoneda = new JTextField();
-		txtTcMoneda.setBounds(518, 8, 43, 20);
+		txtTcMoneda.setBounds(558, 8, 43, 20);
 		txtTcMoneda.setColumns(10);
 		pnlPrincipal.add(txtTcMoneda);
+		
+		txtSerie = new JTextField();
+		txtSerie.setColumns(10);
+		txtSerie.setBounds(74, 8, 50, 20);
+		pnlPrincipal.add(txtSerie);
 		setBounds(100, 100, 627, 325);
 	}
 	public void iniciar() {
