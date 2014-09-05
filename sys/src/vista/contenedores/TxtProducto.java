@@ -19,13 +19,13 @@ public class TxtProducto extends JXTextFieldEntityAC<Producto> {
 		if (entity == null) {
 			setText("");
 		} else {
-			setText(entity.getIdproductos());
+			setText(entity.getIdproducto());
 		}
 	}
 	@Override
 	public boolean coincideBusqueda(Producto entity, String cadena) {
 		String cad = cadena.toLowerCase();
-		if (entity.getIdproductos().toLowerCase().startsWith(cad)
+		if (entity.getIdproducto().toLowerCase().startsWith(cad)
 				|| entity.getDescripcion().toLowerCase().startsWith(cad))
 			return true;
 		else
@@ -34,7 +34,7 @@ public class TxtProducto extends JXTextFieldEntityAC<Producto> {
 
 	@Override
 	public Object[] entity2Object(Producto entity) {
-		return new Object[] { entity.getIdproductos(), entity.getDescripcion() };
+		return new Object[] { entity.getIdproducto(), entity.getDescripcion() };
 	}
 
 	public void refrescar() {

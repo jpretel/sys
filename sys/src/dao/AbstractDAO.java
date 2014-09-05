@@ -19,9 +19,9 @@ import vista.Sys;
 public abstract class AbstractDAO<T> {
 	private Class<T> entityClass;
 
-	private EntityManagerFactory factory;
+	protected EntityManagerFactory factory;
 
-	private EntityManager em;
+	protected EntityManager em;
 
 	protected CriteriaBuilder cb;
 
@@ -35,6 +35,17 @@ public abstract class AbstractDAO<T> {
 				Sys.cfgInicio.getUsuario());
 		persistenceMap.put("javax.persistence.jdbc.password",
 				Sys.cfgInicio.getClave());
+		if (Sys.cfgInicio.getTipo_creacion() != null
+				&& !Sys.cfgInicio.getTipo_creacion().isEmpty()) {
+			if (Sys.cfgInicio.getTipo_creacion().equals("UPDATE")) {
+				persistenceMap.put("eclipselink.ddl-generation",
+						"create-or-extend-tables");
+			}
+			if (Sys.cfgInicio.getTipo_creacion().equals("DROP")) {
+				persistenceMap.put("eclipselink.ddl-generation",
+						"drop-and-create-tables");
+			}
+		}
 
 		this.entityClass = entityClass;
 		factory = Persistence.createEntityManagerFactory("sys", persistenceMap);
@@ -76,7 +87,7 @@ public abstract class AbstractDAO<T> {
 
 	/**
 	 * 
-	 * @return Todos los registros de una tabla SELECT * FROM 
+	 * @return Todos los registros de una tabla SELECT * FROM
 	 */
 	public List<T> findAll() {
 		CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder()
@@ -96,6 +107,7 @@ public abstract class AbstractDAO<T> {
 		q.setFirstResult(range[0]);
 		return q.getResultList();
 	}
+
 	/**
 	 * 
 	 * @return El total de registros de una tabla SELECT COUNT(*) FROM

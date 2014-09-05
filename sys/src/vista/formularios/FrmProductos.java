@@ -177,7 +177,7 @@ public class FrmProductos extends AbstractMaestro {
 
 	public void grabar() {
 		try {
-			if(pdao.find(getProducto().getIdproductos()) != null){
+			if(pdao.find(getProducto().getIdproducto()) != null){
 				Historial.validar("Modificar", bkEntidad , getProducto().historial(), getTitle() );
 			}else{			
 				Historial.validar("Nuevo", getProducto().historial(), getTitle());
@@ -227,7 +227,7 @@ public class FrmProductos extends AbstractMaestro {
 			Subgrupo sg = getProducto().getSubgrupo();
 			Grupo g = (sg == null)? null : sg.getGrupo();
 			
-			txtCodigo.setText(this.getProducto().getIdproductos());
+			txtCodigo.setText(this.getProducto().getIdproducto());
 			txtDescripcion.setText(this.getProducto().getDescripcion());
 			txtnomcorto.setText(this.getProducto().getDescCorta());
 			cntmarca.setSeleccionado(getProducto().getMarca());
@@ -297,7 +297,7 @@ public class FrmProductos extends AbstractMaestro {
 			bkEntidad = pdao.find(txtCodigo.getText()).historial();			
 		}
 		
-		getProducto().setIdproductos(this.txtCodigo.getText());
+		getProducto().setIdproducto(this.txtCodigo.getText());
 		getProducto().setDescripcion(this.txtDescripcion.getText());
 		getProducto().setDescCorta(this.txtnomcorto.getText());
 		getProducto().setSubgrupo(this.cntSubGrupo.getSeleccionado());

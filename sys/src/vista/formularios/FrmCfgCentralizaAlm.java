@@ -194,10 +194,9 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 				ids.setIdgrupo(alm.getId().getIdgrupo());
 				ids.setIdsubgrupo(alm.getId().getIdsubgrupo());
 				alm.setSubgrupo(subgrupoDAO.find(ids));
-				
+
 				getCentralizaTM().addRow(
-						new Object[] { 
-								alm.getGrupo().getIdgrupo(),
+						new Object[] { alm.getGrupo().getIdgrupo(),
 								alm.getGrupo().getDescripcion(),
 								alm.getSubgrupo().getId().getIdsubgrupo(),
 								alm.getSubgrupo().getDescripcion(),
@@ -206,7 +205,7 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 			}
 		}
 	}
-
+	
 	@Override
 	public boolean isValidaVista() {
 

@@ -52,7 +52,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 		for (Producto p : prodList) {
 			Subgrupo sg = p.getSubgrupo();
 			Grupo g = (sg == null) ? null : sg.getGrupo();
-			modeloLista.addRow(new Object[] { p.getIdproductos(),
+			modeloLista.addRow(new Object[] { p.getIdproducto(),
 					p.getDescripcion(),
 					(g == null) ? null : g.getDescripcion(),
 					(sg == null) ? null : sg.getDescripcion() });

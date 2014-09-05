@@ -14,7 +14,7 @@ public class Producto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(nullable = false, length = 3)
+	@Column(nullable = false, length = 20)
 	private String idproducto;
 
 	@Column(name = "desc_corta", nullable = false, length = 50)
@@ -44,8 +44,8 @@ public class Producto implements Serializable {
 	// bi-directional many-to-one association to Subgrupo
 	@ManyToOne
 	@JoinColumns({
-			@JoinColumn(name = "subgrupo_grupo_idgrupo", referencedColumnName = "grupo_idgrupo"),
-			@JoinColumn(name = "subgrupo_idsubgrupo", referencedColumnName = "idsubgrupo") })
+			@JoinColumn(name = "idgrupo", referencedColumnName = "idgrupo"),
+			@JoinColumn(name = "idsubgrupo", referencedColumnName = "idsubgrupo") })
 	private Subgrupo subgrupo;
 
 	// bi-directional many-to-one association to Marca
