@@ -16,34 +16,26 @@ public class Consumidor implements Serializable, Cloneable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(nullable=false, length=5)
-	private String id;
-	
+	@Column(nullable=false, length=15)
+	private String idconsumidor;
+
 	@Column(length=75)
 	private String descripcion;
 
-	@Column(length=3)
+	@Column(length=200)
 	private String jerarquia;
 
-	@Column(length=40)
+	@Column(length=1)
 	private String tipo;
 
 	@ManyToOne
-	@JoinColumn(name = "idref_consumidor")
+	@JoinColumn(name = "idref_consumidor", referencedColumnName="idconsumidor")
 	private Consumidor consumidor;
 
 	@OneToMany(mappedBy = "consumidor")
 	private List<Consumidor> consumidors;
 
 	public Consumidor() {
-	}
-
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getDescripcion() {
@@ -91,6 +83,14 @@ public class Consumidor implements Serializable, Cloneable {
 		consumidor.setConsumidor(this);
 
 		return consumidor;
+	}
+	
+	public String getIdconsumidor() {
+		return idconsumidor;
+	}
+
+	public void setIdconsumidor(String idconsumidor) {
+		this.idconsumidor = idconsumidor;
 	}
 
 	public Consumidor removeConsumidor(Consumidor consumidor) {

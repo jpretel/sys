@@ -28,6 +28,7 @@ public class Subgrupo implements Serializable {
 
 	//bi-directional many-to-one association to Grupo
 	@ManyToOne
+	@JoinColumn(name="idgrupo", referencedColumnName= "idgrupo", insertable=false, updatable=false)
 	private Grupo grupo;
 
 	public Subgrupo() {
@@ -70,7 +71,7 @@ public class Subgrupo implements Serializable {
 
 		return producto;
 	}
-
+	
 	public Grupo getGrupo() {
 		return this.grupo;
 	}

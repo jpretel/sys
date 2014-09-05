@@ -15,9 +15,15 @@ public class SubgrupoPK implements Serializable {
 	@Column(nullable=false, length=3)
 	private String idsubgrupo;
 
-	@Column(name="grupo_idgrupo", insertable=false, updatable=false, length=3)
-	private String grupoIdgrupo;
+	@Column(name="idgrupo", length=3)
+	private String idgrupo;
 
+	public String getIdgrupo() {
+		return idgrupo;
+	}
+	public void setIdgrupo(String idgrupo) {
+		this.idgrupo = idgrupo;
+	}
 	public SubgrupoPK() {
 	}
 	public String getIdsubgrupo() {
@@ -25,12 +31,6 @@ public class SubgrupoPK implements Serializable {
 	}
 	public void setIdsubgrupo(String idsubgrupo) {
 		this.idsubgrupo = idsubgrupo;
-	}
-	public String getGrupoIdgrupo() {
-		return this.grupoIdgrupo;
-	}
-	public void setGrupoIdgrupo(String grupoIdgrupo) {
-		this.grupoIdgrupo = grupoIdgrupo;
 	}
 
 	public boolean equals(Object other) {
@@ -43,14 +43,14 @@ public class SubgrupoPK implements Serializable {
 		SubgrupoPK castOther = (SubgrupoPK)other;
 		return 
 			this.idsubgrupo.equals(castOther.idsubgrupo)
-			&& this.grupoIdgrupo.equals(castOther.grupoIdgrupo);
+			&& this.idgrupo.equals(castOther.idgrupo);
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.idsubgrupo.hashCode();
-		hash = hash * prime + this.grupoIdgrupo.hashCode();
+		hash = hash * prime + this.idgrupo.hashCode();
 		
 		return hash;
 	}

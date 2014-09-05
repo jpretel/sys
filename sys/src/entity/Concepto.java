@@ -4,20 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-
-/**
- * The persistent class for the motivos database table.
- * 
- */
 @Entity
-@Table(name="motivos")
-@NamedQuery(name="Motivo.findAll", query="SELECT m FROM Motivo m")
-public class Motivo implements Serializable {
+@Table(name="concepto")
+public class Concepto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(nullable=false, length=3)
-	private String idmotivo;
+	private String idconcepto;
 
 	@Column(nullable=false)
 	private int centraliza;
@@ -40,15 +34,7 @@ public class Motivo implements Serializable {
 	@Column(nullable=false, length=1)
 	private String tipo;
 
-	public Motivo() {
-	}
-
-	public String getIdmotivo() {
-		return this.idmotivo;
-	}
-
-	public void setIdmotivo(String idmotivo) {
-		this.idmotivo = idmotivo;
+	public Concepto() {
 	}
 
 	public int getCentraliza() {
@@ -108,6 +94,14 @@ public class Motivo implements Serializable {
 	}
 
 	public String historial(){
-        return "Codigo: "+this.idmotivo + " Descripcion: " + this.descripcion;
+        return "Codigo: "+this.idconcepto + " Descripcion: " + this.descripcion;
      }
+
+	public String getIdconcepto() {
+		return idconcepto;
+	}
+
+	public void setIdconcepto(String idconcepto) {
+		this.idconcepto = idconcepto;
+	}
 }

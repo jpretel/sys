@@ -11,8 +11,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import dao.MotivosDAO;
-import entity.Motivo;
+import dao.ConceptoDAO;
+import entity.Concepto;
 import vista.combobox.ComboBox;
 import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
-public class FrmMotivos extends AbstractMaestro {
+public class FrmConcepto extends AbstractMaestro {
 	/**
 	 * 
 	 */
@@ -40,22 +40,22 @@ public class FrmMotivos extends AbstractMaestro {
 	private JCheckBox chkSolicitaCompra;
 	private JCheckBox chckSolicitaRecepcion;
 	private int EsTransferencia,centraliza,solicita_compra,solicita_recepcion;
-	private Motivo motivo;
-	public Motivo getMotivo() {
-		return motivo;
+	private Concepto concepto;
+	public Concepto getConcepto() {
+		return concepto;
 	}
 
-	public void setMotivo(Motivo motivo) {
-		this.motivo = motivo;
+	public void setConcepto(Concepto concepto) {
+		this.concepto = concepto;
 	}
 
-	private MotivosDAO mdao= new MotivosDAO();
-	private List<Motivo> motivoL = mdao.findAll(); 
-	public List<Motivo> getMotivoL() {
+	private ConceptoDAO mdao= new ConceptoDAO();
+	private List<Concepto> motivoL = mdao.findAll(); 
+	public List<Concepto> getMotivoL() {
 		return motivoL;
 	}
 
-	public void setMotivoL(List<Motivo> motivoL) {
+	public void setConceptoL(List<Concepto> motivoL) {
 		this.motivoL = motivoL;
 	}
 
@@ -63,7 +63,7 @@ public class FrmMotivos extends AbstractMaestro {
 	private List<String[]> optionList = new ArrayList<String[]>();
 	private JTabbedPane tabbedPane;
 	
-	public FrmMotivos() {
+	public FrmConcepto() {
 		super("Motivos");
 		
 		JLabel lblCodigo = new JLabel("Codigo");
@@ -192,9 +192,9 @@ public class FrmMotivos extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent arg0) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setMotivo(getMotivoL().get(selectedRow));
+							setConcepto(getMotivoL().get(selectedRow));
 						else
-							setMotivo(null);
+							setConcepto(null);
 						llenar_datos();						
 					}
 				});
@@ -203,7 +203,7 @@ public class FrmMotivos extends AbstractMaestro {
 
 	@Override
 	public void nuevo() {
-		setMotivo(new Motivo());
+		setConcepto(new Concepto());
 	}
 
 	@Override
@@ -214,16 +214,16 @@ public class FrmMotivos extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		mdao.crear_editar(getMotivo());
+		mdao.crear_editar(getConcepto());
 	}
 
 	@Override
 	public void eliminar() {
-		if (getMotivo() != null) {
+		if (getConcepto() != null) {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
 			
 			if (seleccion == 0){
-				getMdao().remove(getMotivo());
+				getMdao().remove(getConcepto());
 				iniciar();
 			}			
 		}
@@ -232,21 +232,21 @@ public class FrmMotivos extends AbstractMaestro {
 	@Override
 	public void llenar_datos() {
 		boolean band;
-		if(getMotivo() instanceof Motivo){
-			txtCodigo.setText(getMotivo().getIdmotivo());
-			txtDescripcion.setText(getMotivo().getDescripcion());
-			txtNombreCorto.setText(getMotivo().getNombreCorto());
+		if(getConcepto() instanceof Concepto){
+			txtCodigo.setText(getConcepto().getIdconcepto());
+			txtDescripcion.setText(getConcepto().getDescripcion());
+			txtNombreCorto.setText(getConcepto().getNombreCorto());
 			if (!getEstado().equals(NUEVO)){
-				int indice = (getMotivo().getTipo().equals("I"))? 0: 1; 
+				int indice = (getConcepto().getTipo().equals("I"))? 0: 1; 
 				cboTipo.setSelectedIndex(indice);
 			}
-			band = (getMotivo().getEsTransferencia() == 1) ? true : false;
+			band = (getConcepto().getEsTransferencia() == 1) ? true : false;
 			chkTransferencia.setSelected(band);
-			band = (getMotivo().getCentraliza() == 1) ? true : false;			
+			band = (getConcepto().getCentraliza() == 1) ? true : false;			
 			chkCentraliza.setSelected(band);
-			band = (getMotivo().getSolcitaCompra() == 1) ? true : false;			
+			band = (getConcepto().getSolcitaCompra() == 1) ? true : false;			
 			chkSolicitaCompra.setSelected(band);
-			band = (getMotivo().getSolicitaRecepcion() == 1) ? true : false;			
+			band = (getConcepto().getSolicitaRecepcion() == 1) ? true : false;			
 			chckSolicitaRecepcion.setSelected(band);
 		}else{
 			txtCodigo.setText(null);
@@ -260,11 +260,11 @@ public class FrmMotivos extends AbstractMaestro {
 		tblLista.setFillsViewportHeight(true);
 		MaestroTableModel modelo = (MaestroTableModel)tblLista.getModel();
 		modelo.limpiar();
-		for(Motivo motivo: getMotivoL()){
-			modelo.addRow(new Object[] {motivo.getIdmotivo(),motivo.getDescripcion()});
+		for(Concepto motivo: getMotivoL()){
+			modelo.addRow(new Object[] {motivo.getIdconcepto(),motivo.getDescripcion()});
 		}
 		if(getMotivoL().size() > 0){
-			setMotivo(getMotivoL().get(0));
+			setConcepto(getMotivoL().get(0));
 			tblLista.setRowSelectionInterval(0, 0);
 		}
 
@@ -272,7 +272,7 @@ public class FrmMotivos extends AbstractMaestro {
 
 	@Override
 	public void llenar_tablas() {
-		setMotivoL(getMdao().findAll());
+		setConceptoL(getMdao().findAll());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -311,25 +311,25 @@ public class FrmMotivos extends AbstractMaestro {
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
-		this.setMotivo(motivo);
+		this.setConcepto(concepto);
 		this.llenar_datos();
 		this.vista_noedicion();
 	}
 
 	@Override
 	public void llenarDesdeVista() {		 
-		getMotivo().setIdmotivo(txtCodigo.getText());
-		getMotivo().setDescripcion(txtDescripcion.getText());
-		getMotivo().setNombreCorto(txtNombreCorto.getText());
-		getMotivo().setTipo(((String[])cboTipo.getSelectedItem())[0]);
+		getConcepto().setIdconcepto(txtCodigo.getText());
+		getConcepto().setDescripcion(txtDescripcion.getText());
+		getConcepto().setNombreCorto(txtNombreCorto.getText());
+		getConcepto().setTipo(((String[])cboTipo.getSelectedItem())[0]);
 		EsTransferencia = (chkTransferencia.isSelected()) ? 1 : 0 ;
 		centraliza = (chkCentraliza.isSelected()) ? 1 : 0;
 		solicita_compra = (chkSolicitaCompra.isSelected())? 1:0;
 		solicita_recepcion = (chckSolicitaRecepcion.isSelected())?1:0;
-		getMotivo().setEsTransferencia(EsTransferencia);
-		getMotivo().setCentraliza(centraliza);
-		getMotivo().setSolcitaCompra(solicita_compra);
-		getMotivo().setSolicitaRecepcion(solicita_recepcion);
+		getConcepto().setEsTransferencia(EsTransferencia);
+		getConcepto().setCentraliza(centraliza);
+		getConcepto().setSolcitaCompra(solicita_compra);
+		getConcepto().setSolicitaRecepcion(solicita_recepcion);
 	}
 
 	@Override
@@ -368,11 +368,11 @@ public class FrmMotivos extends AbstractMaestro {
 		return true;
 	}
 
-	public MotivosDAO getMdao() {
+	public ConceptoDAO getMdao() {
 		return mdao;
 	}
 
-	public void setMdao(MotivosDAO mdao) {
+	public void setMdao(ConceptoDAO mdao) {
 		this.mdao = mdao;
 	}
 }

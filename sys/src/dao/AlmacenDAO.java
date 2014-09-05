@@ -21,7 +21,7 @@ public class AlmacenDAO extends AbstractDAO<Almacen> {
 	public List<Almacen> getPorSucursal(Sucursal sucursal) {
 		CriteriaQuery<Almacen> q = cb.createQuery(Almacen.class);
 		Root<Almacen> c = q.from(Almacen.class);
-		Predicate condicion = cb.equal(c.get("sucursal"), sucursal);
+		Predicate condicion = cb.equal( c.get("sucursal"), sucursal);
 		q.select(c).where(condicion);
 		return getEntityManager().createQuery(q).getResultList();
 	}
