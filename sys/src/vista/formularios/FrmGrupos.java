@@ -65,11 +65,11 @@ public class FrmGrupos extends AbstractMaestro {
 	private Grupo grupoE = new Grupo();
 	private JTextField txtDescCorta;
 	private JTable tblSubGrupo;
-	private DefaultTableModel subgrupo;
+	
 	private JScrollPane scrollPane_SubGrupo;
 	JButton button=new JButton("");
 	
-	public DSGTableModel getAlmacenesTM() {
+	public DSGTableModel getSubgrupoTM() {
 		return ((DSGTableModel) tblSubGrupo.getModel());
 	}
 	
@@ -105,9 +105,6 @@ public class FrmGrupos extends AbstractMaestro {
 		JLabel lblSubgrupos = new JLabel("SubGrupos");
 		
 		scrollPane_SubGrupo = new JScrollPane();
-		subgrupo = new DefaultTableModel();		
-		String columnNames[]=new String[] {"Código" , "Descripción"};
-		subgrupo.setColumnIdentifiers(columnNames);
 		tblSubGrupo = new JTable(new DSGTableModel(new String[] {
 				"Código" , "Descripción" }) {
 			private static final long serialVersionUID = 1L;
@@ -125,10 +122,10 @@ public class FrmGrupos extends AbstractMaestro {
 		scrollPane_SubGrupo.setViewportView(tblSubGrupo);
 		tblSubGrupo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);			
 		
-		getAlmacenesTM().setNombre_detalle("Código");
-		getAlmacenesTM().setObligatorios(0, 1);
-		getAlmacenesTM().setRepetidos(0);
-		getAlmacenesTM().setScrollAndTable(scrollPane_SubGrupo, tblSubGrupo);
+		getSubgrupoTM().setNombre_detalle("Código");
+		getSubgrupoTM().setObligatorios(0, 1);
+		getSubgrupoTM().setRepetidos(0);
+		getSubgrupoTM().setScrollAndTable(scrollPane_SubGrupo, tblSubGrupo);
 		
 		TableColumnModel cModel = tblSubGrupo.getColumnModel();
 		cModel.getColumn(0).setCellEditor(new TableTextEditor(3, true));
@@ -213,14 +210,7 @@ public class FrmGrupos extends AbstractMaestro {
 	}
 	@Override
 	public void nuevo() {
-		setGrupo(new Grupo());	
-		limpiar_detalle();		
-	}
-	
-	public void limpiar_detalle(){
-		while (subgrupo.getRowCount() != 0) {
-			subgrupo.removeRow(0);
-		}
+		setGrupo(new Grupo());			
 	}
 
 	@Override
@@ -236,13 +226,13 @@ public class FrmGrupos extends AbstractMaestro {
 			String lcCodigo = this.txtCodigo.getText();				
 			gdao.crear_editar(getGrupo());
 			//sgDAO.borrarPorGrupo(getGrupo());
-			int nFilas = this.subgrupo.getRowCount();		
+			int nFilas = this.getSubgrupoTM().getRowCount();
 			for(int i = 0;i < nFilas;i++){
 				SubgrupoPK sgpk1 = new SubgrupoPK();
 				Subgrupo sg1 = new Subgrupo();
-				sgpk1.setGrupoIdgrupo(lcCodigo);
-				sgpk1.setIdsubgrupo(this.subgrupo.getValueAt(i, 0).toString());
-				sg1.setDescripcion(this.subgrupo.getValueAt(i, 1).toString());
+				sgpk1.setIdgrupo(lcCodigo);
+				sgpk1.setIdsubgrupo(getSubgrupoTM().getValueAt(i, 0).toString());
+				sg1.setDescripcion(getSubgrupoTM().getValueAt(i, 1).toString());
 				sg1.setId(sgpk1);
 				sg1.setGrupo(getGrupo());			
 				sgDAO.crear_editar(sg1);
@@ -303,12 +293,11 @@ public class FrmGrupos extends AbstractMaestro {
 	
 	private void llenar_detalle() {
 		String Codigo = this.txtCodigo.getText();
-		while(subgrupo.getRowCount() != 0){			
-				subgrupo.removeRow(0);			
-		}		
+		getSubgrupoTM().limpiar();
+		
 		for(Subgrupo subgrupoEnt : sgDAO.findAll()){			
-			if(Codigo.equals(subgrupoEnt.getId().getGrupoIdgrupo())){
-				subgrupo.addRow(new Object[] { subgrupoEnt.getId().getIdsubgrupo(), subgrupoEnt.getDescripcion()});
+			if(Codigo.equals(subgrupoEnt.getId().getIdgrupo())){
+				getSubgrupoTM().addRow(new Object[] { subgrupoEnt.getId().getIdsubgrupo(), subgrupoEnt.getDescripcion()});
 			}
 		}
 	}
@@ -339,7 +328,7 @@ public class FrmGrupos extends AbstractMaestro {
 		txtDescripcion.setEditable(true);
 		this.txtDescCorta.setEditable(true);
 		tblLista.setEnabled(false);
-		getAlmacenesTM().setEditar(true);
+		getSubgrupoTM().setEditar(true);
 	}
 	@Override
 	public void vista_noedicion() {
@@ -347,7 +336,7 @@ public class FrmGrupos extends AbstractMaestro {
 		txtDescripcion.setEditable(false);
 		this.txtDescCorta.setEditable(false);
 		tblLista.setEnabled(true);
-		getAlmacenesTM().setEditar(false);
+		getSubgrupoTM().setEditar(false);
 	}
 
 	@Override
@@ -400,6 +389,6 @@ public class FrmGrupos extends AbstractMaestro {
 	}
 	
 	private boolean validarDetalles() {
-		return getAlmacenesTM().esValido();
+		return getSubgrupoTM().esValido();
 	}
 }

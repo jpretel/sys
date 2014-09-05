@@ -1,40 +1,40 @@
 package vista.contenedores;
 
-import dao.MotivosDAO;
-import entity.Motivo;
+import dao.ConceptoDAO;
+import entity.Concepto;
 
-public class cntMotivo extends AbstractCntBuscar<Motivo> {
+public class CntConcepto extends AbstractCntBuscar<Concepto> {
 	private static final long serialVersionUID = 1L;
-	private MotivosDAO motivoDAO = new MotivosDAO();
+	private ConceptoDAO motivoDAO = new ConceptoDAO();
 
-	public cntMotivo() {
+	public CntConcepto() {
 		super();
 		refrescar();
 	}
 
 	@Override
-	public void cargarDatos(Motivo entity) {
+	public void cargarDatos(Concepto entity) {
 		if (entity == null) {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
 		} else {
-			txtCodigo.setText(entity.getIdmotivo());
+			txtCodigo.setText(entity.getIdconcepto());
 			txtDescripcion.setText(entity.getDescripcion());
 		}
 	}
 
 	@Override
-	public boolean coincideBusqueda(Motivo entity, String cadena) {
+	public boolean coincideBusqueda(Concepto entity, String cadena) {
 		String cad = cadena.toLowerCase();
-		if (entity.getIdmotivo().toLowerCase().startsWith(cad)
+		if (entity.getIdconcepto().toLowerCase().startsWith(cad)
 				|| entity.getDescripcion().toLowerCase().startsWith(cad))
 			return true;
 		return false;
 	}
 
 	@Override
-	public Object[] entity2Object(Motivo entity) {
-		return new Object[] { entity.getIdmotivo(), entity.getDescripcion() };
+	public Object[] entity2Object(Concepto entity) {
+		return new Object[] { entity.getIdconcepto(), entity.getDescripcion() };
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import javax.persistence.criteria.Root;
 import entity.Almacen;
 import entity.Consumidor;
 import entity.Consumidor_;
-import entity.Sucursal;
 
 public class ConsumidorDAO extends AbstractDAO<Consumidor> {
 
@@ -25,6 +24,13 @@ public class ConsumidorDAO extends AbstractDAO<Consumidor> {
 		q.orderBy(cb.asc(c.get(Consumidor_.jerarquia)));
 		return getEntityManager().createQuery(q).getResultList();
 	}
+
+	public String findMaxJerarquia() {
+		CriteriaQuery<String> q = cb.createQuery(String.class);
+		Root c = q.from(Consumidor.class);
+		q.select(cb.max(c.get(Consumidor_.jerarquia)));
+		return getEntityManager().createQuery(q).getSingleResult();
+	}
 	
 	public List<Consumidor> borrarByJerarquia() {
 		CriteriaQuery<Consumidor> q = cb.createQuery(Consumidor.class);
@@ -33,11 +39,10 @@ public class ConsumidorDAO extends AbstractDAO<Consumidor> {
 		q.orderBy(cb.asc(c.get(Consumidor_.jerarquia)));
 		return getEntityManager().createQuery(q).getResultList();
 	}
-	
+
 	public void borrarPorConsumidor(Consumidor consumidor) {
 		getEntityManager().getTransaction().begin();
-		CriteriaDelete<Almacen> delete = cb
-				.createCriteriaDelete(Almacen.class);
+		CriteriaDelete<Almacen> delete = cb.createCriteriaDelete(Almacen.class);
 		Root<Almacen> c = delete.from(Almacen.class);
 		delete.where(cb.equal(c.get("consumidor"), consumidor));
 		Query query = getEntityManager().createQuery(delete);

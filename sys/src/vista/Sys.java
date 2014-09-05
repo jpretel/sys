@@ -1,6 +1,7 @@
 package vista;
 
 import java.io.File;
+import java.util.List;
 
 import static vista.utilitarios.UtilMensajes.mensaje_alterta;
 
@@ -14,8 +15,10 @@ import core.inicio.ConectionManager;
 import core.inicio.ConfigInicial;
 import core.inicio.SysCfgInicio;
 import core.security.Encryption;
+import dao.EmpresaDAO;
 import dao.GrupoUsuarioDAO;
 import dao.UsuarioDAO;
+import entity.Empresa;
 import entity.GrupoUsuario;
 import entity.Usuario;
 
@@ -29,7 +32,8 @@ public class Sys {
 	public static SysCfgInicio cfgInicio;
 
 	public static Usuario usuario;
-	
+	public static Empresa empresa;
+
 	public static Mensajes mensajes;
 	private FrmSysConfig frm = new FrmSysConfig();
 	public static MainFrame mainF;
@@ -60,9 +64,9 @@ public class Sys {
 	}
 
 	public void iniciar() {
-		
+
 		mensajes = new Mensajes("ESPANOL");
-		
+
 		File sys_file = new File(SYS_CONFIG);
 		String[] datos = null;
 		frm = new FrmSysConfig();
@@ -111,6 +115,8 @@ public class Sys {
 	public void abrir() {
 		frm.dispose();
 
+		EmpresaDAO empresaDAO = new EmpresaDAO();
+
 		GrupoUsuario grpAdmin = new GrupoUsuarioDAO().find("ADM");
 
 		if (grpAdmin == null) {
@@ -131,6 +137,19 @@ public class Sys {
 			new UsuarioDAO().create(u);
 		}
 
+		Empresa empresa = empresaDAO.find('0');
+
+		if (empresa == null) {
+			empresa = new Empresa();
+			empresa.setId('0');
+			empresa.setRazon_social("Nueva Empresa");
+			empresa.setRuc("12345678901");
+			empresa.setDireccion("Nueva Dirección");
+			empresaDAO.create(empresa);
+		}
+
+		Sys.empresa = empresa;
+		
 		FrmLogin frm = new FrmLogin();
 		frm.setVisible(true);
 
@@ -144,10 +163,8 @@ public class Sys {
 	private void iniciaMainFrame() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-
 				new MainFrame();
 			}
-
 		});
 	}
 

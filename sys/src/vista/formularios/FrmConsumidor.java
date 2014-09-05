@@ -156,7 +156,7 @@ public class FrmConsumidor extends AbstractMaestro {
 	
 	@Override
 	public void llenarDesdeVista() {
-		getConsumidor().setId(txtCodigo.getText());
+		getConsumidor().setIdconsumidor(txtCodigo.getText());
 		getConsumidor().setDescripcion(txtDescripcion.getText());
 		if (getEstado().equals(NUEVO)) {
 			if ((getConsumidorPADRE() == null || chkEsConsumidorInicial
@@ -215,7 +215,7 @@ public class FrmConsumidor extends AbstractMaestro {
 	@Override
 	public void llenar_datos() {
 		if (getConsumidor() != null) {
-			txtCodigo.setText(getConsumidor().getId());
+			txtCodigo.setText(getConsumidor().getIdconsumidor());
 			txtDescripcion.setText(getConsumidor().getDescripcion());
 		} else {
 			txtCodigo.setText("");
@@ -235,7 +235,7 @@ public class FrmConsumidor extends AbstractMaestro {
 
 		for (Consumidor hijo : lista) {
 			if (hijo.getConsumidor() != null
-					&& padre.getId().equals(hijo.getConsumidor().getId())) {
+					&& padre.getIdconsumidor().equals(hijo.getConsumidor().getIdconsumidor())) {
 				padre.addConsumidor(hijo);
 				llenar_arbol(hijo, lista);
 			}
@@ -364,7 +364,7 @@ class ConsumidorTreeTableModel extends MaestroTreeTableModel {
 		Consumidor treenode = (Consumidor) node;
 		switch (column) {
 		case 0:
-			return treenode.getId();
+			return treenode.getIdconsumidor();
 		case 1:
 			return treenode.getDescripcion();
 		default:
