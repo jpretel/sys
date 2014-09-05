@@ -58,64 +58,126 @@ public class FrmUsuario extends AbstractMaestro {
 		JLabel lblGrupoUsuario = new JLabel("Grupo Usuario");
 
 		txtidgrupo = new JTextField();
-		
+
 		txtClaveR = new JPasswordField();
-		
+
 		JLabel lblRepitaLaClave = new JLabel("Repita Clave:");
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-					.addGap(10)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblId, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblUsuario, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblCLave, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblRepitaLaClave, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblGrupoUsuario, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
-					.addGap(3)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtNombres, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-						.addComponent(txtClave, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-						.addComponent(txtClaveR, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-						.addComponent(txtidgrupo, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-						.addComponent(txtidUsuario, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(11)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
-					.addGap(11))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(15)
-					.addComponent(lblId)
-					.addGap(19)
-					.addComponent(lblUsuario)
-					.addGap(19)
-					.addComponent(lblCLave)
-					.addGap(19)
-					.addComponent(lblRepitaLaClave)
-					.addGap(19)
-					.addComponent(lblGrupoUsuario))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(txtidUsuario, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(txtNombres, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(txtClave, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(txtClaveR, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(txtidgrupo, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
-		);
+		groupLayout
+				.setHorizontalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGap(10)
+										.addComponent(scrollPane,
+												GroupLayout.DEFAULT_SIZE, 274,
+												Short.MAX_VALUE)
+										.addGap(10)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																lblId,
+																GroupLayout.PREFERRED_SIZE,
+																73,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																lblUsuario,
+																GroupLayout.PREFERRED_SIZE,
+																62,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																lblCLave,
+																GroupLayout.PREFERRED_SIZE,
+																42,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																lblRepitaLaClave,
+																GroupLayout.PREFERRED_SIZE,
+																73,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																lblGrupoUsuario,
+																GroupLayout.PREFERRED_SIZE,
+																80,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(3)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																txtNombres,
+																GroupLayout.DEFAULT_SIZE,
+																132,
+																Short.MAX_VALUE)
+														.addComponent(
+																txtClave,
+																GroupLayout.DEFAULT_SIZE,
+																132,
+																Short.MAX_VALUE)
+														.addComponent(
+																txtClaveR,
+																GroupLayout.DEFAULT_SIZE,
+																132,
+																Short.MAX_VALUE)
+														.addComponent(
+																txtidgrupo,
+																GroupLayout.DEFAULT_SIZE,
+																132,
+																Short.MAX_VALUE)
+														.addComponent(
+																txtidUsuario,
+																GroupLayout.PREFERRED_SIZE,
+																152,
+																GroupLayout.PREFERRED_SIZE))
+										.addContainerGap()));
+		groupLayout.setVerticalGroup(groupLayout
+				.createParallelGroup(Alignment.LEADING)
+				.addGroup(
+						groupLayout
+								.createSequentialGroup()
+								.addGap(11)
+								.addComponent(scrollPane,
+										GroupLayout.DEFAULT_SIZE, 235,
+										Short.MAX_VALUE).addGap(11))
+				.addGroup(
+						groupLayout.createSequentialGroup().addGap(15)
+								.addComponent(lblId).addGap(19)
+								.addComponent(lblUsuario).addGap(19)
+								.addComponent(lblCLave).addGap(19)
+								.addComponent(lblRepitaLaClave).addGap(19)
+								.addComponent(lblGrupoUsuario))
+				.addGroup(
+						groupLayout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(txtidUsuario,
+										GroupLayout.PREFERRED_SIZE, 22,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(11)
+								.addComponent(txtNombres,
+										GroupLayout.PREFERRED_SIZE, 22,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(11)
+								.addComponent(txtClave,
+										GroupLayout.PREFERRED_SIZE, 22,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(11)
+								.addComponent(txtClaveR,
+										GroupLayout.PREFERRED_SIZE, 22,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(11)
+								.addComponent(txtidgrupo,
+										GroupLayout.PREFERRED_SIZE, 22,
+										GroupLayout.PREFERRED_SIZE)));
 		pnlContenido.setLayout(groupLayout);
-		//pnlContenido.setFocusTraversalPolicy(new FocusTraversalOnArray(	
-		//		new Component[] { scrollPane, tblLista, lblId, txtidUsuario, lblUsuario, txtClave, lblCLave, txtNombres,	lblGrupoUsuario, txtidgrupo }));
+		// pnlContenido.setFocusTraversalPolicy(new FocusTraversalOnArray(
+		// new Component[] { scrollPane, tblLista, lblId, txtidUsuario,
+		// lblUsuario, txtClave, lblCLave, txtNombres, lblGrupoUsuario,
+		// txtidgrupo }));
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -135,6 +197,7 @@ public class FrmUsuario extends AbstractMaestro {
 	@Override
 	public void nuevo() {
 		setusuario(new Usuario());
+		getusuario().setClave("");
 	}
 
 	@Override
@@ -148,13 +211,15 @@ public class FrmUsuario extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
-		if (getusuario() != null) {			
+		if (getusuario() != null) {
 			txtidUsuario.setText(getusuario().getIdusuario());
 			txtNombres.setText(getusuario().getNombres());
-			txtidgrupo.setText(getusuario().getGrupoUsuario().getDescripcion());
+
+			txtidgrupo.setText((getusuario().getGrupoUsuario() == null) ? ""
+					: getusuario().getGrupoUsuario().getDescripcion());
 			txtClave.setText(Encryption.decrypt(getusuario().getClave()));
 			txtClaveR.setText(Encryption.decrypt(getusuario().getClave()));
-			
+
 		} else {
 			txtidUsuario.setText("");
 			txtNombres.setText("");

@@ -11,7 +11,7 @@ public class Historial {
 	
 	public static void validar(String tipo, String historial, String nomFormulario){
 		if(tipo.equals("Nuevo") || tipo.equals("Eliminar")){
-			log.setIdlog(""+(logDao.findAll().size()+1));
+			log.setIdlog(logDao.findAll().size()+1);
 			log.setUsuario(Sys.usuario.getIdusuario());
 			log.setLog(historial);
 			log.setTipo(tipo);
@@ -21,7 +21,7 @@ public class Historial {
 	}
 	
 	public static void validar(String tipo, String logAnt, String historial, String nomFormulario){
-		log.setIdlog(""+(logDao.findAll().size()+1));
+		log.setIdlog(logDao.findAll().size()+1);
 		log.setUsuario(Sys.usuario.getIdusuario());
 		log.setLog(logAnt + " POR " +historial);
 		log.setTipo(tipo);

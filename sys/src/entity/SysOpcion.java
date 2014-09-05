@@ -1,6 +1,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.*;
 
 
@@ -87,5 +89,7 @@ public class SysOpcion implements Serializable {
 	public void setOpcion(String opcion) {
 		this.opcion = opcion;
 	}
+	
+	
 
 }

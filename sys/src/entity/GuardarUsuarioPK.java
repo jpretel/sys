@@ -12,7 +12,7 @@ public class GuardarUsuarioPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(unique=true, nullable=false, length=5)
+	@Column(unique=true, nullable=false, length=50)
 	private String namehost;
 
 	@Column(unique=true, nullable=false, length=50)

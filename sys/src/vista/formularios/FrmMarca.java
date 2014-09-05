@@ -1,6 +1,5 @@
 package vista.formularios;
 
-
 import java.awt.Component;
 import java.util.List;
 import java.util.ArrayList;
@@ -32,10 +31,9 @@ public class FrmMarca extends AbstractMaestro {
 	private JTextField txtNombreCorto;
 	private JTable tblLista;
 	private Marca marca;
-	private MarcaDAO mdao= new MarcaDAO();
+	private MarcaDAO mdao = new MarcaDAO();
 	private List<Marca> Marcas = new ArrayList<Marca>();
-	String bkEntidad = null;
-	
+
 	public List<Marca> getMarcas() {
 		return Marcas;
 	}
@@ -54,25 +52,25 @@ public class FrmMarca extends AbstractMaestro {
 
 	public FrmMarca() {
 		super("Marca de Productos");
-		
+
 		JLabel lblCodigo = new JLabel("Codigo");
-		
+
 		JLabel lblDescripcion = new JLabel("Descripcion");
-		
+
 		JLabel lblNomenclatura = new JLabel("Nombre Corto");
-		
+
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
 		txtCodigo.setDocument(new JTextFieldLimit(3, true));
-		
+
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
-		
+
 		txtNombreCorto = new JTextField();
 		txtNombreCorto.setColumns(10);
 		txtNombreCorto.setDocument(new JTextFieldLimit(30, true));
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setAlignmentY(Component.TOP_ALIGNMENT);
 		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -80,76 +78,111 @@ public class FrmMarca extends AbstractMaestro {
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-					.addGap(10)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(3)
-							.addComponent(lblCodigo))
-						.addComponent(lblDescripcion)
-						.addComponent(lblNomenclatura))
-					.addGap(21)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtCodigo)
-							.addGap(105))
-						.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtNombreCorto)
-							.addGap(105)))
-					.addGap(10))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(11)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
-					.addGap(15))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(11)
-					.addComponent(lblCodigo, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-					.addGap(1)
-					.addComponent(lblDescripcion)
-					.addGap(17)
-					.addComponent(lblNomenclatura))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(24)
-					.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
-					.addComponent(txtNombreCorto, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-		);
+		groupLayout
+				.setHorizontalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGap(10)
+										.addComponent(scrollPane,
+												GroupLayout.DEFAULT_SIZE, 230,
+												Short.MAX_VALUE)
+										.addGap(10)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(3)
+																		.addComponent(
+																				lblCodigo))
+														.addComponent(
+																lblDescripcion)
+														.addComponent(
+																lblNomenclatura))
+										.addGap(21)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addComponent(
+																				txtCodigo)
+																		.addGap(105))
+														.addComponent(
+																txtDescripcion,
+																GroupLayout.DEFAULT_SIZE,
+																191,
+																Short.MAX_VALUE)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addComponent(
+																				txtNombreCorto)
+																		.addGap(105)))
+										.addGap(10)));
+		groupLayout.setVerticalGroup(groupLayout
+				.createParallelGroup(Alignment.LEADING)
+				.addGroup(
+						groupLayout
+								.createSequentialGroup()
+								.addGap(11)
+								.addComponent(scrollPane,
+										GroupLayout.DEFAULT_SIZE, 230,
+										Short.MAX_VALUE).addGap(15))
+				.addGroup(
+						groupLayout
+								.createSequentialGroup()
+								.addGap(11)
+								.addComponent(lblCodigo,
+										GroupLayout.PREFERRED_SIZE, 46,
+										GroupLayout.PREFERRED_SIZE).addGap(1)
+								.addComponent(lblDescripcion).addGap(17)
+								.addComponent(lblNomenclatura))
+				.addGroup(
+						groupLayout
+								.createSequentialGroup()
+								.addGap(24)
+								.addComponent(txtCodigo,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(11)
+								.addComponent(txtDescripcion,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(11)
+								.addComponent(txtNombreCorto,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)));
 		pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
-					@Override					
+					@Override
 					public void valueChanged(ListSelectionEvent arg0) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
 							setMarca(getMarcas().get(selectedRow));
 						else
 							setMarca(null);
-						llenar_datos();						
+						llenar_datos();
 					}
 				});
 		iniciar();
 	}
-	
+
 	public void grabar(){
-		
-		if(getMdao().find(getMarca().getIdmarca()) != null){
-			Historial.validar("Modificar", bkEntidad , getMarca().historial(), getTitle() );
-		}else{			
-			Historial.validar("Nuevo", getMarca().historial(), getTitle());
-		}	
-		
-		 getMdao().crear_editar(getMarca());
+		logModificar(mdao.find(getMarca().getIdmarca()), getMarca());
+		getMdao().crear_editar(getMarca());
 	}
+
 	public MarcaDAO getMdao() {
 		return mdao;
 	}
@@ -159,13 +192,12 @@ public class FrmMarca extends AbstractMaestro {
 	}
 
 	public void llenarDesdeVista() {
-		if(getMdao().find(txtCodigo.getText()) != null){
-			bkEntidad = getMdao().find(txtCodigo.getText()).historial();			
-		}
 		
+		setMarca(new Marca());
 		getMarca().setIdmarca(this.txtCodigo.getText());
 		getMarca().setDescripcion(this.txtDescripcion.getText());
 		getMarca().setNomcorto(this.txtNombreCorto.getText());
+		
 	};
 
 	@Override
@@ -175,11 +207,11 @@ public class FrmMarca extends AbstractMaestro {
 
 	@Override
 	public void llenar_datos() {
-		if(getMarca() instanceof Marca){
+		if (getMarca() instanceof Marca) {
 			this.txtCodigo.setText(getMarca().getIdmarca());
 			this.txtDescripcion.setText(getMarca().getDescripcion());
 			this.txtNombreCorto.setText(getMarca().getNomcorto());
-		}else{
+		} else {
 			this.txtCodigo.setText(null);
 			this.txtDescripcion.setText(null);
 			this.txtNombreCorto.setText(null);
@@ -190,12 +222,13 @@ public class FrmMarca extends AbstractMaestro {
 	@Override
 	public void llenar_lista() {
 		tblLista.setFillsViewportHeight(true);
-		MaestroTableModel modelo = (MaestroTableModel)tblLista.getModel();
+		MaestroTableModel modelo = (MaestroTableModel) tblLista.getModel();
 		modelo.limpiar();
-		for(Marca marca: getMarcas()){
-			modelo.addRow(new Object[] {marca.getIdmarca(),marca.getDescripcion()});
+		for (Marca marca : getMarcas()) {
+			modelo.addRow(new Object[] { marca.getIdmarca(),
+					marca.getDescripcion() });
 		}
-		if(getMarcas().size() > 0){
+		if (getMarcas().size() > 0) {
 			setMarca(getMarcas().get(0));
 			tblLista.setRowSelectionInterval(0, 0);
 		}
@@ -225,16 +258,16 @@ public class FrmMarca extends AbstractMaestro {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
-		marca = (Marca)entidad;
+		marca = (Marca) entidad;
 		this.setMarca(marca);
 		this.llenar_datos();
 		this.vista_noedicion();
-		
+
 	}
 
 	@Override
@@ -244,13 +277,13 @@ public class FrmMarca extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		
-		if (this.txtCodigo.getText().trim().isEmpty()){
+
+		if (this.txtCodigo.getText().trim().isEmpty()) {
 			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
 			this.txtCodigo.requestFocus();
 			return false;
 		}
-		
+
 		if (getEstado().equals(NUEVO)) {
 			if (getMdao().find(this.txtCodigo.getText().trim()) != null) {
 				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
@@ -258,19 +291,19 @@ public class FrmMarca extends AbstractMaestro {
 				return false;
 			}
 		}
-		
-		if (this.txtDescripcion.getText().trim().isEmpty()){
+
+		if (this.txtDescripcion.getText().trim().isEmpty()) {
 			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
 			this.txtDescripcion.requestFocus();
 			return false;
 		}
-		
+
 		if (this.txtNombreCorto.getText().trim().isEmpty()) {
 
 			this.txtNombreCorto.requestFocus();
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -278,12 +311,13 @@ public class FrmMarca extends AbstractMaestro {
 	public void eliminar() {
 		if (getMarca() != null) {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
-			
-			if (seleccion == 0){
-				Historial.validar("Eliminar", getMarca().historial(), getTitle() );
+
+			if (seleccion == 0) {
+				Historial.validar("Eliminar", getMarca().historial(),
+						getTitle());
 				getMdao().remove(getMarca());
 				iniciar();
-			}			
-		}		
+			}
+		}
 	}
 }
