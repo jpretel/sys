@@ -10,34 +10,40 @@ import java.sql.Timestamp;
  * 
  */
 @Entity
+@Table(name="log")
 @NamedQuery(name="Log.findAll", query="SELECT l FROM Log l")
 public class Log implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.TABLE)
-	private String idlog;
+	@Column(unique=true, nullable=false)
+	private int idlog;
 
+	@Column(nullable=false)
 	private Timestamp date;
 
 	@Lob
+	@Column(nullable=false)
 	private String log;
 
-	@Column(name="nom_formulario")
+	@Column(name="nom_formulario", nullable=false, length=255)
 	private String nomFormulario;
 
+	@Column(nullable=false, length=255)
 	private String tipo;
 
+	@Column(nullable=false, length=255)
 	private String usuario;
 
 	public Log() {
 	}
 
-	public String getIdlog() {
+	public int getIdlog() {
 		return this.idlog;
 	}
 
-	public void setIdlog(String idlog) {
+	public void setIdlog(int idlog) {
 		this.idlog = idlog;
 	}
 

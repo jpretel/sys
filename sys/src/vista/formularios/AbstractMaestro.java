@@ -4,6 +4,7 @@ import javax.swing.AbstractAction;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import vista.barras.PanelBarraMaestro;
@@ -29,6 +30,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 
 	private PanelBarraMaestro barra;
 	protected JPanel pnlContenido;
+	protected String bkEntidad = null;
 
 	public AbstractMaestro(String titulo) {
 		setEstado(VISTA);
@@ -38,9 +40,9 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
-		//Se establece el tamaño minimo del Formulario
-		setMinimumSize(new Dimension(555, 325)); 
-		
+		// Se establece el tamaÃ±o minimo del Formulario
+		setMinimumSize(new Dimension(555, 325));
+
 		barra = new PanelBarraMaestro();
 		barra.setFormMaestro(this);
 		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
@@ -58,7 +60,7 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		inputMap.put(grabarKey, "grabar");
 		inputMap.put(cancelarKey, "cancelar");
 		inputMap.put(elminarKey, "eliminar");
-		
+
 		getRootPane().getActionMap().put("editar", new AbstractAction() {
 			/**
 			 * 
@@ -200,9 +202,29 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		iniciar();
 	}
 
+	public void logEliminar(EntidadLog log) {
+		Historial.validar("Eliminar", log.historial(), getTitle());
+	}
+
+	public void logModificar(EntidadLog logBD, EntidadLog logActual) {
+		if (logBD == null) {
+			Historial.validar("Nuevo", logActual.historial(), getTitle());
+		} else {
+			Historial.validar("Modificar", logBD.historial(),
+					logActual.historial(), getTitle());
+		}
+
+	}
+
 	public abstract void llenarDesdeVista();
 
 	public abstract boolean isValidaVista();
+	
+	public void TextFieldsEdicion(boolean band, JTextField... texts) {
+		for (JTextField text : texts) {
+			text.setEditable(band);
+		}
+	}
 
 	public void salir() {
 		this.dispose();
