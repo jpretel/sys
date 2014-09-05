@@ -40,7 +40,6 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 
 public abstract class AbstractDocList extends JInternalFrame {
-
 	/**
 	 * 
 	 */
@@ -58,7 +57,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 	private String datePattern = "dd/MM/yyyy";
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
 
-	private DefaultTableModel modelo_lista;
+	protected DefaultTableModel modelo_lista;
 	private List<Object[]> datos;
 
 	private static final int _ancho = 20;
