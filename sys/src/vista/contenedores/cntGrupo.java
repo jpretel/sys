@@ -1,16 +1,8 @@
 package vista.contenedores;
-
-import dao.GrupoDAO;
 import entity.Grupo;
 
 public class cntGrupo extends AbstractCntBuscar<Grupo> {
 	private static final long serialVersionUID = 1L;
-	private GrupoDAO grupoDAO = new GrupoDAO();
-
-	public cntGrupo() {
-		super();
-		refrescar();
-	}
 
 	@Override
 	public void cargarDatos(Grupo entity) {
@@ -36,10 +28,5 @@ public class cntGrupo extends AbstractCntBuscar<Grupo> {
 	@Override
 	public Object[] entity2Object(Grupo entity) {
 		return new Object[] { entity.getIdgrupo(), entity.getDescripcion() };
-	}
-
-	@Override
-	public void refrescar() {
-		setData(grupoDAO.findAll());
 	}
 }

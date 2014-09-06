@@ -1,16 +1,15 @@
 package vista.contenedores;
 
-import dao.SucursalDAO;
 import entity.Sucursal;
 
 public class cntSucursal extends AbstractCntBuscar<Sucursal> {
-	private static final long serialVersionUID = 1L;
-	private SucursalDAO sucursalDAO = new SucursalDAO();
-
 	public cntSucursal() {
 		super();
-		refrescar();
+		txtDescripcion.setBounds(46, 0, 144, 20);
+		txtCodigo.setBounds(0, 0, 46, 20);
+		setLayout(null);
 	}
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void cargarDatos(Sucursal entity) {
@@ -36,10 +35,5 @@ public class cntSucursal extends AbstractCntBuscar<Sucursal> {
 	@Override
 	public Object[] entity2Object(Sucursal entity) {
 		return new Object[] { entity.getIdsucursal(), entity.getDescripcion() };
-	}
-
-	@Override
-	public void refrescar() {
-		setData(sucursalDAO.findAll());
 	}
 }

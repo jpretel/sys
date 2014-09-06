@@ -41,7 +41,6 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
-		// Se establece el tamaño minimo del Formulario
 		setMinimumSize(new Dimension(555, 325));
 
 		barra = new PanelBarraMaestro();

@@ -95,49 +95,10 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		add(txtDescripcion, gbc_txtDescripcion);
 
 		btnBuscar = new JLabel("");
-
 		btnBuscar.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
 				.getResource("/main/resources/iconos/vistaprevia.png"))
 				.getImage().getScaledInstance(_dim, _dim,
 						java.awt.Image.SCALE_DEFAULT)));
-
-		/*btnBuscar.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-
-				btnBuscar.setIcon(new ImageIcon(
-						new ImageIcon(
-								BarraMaestro.class
-										.getResource("/main/resources/iconos/vistaprevia.png"))
-								.getImage().getScaledInstance(_dim - 3,
-										_dim - 3, java.awt.Image.SCALE_DEFAULT)));
-			}
-
-			public void mouseExited(MouseEvent arg0) {
-
-				btnBuscar.setIcon(new ImageIcon(
-						new ImageIcon(
-								BarraMaestro.class
-										.getResource("/main/resources/iconos/vistaprevia.png"))
-								.getImage().getScaledInstance(_dim, _dim,
-										java.awt.Image.SCALE_DEFAULT)));
-			}
-		});
-		btnBuscar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		// btnBuscar.setIcon(new ImageIcon(AbstractCntBuscar.class
-		// .getResource("/main/resources/iconos/vistaprevia.png")));
-		btnBuscar.setHorizontalAlignment(SwingConstants.LEFT);
-		btnBuscar.setAlignmentY(0.0f);
-		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
-		gbc_btnBuscar.fill = GridBagConstraints.VERTICAL;
-		gbc_btnBuscar.gridx = 2;
-		gbc_btnBuscar.gridy = 0;
-		add(btnBuscar, gbc_btnBuscar);
-		/*
-		 * 
-		 * public void actionPerformed(ActionEvent arg0) {
-		 * txtCodigo.checkForAndShowSuggestions(); } });
-		 */
 	}
 
 	public AbstractCntBuscar() {
@@ -177,6 +138,4 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public abstract boolean coincideBusqueda(T entity, String cadena);
 
 	public abstract Object[] entity2Object(T entity);
-
-	public abstract void refrescar();
 }

@@ -1,16 +1,8 @@
 package vista.contenedores;
-
-import dao.AreaDAO;
 import entity.Area;
 
 public class cntArea extends AbstractCntBuscar<Area> {
 	private static final long serialVersionUID = 1L;
-	private AreaDAO areaDAO = new AreaDAO();
-
-	public cntArea() {
-		super();
-		refrescar();
-	}
 
 	@Override
 	public void cargarDatos(Area entity) {
@@ -36,10 +28,5 @@ public class cntArea extends AbstractCntBuscar<Area> {
 	@Override
 	public Object[] entity2Object(Area entity) {
 		return new Object[] { entity.getIdarea(), entity.getDescripcion() };
-	}
-
-	@Override
-	public void refrescar() {
-		setData(areaDAO.findAll());
 	}
 }

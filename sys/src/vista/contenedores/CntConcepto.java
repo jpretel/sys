@@ -1,16 +1,13 @@
 package vista.contenedores;
-
-import dao.ConceptoDAO;
 import entity.Concepto;
 
 public class CntConcepto extends AbstractCntBuscar<Concepto> {
-	private static final long serialVersionUID = 1L;
-	private ConceptoDAO motivoDAO = new ConceptoDAO();
-
 	public CntConcepto() {
-		super();
-		refrescar();
+		txtDescripcion.setBounds(46, 0, 144, 20);
+		txtCodigo.setBounds(0, 0, 46, 20);
+		setLayout(null);
 	}
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void cargarDatos(Concepto entity) {
@@ -35,10 +32,5 @@ public class CntConcepto extends AbstractCntBuscar<Concepto> {
 	@Override
 	public Object[] entity2Object(Concepto entity) {
 		return new Object[] { entity.getIdconcepto(), entity.getDescripcion() };
-	}
-
-	@Override
-	public void refrescar() {
-		setData(motivoDAO.findAll());
 	}
 }

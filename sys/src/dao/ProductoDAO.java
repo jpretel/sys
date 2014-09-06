@@ -8,10 +8,10 @@ import javax.persistence.criteria.Root;
 import entity.Producto;
 
 public class ProductoDAO extends AbstractDAO<Producto> {
-
 	public ProductoDAO() {
 		super(Producto.class);
 	}
+	
 	public List<Producto> findAllbyProducto() {
 		CriteriaQuery<Producto> q = cb.createQuery(Producto.class);
 		Root<Producto> m = q.from(Producto.class);

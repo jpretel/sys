@@ -6,19 +6,19 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import vista.barras.PanelBarraDocumento;
+import vista.contenedores.cntMoneda;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+
 import org.jdesktop.swingx.JXDatePicker;
 
 public abstract class AbstractDocForm extends JInternalFrame{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	protected JTextField txtNumero;
 	private PanelBarraDocumento barra;
+	protected JPanel pnlPrincipal;
 	protected static final String EDICION = "EDICION";
 	protected static final String VISTA = "VISTA";
 	protected static final String NUEVO = "NUEVO";
@@ -28,8 +28,10 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected JTextField txtTcMoneda;
 	protected JLabel lblTcMoneda;
 	protected JLabel lblTipoCambio;
-	protected JXDatePicker datePicker;
+	protected JXDatePicker txtFecha;
 	protected JTextField txtSerie;
+	protected cntMoneda cntMoneda;	
+	
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -38,63 +40,75 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		setVisible(true);
 		setResizable(true);
 		barra = new PanelBarraDocumento();
-		barra.setMinimumSize(new Dimension(411, 30));
-		barra.setPreferredSize(new Dimension(411, 30));
-		barra.setBounds(0, 0, 598, 42);
+		barra.setMinimumSize(new Dimension(770, 30));
+		barra.setPreferredSize(new Dimension(770, 30));
+		barra.setBounds(0, 0, 770, 42);
 		barra.setFormMaestro(this);
 		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(barra, BorderLayout.NORTH);
 		
-		JPanel pnlPrincipal = new JPanel();
-		pnlPrincipal.setBounds(0, 44, 598, 33);
-		pnlPrincipal.setPreferredSize(new Dimension(10, 50));
+		pnlPrincipal = new JPanel();
+		pnlPrincipal.setMinimumSize(new Dimension(770, 500));
+		pnlPrincipal.setPreferredSize(new Dimension(770, 500));
+		pnlPrincipal.setBounds(0, 40, 770, 42);
+		//pnlPrincipal.setLayout(getLayout());
 		getContentPane().add(pnlPrincipal);
-		pnlPrincipal.setLayout(null);
-		
 		JLabel lblNumero = new JLabel("Correlativo");
-		lblNumero.setBounds(10, 11, 59, 14);
-		pnlPrincipal.add(lblNumero);
+		lblNumero.setBounds(10, 9, 53, 14);
 		
 		txtNumero_2 = new JTextField();
+		txtNumero_2.setBounds(116, 6, 80, 20);
 		txtNumero_2.setEnabled(false);
-		txtNumero_2.setBounds(122, 8, 71, 20);
-		pnlPrincipal.add(txtNumero_2);
 		txtNumero_2.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(203, 11, 29, 14);
-		pnlPrincipal.add(lblFecha);
+		lblFecha.setBounds(206, 9, 29, 14);
 		
-		datePicker = new JXDatePicker();
-		datePicker.setBounds(242, 8, 91, 23);
-		datePicker.getEditor().setLocation(0, 8);
-		pnlPrincipal.add(datePicker);
+		txtFecha = new JXDatePicker();
+		txtFecha.setBounds(245, 5, 77, 22);
+		txtFecha.getEditor().setLocation(0, 8);
 		
 		txtTipoCambio = new JTextField();
-		txtTipoCambio.setBounds(431, 8, 43, 20);
+		txtTipoCambio.setBounds(713, 6, 53, 20);
+		txtTipoCambio.setMinimumSize(new Dimension(30, 20));
+		txtTipoCambio.setPreferredSize(new Dimension(30, 20));
 		txtTipoCambio.setColumns(10);
-		pnlPrincipal.add(txtTipoCambio);
 		
 		lblTipoCambio = new JLabel("Tipo de Cambio");
-		lblTipoCambio.setBounds(343, 11, 78, 14);
-		pnlPrincipal.add(lblTipoCambio);
+		lblTipoCambio.setBounds(636, 9, 73, 14);
 		
 		lblTcMoneda = new JLabel("T.C. Moneda");
-		lblTcMoneda.setBounds(484, 11, 62, 14);
-		pnlPrincipal.add(lblTcMoneda);
+		lblTcMoneda.setBounds(509, 9, 62, 14);
 		
 		txtTcMoneda = new JTextField();
-		txtTcMoneda.setBounds(558, 8, 43, 20);
+		txtTcMoneda.setBounds(576, 6, 53, 20);
 		txtTcMoneda.setColumns(10);
-		pnlPrincipal.add(txtTcMoneda);
 		
 		txtSerie = new JTextField();
+		txtSerie.setBounds(73, 6, 44, 20);
 		txtSerie.setColumns(10);
-		txtSerie.setBounds(74, 8, 50, 20);
+		
+		JLabel lblMoneda = new JLabel("Moneda");
+		lblMoneda.setBounds(332, 9, 38, 14);
+		
+		pnlPrincipal.setLayout(null);
+		pnlPrincipal.add(lblNumero);
+		pnlPrincipal.add(txtNumero_2);
+		pnlPrincipal.add(lblFecha);
+		pnlPrincipal.add(txtFecha);
+		pnlPrincipal.add(txtTipoCambio);
+		pnlPrincipal.add(lblTipoCambio);
+		pnlPrincipal.add(lblTcMoneda);
+		pnlPrincipal.add(txtTcMoneda);
 		pnlPrincipal.add(txtSerie);
-		setBounds(100, 100, 627, 325);
+		pnlPrincipal.add(lblMoneda);
+		cntMoneda = new cntMoneda();
+		cntMoneda.setBounds(380, 9, 122, 20);
+		pnlPrincipal.add(cntMoneda);
+		setBounds(100, 100, 792, 393);		
 	}
+	
 	public void iniciar() {
 		llenar_tablas();
 		llenar_lista();

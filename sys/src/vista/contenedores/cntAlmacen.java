@@ -1,21 +1,18 @@
 package vista.contenedores;
-
-import dao.AlmacenDAO;
 import entity.Almacen;
 import entity.Sucursal;
 
 public class cntAlmacen extends AbstractCntBuscar<Almacen> {
+	public cntAlmacen() {
+		txtDescripcion.setBounds(46, 0, 144, 20);
+		txtCodigo.setBounds(0, 0, 46, 20);
+		setLayout(null);
+	}
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	AlmacenDAO almacenDAO = new AlmacenDAO();
 	private Sucursal sucursal;
-
-	public cntAlmacen() {
-		super();
-		refrescar();
-	}
 
 	@Override
 	public void cargarDatos(Almacen entity) {
@@ -41,11 +38,6 @@ public class cntAlmacen extends AbstractCntBuscar<Almacen> {
 	public Object[] entity2Object(Almacen entity) {
 		return new Object[] { entity.getId().getIdalmacen(),
 				entity.getDescripcion() };
-	}
-
-	@Override
-	public void refrescar() {
-		setData(almacenDAO.getPorSucursal(getSucursal()));
 	}
 
 	public Sucursal getSucursal() {

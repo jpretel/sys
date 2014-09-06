@@ -19,7 +19,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	public FrmListaProductos() {
 		super();
-		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		/*GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGap(0, 568, Short.MAX_VALUE)
@@ -29,7 +29,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 				.addGap(0, 277, Short.MAX_VALUE)
 		);
 		pnlContenido.setLayout(groupLayout);
-		pnlContenido.setLayout(null);
+		getContentPane().add(pnlContenido);*/
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);
@@ -49,6 +49,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	@Override
 	public void llenar_lista() {
+		System.out.println(prodList.size());
 		for (Producto p : prodList) {
 			Subgrupo sg = p.getSubgrupo();
 			Grupo g = (sg == null) ? null : sg.getGrupo();

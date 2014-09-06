@@ -1,20 +1,13 @@
 package vista.contenedores;
-
-import dao.AreaDAO;
-import dao.SysOpcionDAO;
-import entity.Area;
 import entity.SysOpcion;
-
 public class cntFormulario extends AbstractCntBuscar<SysOpcion> {
 	private static final long serialVersionUID = 1L;
-	private SysOpcionDAO sysOpcionDAO = new SysOpcionDAO();
 
 	public cntFormulario() {
 		super();
 		txtDescripcion.setBounds(107, 0, 220, 20);
 		txtCodigo.setBounds(0, 0, 110, 20);
 		setLayout(null);
-		refrescar();
 	}
 
 	@Override
@@ -39,10 +32,5 @@ public class cntFormulario extends AbstractCntBuscar<SysOpcion> {
 	@Override
 	public Object[] entity2Object(SysOpcion entity) {
 		return new Object[] { entity.getOpcion(), entity.getDescripcion() };
-	}
-
-	@Override
-	public void refrescar() {
-		setData(sysOpcionDAO.findAll());
 	}
 }

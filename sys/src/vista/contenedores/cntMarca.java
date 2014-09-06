@@ -1,15 +1,10 @@
 package vista.contenedores;
-
-import dao.MarcaDAO;
 import entity.Marca;
 
 public class cntMarca extends AbstractCntBuscar<Marca> {
 	private static final long serialVersionUID = 1L;
-	private MarcaDAO marcaDAO = new MarcaDAO();
-
 	public cntMarca() {
 		super();
-		refrescar();
 	}
 
 	@Override
@@ -36,10 +31,4 @@ public class cntMarca extends AbstractCntBuscar<Marca> {
 	public Object[] entity2Object(Marca entity) {
 		return new Object[] { entity.getIdmarca(), entity.getDescripcion() };
 	}
-
-	@Override
-	public void refrescar() {
-		setData(marcaDAO.findAll());
-	}
-
 }

@@ -1,16 +1,9 @@
 package vista.contenedores;
 
-import dao.UnimedidaDAO;
 import entity.Unimedida;
 
 public class cntMedida extends AbstractCntBuscar<Unimedida> {
 	private static final long serialVersionUID = 1L;
-	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
-
-	public cntMedida() {
-		super();
-		refrescar();
-	}
 
 	@Override
 	public void cargarDatos(Unimedida entity) {
@@ -35,10 +28,5 @@ public class cntMedida extends AbstractCntBuscar<Unimedida> {
 	@Override
 	public Object[] entity2Object(Unimedida entity) {
 		return new Object[] { entity.getIdunimedida(), entity.getDescripcion() };
-	}
-
-	@Override
-	public void refrescar() {
-		setData(unimedidaDAO.findAll());
 	}
 }

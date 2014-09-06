@@ -3,7 +3,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import vista.contenedores.CntConcepto;
@@ -25,17 +24,21 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import org.eclipse.persistence.internal.sessions.DirectCollectionChangeRecord.NULL;
+
+import dao.AlmacenDAO;
+import dao.ConceptoDAO;
 import dao.DetDocIngresoDAO;
-import dao.DocFormularioDAO;
 import dao.DocingresoDAO;
-import dao.DocumentoDAO;
-import dao.DocumentoNumeroDAO;
+import dao.MonedaDAO;
+import dao.ResponsableDAO;
+import dao.SucursalDAO;
 import entity.DetDocingreso;
 import entity.DetDocingresoPK;
-import entity.DocFormulario;
 import entity.Docingreso;
-import entity.Documento;
-import entity.DocumentoNumero;
+import entity.Moneda;
+
+import java.awt.Dimension;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 
@@ -43,28 +46,23 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private cntResponsable cntresponsable;
-	private cntSucursal cntsucursal;
-	private cntAlmacen cntalmacen;
 	private JTable tblDetalle;
 	private JScrollPane scrollPaneDetalle;
 	private Docingreso docIngreso;
 	private List<DetDocingreso> DetDocingresoL;
 	private DocingresoDAO docIngresoDAO = new DocingresoDAO();
 	private DetDocIngresoDAO detDocingresoDAO = new DetDocIngresoDAO();
-	private CntConcepto cntmotivo; 
 	private long Id;
-	private String IdDocumento;
-	public List<DetDocingreso> getDetDocingresoL() {
-		return DetDocingresoL;
-	}
-
-	public void setDetDocingresoL(List<DetDocingreso> detDocingresoL) {
-		DetDocingresoL = detDocingresoL;
-	}
-
+	private CntConcepto cntConcepto;
+	private cntResponsable cntResponsable;
+	private cntSucursal cntSucursal;
+	private cntAlmacen cntAlmacen;
+	private JTextArea txtGlosa;
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");		
+		cntMoneda.setBounds(380, 9, 112, 20);
+		cntMoneda.txtDescripcion.setBounds(29, 0, 81, 20);
+		txtTipoCambio.setSize(new Dimension(50, 20));
 		JPanel panel = new JPanel();
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -76,59 +74,31 @@ public class FrmDocRecepcion extends AbstractDocForm {
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(87)
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE))
-		);
+		);	
 		panel.setLayout(null);
 		
 		JLabel lblConcepto = new JLabel("Concepto");
-		lblConcepto.setBounds(10, 11, 46, 14);
+		lblConcepto.setBounds(12, 12, 54, 16);
 		panel.add(lblConcepto);
 		
-		cntmotivo = new CntConcepto();
-		cntmotivo.setBounds(66, 11, 222, 21);
-		panel.add(cntmotivo);
-		
 		JLabel lblResponsable = new JLabel("Responsable");
-		lblResponsable.setBounds(298, 11, 71, 14);
+		lblResponsable.setBounds(400, 12, 74, 16);
 		panel.add(lblResponsable);
 		
-		cntresponsable = new cntResponsable();
-		cntresponsable.setBounds(379, 11, 222, 21);
-		panel.add(cntresponsable);
-		
 		JLabel lblSucursal = new JLabel("Sucursal");
-		lblSucursal.setBounds(10, 44, 46, 14);
+		lblSucursal.setBounds(12, 40, 51, 16);
 		panel.add(lblSucursal);
 		
-		cntsucursal = new cntSucursal();
-		cntsucursal.setBounds(66, 44, 222, 21);
-		panel.add(cntsucursal);
-		
 		JLabel lblAlmacen = new JLabel("Almacen");
-		lblAlmacen.setBounds(298, 44, 71, 14);
+		lblAlmacen.setBounds(400, 40, 50, 16);
 		panel.add(lblAlmacen);
 		
-		cntalmacen = new cntAlmacen();
-		cntalmacen.setBounds(379, 44, 222, 21);
-		panel.add(cntalmacen);
-		
-		cntalmacen.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				actualizaSucursal();
-			}
-
-			private void actualizaSucursal() {
-				cntalmacen.setSucursal(cntsucursal.getSeleccionado());
-				cntalmacen.refrescar();				
-			}
-		});
-		
 		JLabel lblGlosa = new JLabel("Glosa");
-		lblGlosa.setBounds(10, 79, 46, 14);
+		lblGlosa.setBounds(12, 68, 32, 16);
 		panel.add(lblGlosa);
 		
 		JTextArea textArea = new JTextArea();
-		textArea.setBounds(66, 76, 222, 66);
+		textArea.setBounds(540, 5, 0, 16);
 		panel.add(textArea);		
 		 
 		tblDetalle = new JTable(new DSGTableModel(new String[]{"IdProducto","Producto","IdMedida","Medida","Cantidad","Precio","Importe"}){
@@ -152,7 +122,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		tblDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		scrollPaneDetalle = new JScrollPane(tblDetalle);
-		scrollPaneDetalle.setBounds(10, 153, 591, 154);
+		scrollPaneDetalle.setBounds(12, 122, 747, 185);
 		
 		final TxtProducto txtProducto = new TxtProducto();		
 		DefaultCellEditor txtproducto = new DefaultCellEditor(txtProducto);
@@ -174,12 +144,48 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		});
 		
 		panel.add(scrollPaneDetalle);
+		
+		cntConcepto = new CntConcepto();
+		cntConcepto.txtDescripcion.setBounds(46, 0, 239, 20);
+		cntConcepto.setBounds(81, 12, 285, 23);
+		panel.add(cntConcepto);
+		
+		cntResponsable = new cntResponsable();
+		cntResponsable.txtDescripcion.setBounds(46, 0, 223, 20);
+		cntResponsable.setBounds(490, 12, 269, 23);
+		panel.add(cntResponsable);
+		
+		cntSucursal = new cntSucursal();
+		cntSucursal.txtDescripcion.setBounds(46, 0, 240, 20);
+		cntSucursal.setBounds(80, 40, 286, 23);
+		panel.add(cntSucursal);
+		
+		cntAlmacen = new cntAlmacen();
+		cntAlmacen.txtDescripcion.setBounds(46, 0, 223, 20);
+		cntAlmacen.setBounds(490, 40, 269, 23);
+		panel.add(cntAlmacen);
+		
+		
+		cntSucursal.txtCodigo.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if(cntSucursal.txtCodigo.getText().trim().length() > 0){
+					cntAlmacen.setData(new AlmacenDAO().getPorSucursal(cntSucursal.getSeleccionado()));
+				}
+			}
+		});
+		
+		txtGlosa = new JTextArea();
+		txtGlosa.setBounds(81, 68, 285, 48);
+		panel.add(txtGlosa);
 		getContentPane().setLayout(groupLayout);
+		iniciar();
 	}
 
 	@Override
 	public void nuevo() {
 		docIngreso = new Docingreso();
+		docIngreso.setMoneda(new Moneda());
 		Id = System.nanoTime();
 	}
 
@@ -192,13 +198,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void grabar() {
 		docIngresoDAO.crear_editar(docIngreso);
-		/*if(!docSerieNumeroDAO.getRetornaSerieNumero(IdDocumento, docIngreso.getSerie(), docIngreso.getNumero()) && getEstado().equals(NUEVO)){
-			DocSerieNumero docSerieNumero = new DocSerieNumero();
-			docSerieNumero.setIddocumento(IdDocumento);
-			docSerieNumero.setSerie(docIngreso.getSerie());
-			docSerieNumero.setNumero(docIngreso.getNumero());
-			docSerieNumeroDAO.crear_editar(docSerieNumero);
-		}*/
 		for (DetDocingreso det : getDetDocingresoL()){
 			detDocingresoDAO.crear_editar(det);
 		}
@@ -214,20 +213,23 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void llenar_datos() {
 		if (docIngreso instanceof Docingreso){		
-			this.txtNumero_2.setText(docIngreso.getNumero());
+			this.txtNumero_2.setText(String.valueOf(docIngreso.getNumero()));
 			this.txtSerie.setText(docIngreso.getSerie());
-			this.cntmotivo.txtCodigo.setText(docIngreso.getIdmotivo());
-			this.cntresponsable.txtCodigo.setText(docIngreso.getIdresponsable());
-			this.cntalmacen.txtCodigo.setText(docIngreso.getIdalmacen());
+			//this.txtFecha.setDate(date);
+			this.cntMoneda.txtCodigo.setText(docIngreso.getMoneda().getIdmoneda());
+			this.cntConcepto.txtCodigo.setText(docIngreso.getIdmotivo());
+			this.cntResponsable.txtCodigo.setText(docIngreso.getIdresponsable());
+			this.cntSucursal.txtCodigo.setText(docIngreso.getIdsucursal());
+			this.cntAlmacen.txtCodigo.setText(docIngreso.getIdalmacen());
 		}
-		if(getEstado().equals(NUEVO)){
+		/*if(getEstado().equals(NUEVO)){
 			DocumentoDAO documentoDAO = new DocumentoDAO();
 			Documento documento = documentoDAO.getPorDocumento("FrmListaRecepcion");
 			DocumentoNumeroDAO documentoNDAO = new  DocumentoNumeroDAO();
 			DocumentoNumero documentoN = documentoNDAO.getPorDocumento(documento);
 			this.txtSerie.setText(documentoN.getId().getSerie());
 			this.txtNumero_2.setText(documentoN.getNumero());
-		}
+		}*/
 	}
 
 	@Override
@@ -237,32 +239,44 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	}
 
 	@Override
-	public void llenar_tablas() {		
+	public void llenar_tablas() {
+		cntMoneda.setData(new MonedaDAO().findAll());
+		cntSucursal.setData(new SucursalDAO().findAll());		
+		cntConcepto.setData(new ConceptoDAO().findAll());
+		cntResponsable.setData(new ResponsableDAO().findAll());
 	}
 
 	@Override
 	public void vista_edicion() {
 		this.txtSerie.setEditable(true);
-		this.datePicker.setEditable(true);
+		this.txtFecha.setEditable(true);
 		this.txtTcMoneda.setEditable(true);
 		this.txtTipoCambio.setEditable(true);
-		this.cntmotivo.txtCodigo.setEditable(true);
-		this.cntresponsable.txtCodigo.setEditable(true);
-		this.cntsucursal.txtCodigo.setEditable(true);
-		this.cntalmacen.txtCodigo.setEditable(true);
+		this.cntMoneda.txtCodigo.setEditable(true);
+		this.cntConcepto.txtCodigo.setEditable(true);
+		this.cntResponsable.txtCodigo.setEditable(true);
+		this.cntSucursal.txtCodigo.setEditable(true);
+		this.cntAlmacen.txtCodigo.setEditable(true);
+		this.txtTcMoneda.setEditable(true);
+		this.txtTipoCambio.setEditable(true);
+		this.txtGlosa.setEditable(true);
 		getDetalleTM().setEditar(true);
 	}
 
 	@Override
 	public void vista_noedicion() {
 		this.txtSerie.setEditable(false);
-		this.datePicker.setEditable(false);
+		this.txtFecha.setEditable(false);
 		this.txtTcMoneda.setEditable(false);
 		this.txtTipoCambio.setEditable(false);
-		this.cntmotivo.txtCodigo.setEditable(false);
-		this.cntresponsable.txtCodigo.setEditable(false);
-		this.cntsucursal.txtCodigo.setEditable(false);
-		this.cntalmacen.txtCodigo.setEditable(false);
+		this.cntMoneda.txtCodigo.setEditable(false);
+		this.cntConcepto.txtCodigo.setEditable(false);
+		this.cntResponsable.txtCodigo.setEditable(false);
+		this.cntSucursal.txtCodigo.setEditable(false);
+		this.cntAlmacen.txtCodigo.setEditable(false);
+		this.txtTcMoneda.setEditable(false);
+		this.txtTipoCambio.setEditable(false);
+		this.txtGlosa.setEditable(false);
 		getDetalleTM().setEditar(false);
 	}
 
@@ -279,12 +293,17 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void llenarDesdeVista() {		
 		docIngreso.setSerie(this.txtSerie.getText());
-		docIngreso.setNumero(this.txtNumero_2.getText());
-		docIngreso.setIdmotivo(this.cntmotivo.txtCodigo.getText());
-		docIngreso.setIdresponsable(this.cntresponsable.txtCodigo.getText());
-		docIngreso.setIdsucursal(this.cntsucursal.txtCodigo.getText());
-		docIngreso.setIdalmacen(this.cntalmacen.txtCodigo.getText());
-		docIngreso.setGlosa("");
+		docIngreso.setNumero(Integer.parseInt(this.txtNumero_2.getText()));
+		docIngreso.setIdmotivo(this.cntConcepto.txtCodigo.getText());
+		Moneda moneda = new MonedaDAO().find(this.cntMoneda.txtCodigo.getText());
+		docIngreso.setMoneda(moneda);
+		docIngreso.setIdresponsable(this.cntResponsable.txtCodigo.getText());
+		docIngreso.setIdsucursal(this.cntSucursal.txtCodigo.getText());
+		docIngreso.setIdalmacen(this.cntAlmacen.txtCodigo.getText());
+		docIngreso.setDia(txtFecha.getDate().getDay());
+		docIngreso.setMes(this.txtFecha.getDate().getMonth());
+		docIngreso.setAnio(this.txtFecha.getDate().getYear());
+		docIngreso.setGlosa(txtGlosa.getText());
 		setDetDocingresoL(new ArrayList<DetDocingreso>());
 		for(int i = 0;i < getDetalleTM().getRowCount();i++){
 			DetDocingresoPK detPK = new DetDocingresoPK();
@@ -308,22 +327,44 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	}
 	
 	public boolean validaCabecera(){
-		if (this.cntmotivo.txtCodigo.getText().isEmpty())
+		//if (this.txt)
+			//return false;
+		
+		if (this.cntMoneda.txtCodigo.getText().isEmpty())
 			return false;
 		
-		if (this.cntresponsable.txtCodigo.getText().isEmpty())
+		if (this.txtTipoCambio.getText().isEmpty())
 			return false;
 		
-		if (this.cntsucursal.txtCodigo.getText().isEmpty())
+		if (this.txtTcMoneda.getText().isEmpty())
 			return false;
 		
-		if (this.cntalmacen.txtCodigo.getText().isEmpty())
+		if (this.cntConcepto.txtCodigo.getText().isEmpty())
 			return false;
+		
+		if (this.cntResponsable.txtCodigo.getText().isEmpty())
+			return false;
+		
+		if (this.cntSucursal.txtCodigo.getText().isEmpty())
+			return false;
+		
+		if (this.cntAlmacen.txtCodigo.getText().isEmpty())
+			return false;
+		
+	
 		
 		return true;
 	}
 	
 	public DSGTableModel getDetalleTM(){
 		return ((DSGTableModel) tblDetalle.getModel());
+	}
+	
+	public List<DetDocingreso> getDetDocingresoL() {
+		return DetDocingresoL;
+	}
+
+	public void setDetDocingresoL(List<DetDocingreso> detDocingresoL) {
+		DetDocingresoL = detDocingresoL;
 	}
 }

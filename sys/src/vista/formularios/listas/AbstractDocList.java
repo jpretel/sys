@@ -13,7 +13,6 @@ import javax.swing.border.EtchedBorder;
 
 import entity.Documento;
 import vista.barras.BarraMaestro;
-import vista.contenedores.TxtDocFormulario;
 import vista.controles.ComboBox;
 import vista.controles.IDocumentoDAO;
 
@@ -31,7 +30,6 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.TitledBorder;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -52,7 +50,6 @@ public abstract class AbstractDocList extends JInternalFrame {
 	private JXDatePicker txtHasta;
 	private JScrollPane pnlDocumentos = new JScrollPane();
 	private JTable tblDocumentos;
-	//private Calendar calendar;
 
 	private String datePattern = "dd/MM/yyyy";
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
