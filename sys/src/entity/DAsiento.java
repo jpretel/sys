@@ -17,7 +17,7 @@ public class DAsiento implements Serializable {
 	private DAsientoPK id;
 
 	@JoinColumn(name = "idcuenta", referencedColumnName = "idcuenta", insertable = false, updatable = false)
-	private Cuenta idcuenta;
+	private Cuenta cuenta;
 
 	private float debe;
 
@@ -54,14 +54,6 @@ public class DAsiento implements Serializable {
 
 	public void setId(DAsientoPK id) {
 		this.id = id;
-	}
-
-	public Cuenta getIdcuenta() {
-		return idcuenta;
-	}
-
-	public void setIdcuenta(Cuenta idcuenta) {
-		this.idcuenta = idcuenta;
 	}
 
 	public float getDebe() {
@@ -110,5 +102,37 @@ public class DAsiento implements Serializable {
 
 	public void setHaber_ex(float haber_ex) {
 		this.haber_ex = haber_ex;
+	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
+	public float getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(float cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public Consumidor getConsumidor() {
+		return consumidor;
+	}
+
+	public void setConsumidor(Consumidor consumidor) {
+		this.consumidor = consumidor;
+	}
+
+	public Cuenta getCuenta() {
+		return cuenta;
+	}
+
+	public void setCuenta(Cuenta cuenta) {
+		this.cuenta = cuenta;
 	}
 }
