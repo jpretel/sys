@@ -22,7 +22,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.AbstractButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 
@@ -165,6 +164,7 @@ public class FrmMoneda extends AbstractMaestro {
 	@Override
 	public void nuevo() {
 		setMoneda(new Moneda());
+		this.txtCodigo.requestFocus();
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class FrmMoneda extends AbstractMaestro {
 				optExt.setSelected(true);
 				break;
 			default:
-				optExt.setSelected(true);
+				optOtra.setSelected(true);
 				break;
 			}
 		} else {
