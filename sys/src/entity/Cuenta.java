@@ -23,7 +23,16 @@ public class Cuenta implements Serializable {
 
 	@Column(name="tc_ajuste", length=40)
 	private String tcAjuste;
+	
+	@Column(scale=1,precision=0)
+	private int a_producto;
 
+	@Column(scale=1,precision=0)
+	private int a_cosumidor;
+	
+	@Column(scale=1,precision=0)
+	private int a_documento;
+	
 	public Cuenta() {
 	}
 
@@ -51,4 +60,27 @@ public class Cuenta implements Serializable {
 		this.idcuenta = idcuenta;
 	}
 
+	public int getA_producto() {
+		return a_producto;
+	}
+
+	public void setA_producto(int a_producto) {
+		this.a_producto = a_producto;
+	}
+
+	public int getA_cosumidor() {
+		return a_cosumidor;
+	}
+
+	public void setA_cosumidor(int a_cosumidor) {
+		this.a_cosumidor = a_cosumidor;
+	}
+
+	public int getA_documento() {
+		return a_documento;
+	}
+
+	public void setA_documento(int a_documento) {
+		this.a_documento = a_documento;
+	}
 }

@@ -18,9 +18,7 @@ import vista.utilitarios.UtilMensajes;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JCheckBox;
 
 public class FrmCuentas extends AbstractMaestro {
 
@@ -34,25 +32,30 @@ public class FrmCuentas extends AbstractMaestro {
 	private JTable tblLista;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
+	private JCheckBox chckbxProducto;
+	private JCheckBox chckbxConsumidor;
+	private JCheckBox chckbxDocumento;
 
 	public FrmCuentas() {
 		super("Cuentas Contables");
+		initGUI();
+	}
 
-		getBarra().setFormMaestro(this);
+	private void initGUI() {
 
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
-		lblCdigo.setBounds(227, 11, 46, 14);
+		lblCdigo.setBounds(287, 26, 39, 16);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(276, 8, 122, 20);
+		txtCodigo.setBounds(360, 26, 129, 20);
 		txtCodigo.setColumns(10);
 		txtCodigo.setDocument(new JTextFieldLimit(10, true));
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(227, 36, 75, 14);
+		lblDescripcin.setBounds(287, 55, 68, 16);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 10, 207, 273);
+		scrollPane.setBounds(12, 12, 257, 228);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -60,102 +63,32 @@ public class FrmCuentas extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(286, 33, 122, 20);
+		txtDescripcion.setBounds(360, 52, 173, 22);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
-		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(scrollPane,
-												GroupLayout.DEFAULT_SIZE, 226,
-												Short.MAX_VALUE)
-										.addPreferredGap(
-												ComponentPlacement.UNRELATED)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(lblCdigo)
-														.addComponent(
-																lblDescripcin))
-										.addGap(5)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addComponent(
-																txtDescripcion,
-																GroupLayout.DEFAULT_SIZE,
-																142,
-																Short.MAX_VALUE)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				txtCodigo,
-																				GroupLayout.DEFAULT_SIZE,
-																				98,
-																				Short.MAX_VALUE)
-																		.addGap(44)))
-										.addContainerGap()));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(26)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								lblCdigo)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addComponent(
-																												txtCodigo,
-																												GroupLayout.PREFERRED_SIZE,
-																												GroupLayout.DEFAULT_SIZE,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addPreferredGap(
-																												ComponentPlacement.RELATED)
-																										.addGroup(
-																												groupLayout
-																														.createParallelGroup(
-																																Alignment.BASELINE)
-																														.addComponent(
-																																txtDescripcion,
-																																GroupLayout.PREFERRED_SIZE,
-																																22,
-																																GroupLayout.PREFERRED_SIZE)
-																														.addComponent(
-																																lblDescripcin)))))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addComponent(
-																				scrollPane,
-																				GroupLayout.DEFAULT_SIZE,
-																				370,
-																				Short.MAX_VALUE)))
-										.addContainerGap()));
-		pnlContenido.setLayout(groupLayout);
+		pnlContenido.setLayout(null);
+		pnlContenido.add(scrollPane);
+		pnlContenido.add(lblCdigo);
+		pnlContenido.add(lblDescripcin);
+		pnlContenido.add(this.txtDescripcion);
+		pnlContenido.add(this.txtCodigo);
 
+		JLabel lblTipoDeAnlisis = new JLabel("Tipo de An\u00E1lisis");
+		lblTipoDeAnlisis.setBounds(287, 95, 99, 16);
+		pnlContenido.add(lblTipoDeAnlisis);
+
+		chckbxProducto = new JCheckBox("Producto");
+		chckbxProducto.setBounds(289, 121, 97, 23);
+		pnlContenido.add(chckbxProducto);
+
+		chckbxConsumidor = new JCheckBox("Consumidor");
+		chckbxConsumidor.setBounds(401, 121, 97, 23);
+		pnlContenido.add(chckbxConsumidor);
+
+		chckbxDocumento = new JCheckBox("Documento");
+		chckbxDocumento.setBounds(287, 150, 97, 23);
+		pnlContenido.add(chckbxDocumento);
+		
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					@Override
@@ -174,6 +107,7 @@ public class FrmCuentas extends AbstractMaestro {
 	@Override
 	public void nuevo() {
 		setCuenta(new Cuenta());
+		txtCodigo.requestFocus();
 	}
 
 	@Override
@@ -190,17 +124,20 @@ public class FrmCuentas extends AbstractMaestro {
 	public void llenarDesdeVista() {
 		getCuenta().setIdcuenta(txtCodigo.getText());
 		getCuenta().setDescripcion(txtDescripcion.getText());
+		getCuenta().setA_cosumidor((chckbxConsumidor.isSelected()) ? 1 : 0);
+		getCuenta().setA_producto((chckbxProducto.isSelected()) ? 1 : 0);
+		getCuenta().setA_documento((chckbxDocumento.isSelected()) ? 1 : 0);
 	};
 
 	@Override
 	public void eliminar() {
 		if (getCuenta() != null) {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
-			
-			if (seleccion == 0){
+
+			if (seleccion == 0) {
 				getCuentaDAO().remove(getCuenta());
 				iniciar();
-			}			
+			}
 		}
 		setEstado(VISTA);
 		vista_noedicion();
@@ -227,9 +164,15 @@ public class FrmCuentas extends AbstractMaestro {
 		if (getCuenta() != null) {
 			txtCodigo.setText(getCuenta().getIdcuenta());
 			txtDescripcion.setText(getCuenta().getDescripcion());
+			chckbxConsumidor.setSelected(getCuenta().getA_cosumidor() == 1);
+			chckbxProducto.setSelected(getCuenta().getA_producto() == 1);
+			chckbxDocumento.setSelected(getCuenta().getA_documento() == 1);
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
+			chckbxConsumidor.setSelected(false);
+			chckbxProducto.setSelected(false);
+			chckbxDocumento.setSelected(false);
 		}
 	}
 
@@ -266,14 +209,14 @@ public class FrmCuentas extends AbstractMaestro {
 	public void vista_edicion() {
 		if (getEstado().equals(NUEVO))
 			txtCodigo.setEditable(true);
-		txtDescripcion.setEditable(true);
+
 		tblLista.setEnabled(false);
+		TextFieldsEdicion(true, txtDescripcion);
 	}
 
 	@Override
 	public void vista_noedicion() {
-		txtCodigo.setEditable(false);
-		txtDescripcion.setEditable(false);
+		TextFieldsEdicion(false, txtCodigo, txtDescripcion);
 		tblLista.setEnabled(true);
 	}
 
@@ -291,12 +234,10 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public boolean isValidaVista() {
-		if (this.txtCodigo.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
-			this.txtCodigo.requestFocus();
+
+		if (!TextFieldObligatorios(txtCodigo, txtDescripcion))
 			return false;
-		}
-		
+
 		if (getEstado().equals(NUEVO)) {
 			if (getCuentaDAO().find(this.txtCodigo.getText().trim()) != null) {
 				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
@@ -304,14 +245,7 @@ public class FrmCuentas extends AbstractMaestro {
 				return false;
 			}
 		}
-		
-		if (this.txtDescripcion.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
-			this.txtDescripcion.requestFocus();
-			return false;
-		}
-		
+
 		return true;
 	}
-
 }
