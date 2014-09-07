@@ -1,6 +1,9 @@
 package vista.utilitarios;
 
-import java.io.IOException;
+ import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jsoup.Connection;
@@ -13,21 +16,20 @@ import org.jsoup.select.Elements;
 import entity.Clieprov;
 
 public class ObjetoWeb {
-	
-	public ObjetoWeb(){
-		
+
+	public ObjetoWeb() {
+
 	}
-	
-	public static Clieprov ConsultaRUC(String ruc){
+
+	public static Clieprov ConsultaRUC(String ruc) {
 		String captcha = "";
-		
+
 		try {
 
 			Connection.Response res = Jsoup
 					.connect(
 							"http://www.sunat.gob.pe/cl-ti-itmrconsruc/captcha")
-					.data("accion", "random")
-					.method(Method.POST).execute();
+					.data("accion", "random").method(Method.POST).execute();
 
 			Map<String, String> cookie = res.cookies();
 
@@ -46,24 +48,114 @@ public class ObjetoWeb {
 			int i = 0;
 			Clieprov c = new Clieprov();
 			c.setRuc(ruc);
-			for (Element e : rows) {				
+			for (Element e : rows) {
 				if (e.children().size() > 1) {
-					Element td = e.child(1);					
-					if(i==0)
+					Element td = e.child(1);
+					if (i == 0)
 						c.setIdclieprov(td.text().substring(0, 11));
-					if(i==2)
+					if (i == 2)
 						c.setRazonSocial(td.text());
-					if(i==6)
+					if (i == 6)
 						c.setDireccion(td.text());
 				}
-				i +=1;
-			}			
+				i += 1;
+			}
 			return c;
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 
 		}
 		return null;
+	}
+
+	public static void getTipoCambioSunat(int anio, int mes) {
+
+		// http: //
+		// www.sunat.gob.pe/cl-at-ittipcam/tcS01Alias?mesElegido=09&anioElegido=2014&mes=01&anho=2014&accion=init&email=
+		List<_TipoCambio> tc = new ArrayList<_TipoCambio>();
+
+		try {
+
+			Map<String, String> m = new HashMap<String, String>();
+			m.put("mesElegido", StringUtils._padl(mes, 2, '0'));
+			m.put("anioElegido", StringUtils._padl(anio, 4, '0'));
+			m.put("mes", StringUtils._padl(mes, 2, '0'));
+			m.put("anho", StringUtils._padl(anio, 4, '0'));
+			m.put("accion", "init");
+			m.put("mail", "");
+
+			Document res = Jsoup
+					.connect(
+							"http://www.sunat.gob.pe/cl-at-ittipcam/tcS01Alias")
+					.data(m).method(Method.GET).get();
+
+			Element table = res.select("TABLE[class = class=\"form-table\"]")
+					.get(0);
+
+			Elements rows = table.select("tr");
+
+			for (int i = 1; i < rows.size(); i++) {
+				Element e = rows.get(i);
+
+				Elements de = e.select("td");
+
+				for (int j = 0; j < de.size() / 3; j++) {
+					tc.add(new _TipoCambio(Integer.parseInt(de.get(j * 3 + 0)
+							.text()), Float
+							.parseFloat(de.get(j * 3 + 1).text()), Float
+							.parseFloat(de.get(j * 3 + 2).text())));
+				}
+			}
+
+			for (_TipoCambio t : tc) {
+				System.out.println(t.getDia() + " " + t.getCompra() + " "
+						+ t.getVenta());
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+
+		}
+	}
+
+	public static void main(String[] args) {
+		getTipoCambioSunat(2014, 9);
+	}
+}
+
+class _TipoCambio {
+	private float compra;
+	private float venta;
+	private int dia;
+
+	public _TipoCambio(int dia, float compra, float venta) {
+		this.dia = dia;
+		this.compra = compra;
+		this.venta = venta;
+	}
+
+	public float getCompra() {
+		return compra;
+	}
+
+	public void setCompra(float compra) {
+		this.compra = compra;
+	}
+
+	public float getVenta() {
+		return venta;
+	}
+
+	public void setVenta(float venta) {
+		this.venta = venta;
+	}
+
+	public int getDia() {
+		return dia;
+	}
+
+	public void setDia(int dia) {
+		this.dia = dia;
 	}
 }
