@@ -47,7 +47,7 @@ public class JTableUtils {
 			headers.add(String.valueOf(i + 1).toUpperCase());
 		}
 
-		headers.add("+");
+		// headers.add("+");
 		ListModel<String> lm = new AbstractListModel<String>() {
 			private static final long serialVersionUID = -401435697781157444L;
 
@@ -65,7 +65,7 @@ public class JTableUtils {
 		rowHeader.setFixedCellWidth(30);
 
 		MouseInputAdapter mouseAdapter = new MouseInputAdapter() {
-				private int getLocationToIndex(Point point) {
+			private int getLocationToIndex(Point point) {
 				int i = rowHeader.locationToIndex(point);
 				if (!rowHeader.getCellBounds(i, i).contains(point)) {
 					i = -1;
@@ -89,17 +89,18 @@ public class JTableUtils {
 						menu.show(rowHeader, e.getX(), e.getY());
 					}
 				}
-				
+
 			}
-			
-			public void mouseClicked(MouseEvent e){
+
+			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
 				int previ = getLocationToIndex(new Point(e.getX(), e.getY() - 3));
 				if (previ > -1 && previ < table.getRowCount()) {
-					model.getTable().getSelectionModel().setSelectionInterval(previ, previ);
+					model.getTable().getSelectionModel()
+							.setSelectionInterval(previ, previ);
 				}
-			
-			}			
+
+			}
 
 			/*
 			 * (non-Javadoc)
@@ -201,7 +202,7 @@ public class JTableUtils {
 									.getValueAt(row, i).toString().trim());
 				}
 				StringSelection dataClip = new StringSelection(data);
-				
+
 				clipboar.setContents(dataClip, dataClip);
 			}
 		});
@@ -257,14 +258,7 @@ public class JTableUtils {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int seleccion = JOptionPane.showOptionDialog(null,
-						"Desea Eliminar el Registro Seleccionado",
-						"Informacion del Sistema", JOptionPane.YES_NO_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null, new Object[] {
-								"Si", "No" }, "Si");
-				if (seleccion == 0) {
-					model.removeRow(row);
-				}
+				model.remRow(row);
 			}
 		});
 

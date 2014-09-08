@@ -18,15 +18,11 @@ import vista.Sys;
 
 public abstract class AbstractDAO<T> {
 	private Class<T> entityClass;
-
 	protected EntityManagerFactory factory;
-
 	protected EntityManager em;
-
 	protected CriteriaBuilder cb;
-
+	
 	public AbstractDAO(Class<T> entityClass) {
-
 		Map<String, String> persistenceMap = new HashMap<String, String>();
 
 		persistenceMap.put("javax.persistence.jdbc.url",
@@ -46,7 +42,6 @@ public abstract class AbstractDAO<T> {
 						"drop-and-create-tables");
 			}
 		}
-
 		this.entityClass = entityClass;
 		factory = Persistence.createEntityManagerFactory("sys", persistenceMap);
 		em = factory.createEntityManager();

@@ -3,9 +3,6 @@ package vista.formularios;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.CuentaDAO;
-import entity.Cuenta;
-
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -20,23 +17,26 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JCheckBox;
 
-public class FrmCuentas extends AbstractMaestro {
+import dao.GrupoCentralizacionDAO;
+import dao.SubdiarioDAO;
+import entity.GrupoCentralizacion;
+import vista.contenedores.CntSubdiario;
+
+public class FrmGrupoCentralizacion extends AbstractMaestro {
 
 	private static final long serialVersionUID = 1L;
 
-	private Cuenta cuenta;
+	private GrupoCentralizacion grupo;
 
-	private CuentaDAO cuentaDAO = new CuentaDAO();
+	private GrupoCentralizacionDAO grupoDAO = new GrupoCentralizacionDAO();
 
-	private List<Cuenta> cuentas = new ArrayList<Cuenta>();
+	private List<GrupoCentralizacion> grupos = new ArrayList<GrupoCentralizacion>();
 	private JTable tblLista;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
-	private JCheckBox chckbxProducto;
-	private JCheckBox chckbxConsumidor;
-	private JCheckBox chckbxDocumento;
+	CntSubdiario cntSubdiario;
 
-	public FrmCuentas() {
+	public FrmGrupoCentralizacion() {
 		super("Cuentas Contables");
 		initGUI();
 	}
@@ -73,21 +73,13 @@ public class FrmCuentas extends AbstractMaestro {
 		pnlContenido.add(this.txtDescripcion);
 		pnlContenido.add(this.txtCodigo);
 
-		JLabel lblTipoDeAnlisis = new JLabel("Tipo de An\u00E1lisis");
+		JLabel lblTipoDeAnlisis = new JLabel("Sub Diario");
 		lblTipoDeAnlisis.setBounds(287, 95, 99, 16);
 		pnlContenido.add(lblTipoDeAnlisis);
 
-		chckbxProducto = new JCheckBox("Producto");
-		chckbxProducto.setBounds(289, 121, 97, 23);
-		pnlContenido.add(chckbxProducto);
-
-		chckbxConsumidor = new JCheckBox("Consumidor");
-		chckbxConsumidor.setBounds(401, 121, 97, 23);
-		pnlContenido.add(chckbxConsumidor);
-
-		chckbxDocumento = new JCheckBox("Documento");
-		chckbxDocumento.setBounds(287, 150, 97, 23);
-		pnlContenido.add(chckbxDocumento);
+		cntSubdiario = new CntSubdiario();
+		cntSubdiario.setBounds(327, 118, 202, 20);
+		pnlContenido.add(cntSubdiario);
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -95,9 +87,9 @@ public class FrmCuentas extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent e) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setCuenta(getCuentas().get(selectedRow));
+							setGrupo(getGrupos().get(selectedRow));
 						else
-							setCuenta(null);
+							setGrupo(null);
 						llenar_datos();
 					}
 				});
@@ -106,7 +98,7 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public void nuevo() {
-		setCuenta(new Cuenta());
+		setGrupo(new GrupoCentralizacion());
 		txtCodigo.requestFocus();
 	}
 
@@ -117,25 +109,23 @@ public class FrmCuentas extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		getCuentaDAO().crear_editar(getCuenta());
+		getGrupoDAO().crear_editar(getGrupo());
 	}
 
 	@Override
 	public void llenarDesdeVista() {
-		getCuenta().setIdcuenta(txtCodigo.getText());
-		getCuenta().setDescripcion(txtDescripcion.getText());
-		getCuenta().setA_cosumidor((chckbxConsumidor.isSelected()) ? 1 : 0);
-		getCuenta().setA_producto((chckbxProducto.isSelected()) ? 1 : 0);
-		getCuenta().setA_documento((chckbxDocumento.isSelected()) ? 1 : 0);
+		getGrupo().setIdgcentralizacion(txtCodigo.getText());
+		getGrupo().setDescripcion(txtDescripcion.getText());
+
 	};
 
 	@Override
 	public void eliminar() {
-		if (getCuenta() != null) {
+		if (getGrupo() != null) {
 			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
 
 			if (seleccion == 0) {
-				getCuentaDAO().remove(getCuenta());
+				getGrupoDAO().remove(getGrupo());
 				iniciar();
 			}
 		}
@@ -143,36 +133,14 @@ public class FrmCuentas extends AbstractMaestro {
 		vista_noedicion();
 	}
 
-	public Cuenta getCuenta() {
-		return cuenta;
-	}
-
-	public void setCuenta(Cuenta cuenta) {
-		this.cuenta = cuenta;
-	}
-
-	public CuentaDAO getCuentaDAO() {
-		return cuentaDAO;
-	}
-
-	public void setCuentaDAO(CuentaDAO cuentaDAO) {
-		this.cuentaDAO = cuentaDAO;
-	}
-
 	@Override
 	public void llenar_datos() {
-		if (getCuenta() != null) {
-			txtCodigo.setText(getCuenta().getIdcuenta());
-			txtDescripcion.setText(getCuenta().getDescripcion());
-			chckbxConsumidor.setSelected(getCuenta().getA_cosumidor() == 1);
-			chckbxProducto.setSelected(getCuenta().getA_producto() == 1);
-			chckbxDocumento.setSelected(getCuenta().getA_documento() == 1);
+		if (getGrupo() != null) {
+			txtCodigo.setText(getGrupo().getIdgcentralizacion());
+			txtDescripcion.setText(getGrupo().getDescripcion());
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
-			chckbxConsumidor.setSelected(false);
-			chckbxProducto.setSelected(false);
-			chckbxDocumento.setSelected(false);
 		}
 	}
 
@@ -182,27 +150,20 @@ public class FrmCuentas extends AbstractMaestro {
 
 		MaestroTableModel model = (MaestroTableModel) tblLista.getModel();
 		model.limpiar();
-		for (Cuenta cuenta : getCuentas()) {
-			model.addRow(new Object[] { cuenta.getIdcuenta(),
-					cuenta.getDescripcion() });
+		for (GrupoCentralizacion obj : getGrupos()) {
+			model.addRow(new Object[] { obj.getIdgcentralizacion(),
+					obj.getDescripcion() });
 		}
-		if (getCuentas().size() > 0) {
-			setCuenta(getCuentas().get(0));
+		if (getGrupos().size() > 0) {
+			setGrupo(getGrupos().get(0));
 			tblLista.setRowSelectionInterval(0, 0);
 		}
 	}
 
 	@Override
 	public void llenar_tablas() {
-		setCuentas(getCuentaDAO().findAll());
-	}
-
-	public List<Cuenta> getCuentas() {
-		return cuentas;
-	}
-
-	public void setCuentas(List<Cuenta> cuentas) {
-		this.cuentas = cuentas;
+		setGrupos(getGrupoDAO().findAll());
+		actualiza_tablas();
 	}
 
 	@Override
@@ -211,18 +172,12 @@ public class FrmCuentas extends AbstractMaestro {
 			txtCodigo.setEditable(true);
 
 		tblLista.setEnabled(false);
-		chckbxConsumidor.setEnabled(true);
-		chckbxDocumento.setEnabled(true);
-		chckbxProducto.setEnabled(true);
 		TextFieldsEdicion(true, txtDescripcion);
 	}
 
 	@Override
 	public void vista_noedicion() {
 		TextFieldsEdicion(false, txtCodigo, txtDescripcion);
-		chckbxConsumidor.setEnabled(false);
-		chckbxDocumento.setEnabled(false);
-		chckbxProducto.setEnabled(false);
 		tblLista.setEnabled(true);
 	}
 
@@ -245,7 +200,7 @@ public class FrmCuentas extends AbstractMaestro {
 			return false;
 
 		if (getEstado().equals(NUEVO)) {
-			if (getCuentaDAO().find(this.txtCodigo.getText().trim()) != null) {
+			if (getGrupoDAO().find(this.txtCodigo.getText().trim()) != null) {
 				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
 				this.txtCodigo.requestFocus();
 				return false;
@@ -253,5 +208,35 @@ public class FrmCuentas extends AbstractMaestro {
 		}
 
 		return true;
+	}
+
+	@Override
+	public void actualiza_tablas() {
+		if (cntSubdiario != null)
+			cntSubdiario.setData(new SubdiarioDAO().findAll());
+	}
+
+	public GrupoCentralizacion getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(GrupoCentralizacion grupo) {
+		this.grupo = grupo;
+	}
+
+	public GrupoCentralizacionDAO getGrupoDAO() {
+		return grupoDAO;
+	}
+
+	public void setGrupoDAO(GrupoCentralizacionDAO grupoDAO) {
+		this.grupoDAO = grupoDAO;
+	}
+
+	public List<GrupoCentralizacion> getGrupos() {
+		return grupos;
+	}
+
+	public void setGrupos(List<GrupoCentralizacion> grupos) {
+		this.grupos = grupos;
 	}
 }

@@ -269,6 +269,7 @@ public class FrmSucursal extends AbstractMaestro {
 	@Override
 	public void nuevo() {
 		setSucursal(new Sucursal());
+		txtCodigo.requestFocus();
 	}
 
 	@Override

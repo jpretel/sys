@@ -1,9 +1,22 @@
 package vista.controles;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
+import vista.barras.BarraMaestro;
 import vista.utilitarios.JTableUtils;
 import vista.utilitarios.UtilMensajes;
 
@@ -23,8 +36,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 	private JTable table;
 
 	private String[] cabeceras;
-	
-	
+
 	public DSGTableModel() {
 		this("Campo 1", "Campo 2");
 	}
@@ -105,7 +117,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 			for (int i = 0; i < columnas.length; i++) {
 				cadena = cadena.concat(((i == 0) ? ""
 						: (i == columnas.length - 1) ? " y " : ", ")
-						.concat(cabeceras[i].toUpperCase()));
+						.concat(cabeceras[columnas[i]].toUpperCase()));
 			}
 		return cadena;
 	}
@@ -167,13 +179,80 @@ public abstract class DSGTableModel extends DefaultTableModel {
 		this.table = table;
 		refrescarRowHeader();
 	}
-	
+
 	private void refrescarRowHeader() {
 		if (getScrollPane() != null && getTable() != null) {
 			getScrollPane().setRowHeaderView(
 					JTableUtils.buildRowHeader(getTable(), this));
+			JButton boton;
+			getScrollPane().setCorner(JScrollPane.UPPER_LEFT_CORNER,
+					boton = new JButton() {
+						private static final long serialVersionUID = 1L;
+
+						{
+							
+							addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									if (getEditar())
+										addRow();
+								}
+							});
+						}
+					});
+			boton.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+					.getResource("/main/resources/iconos/mas.png"))
+					.getImage().getScaledInstance(12, 12,
+							java.awt.Image.SCALE_DEFAULT)));
+			
+			InputMap inputMap = getTable().getInputMap(
+					JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+			inputMap.put(insertarKey, "insertar");
+			inputMap.put(borrarKey, "borrar");
+
+			getTable().getActionMap().put("insertar", new AbstractAction() {
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				public void actionPerformed(ActionEvent evt) {
+					if (getEditar())
+						addRow();
+				}
+			});
+
+			getTable().getActionMap().put("borrar", new AbstractAction() {
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				public void actionPerformed(ActionEvent evt) {
+					int row = getTable().getSelectedRow();
+					if (getEditar() && row > -1)
+						remRow(row);
+				}
+			});
+
 		}
 	}
-	
+
+	KeyStroke insertarKey = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT,
+			InputEvent.CTRL_MASK);
+
+	KeyStroke borrarKey = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,
+			InputEvent.CTRL_MASK);
+
+	public void remRow(int row) {
+		int seleccion = JOptionPane.showOptionDialog(null,
+				"Desea Eliminar el Registro Seleccionado",
+				"Informacion del Sistema", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null,
+				new Object[] { "Si", "No" }, "Si");
+		if (seleccion == 0) {
+			removeRow(row);
+		}
+	}
+
 	public abstract void addRow();
 }

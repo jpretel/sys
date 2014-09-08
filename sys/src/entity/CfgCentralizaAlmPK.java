@@ -48,7 +48,11 @@ public class CfgCentralizaAlmPK implements Serializable {
 				&& (getIdconcepto() == null ? other.getIdconcepto() == null
 						: getIdconcepto().equals(other.getIdconcepto()))
 				&& (getIdgrupo() == null ? other.getIdgrupo() == null
-						: getIdgrupo().equals(other.getIdgrupo()));
+						: getIdgrupo().equals(other.getIdgrupo())
+								&& (getIdsubgrupo() == null ? other
+										.getIdsubgrupo() == null
+										: getIdsubgrupo().equals(
+												other.getIdsubgrupo())));
 	}
 
 	/*
