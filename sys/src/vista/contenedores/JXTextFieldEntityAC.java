@@ -28,33 +28,29 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	private static final long serialVersionUID = 1L;
 	private List<T> data;
 	private List<T> sugerencias = new ArrayList<T>();
-	private JWindow autoSuggestionPopUpWindow;
-	private JTable table;
+	protected JWindow autoSuggestionPopUpWindow;
+	protected JTable table;
 	private JScrollPane scrollPane;
 	private int indice = -1;
 	private int iSeleccionado;
 	private int[] anchos;
 	private String[] cabeceras;
 	private T seleccionado;
-	private String oldValue;
 
 	private DocumentListener documentListener = new DocumentListener() {
 
 		@Override
 		public void insertUpdate(DocumentEvent de) {
-			System.out.println(JXTextFieldEntityAC.this.getText());
 			checkForAndShowSuggestions();
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent de) {
-			System.out.println(JXTextFieldEntityAC.this.getText());
 			checkForAndShowSuggestions();
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent de) {
-			System.out.println(JXTextFieldEntityAC.this.getText());
 			checkForAndShowSuggestions();
 		}
 	};
@@ -184,16 +180,18 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	public boolean wordTyped(String typedWord) {
 		typedWord = typedWord.trim();
 		sugerencias = new ArrayList<T>();
-		if (typedWord.isEmpty() || typedWord.length() < getMinimoBusqueda()) {
-			return false;
-		}
+		// if (typedWord.isEmpty() || typedWord.length() < getMinimoBusqueda())
+		// {
+		// return false;
+		// }
 		boolean hayCoincidencias = false;
-		for (T dato : data) {
-			if (coincideBusqueda(dato, typedWord)) {
-				sugerencias.add(dato);
-				hayCoincidencias = true;
+		if (data != null)
+			for (T dato : data) {
+				if (coincideBusqueda(dato, typedWord)) {
+					sugerencias.add(dato);
+					hayCoincidencias = true;
+				}
 			}
-		}
 		return hayCoincidencias;
 	}
 
@@ -231,8 +229,8 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 		int windowY = getLocationOnScreen().y + getHeight();
 
 		autoSuggestionPopUpWindow.setLocation(windowX, windowY);
-		autoSuggestionPopUpWindow.setMinimumSize(new Dimension(this.getParent()
-				.getWidth(), anchoTotal));
+		autoSuggestionPopUpWindow
+				.setMinimumSize(new Dimension(anchoTotal, 140));
 		autoSuggestionPopUpWindow.setAutoRequestFocus(false);
 		autoSuggestionPopUpWindow.setVisible(true);
 
@@ -262,33 +260,53 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		revisaFoco('G', e);
-	}
-
-	@Override
-	public void focusLost(FocusEvent e) {
-		revisaFoco('L', e);
-	}
-
-	private void revisaFoco(char tipo, FocusEvent e) {
 		boolean band = false;
-		if (tipo == 'G') {
-			if (e.getComponent() == table) {
-				band = true;
-			}
-		} else {
-			if ((e.getComponent() == table && e.getOppositeComponent() == this)
-					|| (e.getComponent() == this && e.getOppositeComponent() == table)) {
-				band = true;
-			}
-			if (e.getComponent() == this && !band) {
-				cargaDatos();
-			}
+		if (e.getComponent() == table) {
+			band = true;
 		}
 		if (!band) {
 			autoSuggestionPopUpWindow.setVisible(false);
 		}
 	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (!(e.getComponent() == this && e.getOppositeComponent() == this))
+			cargaDatos();
+		boolean band = false;
+		if ((e.getComponent() == table && e.getOppositeComponent() == this)
+				|| (e.getComponent() == this && e.getOppositeComponent() == table)) {
+			band = true;
+		}
+		if (e.getComponent() == this && !band) {
+			setEntityPorCodigo();
+			cargaDatos();
+		}
+		if (!band) {
+			autoSuggestionPopUpWindow.setVisible(false);
+		}
+	}
+
+	// private void revisaFoco(char tipo, FocusEvent e) {
+	// boolean band = false;
+	// if (tipo == 'G') {
+	// if (e.getComponent() == table) {
+	// band = true;
+	// }
+	// } else {
+	// if ((e.getComponent() == table && e.getOppositeComponent() == this)
+	// || (e.getComponent() == this && e.getOppositeComponent() == table)) {
+	// band = true;
+	// }
+	// if (e.getComponent() == this && !band) {
+	// setEntityPorCodigo();
+	// cargaDatos();
+	// }
+	// }
+	// if (!band) {
+	// autoSuggestionPopUpWindow.setVisible(false);
+	// }
+	// }
 
 	public T getSeleccionado() {
 		return seleccionado;
@@ -320,5 +338,20 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	public abstract boolean coincideBusqueda(T entity, String cadena);
 
 	public abstract Object[] entity2Object(T entity);
+
+	public void setEntityPorCodigo() {
+		setSeleccionado(null);
+		if (data != null) {
+			salir: for (T entity : data) {
+				if (getEntityCode(entity).equalsIgnoreCase(getText())) {
+					setSeleccionado(entity);
+					break salir;
+				}
+			}
+		}
+	}
+	
+
+	public abstract String getEntityCode(T entity);
 
 }

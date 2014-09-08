@@ -1,15 +1,12 @@
 package vista.controles.celleditor;
 
 import java.awt.Component;
-import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.AbstractCellEditor;
-import javax.swing.CellEditor;
 import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 
 public abstract class JXTableTextField<T> extends
 		vista.contenedores.JXTextFieldEntityAC<T> {
