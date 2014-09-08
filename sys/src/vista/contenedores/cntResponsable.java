@@ -1,4 +1,5 @@
 package vista.contenedores;
+
 import entity.Responsable;
 
 public class cntResponsable extends AbstractCntBuscar<Responsable> {
@@ -7,19 +8,17 @@ public class cntResponsable extends AbstractCntBuscar<Responsable> {
 		txtCodigo.setBounds(0, 0, 46, 20);
 		setLayout(null);
 	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void cargarDatos(Responsable entity) {
-		if (entity == null) {
-			txtCodigo.setText("");
-			txtDescripcion.setText("");
-		} else {
-			txtCodigo.setText(entity.getIdresponsable());
-			txtDescripcion.setText(entity.getNombre());
-		}
+		txtCodigo.setText(entity.getIdresponsable());
+		txtDescripcion.setText(entity.getNombre());
+
 	}
-	//opciones de Busqueda
+
+	// opciones de Busqueda
 	@Override
 	public boolean coincideBusqueda(Responsable entity, String cadena) {
 		String cad = cadena.toLowerCase();
@@ -28,9 +27,15 @@ public class cntResponsable extends AbstractCntBuscar<Responsable> {
 			return true;
 		return false;
 	}
-	//Informacion que se carga en el Windows Popup
+
+	// Informacion que se carga en el Windows Popup
 	@Override
 	public Object[] entity2Object(Responsable entity) {
-		return new Object[] { entity.getIdresponsable(), entity.getNombre()};
+		return new Object[] { entity.getIdresponsable(), entity.getNombre() };
+	}
+
+	@Override
+	public String getEntityCode(Responsable entity) {
+		return entity.getIdresponsable();
 	}
 }

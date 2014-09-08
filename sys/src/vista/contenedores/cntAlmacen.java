@@ -1,4 +1,5 @@
 package vista.contenedores;
+
 import entity.Almacen;
 import entity.Sucursal;
 
@@ -8,6 +9,7 @@ public class cntAlmacen extends AbstractCntBuscar<Almacen> {
 		txtCodigo.setBounds(0, 0, 46, 20);
 		setLayout(null);
 	}
+
 	/**
 	 * 
 	 */
@@ -47,5 +49,10 @@ public class cntAlmacen extends AbstractCntBuscar<Almacen> {
 	public void setSucursal(Sucursal sucursal) {
 		this.sucursal = sucursal;
 	}
-	
+
+	@Override
+	public String getEntityCode(Almacen entity) {
+		return entity.getId().getIdalmacen();
+	}
+
 }

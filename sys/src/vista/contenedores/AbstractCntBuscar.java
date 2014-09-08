@@ -19,6 +19,9 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public abstract class AbstractCntBuscar<T> extends JPanel {
 	/**
 	 * 
@@ -35,7 +38,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		setForeground(Color.LIGHT_GRAY);
 		this.setBounds(152, 11, 220, 20);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		
+
 		gridBagLayout.columnWidths = new int[] { 46, 106, 26, 0 };
 		gridBagLayout.rowHeights = new int[] { 20, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0,
@@ -64,9 +67,12 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 			public void cargaDatos() {
 				if (getSeleccionado() != null) {
 					AbstractCntBuscar.this.cargarDatos(getSeleccionado());
+				} else {
+					txtCodigo.setText("");
+					txtDescripcion.setText("");
 				}
 			}
-
+			
 			@Override
 			public boolean coincideBusqueda(T dato, String cadena) {
 				return AbstractCntBuscar.this.coincideBusqueda(dato, cadena);
@@ -76,11 +82,16 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 			public Object[] entity2Object(T entity) {
 				return AbstractCntBuscar.this.entity2Object(entity);
 			}
+
+			@Override
+			public String getEntityCode(T entity) {
+				return AbstractCntBuscar.this.getEntityCode(entity);
+			}
 		};
 
 		txtCodigo.setColumns(5);
-		GridBagConstraints gbc_txtCodigo = new GridBagConstraints();	
-		
+		GridBagConstraints gbc_txtCodigo = new GridBagConstraints();
+
 		gbc_txtCodigo.fill = GridBagConstraints.BOTH;
 		gbc_txtCodigo.gridx = 0;
 		gbc_txtCodigo.gridy = 0;
@@ -95,10 +106,22 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		add(txtDescripcion, gbc_txtDescripcion);
 
 		btnBuscar = new JLabel("");
+		btnBuscar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtCodigo.checkForAndShowSuggestions();
+			}
+		});
 		btnBuscar.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
 				.getResource("/main/resources/iconos/vistaprevia.png"))
 				.getImage().getScaledInstance(_dim, _dim,
 						java.awt.Image.SCALE_DEFAULT)));
+
+		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
+		gbc_btnBuscar.fill = GridBagConstraints.CENTER;
+		gbc_btnBuscar.gridx = 2;
+		gbc_btnBuscar.gridy = 0;
+		add(btnBuscar, gbc_btnBuscar);
 	}
 
 	public AbstractCntBuscar() {
@@ -121,8 +144,8 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public T getSeleccionado() {
 		return txtCodigo.getSeleccionado();
 	}
-	
-	public void setSeleccionado(T seleccionado){
+
+	public void setSeleccionado(T seleccionado) {
 		txtCodigo.setSeleccionado(seleccionado);
 		cargarDatos(seleccionado);
 	}
@@ -138,4 +161,6 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public abstract boolean coincideBusqueda(T entity, String cadena);
 
 	public abstract Object[] entity2Object(T entity);
+
+	public abstract String getEntityCode(T entity);
 }

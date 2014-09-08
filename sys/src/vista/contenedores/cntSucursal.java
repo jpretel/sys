@@ -9,17 +9,13 @@ public class cntSucursal extends AbstractCntBuscar<Sucursal> {
 		txtCodigo.setBounds(0, 0, 46, 20);
 		setLayout(null);
 	}
+
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public void cargarDatos(Sucursal entity) {
-		if (entity == null) {
-			txtCodigo.setText("");
-			txtDescripcion.setText("");
-		} else {
-			txtCodigo.setText(entity.getIdsucursal());
-			txtDescripcion.setText(entity.getDescripcion());
-		}
+		txtCodigo.setText(entity.getIdsucursal());
+		txtDescripcion.setText(entity.getDescripcion());
 	}
 
 	@Override
@@ -35,5 +31,10 @@ public class cntSucursal extends AbstractCntBuscar<Sucursal> {
 	@Override
 	public Object[] entity2Object(Sucursal entity) {
 		return new Object[] { entity.getIdsucursal(), entity.getDescripcion() };
+	}
+
+	@Override
+	public String getEntityCode(Sucursal entity) {
+		return entity.getIdsucursal();
 	}
 }

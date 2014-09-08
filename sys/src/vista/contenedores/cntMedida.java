@@ -7,13 +7,9 @@ public class cntMedida extends AbstractCntBuscar<Unimedida> {
 
 	@Override
 	public void cargarDatos(Unimedida entity) {
-		if (entity == null) {
-			txtCodigo.setText("");
-			txtDescripcion.setText("");
-		} else {
-			txtCodigo.setText(entity.getIdunimedida());
-			txtDescripcion.setText(entity.getDescripcion());
-		}
+		txtCodigo.setText("");
+		txtDescripcion.setText("");
+
 	}
 
 	@Override
@@ -28,5 +24,10 @@ public class cntMedida extends AbstractCntBuscar<Unimedida> {
 	@Override
 	public Object[] entity2Object(Unimedida entity) {
 		return new Object[] { entity.getIdunimedida(), entity.getDescripcion() };
+	}
+
+	@Override
+	public String getEntityCode(Unimedida entity) {
+		return entity.getIdunimedida();
 	}
 }

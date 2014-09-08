@@ -33,4 +33,9 @@ public class cntFormulario extends AbstractCntBuscar<SysOpcion> {
 	public Object[] entity2Object(SysOpcion entity) {
 		return new Object[] { entity.getOpcion(), entity.getDescripcion() };
 	}
+
+	@Override
+	public String getEntityCode(SysOpcion entity) {
+		return entity.getOpcion();
+	}
 }

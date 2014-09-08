@@ -29,4 +29,9 @@ public class cntArea extends AbstractCntBuscar<Area> {
 	public Object[] entity2Object(Area entity) {
 		return new Object[] { entity.getIdarea(), entity.getDescripcion() };
 	}
+
+	@Override
+	public String getEntityCode(Area entity) {
+		return entity.getIdarea();
+	}
 }

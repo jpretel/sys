@@ -1,21 +1,18 @@
 package vista.contenedores;
+
 import entity.Marca;
 
 public class cntMarca extends AbstractCntBuscar<Marca> {
 	private static final long serialVersionUID = 1L;
+
 	public cntMarca() {
 		super();
 	}
 
 	@Override
 	public void cargarDatos(Marca entity) {
-		if (entity == null) {
-			txtCodigo.setText("");
-			txtDescripcion.setText("");
-		} else {
-			txtCodigo.setText(entity.getIdmarca());
-			txtDescripcion.setText(entity.getDescripcion());
-		}
+		txtCodigo.setText(entity.getIdmarca());
+		txtDescripcion.setText(entity.getDescripcion());
 	}
 
 	@Override
@@ -30,5 +27,10 @@ public class cntMarca extends AbstractCntBuscar<Marca> {
 	@Override
 	public Object[] entity2Object(Marca entity) {
 		return new Object[] { entity.getIdmarca(), entity.getDescripcion() };
+	}
+
+	@Override
+	public String getEntityCode(Marca entity) {
+		return entity.getIdmarca();
 	}
 }

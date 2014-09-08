@@ -1,4 +1,5 @@
 package vista.contenedores;
+
 import entity.Grupo;
 
 public class cntGrupo extends AbstractCntBuscar<Grupo> {
@@ -6,13 +7,8 @@ public class cntGrupo extends AbstractCntBuscar<Grupo> {
 
 	@Override
 	public void cargarDatos(Grupo entity) {
-		if (entity == null) {
-			txtCodigo.setText("");
-			txtDescripcion.setText("");
-		} else {
-			txtCodigo.setText(entity.getIdgrupo());
-			txtDescripcion.setText(entity.getDescripcion());
-		}
+		txtCodigo.setText(entity.getIdgrupo());
+		txtDescripcion.setText(entity.getDescripcion());
 	}
 
 	@Override
@@ -28,5 +24,10 @@ public class cntGrupo extends AbstractCntBuscar<Grupo> {
 	@Override
 	public Object[] entity2Object(Grupo entity) {
 		return new Object[] { entity.getIdgrupo(), entity.getDescripcion() };
+	}
+
+	@Override
+	public String getEntityCode(Grupo entity) {
+		return entity.getIdgrupo();
 	}
 }

@@ -33,4 +33,9 @@ public class CntConcepto extends AbstractCntBuscar<Concepto> {
 	public Object[] entity2Object(Concepto entity) {
 		return new Object[] { entity.getIdconcepto(), entity.getDescripcion() };
 	}
+
+	@Override
+	public String getEntityCode(Concepto entity) {
+		return entity.getIdconcepto();
+	}
 }
