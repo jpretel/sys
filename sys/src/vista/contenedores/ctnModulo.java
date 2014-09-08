@@ -36,4 +36,9 @@ public class ctnModulo extends AbstractCntBuscar<SysModulo>{
 		return new Object[] { entity.getIdmodulo(), entity.getDescripcion() };
 	}
 
+	@Override
+	public String getEntityCode(SysModulo entity) {
+		return entity.getIdmodulo();
+	}
+
 }

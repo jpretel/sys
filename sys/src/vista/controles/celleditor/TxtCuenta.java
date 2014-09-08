@@ -3,7 +3,6 @@ package vista.controles.celleditor;
 import javax.swing.JTable;
 
 import entity.Cuenta;
-import entity.Grupo;
 
 public abstract class TxtCuenta extends JXTableTextField<Cuenta> {
 

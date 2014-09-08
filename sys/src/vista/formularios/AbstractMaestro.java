@@ -61,16 +61,6 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		inputMap.put(cancelarKey, "cancelar");
 		inputMap.put(elminarKey, "eliminar");
 
-		getRootPane().getActionMap().put("editar", new AbstractAction() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent evt) {
-
-			}
-		});
 		getRootPane().getActionMap().put("nuevo", new AbstractAction() {
 			/**
 			 * 
@@ -123,6 +113,28 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		});
 	}
 
+	@Override
+	public void moveToFront() {
+		super.moveToFront();
+		actualiza_tablas();
+//		Window window = SwingUtilities.getWindowAncestor(this);
+//        Component focusOwner = (window != null) ? window.getFocusOwner() :
+//                                null;
+//        boolean descendant = false;
+//
+//        if (window != null && focusOwner != null &&
+//                      SwingUtilities.isDescendingFrom(focusOwner, this)) {
+//            descendant = true;
+//            requestFocus();
+//        }
+//
+//        super.moveToFront();
+//
+//        if (descendant) {
+//            focusOwner.requestFocus();
+//        }
+    }
+
 	public void iniciar() {
 		llenar_tablas();
 		llenar_lista();
@@ -149,8 +161,9 @@ public abstract class AbstractMaestro extends JInternalFrame {
 
 	public abstract void llenar_lista();
 
-	public  void limpiarDetalle() {}
-	
+	public void limpiarDetalle() {
+	}
+
 	public abstract void llenar_tablas();
 
 	public abstract void vista_edicion();
@@ -221,14 +234,14 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract void llenarDesdeVista();
 
 	public abstract boolean isValidaVista();
-	
+
 	public void TextFieldsEdicion(boolean band, JTextField... texts) {
 		for (JTextField text : texts) {
 			text.setEditable(band);
 		}
 	}
-	
-	public boolean TextFieldObligatorios (JTextField... texts) {
+
+	public boolean TextFieldObligatorios(JTextField... texts) {
 		for (JTextField text : texts) {
 			if (text.getText().trim().isEmpty()) {
 				UtilMensajes.mensaje_alterta("DATO_REQUERIDO", text.getName());
@@ -237,6 +250,10 @@ public abstract class AbstractMaestro extends JInternalFrame {
 			}
 		}
 		return true;
+	}
+
+	public void actualiza_tablas() {
+		
 	}
 
 	public void salir() {

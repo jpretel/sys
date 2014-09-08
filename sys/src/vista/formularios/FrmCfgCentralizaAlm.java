@@ -8,23 +8,27 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import vista.controles.DSGTableModel;
+import vista.controles.celleditor.TxtCuenta;
+import vista.controles.celleditor.TxtGrupo;
+import vista.controles.celleditor.TxtSubGrupo;
 import vista.utilitarios.MaestroTableModel;
-import vista.utilitarios.editores.TableTextEditor;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumnModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
 import dao.CfgCentralizaAlmDAO;
 import dao.ConceptoDAO;
+import dao.CuentaDAO;
 import dao.GrupoDAO;
 import dao.SubgrupoDAO;
 import entity.CfgCentralizaAlm;
 import entity.CfgCentralizaAlmPK;
 import entity.Concepto;
 import entity.Cuenta;
+import entity.Grupo;
+import entity.Subgrupo;
 import entity.SubgrupoPK;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -47,8 +51,15 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 	private ConceptoDAO conceptoDAO = new ConceptoDAO();
 	private GrupoDAO grupoDAO = new GrupoDAO();
 	private SubgrupoDAO subgrupoDAO = new SubgrupoDAO();
+	private CuentaDAO cuentaDAO = new CuentaDAO();
+
 	private CfgCentralizaAlmDAO centralizaDAO = new CfgCentralizaAlmDAO();
 	private JScrollPane scrollPaneNum;
+
+	private TxtGrupo txtgrupo;
+	private TxtSubGrupo txtsubgrupo;
+	private TxtCuenta txtCuentaDebe;
+	private TxtCuenta txtCuentaHaber;
 
 	public FrmCfgCentralizaAlm() {
 		super("Configuracion de Centralización");
@@ -57,6 +68,7 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
+
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		tblCentraliza = new JTable(new DSGTableModel(new String[] {
@@ -66,6 +78,8 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 
 			@Override
 			public boolean evaluaEdicion(int row, int column) {
+				if (column == 1 || column == 3)
+					return false;
 				return getEditar();
 			}
 
@@ -73,19 +87,127 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 			public void addRow() {
 				addRow(new Object[] { "", "", "", "", "", "" });
 			}
-		});
+
+		}) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void changeSelection(int row, int column, boolean toggle,
+					boolean extend) {
+				super.changeSelection(row, column, toggle, extend);
+				if (row > -1) {
+					String idgrupo = getCentralizaTM().getValueAt(row, 0)
+							.toString();
+					String idsubgrupo = getCentralizaTM().getValueAt(row, 2)
+							.toString();
+					String idcuentadebe = getCentralizaTM().getValueAt(row, 4)
+							.toString();
+
+					String idcuentahaber = getCentralizaTM().getValueAt(row, 5)
+							.toString();
+
+					txtgrupo.refresValue(idgrupo);
+
+					txtsubgrupo.setData(subgrupoDAO.findAllbyGrupo(grupoDAO
+							.find(idgrupo)));
+					txtsubgrupo.refresValue(idsubgrupo);
+
+					txtCuentaDebe.refresValue(idcuentadebe);
+					txtCuentaHaber.refresValue(idcuentahaber);
+				}
+			}
+		};
 
 		tblCentraliza.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		scrollPaneNum = new JScrollPane(tblCentraliza);
-
-		getCentralizaTM().setNombre_detalle("Almacenes");
-		getCentralizaTM().setObligatorios(0, 1, 2);
+		scrollPaneNum = new JScrollPane(tblCentraliza,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		tblCentraliza.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		getCentralizaTM().setNombre_detalle("Grupos de Productos");
+		getCentralizaTM().setObligatorios(0, 1, 2, 3, 4, 5);
 		getCentralizaTM().setRepetidos(0, 2);
 		getCentralizaTM().setScrollAndTable(scrollPaneNum, tblCentraliza);
 
-		TableColumnModel cModel = tblCentraliza.getColumnModel();
-		cModel.getColumn(0).setCellEditor(new TableTextEditor(3, true));
+		txtgrupo = new TxtGrupo(tblCentraliza, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Grupo entity) {
+				int row = tblCentraliza.getSelectedRow();
+				if (entity == null) {
+					getCentralizaTM().setValueAt("", row, 0);
+					getCentralizaTM().setValueAt("", row, 1);
+				} else {
+					setText(entity.getIdgrupo());
+					getCentralizaTM().setValueAt(entity.getIdgrupo(), row, 0);
+					getCentralizaTM().setValueAt(entity.getDescripcion(), row,
+							1);
+				}
+				setSeleccionado(null);
+			}
+		};
+
+		txtsubgrupo = new TxtSubGrupo(tblCentraliza, 2) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Subgrupo entity) {
+				int row = tblCentraliza.getSelectedRow();
+				if (entity == null) {
+					setText("");
+					getCentralizaTM().setValueAt("", row, 2);
+					getCentralizaTM().setValueAt("", row, 3);
+				} else {
+					setText(entity.getId().getIdsubgrupo());
+					getCentralizaTM().setValueAt(
+							entity.getId().getIdsubgrupo(), row, 2);
+					getCentralizaTM().setValueAt(entity.getDescripcion(), row,
+							3);
+				}
+				setSeleccionado(null);
+			}
+		};
+
+		txtCuentaDebe = new TxtCuenta(tblCentraliza, 4) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Cuenta entity) {
+				int row = tblCentraliza.getSelectedRow();
+				if (entity == null) {
+					getCentralizaTM().setValueAt("", row, 4);
+				} else {
+					setText(entity.getIdcuenta());
+					getCentralizaTM().setValueAt(entity.getIdcuenta(), row, 4);
+				}
+			}
+		};
+
+		txtCuentaHaber = new TxtCuenta(tblCentraliza, 5) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Cuenta entity) {
+				int row = tblCentraliza.getSelectedRow();
+				if (entity == null) {
+					getCentralizaTM().setValueAt("", row, 5);
+				} else {
+					setText(entity.getIdcuenta());
+					getCentralizaTM().setValueAt(entity.getIdcuenta(), row, 5);
+				}
+			}
+		};
+
+		txtgrupo.updateCellEditor();
+		txtsubgrupo.updateCellEditor();
+		txtCuentaDebe.updateCellEditor();
+		txtCuentaHaber.updateCellEditor();
+
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
 				Alignment.LEADING).addGroup(
@@ -148,6 +270,11 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
+		for (CfgCentralizaAlm c : centralizaDAO.aEliminar(getConcepto(),
+				getCentraliza())) {
+			centralizaDAO.remove(c);
+		}
+
 		for (CfgCentralizaAlm c : centraliza) {
 			centralizaDAO.crear_editar(c);
 		}
@@ -205,10 +332,9 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isValidaVista() {
-
 		if (!validarDetalles()) {
 			return false;
 		}
@@ -238,6 +364,7 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 	@Override
 	public void llenar_tablas() {
 		setConceptos(conceptoDAO.findAll());
+		actualiza_tablas();
 	}
 
 	@Override
@@ -270,6 +397,17 @@ public class FrmCfgCentralizaAlm extends AbstractMaestro {
 	@Override
 	public void eliminar() {
 		// ////
+	}
+
+	public void actualiza_tablas() {
+		if (txtgrupo != null)
+			txtgrupo.setData(grupoDAO.findAll());
+		if (txtsubgrupo != null)
+			txtsubgrupo.setData(null);
+		if (txtCuentaDebe != null)
+			txtCuentaDebe.setData(cuentaDAO.findAll());
+		if (txtCuentaHaber != null)
+			txtCuentaHaber.setData(cuentaDAO.findAll());
 	}
 
 	public List<Concepto> getConceptos() {

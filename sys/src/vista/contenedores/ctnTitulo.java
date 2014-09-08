@@ -2,17 +2,13 @@ package vista.contenedores;
 
 import entity.SysTitulo;
 
-public class ctnTitulo extends AbstractCntBuscar<SysTitulo>{
+public class ctnTitulo extends AbstractCntBuscar<SysTitulo> {
 	private static final long serialVersionUID = 1L;
+
 	@Override
 	public void cargarDatos(SysTitulo entity) {
-		if (entity == null) {
-			txtCodigo.setText("");
-			txtDescripcion.setText("");
-		} else {
-			txtCodigo.setText(entity.getId().getIdtitulo());
-			txtDescripcion.setText(entity.getDescripcion());
-		}
+		txtCodigo.setText(entity.getId().getIdtitulo());
+		txtDescripcion.setText(entity.getDescripcion());
 	}
 
 	@Override
@@ -28,5 +24,10 @@ public class ctnTitulo extends AbstractCntBuscar<SysTitulo>{
 	public Object[] entity2Object(SysTitulo entity) {
 		return new Object[] { entity.getId().getIdtitulo(),
 				entity.getDescripcion() };
+	}
+
+	@Override
+	public String getEntityCode(SysTitulo entity) {
+		return entity.getId().getIdtitulo();
 	}
 }
