@@ -4,22 +4,32 @@ import javax.swing.JTable;
 
 import entity.Grupo;
 
-public abstract class TxtGrupo extends JXTextFieldEntityAC<Grupo> {
+public abstract class TxtGrupo extends JXTableTextField<Grupo> {
 
-	public TxtGrupo(JTable tabla,
-			int ubicacion) {
-		super(new String[] {"Código", "Descripción"}, new int [] {20, 60}, tabla, ubicacion);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public TxtGrupo(JTable tabla, int ubicacion) {
+		super(new String[] { "Código", "Descripción" }, new int[] { 50, 130 },
+				tabla, ubicacion);
 	}
 
 	@Override
 	public boolean coincideBusqueda(Grupo entity, String cadena) {
-		return false;
+		cadena = cadena.trim().toLowerCase();
+		return entity.getIdgrupo().toLowerCase().startsWith(cadena)
+				|| entity.getDescripcion().toLowerCase().startsWith(cadena);
 	}
 
 	@Override
 	public Object[] entity2Object(Grupo entity) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Object[] { entity.getIdgrupo(), entity.getDescripcion() };
 	}
 
+	@Override
+	public String getEntityCode(Grupo entity) {
+		return entity.getIdgrupo();
+	}
 }
