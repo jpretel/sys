@@ -271,8 +271,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (!(e.getComponent() == this && e.getOppositeComponent() == this))
-			cargaDatos();
+		
 		boolean band = false;
 		if ((e.getComponent() == table && e.getOppositeComponent() == this)
 				|| (e.getComponent() == this && e.getOppositeComponent() == table)) {
@@ -341,14 +340,17 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 	public void setEntityPorCodigo() {
 		setSeleccionado(null);
+		System.out.println("Entroo:" + getText()+"222");
 		if (data != null) {
 			salir: for (T entity : data) {
+				System.out.println(getText() + "----" + getEntityCode(entity));
 				if (getEntityCode(entity).equalsIgnoreCase(getText())) {
 					setSeleccionado(entity);
 					break salir;
 				}
 			}
 		}
+		System.out.println(getSeleccionado());
 	}
 	
 
