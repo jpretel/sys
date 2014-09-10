@@ -58,9 +58,9 @@ public class MainFrame extends JRibbonFrame {
 
 	public MainFrame() {
 		desktopPane = new JDesktopPane();
-
+		Sys.desktoppane = desktopPane;
 		getContentPane().add(desktopPane, BorderLayout.CENTER);
-
+		Sys.desktoppane = desktopPane;
 		// Se establece el tamaño minimo del MainFrame
 		setMinimumSize(new Dimension(800, 600));
 
