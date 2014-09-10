@@ -22,7 +22,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSpinner;
 import javax.swing.JTable;
@@ -269,150 +268,129 @@ public class JTableUtils {
 		return menu;
 	}
 
-	class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		JTable table;
-		SpinnerNumberModel model = new SpinnerNumberModel(0, 0, null, 1);
-		JSpinner spinner = new JSpinner(model);
-		int clickCountToStart = 1;
+}
 
-		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column) {
-			spinner.setValue(((Integer) value).intValue());
-			return spinner;
-		}
+class ButtonEditor extends AbstractCellEditor implements TableCellEditor {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	JTable table;
+	JButton button = new JButton();
+	NumberFormat nf = NumberFormat.getCurrencyInstance();
+	int clickCountToStart = 1;
 
-		public Object getCellEditorValue() {
-			return (Integer) spinner.getValue();
-		}
-
-		public boolean isCellEditable(EventObject anEvent) {
-			if (anEvent instanceof MouseEvent) {
-				return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
-			}
-			return true;
-		}
-
-		public boolean shouldSelectCell(EventObject anEvent) {
-			return true;
-		}
-
-		public boolean stopCellEditing() {
-			return super.stopCellEditing();
-		}
-
-		public void cancelCellEditing() {
-			super.cancelCellEditing();
-		}
+	public ButtonEditor(JTable table) {
+		this.table = table;
 	}
 
-	class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
-			ActionListener {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		JTable table;
-		JButton button = new JButton();
-		NumberFormat nf = NumberFormat.getCurrencyInstance();
-		int clickCountToStart = 1;
-
-		public ButtonEditor(JTable table) {
-			this.table = table;
-			button.addActionListener(this);
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			StringBuilder sb = new StringBuilder();
-			int row = table.getEditingRow();
-			int col = table.getEditingColumn();
-			// System.out.printf("row = %d  col = %d%n", row, col);
-			sb.append((String) table.getValueAt(row, 6));
-			sb.append(" has ");
-			sb.append(((col == 4) ? "bought " : "sold "));
-			sb.append(((Integer) table.getValueAt(row, 3)).toString());
-			sb.append(" shares of " + (String) table.getValueAt(row, 0));
-			sb.append(" at "
-					+ nf.format(((Double) table.getValueAt(row, 1))
-							.doubleValue()));
-			stopCellEditing();
-			System.out.println(sb.toString());
-		}
-
-		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column) {
-			button.setText(value.toString());
-			return button;
-		}
-
-		public Object getCellEditorValue() {
-			return button.getText();
-		}
-
-		public boolean isCellEditable(EventObject anEvent) {
-			if (anEvent instanceof MouseEvent) {
-				return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
-			}
-			return true;
-		}
-
-		public boolean shouldSelectCell(EventObject anEvent) {
-			return true;
-		}
-
-		public boolean stopCellEditing() {
-			return super.stopCellEditing();
-		}
-
-		public void cancelCellEditing() {
-			super.cancelCellEditing();
-		}
+	public Component getTableCellEditorComponent(JTable table, Object value,
+			boolean isSelected, int row, int column) {
+		button.setText(value.toString());
+		return button;
 	}
 
-	class SpinnerRenderer implements TableCellRenderer {
-		SpinnerNumberModel model = new SpinnerNumberModel(0, 0, null, 1);
-		JSpinner spinner = new JSpinner(model);
-
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
-			spinner.setValue(((Integer) value).intValue());
-			return spinner;
-		}
+	public Object getCellEditorValue() {
+		return button.getText();
 	}
 
-	class ButtonRenderer implements TableCellRenderer {
-		JButton button = new JButton();
-
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
-			button.setText(value.toString());
-			return button;
+	public boolean isCellEditable(EventObject anEvent) {
+		if (anEvent instanceof MouseEvent) {
+			return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
 		}
+		return true;
 	}
 
-	public class DoubleRenderer extends DefaultTableCellRenderer {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		NumberFormat nf = NumberFormat.getCurrencyInstance();
+	public boolean shouldSelectCell(EventObject anEvent) {
+		return true;
+	}
 
-		public DoubleRenderer() {
-			setHorizontalAlignment(RIGHT);
-		}
+	public boolean stopCellEditing() {
+		return super.stopCellEditing();
+	}
 
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
-			super.getTableCellRendererComponent(table, value, isSelected,
-					hasFocus, row, column);
-			setText(nf.format(((Double) value).doubleValue()));
-			return this;
+	public void cancelCellEditing() {
+		super.cancelCellEditing();
+	}
+}
+
+class SpinnerRenderer implements TableCellRenderer {
+	SpinnerNumberModel model = new SpinnerNumberModel(0, 0, null, 1);
+	JSpinner spinner = new JSpinner(model);
+
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		spinner.setValue(((Integer) value).intValue());
+		return spinner;
+	}
+}
+
+class SpinnerEditor extends AbstractCellEditor implements TableCellEditor {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	JTable table;
+	SpinnerNumberModel model = new SpinnerNumberModel(0, 0, null, 1);
+	JSpinner spinner = new JSpinner(model);
+	int clickCountToStart = 1;
+
+	public Component getTableCellEditorComponent(JTable table, Object value,
+			boolean isSelected, int row, int column) {
+		spinner.setValue(((Integer) value).intValue());
+		return spinner;
+	}
+
+	public Object getCellEditorValue() {
+		return (Integer) spinner.getValue();
+	}
+
+	public boolean isCellEditable(EventObject anEvent) {
+		if (anEvent instanceof MouseEvent) {
+			return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
 		}
+		return true;
+	}
+
+	public boolean shouldSelectCell(EventObject anEvent) {
+		return true;
+	}
+
+	public boolean stopCellEditing() {
+		return super.stopCellEditing();
+	}
+
+	public void cancelCellEditing() {
+		super.cancelCellEditing();
+	}
+}
+
+class ButtonRenderer implements TableCellRenderer {
+	JButton button = new JButton();
+
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		button.setText(value.toString());
+		return button;
+	}
+}
+
+class DoubleRenderer extends DefaultTableCellRenderer {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	NumberFormat nf = NumberFormat.getCurrencyInstance();
+
+	public DoubleRenderer() {
+		setHorizontalAlignment(RIGHT);
+	}
+
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+				row, column);
+		setText(nf.format(((Double) value).doubleValue()));
+		return this;
 	}
 }

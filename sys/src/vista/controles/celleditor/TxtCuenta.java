@@ -2,6 +2,7 @@ package vista.controles.celleditor;
 
 import javax.swing.JTable;
 
+import vista.controles.JTextFieldLimit;
 import entity.Cuenta;
 
 public abstract class TxtCuenta extends JXTableTextField<Cuenta> {

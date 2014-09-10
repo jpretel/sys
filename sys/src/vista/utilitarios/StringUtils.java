@@ -29,6 +29,16 @@ public class StringUtils {
 		
 		return cad;
 	}
+	
+	public static String _padl(String valor, int longitud, char car){
+		String cad = valor.trim();
+		
+		if (cad.length() < longitud) {
+			cad = _replicate(longitud - cad.length(), car) + cad;
+		}
+		
+		return cad;
+	}
 
 	public static String _replicate(int cantidad, String ret) {
 		String cad = "";

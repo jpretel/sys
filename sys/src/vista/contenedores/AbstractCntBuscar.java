@@ -3,6 +3,7 @@ package vista.contenedores;
 import java.awt.Color;
 import java.awt.Window;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -22,6 +23,15 @@ import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.SwingConstants;
+import java.awt.Cursor;
+import java.awt.ComponentOrientation;
+
 public abstract class AbstractCntBuscar<T> extends JPanel {
 	/**
 	 * 
@@ -39,7 +49,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		this.setBounds(152, 11, 220, 20);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 
-		gridBagLayout.columnWidths = new int[] { 46, 106, 26, 0 };
+		gridBagLayout.columnWidths = new int[] { 46, 106, 28, 0 };
 		gridBagLayout.rowHeights = new int[] { 20, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0,
 				Double.MIN_VALUE };
@@ -106,9 +116,14 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		add(txtDescripcion, gbc_txtDescripcion);
 
 		btnBuscar = new JLabel("");
+		btnBuscar.setFocusTraversalPolicyProvider(true);
+		btnBuscar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnBuscar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnBuscar.setHorizontalAlignment(SwingConstants.CENTER);
 		btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				txtCodigo.requestFocus();
 				txtCodigo.checkForAndShowSuggestions();
 			}
 		});
@@ -116,9 +131,8 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 				.getResource("/main/resources/iconos/vistaprevia.png"))
 				.getImage().getScaledInstance(_dim, _dim,
 						java.awt.Image.SCALE_DEFAULT)));
-
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
-		gbc_btnBuscar.fill = GridBagConstraints.CENTER;
+		gbc_btnBuscar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnBuscar.gridx = 2;
 		gbc_btnBuscar.gridy = 0;
 		add(btnBuscar, gbc_btnBuscar);
@@ -126,6 +140,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 
 	public AbstractCntBuscar() {
 		this(new String[] { "Codigo", "Descripcion" }, new int[] { 90, 200 });
+		setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 	}
 
 	public Window getFormulario() {

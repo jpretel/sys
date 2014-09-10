@@ -340,10 +340,8 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 	public void setEntityPorCodigo() {
 		setSeleccionado(null);
-		System.out.println("Entroo:" + getText()+"222");
 		if (data != null) {
 			salir: for (T entity : data) {
-				System.out.println(getText() + "----" + getEntityCode(entity));
 				if (getEntityCode(entity).equalsIgnoreCase(getText())) {
 					setSeleccionado(entity);
 					break salir;

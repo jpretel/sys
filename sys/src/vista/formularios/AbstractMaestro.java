@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import vista.barras.PanelBarraMaestro;
+import vista.utilitarios.FormValidador;
 import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JPanel;
@@ -236,20 +237,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract boolean isValidaVista();
 
 	public void TextFieldsEdicion(boolean band, JTextField... texts) {
-		for (JTextField text : texts) {
-			text.setEditable(band);
-		}
+		FormValidador.TextFieldsEdicion(band, texts);
 	}
-
+	
 	public boolean TextFieldObligatorios(JTextField... texts) {
-		for (JTextField text : texts) {
-			if (text.getText().trim().isEmpty()) {
-				UtilMensajes.mensaje_alterta("DATO_REQUERIDO", text.getName());
-				text.requestFocus();
-				return false;
-			}
-		}
-		return true;
+		return FormValidador.TextFieldObligatorios(texts);
 	}
 
 	public void actualiza_tablas() {

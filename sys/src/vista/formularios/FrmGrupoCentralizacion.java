@@ -15,7 +15,6 @@ import vista.utilitarios.UtilMensajes;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.JCheckBox;
 
 import dao.GrupoCentralizacionDAO;
 import dao.SubdiarioDAO;
@@ -37,7 +36,7 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 	CntSubdiario cntSubdiario;
 
 	public FrmGrupoCentralizacion() {
-		super("Cuentas Contables");
+		super("Grupo de Centralización");
 		initGUI();
 	}
 

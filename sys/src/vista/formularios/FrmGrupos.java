@@ -5,14 +5,10 @@ import java.util.List;
 
 import vista.controles.DSGTableModel;
 import vista.controles.JTextFieldLimit;
-import vista.utilitarios.ButtonEditor;
-import vista.utilitarios.ButtonRenderer;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 import vista.utilitarios.editores.TableTextEditor;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -21,8 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import dao.GrupoDAO;
@@ -34,17 +28,9 @@ import entity.SubgrupoPK;
 import java.awt.Component;
 
 import javax.swing.JButton;
-import javax.swing.ImageIcon;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.SwingConstants;
-
-import java.awt.Insets;
-import java.awt.Dimension;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 

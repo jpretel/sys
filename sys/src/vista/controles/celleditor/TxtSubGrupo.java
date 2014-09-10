@@ -2,6 +2,7 @@ package vista.controles.celleditor;
 
 import javax.swing.JTable;
 
+import vista.controles.JTextFieldLimit;
 import entity.Subgrupo;
 
 public abstract class TxtSubGrupo extends JXTableTextField<Subgrupo> {
@@ -28,7 +29,7 @@ public abstract class TxtSubGrupo extends JXTableTextField<Subgrupo> {
 		return new Object[] { entity.getId().getIdsubgrupo(),
 				entity.getDescripcion() };
 	}
-	
+
 	@Override
 	public String getEntityCode(Subgrupo entity) {
 		return entity.getId().getIdsubgrupo();

@@ -2,6 +2,7 @@ package vista.controles.celleditor;
 
 import javax.swing.JTable;
 
+import vista.controles.JTextFieldLimit;
 import entity.Grupo;
 
 public abstract class TxtGrupo extends JXTableTextField<Grupo> {

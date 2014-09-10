@@ -3,7 +3,7 @@
 <persistence version="2.1"
 	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-	<persistence-unit name="sys" transaction-type="RESOURCE_LOCAL">		
+	<persistence-unit name="sys" transaction-type="RESOURCE_LOCAL">
 		<class>entity.Almacen</class>
 		<class>entity.AlmacenPK</class>
 		<class>entity.Area</class>
@@ -19,7 +19,6 @@
 		<class>entity.DetDocingreso</class>
 		<class>entity.DetDocingresoPK</class>
 		<class>entity.DocFormulario</class>
-		<class>entity.Docingreso</class>
 		<class>entity.Documento</class>
 		<class>entity.DocumentoNumero</class>
 		<class>entity.DocumentoNumeroPK</class>
@@ -27,6 +26,7 @@
 		<class>entity.Empresa</class>
 		<class>entity.Flujo</class>
 		<class>entity.Grupo</class>
+		<class>entity.GrupoCentralizacion</class>
 		<class>entity.GrupoUsuario</class>
 		<class>entity.GuardarUsuario</class>
 		<class>entity.GuardarUsuarioPK</class>
@@ -63,9 +63,7 @@
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			 <property name="eclipselink.ddl-generation" value="create-or-extend-tables" 
-				/> 
-
+			 <property name="eclipselink.logging.level" value="FINEST"/>
 		</properties>
 	</persistence-unit>
 
