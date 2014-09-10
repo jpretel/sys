@@ -19,7 +19,7 @@ public class DetDocingreso implements Serializable {
 	private DetDocingresoPK id;
 
 	@Column(nullable=false, precision=10, scale=2)
-	private BigDecimal cantidad;
+	private float cantidad;
 
 	@Column(length=200)
 	private String descripcion;
@@ -28,28 +28,22 @@ public class DetDocingreso implements Serializable {
 	private String idmedida;
 
 	@Column(nullable=false, precision=10, scale=2)
-	private BigDecimal importe;
+	private float importe;
 
 	@Column(nullable=false, precision=10, scale=2)
-	private BigDecimal precio;
-
+	private float precio;
+	
+	private Producto producto;
+	
 	public DetDocingreso() {
 	}
 
 	public DetDocingresoPK getId() {
 		return this.id;
 	}
-
+	
 	public void setId(DetDocingresoPK id) {
 		this.id = id;
-	}
-
-	public BigDecimal getCantidad() {
-		return this.cantidad;
-	}
-
-	public void setCantidad(BigDecimal cantidad) {
-		this.cantidad = cantidad;
 	}
 
 	public String getDescripcion() {
@@ -76,11 +70,27 @@ public class DetDocingreso implements Serializable {
 		this.importe = importe;
 	}
 
-	public BigDecimal getPrecio() {
-		return this.precio;
+	public Producto getProducto() {
+		return producto;
 	}
 
-	public void setPrecio(BigDecimal precio) {
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
+	public float getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(float cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public float getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(float precio) {
 		this.precio = precio;
 	}
 
