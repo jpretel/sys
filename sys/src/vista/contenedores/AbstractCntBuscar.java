@@ -3,7 +3,6 @@ package vista.contenedores;
 import java.awt.Color;
 import java.awt.Window;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -23,14 +22,9 @@ import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.SwingConstants;
 import java.awt.Cursor;
-import java.awt.ComponentOrientation;
 
 public abstract class AbstractCntBuscar<T> extends JPanel {
 	/**
@@ -178,4 +172,9 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public abstract Object[] entity2Object(T entity);
 
 	public abstract String getEntityCode(T entity);
+	
+	public void llenar() {
+		txtCodigo.setEntityPorCodigo();
+		txtCodigo.cargaDatos();
+	}
 }
