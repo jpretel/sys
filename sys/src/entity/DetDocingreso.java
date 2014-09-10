@@ -33,7 +33,7 @@ public class DetDocingreso implements Serializable {
 	@Column(nullable=false, precision=10, scale=2)
 	private float precio;
 	
-	private Producto producto;
+	//private Producto producto;
 	
 	public DetDocingreso() {
 	}
@@ -70,13 +70,13 @@ public class DetDocingreso implements Serializable {
 		this.importe = importe;
 	}
 
-	public Producto getProducto() {
+	/*public Producto getProducto() {
 		return producto;
 	}
 
 	public void setProducto(Producto producto) {
 		this.producto = producto;
-	}
+	}*/
 
 	public float getCantidad() {
 		return cantidad;

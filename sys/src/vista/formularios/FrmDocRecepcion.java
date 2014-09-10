@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
 import dao.DetDocIngresoDAO;
@@ -30,6 +31,7 @@ import dao.DocumentoDAO;
 import dao.DocumentoNumeroDAO;
 import dao.GrupoCentralizacionDAO;
 import dao.MonedaDAO;
+import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
 import entity.DetDocingreso;
@@ -38,6 +40,7 @@ import entity.Docingreso;
 import entity.Documento;
 import entity.DocumentoNumeroPK;
 import entity.Moneda;
+import entity.Producto;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 
@@ -305,6 +308,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenarDesdeVista() {		
+		docIngreso.setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
 		docIngreso.setSerie(this.txtSerie.getText());
 		docIngreso.setNumero(Integer.parseInt(this.txtNumero_2.getText()));
 		docIngreso.setIdmotivo(this.cntConcepto.txtCodigo.getText());

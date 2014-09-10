@@ -54,6 +54,6 @@ public class TxtProducto extends JXTextFieldEntityAC<Producto> {
 	@Override
 	public String getEntityCode(Producto entity) {
 		// TODO Auto-generated method stub
-		return null;
+		return entity.getIdproducto();
 	}
 }

@@ -52,12 +52,6 @@ public class SysDesarrollo extends JFrame {
 		SysDesarrollo frm = new SysDesarrollo();
 		frm.setVisible(true);		
 		
-		/*FrmSubdiario frm3 = new FrmSubdiario();
-		frm.getDesktopPane().add(frm3);
-
-		FrmGrupoCentralizacion frm5 = new FrmGrupoCentralizacion();
-		frm.getDesktopPane().add(frm5);*/
-		
 		FrmListaRecepcion frm4 = new FrmListaRecepcion();
 		frm.getDesktopPane().add(frm4);
 		
