@@ -62,11 +62,11 @@ public class DetDocingreso implements Serializable {
 		this.idmedida = idmedida;
 	}
 
-	public BigDecimal getImporte() {
+	public float getImporte() {
 		return this.importe;
 	}
 
-	public void setImporte(BigDecimal importe) {
+	public void setImporte(float importe) {
 		this.importe = importe;
 	}
 
