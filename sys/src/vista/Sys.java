@@ -5,6 +5,7 @@ import java.util.List;
 
 import static vista.utilitarios.UtilMensajes.mensaje_alterta;
 
+import javax.swing.JDesktopPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,7 +34,7 @@ public class Sys {
 
 	public static Usuario usuario;
 	public static Empresa empresa;
-
+	public static JDesktopPane desktoppane;
 	public static Mensajes mensajes;
 	private FrmSysConfig frm = new FrmSysConfig();
 	public static MainFrame mainF;
