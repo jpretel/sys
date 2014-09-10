@@ -3,6 +3,7 @@ package vista.contenedores;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Window;
+
 import javax.swing.JTextField;
 
 import vista.Sys;
@@ -53,6 +54,12 @@ public abstract class AbstractTxtBuscar<T> extends JTextField {
 			@Override
 			public Object[] entity2Object(T entity) {
 				return AbstractTxtBuscar.this.entity2Object(entity);
+			}
+
+			@Override
+			public String getEntityCode(T entity) {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		};
 

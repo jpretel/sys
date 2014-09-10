@@ -14,16 +14,14 @@ import javax.swing.border.EtchedBorder;
 import entity.Documento;
 import vista.barras.BarraMaestro;
 import vista.controles.ComboBox;
+import vista.controles.DSGDatePicker;
 import vista.controles.IDocumentoDAO;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
-import org.jdesktop.swingx.JXDatePicker;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
@@ -36,6 +34,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public abstract class AbstractDocList extends JInternalFrame {
 	/**
@@ -46,14 +45,10 @@ public abstract class AbstractDocList extends JInternalFrame {
 	protected JTextField txtSerie;
 	protected JTextField txtNumero;
 	private IDocumentoDAO documentoDAO;
-	private JXDatePicker txtDesde;
-	private JXDatePicker txtHasta;
+	private DSGDatePicker txtDesde;
+	private DSGDatePicker txtHasta;
 	private JScrollPane pnlDocumentos = new JScrollPane();
 	private JTable tblDocumentos;
-
-	private String datePattern = "dd/MM/yyyy";
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
-
 	protected DefaultTableModel modelo_lista;
 	private List<Object[]> datos;
 
@@ -98,15 +93,16 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 		JLabel lblDesde = new JLabel("Desde");
 
-		txtDesde = new JXDatePicker();
-		txtDesde.setFormats(dateFormatter);
-
-		//txtDesde.setDate(Calendar.DAY_OF_MONTH);
+		txtDesde = new DSGDatePicker();
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date());
+		c.set(Calendar.DAY_OF_MONTH, 1);
+		txtDesde.setDate(c.getTime());// .setDate(Calendar.DAY_OF_MONTH);
 
 		JLabel lblHasta = new JLabel("Hasta");
 
-		txtHasta = new JXDatePicker();
-		txtHasta.setFormats(dateFormatter);
+		txtHasta = new DSGDatePicker();
+		txtHasta.setDate(new Date());
 		//txtHasta.setDate(calendar.getTime());
 
 		lblDocumento = new JLabel("Documento");
@@ -131,67 +127,65 @@ public abstract class AbstractDocList extends JInternalFrame {
 				.addGroup(gl_pnlFiltros.createSequentialGroup()
 					.addGap(22)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(12)
-							.addComponent(lblDesde, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-						.addComponent(this.txtDesde, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE))
-					.addGap(12)
+						.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblDesde, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
+					.addGap(26)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblHasta, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(6)
-							.addComponent(this.txtHasta, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
-					.addGap(12)
+						.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblHasta, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
+					.addGap(36)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(this.lblDocumento)
+						.addComponent(lblDocumento)
 						.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
 					.addGap(12)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(6)
-							.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
-						.addComponent(this.txtNumero, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
-					.addGap(3)
+						.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_pnlFiltros.createSequentialGroup()
 							.addGap(9)
-							.addComponent(this.textField, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
 						.addComponent(getLabel(), GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-					.addGap(116)
+					.addGap(57)
 					.addComponent(btnActualizar, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
 		);
 		gl_pnlFiltros.setVerticalGroup(
 			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(12)
-					.addComponent(lblDesde)
-					.addGap(7)
-					.addComponent(this.txtDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(12)
-					.addComponent(lblHasta)
-					.addGap(7)
-					.addComponent(this.txtHasta, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(12)
-					.addComponent(this.lblDocumento)
-					.addGap(7)
-					.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(12)
+					.addContainerGap()
 					.addComponent(lblNmero)
-					.addGap(7)
-					.addComponent(this.txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(36)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(this.textField, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(3)
-							.addComponent(getLabel()))))
+						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+					.addGap(11))
+				.addGroup(Alignment.TRAILING, gl_pnlFiltros.createSequentialGroup()
+					.addContainerGap(31, Short.MAX_VALUE)
+					.addComponent(btnActualizar)
+					.addGap(13))
 				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(12)
-					.addComponent(btnActualizar))
+					.addGap(13)
+					.addComponent(lblDesde)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+					.addGap(11))
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addGap(11)
+					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addComponent(lblHasta)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_pnlFiltros.createSequentialGroup()
+							.addComponent(lblDocumento)
+							.addGap(7)
+							.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
+					.addGap(12))
+				.addGroup(gl_pnlFiltros.createSequentialGroup()
+					.addGap(35)
+					.addComponent(getLabel())
+					.addGap(18))
 		);
 		pnlFiltros.setLayout(gl_pnlFiltros);
 

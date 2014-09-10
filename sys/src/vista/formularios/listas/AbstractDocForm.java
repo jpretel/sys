@@ -6,13 +6,14 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import vista.barras.PanelBarraDocumento;
-import vista.contenedores.cntMoneda;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
+
+import vista.contenedores.CntGrupoCentralizacion;
+import vista.contenedores.CntMoneda;
 
 public abstract class AbstractDocForm extends JInternalFrame{
 	private static final long serialVersionUID = 1L;
@@ -30,8 +31,8 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected JLabel lblTipoCambio;
 	protected JXDatePicker txtFecha;
 	protected JTextField txtSerie;
-	protected cntMoneda cntMoneda;	
-	
+	protected CntMoneda cntMoneda;	
+	protected CntGrupoCentralizacion cntGrupoCentralizacion;
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -39,59 +40,59 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
+		int AnchoCabecera = 850;
 		barra = new PanelBarraDocumento();
-		barra.setMinimumSize(new Dimension(770, 30));
-		barra.setPreferredSize(new Dimension(770, 30));
-		barra.setBounds(0, 0, 770, 42);
+		barra.setMinimumSize(new Dimension(AnchoCabecera, 30));
+		barra.setPreferredSize(new Dimension(AnchoCabecera, 30));
+		barra.setBounds(0, 0, AnchoCabecera, 42);
 		barra.setFormMaestro(this);
 		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(barra, BorderLayout.NORTH);
 		
 		pnlPrincipal = new JPanel();
-		pnlPrincipal.setMinimumSize(new Dimension(770, 500));
-		pnlPrincipal.setPreferredSize(new Dimension(770, 500));
-		pnlPrincipal.setBounds(0, 40, 770, 42);
+		pnlPrincipal.setMinimumSize(new Dimension(AnchoCabecera, 500));
+		pnlPrincipal.setPreferredSize(new Dimension(AnchoCabecera, 500));
+		pnlPrincipal.setBounds(0, 40, AnchoCabecera, 70);
 		//pnlPrincipal.setLayout(getLayout());
 		getContentPane().add(pnlPrincipal);
 		JLabel lblNumero = new JLabel("Correlativo");
-		lblNumero.setBounds(10, 9, 53, 14);
+		lblNumero.setBounds(10, 39, 53, 14);
 		
 		txtNumero_2 = new JTextField();
-		txtNumero_2.setBounds(116, 6, 80, 20);
+		txtNumero_2.setBounds(116, 36, 80, 20);
 		txtNumero_2.setEnabled(false);
 		txtNumero_2.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(206, 9, 29, 14);
+		lblFecha.setBounds(206, 39, 53, 14);
 		
 		txtFecha = new JXDatePicker();
-		txtFecha.setBounds(245, 5, 77, 22);
+		txtFecha.setBounds(245, 34, 101, 22);
 		txtFecha.getEditor().setLocation(0, 8);
 		
 		txtTipoCambio = new JTextField();
-		txtTipoCambio.setBounds(713, 6, 53, 20);
+		txtTipoCambio.setBounds(786, 34, 44, 20);
 		txtTipoCambio.setMinimumSize(new Dimension(30, 20));
 		txtTipoCambio.setPreferredSize(new Dimension(30, 20));
 		txtTipoCambio.setColumns(10);
 		
 		lblTipoCambio = new JLabel("Tipo de Cambio");
-		lblTipoCambio.setBounds(636, 9, 73, 14);
+		lblTipoCambio.setBounds(699, 39, 73, 14);
 		
 		lblTcMoneda = new JLabel("T.C. Moneda");
-		lblTcMoneda.setBounds(509, 9, 62, 14);
+		lblTcMoneda.setBounds(564, 39, 62, 14);
 		
 		txtTcMoneda = new JTextField();
-		txtTcMoneda.setBounds(576, 6, 53, 20);
+		txtTcMoneda.setBounds(636, 34, 53, 20);
 		txtTcMoneda.setColumns(10);
 		
 		txtSerie = new JTextField();
-		txtSerie.setBounds(73, 6, 44, 20);
+		txtSerie.setBounds(73, 36, 44, 20);
 		txtSerie.setColumns(10);
 		
 		JLabel lblMoneda = new JLabel("Moneda");
-		lblMoneda.setBounds(332, 9, 38, 14);
-		
+		lblMoneda.setBounds(353, 39, 53, 14);
 		pnlPrincipal.setLayout(null);
 		pnlPrincipal.add(lblNumero);
 		pnlPrincipal.add(txtNumero_2);
@@ -103,10 +104,23 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		pnlPrincipal.add(txtTcMoneda);
 		pnlPrincipal.add(txtSerie);
 		pnlPrincipal.add(lblMoneda);
-		cntMoneda = new cntMoneda();
-		cntMoneda.setBounds(380, 9, 122, 20);
+		cntMoneda = new CntMoneda();
+		cntMoneda.txtDescripcion.setSize(120, 20);
+		cntMoneda.txtCodigo.setLocation(0, 0);
+		cntMoneda.txtDescripcion.setLocation(29, 0);
+		cntMoneda.setBounds(400, 33, 149, 20);
 		pnlPrincipal.add(cntMoneda);
-		setBounds(100, 100, 792, 393);		
+		
+		JLabel lblGrupoDeCentralizacion = new JLabel("Operacion");
+		lblGrupoDeCentralizacion.setBounds(10, 14, 53, 14);
+		pnlPrincipal.add(lblGrupoDeCentralizacion);
+		
+		cntGrupoCentralizacion = new CntGrupoCentralizacion();
+		cntGrupoCentralizacion.txtDescripcion.setBounds(46, 0, 219, 20);
+		cntGrupoCentralizacion.btnBuscar.setLocation(275, 4);
+		cntGrupoCentralizacion.setBounds(73, 8, 291, 20);
+		pnlPrincipal.add(cntGrupoCentralizacion);
+		setBounds(100, 100, 856, 465);		
 	}
 	
 	public void iniciar() {

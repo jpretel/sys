@@ -50,4 +50,10 @@ public class TxtProducto extends JXTextFieldEntityAC<Producto> {
 	public int getMinimoBusqueda() {
 		return 1;
 	}
+
+	@Override
+	public String getEntityCode(Producto entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -48,29 +48,19 @@ public class SysDesarrollo extends JFrame {
 		
 		
 		cfgInicio.setTipo_creacion("");//No Hace Nada
-		//cfgInicio.setTipo_creacion("DROP");//Borra y Crea
-		//cfgInicio.setTipo_creacion("UPDATE");//Crea y actualiza
-		
-		//UsuarioDAO usuarioDAO = new UsuarioDAO();
-		//Sys.usuario = usuarioDAO.find("ADMINISTRADOR");
 		Sys.mensajes = new Mensajes("ESPANOL");
 		SysDesarrollo frm = new SysDesarrollo();
-		frm.setVisible(true);
+		frm.setVisible(true);		
 		
-		FrmCfgCentralizaAlm frame2 = new FrmCfgCentralizaAlm();
-		frm.getDesktopPane().add(frame2);
-		
-		FrmGrupos frm2 = new FrmGrupos();
-		frm.getDesktopPane().add(frm2);
-		
-		FrmConcepto frm3 = new FrmConcepto();
+		/*FrmSubdiario frm3 = new FrmSubdiario();
 		frm.getDesktopPane().add(frm3);
+
+		FrmGrupoCentralizacion frm5 = new FrmGrupoCentralizacion();
+		frm.getDesktopPane().add(frm5);*/
 		
-		
-		FrmCuentas frm4 = new FrmCuentas();
+		FrmListaRecepcion frm4 = new FrmListaRecepcion();
 		frm.getDesktopPane().add(frm4);
 		
-		ConsumidorDAO dao = new ConsumidorDAO();
-		System.out.println(dao.findMaxJerarquia());
+		
 	}
 }

@@ -1,5 +1,6 @@
 package core.centralizacion;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +59,9 @@ public class CentralizaAlm {
 		Moneda moneda = doc.getMoneda();
 		
 		for (DetDocingreso det : dingresoDAO.findAll()) {
-			float precio = det.getPrecio(), cantidad = det.getCantidad(), total = 0;
+			BigDecimal precio = det.getPrecio();
+			BigDecimal cantidad = det.getCantidad();
+			float total = 0;
 			Producto prod = det.getProducto();
 			total = precio * cantidad;
 

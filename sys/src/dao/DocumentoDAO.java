@@ -24,4 +24,5 @@ public class DocumentoDAO extends AbstractDAO<Documento> {
 		return getEntityManager().createQuery(q).getSingleResult();
 	}
 
+
 }

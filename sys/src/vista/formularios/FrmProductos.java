@@ -13,8 +13,11 @@ import vista.utilitarios.UtilMensajes;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-
+import dao.GrupoDAO;
+import dao.MarcaDAO;
 import dao.ProductoDAO;
+import dao.SubgrupoDAO;
+import dao.UnimedidaDAO;
 import entity.Grupo;
 import entity.Marca;
 import entity.Producto;
@@ -164,8 +167,7 @@ public class FrmProductos extends AbstractMaestro {
 						.addContainerGap()
 						.addComponent(tabPanel, GroupLayout.DEFAULT_SIZE, 312,
 								Short.MAX_VALUE).addContainerGap()));
-		pnlContenido.setLayout(groupLayout);
-		llenar_contenedores();
+		pnlContenido.setLayout(groupLayout);		
 	}
 
 	@Override
@@ -233,7 +235,7 @@ public class FrmProductos extends AbstractMaestro {
 			cntmarca.setSeleccionado(getProducto().getMarca());
 			cntmedida.setSeleccionado(getProducto().getUnimedida());
 			cntgrupo.setSeleccionado(g);
-			cntSubGrupo.setGrupo(g);
+			//cntSubGrupo.setGrupo(g);
 			cntSubGrupo.setSeleccionado(sg);
 			
 		} else {
@@ -251,17 +253,10 @@ public class FrmProductos extends AbstractMaestro {
 		}
 	}
 
-	public void llenar_contenedores() {
-		cntgrupo.refrescar();
-		cntSubGrupo.setGrupo(null);
-		cntSubGrupo.refrescar();
-		cntmedida.refrescar();
-		cntmarca.refrescar();
-	}
+
 
 	public void actualizaSubGrupo() {
-		cntSubGrupo.setGrupo(cntgrupo.getSeleccionado());
-		cntSubGrupo.refrescar();
+		cntSubGrupo.setData(new SubgrupoDAO().findAllbyGrupo(cntgrupo.getSeleccionado()));
 	}
 
 	@Override
@@ -271,8 +266,10 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void llenar_tablas() {
-		// TODO Auto-generated method stub
-
+		System.out.println("entro al metodo");
+		cntgrupo.setData(new GrupoDAO().findAll());
+		cntmarca.setData(new MarcaDAO().findAll());
+		cntmedida.setData(new UnimedidaDAO().findAll());
 	}
 
 	@Override

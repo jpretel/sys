@@ -16,20 +16,9 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	private Object[] obj;
 	private List<Producto> prodList = pdao.findAll();
 	private Producto producto;
-
+	private FrmProductos frmproductos = new FrmProductos();
 	public FrmListaProductos() {
 		super();
-		/*GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 568, Short.MAX_VALUE)
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 277, Short.MAX_VALUE)
-		);
-		pnlContenido.setLayout(groupLayout);
-		getContentPane().add(pnlContenido);*/
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);
@@ -41,9 +30,6 @@ public class FrmListaProductos extends AbstractMaestroLista {
 		if (RetornarPk() instanceof Object) {
 			producto = pdao.find(RetornarPk());
 		}
-
-		FrmProductos frmproductos = new FrmProductos();
-
 		init(frmproductos, estado, producto);
 	}
 
@@ -78,10 +64,10 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	}
 
-	@Override
+	//Llamar al metodo Llenar Tablas del FrmProductos
+	@Override 
 	public void llenar_tablas() {
-		// TODO Auto-generated method stub
-
+		frmproductos.llenar_tablas();
 	}
 
 	@Override

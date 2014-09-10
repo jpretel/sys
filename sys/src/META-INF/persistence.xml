@@ -19,6 +19,7 @@
 		<class>entity.DetDocingreso</class>
 		<class>entity.DetDocingresoPK</class>
 		<class>entity.DocFormulario</class>
+		<class>entity.Docingreso</class>
 		<class>entity.Documento</class>
 		<class>entity.DocumentoNumero</class>
 		<class>entity.DocumentoNumeroPK</class>

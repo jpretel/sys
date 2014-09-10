@@ -102,7 +102,9 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 	
 	@Override
 	public void nuevo() {
+		System.out.println("hace nuevo");
 		irFormulario(NUEVO);
+		iniciar();
 	}
 	
 	@Override

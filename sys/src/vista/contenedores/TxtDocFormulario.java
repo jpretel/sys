@@ -53,4 +53,10 @@ public class TxtDocFormulario extends JXTextFieldEntityAC<DocFormulario> {
 	public int getMinimoBusqueda() {
 		return 1;
 	}
+
+	@Override
+	public String getEntityCode(DocFormulario entity) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
