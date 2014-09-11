@@ -6,14 +6,19 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import vista.barras.PanelBarraDocumento;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-
-import org.jdesktop.swingx.JXDatePicker;
+import java.util.Date;
 
 import vista.contenedores.CntGrupoCentralizacion;
 import vista.contenedores.CntMoneda;
+import vista.controles.DSGDatePicker;
+import vista.controles.DSGTextFieldCorrelativo;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public abstract class AbstractDocForm extends JInternalFrame{
 	private static final long serialVersionUID = 1L;
@@ -24,12 +29,12 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected static final String VISTA = "VISTA";
 	protected static final String NUEVO = "NUEVO";
 	private String estado;	
-	protected JTextField txtNumero_2;
+	protected DSGTextFieldCorrelativo txtNumero_2;
 	protected JTextField txtTipoCambio;
 	protected JTextField txtTcMoneda;
 	protected JLabel lblTcMoneda;
 	protected JLabel lblTipoCambio;
-	protected JXDatePicker txtFecha;
+	protected DSGDatePicker txtFecha;
 	protected JTextField txtSerie;
 	protected CntMoneda cntMoneda;	
 	protected CntGrupoCentralizacion cntGrupoCentralizacion;
@@ -54,73 +59,164 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		pnlPrincipal.setMinimumSize(new Dimension(AnchoCabecera, 500));
 		pnlPrincipal.setPreferredSize(new Dimension(AnchoCabecera, 500));
 		pnlPrincipal.setBounds(0, 40, AnchoCabecera, 70);
-		//pnlPrincipal.setLayout(getLayout());
+		
 		getContentPane().add(pnlPrincipal);
 		JLabel lblNumero = new JLabel("Correlativo");
-		lblNumero.setBounds(10, 39, 53, 14);
 		
-		txtNumero_2 = new JTextField();
-		txtNumero_2.setBounds(116, 36, 80, 20);
-		txtNumero_2.setEnabled(false);
+		txtNumero_2 = new DSGTextFieldCorrelativo(8);
 		txtNumero_2.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(206, 39, 53, 14);
 		
-		txtFecha = new JXDatePicker();
-		txtFecha.setBounds(245, 34, 101, 22);
+		txtFecha = new DSGDatePicker();
 		txtFecha.getEditor().setLocation(0, 8);
+		txtFecha.setDate(new Date());
 		
 		txtTipoCambio = new JTextField();
-		txtTipoCambio.setBounds(786, 34, 44, 20);
 		txtTipoCambio.setMinimumSize(new Dimension(30, 20));
 		txtTipoCambio.setPreferredSize(new Dimension(30, 20));
 		txtTipoCambio.setColumns(10);
 		
 		lblTipoCambio = new JLabel("Tipo de Cambio");
-		lblTipoCambio.setBounds(699, 39, 73, 14);
 		
 		lblTcMoneda = new JLabel("T.C. Moneda");
-		lblTcMoneda.setBounds(564, 39, 62, 14);
 		
 		txtTcMoneda = new JTextField();
-		txtTcMoneda.setBounds(636, 34, 53, 20);
 		txtTcMoneda.setColumns(10);
 		
 		txtSerie = new JTextField();
-		txtSerie.setBounds(73, 36, 44, 20);
 		txtSerie.setColumns(10);
-		
-		JLabel lblMoneda = new JLabel("Moneda");
-		lblMoneda.setBounds(353, 39, 53, 14);
-		pnlPrincipal.setLayout(null);
-		pnlPrincipal.add(lblNumero);
-		pnlPrincipal.add(txtNumero_2);
-		pnlPrincipal.add(lblFecha);
-		pnlPrincipal.add(txtFecha);
-		pnlPrincipal.add(txtTipoCambio);
-		pnlPrincipal.add(lblTipoCambio);
-		pnlPrincipal.add(lblTcMoneda);
-		pnlPrincipal.add(txtTcMoneda);
-		pnlPrincipal.add(txtSerie);
-		pnlPrincipal.add(lblMoneda);
-		cntMoneda = new CntMoneda();
-		cntMoneda.txtDescripcion.setSize(120, 20);
-		cntMoneda.txtCodigo.setLocation(0, 0);
-		cntMoneda.txtDescripcion.setLocation(29, 0);
-		cntMoneda.setBounds(400, 33, 149, 20);
-		pnlPrincipal.add(cntMoneda);
-		
 		JLabel lblGrupoDeCentralizacion = new JLabel("Operacion");
-		lblGrupoDeCentralizacion.setBounds(10, 14, 53, 14);
-		pnlPrincipal.add(lblGrupoDeCentralizacion);
 		
 		cntGrupoCentralizacion = new CntGrupoCentralizacion();
-		cntGrupoCentralizacion.txtDescripcion.setBounds(46, 0, 219, 20);
-		cntGrupoCentralizacion.btnBuscar.setLocation(275, 4);
-		cntGrupoCentralizacion.setBounds(73, 8, 291, 20);
-		pnlPrincipal.add(cntGrupoCentralizacion);
-		setBounds(100, 100, 856, 465);		
+		JLabel lblMoneda = new JLabel("Moneda");
+		cntMoneda = new CntMoneda();
+		GroupLayout gl_cntMoneda = new GroupLayout(cntMoneda);
+		gl_cntMoneda.setHorizontalGroup(
+			gl_cntMoneda.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_cntMoneda.createSequentialGroup()
+					.addComponent(cntMoneda.txtCodigo, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+					.addGap(1)
+					.addComponent(cntMoneda.txtDescripcion, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+					.addGap(25)
+					.addComponent(cntMoneda.btnBuscar, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+		);
+		gl_cntMoneda.setVerticalGroup(
+			gl_cntMoneda.createParallelGroup(Alignment.LEADING)
+				.addComponent(cntMoneda.txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+				.addComponent(cntMoneda.txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+				.addGroup(gl_cntMoneda.createSequentialGroup()
+					.addGap(2)
+					.addComponent(cntMoneda.btnBuscar))
+		);
+		cntMoneda.setLayout(gl_cntMoneda);
+		setBounds(100, 100, 854, 465);
+		cntGrupoCentralizacion.txtCodigo.requestFocus();
+		GroupLayout gl_cntGrupoCentralizacion = new GroupLayout(cntGrupoCentralizacion);
+		gl_cntGrupoCentralizacion.setHorizontalGroup(
+			gl_cntGrupoCentralizacion.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_cntGrupoCentralizacion.createSequentialGroup()
+					.addComponent(cntGrupoCentralizacion.txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(cntGrupoCentralizacion.txtDescripcion, GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+					.addGap(10)
+					.addComponent(cntGrupoCentralizacion.btnBuscar)
+					.addGap(8))
+		);
+		gl_cntGrupoCentralizacion.setVerticalGroup(
+			gl_cntGrupoCentralizacion.createParallelGroup(Alignment.LEADING)
+				.addComponent(cntGrupoCentralizacion.txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+				.addComponent(cntGrupoCentralizacion.txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+				.addGroup(gl_cntGrupoCentralizacion.createSequentialGroup()
+					.addGap(4)
+					.addComponent(cntGrupoCentralizacion.btnBuscar))
+		);
+		cntGrupoCentralizacion.setLayout(gl_cntGrupoCentralizacion);
+		GroupLayout gl_pnlPrincipal = new GroupLayout(pnlPrincipal);
+		gl_pnlPrincipal.setHorizontalGroup(
+			gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlPrincipal.createSequentialGroup()
+					.addGap(10)
+					.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addComponent(lblGrupoDeCentralizacion, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+							.addGap(3)
+							.addComponent(cntGrupoCentralizacion, GroupLayout.PREFERRED_SIZE, 301, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addComponent(lblNumero)
+							.addGap(10)
+							.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_pnlPrincipal.createSequentialGroup()
+									.addGap(43)
+									.addComponent(txtNumero_2, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+								.addGroup(gl_pnlPrincipal.createSequentialGroup()
+									.addComponent(txtSerie, GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+									.addGap(79)))
+							.addGap(10)
+							.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_pnlPrincipal.createSequentialGroup()
+									.addGap(39)
+									.addComponent(txtFecha, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
+								.addComponent(lblFecha, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE))
+							.addGap(7)
+							.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblMoneda, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_pnlPrincipal.createSequentialGroup()
+									.addGap(47)
+									.addComponent(cntMoneda, GroupLayout.PREFERRED_SIZE, 181, Short.MAX_VALUE)))
+							.addGap(10)
+							.addComponent(lblTcMoneda)
+							.addGap(10)
+							.addComponent(txtTcMoneda, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+							.addGap(10)
+							.addComponent(lblTipoCambio)
+							.addGap(10)
+							.addComponent(txtTipoCambio, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)))
+					.addGap(8))
+		);
+		gl_pnlPrincipal.setVerticalGroup(
+			gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_pnlPrincipal.createSequentialGroup()
+					.addGap(8)
+					.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblGrupoDeCentralizacion))
+						.addComponent(cntGrupoCentralizacion, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+					.addGap(5)
+					.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblNumero))
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(3)
+							.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtNumero_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(txtSerie, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(1)
+							.addGroup(gl_pnlPrincipal.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtFecha, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_pnlPrincipal.createSequentialGroup()
+									.addGap(5)
+									.addComponent(lblFecha))))
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblMoneda))
+						.addComponent(cntMoneda, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblTcMoneda))
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(3)
+							.addComponent(txtTcMoneda, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblTipoCambio))
+						.addGroup(gl_pnlPrincipal.createSequentialGroup()
+							.addGap(1)
+							.addComponent(txtTipoCambio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+		);
+		pnlPrincipal.setLayout(gl_pnlPrincipal);
 	}
 	
 	public void iniciar() {

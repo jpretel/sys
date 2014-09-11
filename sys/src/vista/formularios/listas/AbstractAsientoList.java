@@ -45,14 +45,12 @@ public abstract class AbstractAsientoList extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 	protected DSGTextFieldCorrelativo txtNumero;
 	protected JButton btnActualizar;
-
 	protected DSGDatePicker txtDesde;
 	protected DSGDatePicker txtHasta;
 	private JScrollPane pnlDocumentos;
 	protected DSGTableList tblDocumentos;
 
 	protected DSGTableModelList docModel;
-	// private List<Object[]> datos;
 
 	private static final int _ancho = 20;
 	private static final int _alto = 20;
@@ -119,8 +117,6 @@ public abstract class AbstractAsientoList extends JInternalFrame {
 		txtHasta = new DSGDatePicker();
 
 		txtHasta.setDate(new Date());
-		// txtHasta.setDate(calendar.getTime());
-
 		lblSubdiario = new JLabel("Subdiario");
 
 		JLabel lblNmero = new JLabel("N\u00FAmero");

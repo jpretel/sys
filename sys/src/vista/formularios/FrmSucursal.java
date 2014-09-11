@@ -304,7 +304,7 @@ public class FrmSucursal extends AbstractMaestro {
 
 			id.setIdsucursal(getSucursal().getIdsucursal());
 			id.setIdalmacen(this.getAlmacenesTM().getValueAt(i, 0).toString());
-
+			
 			alm.setId(id);
 			alm.setDescripcion(this.getAlmacenesTM().getValueAt(i, 1)
 					.toString());

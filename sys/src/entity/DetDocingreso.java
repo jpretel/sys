@@ -1,8 +1,9 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
-import java.math.BigDecimal;
+import java.util.List;
 
 
 /**
@@ -33,7 +34,14 @@ public class DetDocingreso implements Serializable {
 	@Column(nullable=false, precision=10, scale=2)
 	private float precio;
 	
-	//private Producto producto;
+	/*@ManyToOne
+	@JoinColumn(name = "idingreso", referencedColumnName = "idingreso")
+	private Docingreso docingreso;*/
+	
+	/*@OneToMany
+	@JoinColumn(name="idproducto",referencedColumnName = "idproducto", nullable=false, insertable=false, updatable=false)
+	private List<Producto> productos;*/
+
 	
 	public DetDocingreso() {
 	}
@@ -69,14 +77,6 @@ public class DetDocingreso implements Serializable {
 	public void setImporte(float importe) {
 		this.importe = importe;
 	}
-
-	/*public Producto getProducto() {
-		return producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}*/
 
 	public float getCantidad() {
 		return cantidad;

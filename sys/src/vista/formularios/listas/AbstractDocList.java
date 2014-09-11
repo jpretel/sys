@@ -6,22 +6,18 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.border.EtchedBorder;
 
 import entity.Documento;
 import vista.barras.BarraMaestro;
 import vista.controles.ComboBox;
 import vista.controles.DSGDatePicker;
-import vista.controles.IDocumentoDAO;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.beans.PropertyVetoException;
@@ -34,6 +30,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
+
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 public abstract class AbstractDocList extends JInternalFrame {
@@ -44,19 +41,16 @@ public abstract class AbstractDocList extends JInternalFrame {
 	protected ComboBox<Documento> cboDocumento = new ComboBox<Documento>();
 	protected JTextField txtSerie;
 	protected JTextField txtNumero;
-	private IDocumentoDAO documentoDAO;
 	private DSGDatePicker txtDesde;
 	private DSGDatePicker txtHasta;
-	private JScrollPane pnlDocumentos = new JScrollPane();
-	private JTable tblDocumentos;
-	protected DefaultTableModel modelo_lista;
-	private List<Object[]> datos;
-
+	protected JScrollPane pnlDocumentos = new JScrollPane();
+	protected DSGTableList tblDocumentos;
+	protected DSGTableModelList modelo_lista;
+	
 	private static final int _ancho = 20;
 	private static final int _alto = 20;
 
-	protected String[] cabeceras = new String[] { "Documento", "Serie",
-			"Numero" };
+	protected String[] cabeceras;
 	
 	protected JLabel lblDocumento;
 	private JTextField textField;
@@ -72,17 +66,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
-		//getContentPane().setLayout(new BorderLayout(0, 0));
-		//calendar.set(Calendar.DATE, 1);
 		getContentPane().add(pnlDocumentos, BorderLayout.CENTER);
-
-		tblDocumentos = new JTable();
-		tblDocumentos.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null,
-				null));
-		tblDocumentos.setModel(new DefaultTableModel(new Object[][] {},
-				cabeceras));
-		pnlDocumentos.setViewportView(tblDocumentos);
-
 		JPanel pnlFiltros = new JPanel();
 
 		pnlFiltros.setPreferredSize(new Dimension(0, 70));
@@ -97,13 +81,12 @@ public abstract class AbstractDocList extends JInternalFrame {
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date());
 		c.set(Calendar.DAY_OF_MONTH, 1);
-		txtDesde.setDate(c.getTime());// .setDate(Calendar.DAY_OF_MONTH);
+		txtDesde.setDate(c.getTime());
 
 		JLabel lblHasta = new JLabel("Hasta");
 
 		txtHasta = new DSGDatePicker();
 		txtHasta.setDate(new Date());
-		//txtHasta.setDate(calendar.getTime());
 
 		lblDocumento = new JLabel("Documento");
 
@@ -116,7 +99,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 		JButton btnActualizar = new JButton("Actualizar");
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				llenarLista();
+				Object entity = new Object();
+				llenarLista(entity);
 			}
 		});
 		
@@ -223,11 +207,18 @@ public abstract class AbstractDocList extends JInternalFrame {
 				
 				JButton btnEditar = new JButton("Editar");
 				btnEditar.setIcon(new ImageIcon(AbstractDocList.class.getResource("/main/resources/iconos/editar_lista3.png")));
-				pnlOpciones.add(btnEditar, "1, 4");
-								
+				btnEditar.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						editar();						
+					}
+				});
+				pnlOpciones.add(btnEditar, "1, 4");								
 								JButton btnImprimir = new JButton("Imprimir");
 								btnImprimir.addActionListener(new ActionListener() {
 									public void actionPerformed(ActionEvent arg0) {
+										
 									}
 								});
 								pnlOpciones.add(btnImprimir, "1, 6");
@@ -241,82 +232,18 @@ public abstract class AbstractDocList extends JInternalFrame {
 		setBounds(100, 100, 763, 325);
 	}
 
-	/*
-	 * *
-	 * Metodo que retorna cabeceras de la lista
-	 * 
-	 * @return Cabeceras que se mostrarán en la cabecera de la lista / public
-	 * abstract String[] getCabeceras();
-	 */
-	/**
-	 * Llena la lista del formulario con los datos de los documentos, usa un
-	 * tipo de datos <b> List </b> que deberá ser llenado desde se tomará la
-	 * posicion cero para el Objeto de tipo <b>ID</b> de la entidad, para poder
-	 * llamarla en el formulario de edición una clase DAO que herede de
-	 * <b>Abstract DAO</b> en caso de agregar más parametros sobreescribir esta
-	 * clase.
-	 */
-	public void llenarLista() {
-		int columnas;
-		Calendar desde, hasta;
-		String iddocumento, serie, numero;
-		desde = Calendar.getInstance();
-		hasta = Calendar.getInstance();
-		desde.setTime(txtDesde.getDate());
-		hasta.setTime(txtHasta.getDate());
-		iddocumento = cboDocumento.getModel()
-				.getElementAt(cboDocumento.getSelectedIndex()).getObject()
-				.getIddocumento();
-		//serie = txtSerie.getText();
-		serie = "";
-		numero = txtNumero.getText();
-
-		columnas = cabeceras.length;
-
-		datos = getDocumentoDAO().getListaDocumentos(
-				desde.get(Calendar.DAY_OF_MONTH), desde.get(Calendar.MONTH),
-				desde.get(Calendar.YEAR), hasta.get(Calendar.DAY_OF_MONTH),
-				hasta.get(Calendar.MONTH), hasta.get(Calendar.YEAR),
-				iddocumento, serie, numero);
-
-		modelo_lista = new DefaultTableModel();
-
-		for (String cabecera : cabeceras) {
-			modelo_lista.addColumn(cabecera);
-		}
-
-		for (Object[] dato : datos) {
-			Object[] row = new Object[columnas];
-			for (int i = 0; i < columnas; i++) {
-				row[i] = dato[i + 1];
-			}
-			modelo_lista.addRow(row);
-		}
-	}
-
-	public IDocumentoDAO getDocumentoDAO() {
-		return documentoDAO;
-	}
-
-	/**
-	 * @param documentoDAO
-	 *            the documentoDAO to set
-	 */
-	public void setDocumentoDAO(IDocumentoDAO documentoDAO) {
-		this.documentoDAO = documentoDAO;
-	}
-	
 	public void init(AbstractDocForm obj, String opcion, Object entidad) {
 		if (obj instanceof AbstractDocForm) {
 			getDesktopPane().add(obj);
 			if (opcion.equals("NUEVO"))
 				obj.DoNuevo();
 			if (opcion.equals("VISTA")) {
+				obj.setEstado(opcion);
 				obj.actualiza_objeto(entidad);
 			}
 			if (opcion.equals("EDICION")) {
-				obj.actualiza_objeto(entidad);
 				obj.editar();
+				obj.actualiza_objeto(entidad);
 			}
 			try {
 				obj.setSelected(true);
@@ -326,7 +253,32 @@ public abstract class AbstractDocList extends JInternalFrame {
 		}
 	}
 	
+	public void llenarLista(Object documento){
+		modelo_lista.limpiar();
+		for (Object [] data : getData(0, 0,
+				0, documento)) {
+			modelo_lista.addRow(data);
+		}
+	}
+	
+	
+	public Object RetornarPk() {
+		Object id = null;
+		if (tblDocumentos.getSelectedRow() >= 0) {
+			id = modelo_lista.getValueAt(tblDocumentos.getSelectedRow(), 0);
+		}
+		return id;
+	}
+	
+	public abstract Object[][] getData(int idesde, int ihasta, int numero,
+			Object ingreso);
+	
 	public abstract void nuevo();
+	
+	public abstract void editar();
+	
+	public abstract void abrirFormulario(String estado);
+	
 	private JLabel getLabel() {
 		if (label == null) {
 			label = new JLabel("-");
