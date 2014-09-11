@@ -14,7 +14,7 @@ public class Docingreso implements Serializable {
 
 	@Id
 	@Column(unique=true, nullable=false)
-	private String iddocingreso;
+	private long iddocingreso;
 	
 	@ManyToOne
 	@JoinColumn(name = "idgcentralizacion",referencedColumnName = "idgcentralizacion" , nullable = false)
@@ -90,11 +90,11 @@ public class Docingreso implements Serializable {
 	public Docingreso() {
 	}
 
-	public String getIddocingreso() {
+	public long getIddocingreso() {
 		return this.iddocingreso;
 	}
 
-	public void setIddocingreso(String iddocingreso) {
+	public void setIddocingreso(long iddocingreso) {
 		this.iddocingreso = iddocingreso;
 	}
 

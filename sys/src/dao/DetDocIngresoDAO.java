@@ -15,10 +15,10 @@ public class DetDocIngresoDAO extends AbstractDAO<DetDocingreso> {
 		super(DetDocingreso.class);
 	}
 	
-	public List<DetDocingreso> getPorIdIngreso(long idingreso){
+	public List<DetDocingreso> getPorIdIngreso(Docingreso ingreso){
 		CriteriaQuery<DetDocingreso> q = cb.createQuery(DetDocingreso.class);
-		Root<DetDocingresoPK> c = q.from(DetDocingresoPK.class);
-		Predicate condicion = cb.equal(c.get("idingreso"), idingreso);
+		Root<DetDocingreso> c = q.from(DetDocingreso.class);
+		Predicate condicion = cb.equal(c.get("docingreso"), ingreso);
 		q.multiselect(c).where(condicion);
 		return getEntityManager().createQuery(q).getResultList();
 	}

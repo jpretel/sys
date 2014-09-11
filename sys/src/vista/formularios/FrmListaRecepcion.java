@@ -25,7 +25,7 @@ public class FrmListaRecepcion extends AbstractDocList {
 		lblDocumento.setVisible(false);
 		Docingreso docingreso = new Docingreso();
 		cabeceras = new String[] {"Id","Serie", "Numero","Responsable","Sucursal","Almacen"};
-		tblDocumentos = new DSGTableList(0) {			
+		tblDocumentos = new DSGTableList(5) {			
 			/**
 			 * 
 			 */

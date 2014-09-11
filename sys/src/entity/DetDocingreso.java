@@ -25,7 +25,7 @@ public class DetDocingreso implements Serializable {
 	@Column(length=200)
 	private String descripcion;
 
-	@Column(nullable=false, length=4)
+	@Column(length=3 , nullable = false)
 	private String idmedida;
 
 	@Column(nullable=false, precision=10, scale=2)
@@ -34,9 +34,9 @@ public class DetDocingreso implements Serializable {
 	@Column(nullable=false, precision=10, scale=2)
 	private float precio;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "idingreso", referencedColumnName = "idingreso")
-	private Docingreso docingreso;*/
+	@ManyToOne
+	@JoinColumn(name = "idingreso", nullable=false, insertable=false, updatable=false)
+	private Docingreso docingreso;
 	
 	/*@OneToMany
 	@JoinColumn(name="idproducto",referencedColumnName = "idproducto", nullable=false, insertable=false, updatable=false)
@@ -62,14 +62,6 @@ public class DetDocingreso implements Serializable {
 		this.descripcion = descripcion;
 	}
 
-	public String getIdmedida() {
-		return this.idmedida;
-	}
-
-	public void setIdmedida(String idmedida) {
-		this.idmedida = idmedida;
-	}
-
 	public float getImporte() {
 		return this.importe;
 	}
@@ -77,7 +69,15 @@ public class DetDocingreso implements Serializable {
 	public void setImporte(float importe) {
 		this.importe = importe;
 	}
+	
+	public String getIdmedida() {
+		return idmedida;
+	}
 
+	public void setIdmedida(String idmedida) {
+		this.idmedida = idmedida;
+	}
+	
 	public float getCantidad() {
 		return cantidad;
 	}
@@ -92,6 +92,14 @@ public class DetDocingreso implements Serializable {
 
 	public void setPrecio(float precio) {
 		this.precio = precio;
+	}
+
+	public Docingreso getDocingreso() {
+		return docingreso;
+	}
+
+	public void setDocingreso(Docingreso docingreso) {
+		this.docingreso = docingreso;
 	}
 
 }

@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
 import dao.DetDocIngresoDAO;
@@ -31,9 +32,11 @@ import dao.MonedaDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
+import dao.UnimedidaDAO;
 import entity.DetDocingreso;
 import entity.DetDocingresoPK;
 import entity.Docingreso;
+import entity.Unimedida;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 
@@ -227,21 +230,29 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		if (getIngreso() instanceof Docingreso && !getEstado().equals("NUEVO")){		
 			this.txtNumero_2.setText(String.valueOf(getIngreso().getNumero()));
 			this.txtSerie.setText(getIngreso().getSerie());
+			this.cntGrupoCentralizacion.setSeleccionado(getIngreso().getGrupoCentralizacion());
 			this.cntGrupoCentralizacion.txtCodigo.setText(getIngreso().getGrupoCentralizacion().getIdgcentralizacion());
 			this.cntGrupoCentralizacion.txtDescripcion.setText(getIngreso().getGrupoCentralizacion().getDescripcion());
+			this.cntMoneda.setSeleccionado(getIngreso().getMoneda());
 			this.cntMoneda.txtCodigo.setText(getIngreso().getMoneda().getIdmoneda());
 			this.cntMoneda.txtDescripcion.setText(getIngreso().getMoneda().getDescripcion());
+			this.cntConcepto.setSeleccionado(getIngreso().getConcepto());
 			this.cntConcepto.txtCodigo.setText(getIngreso().getConcepto().getIdconcepto());
 			this.cntConcepto.txtDescripcion.setText(getIngreso().getConcepto().getDescripcion());
+			this.cntResponsable.setSeleccionado(getIngreso().getResponsable());
 			this.cntResponsable.txtCodigo.setText(getIngreso().getResponsable().getIdresponsable());
 			this.cntResponsable.txtDescripcion.setText(getIngreso().getResponsable().getNombre());
+			this.cntSucursal.setSeleccionado(getIngreso().getAlmacen().getSucursal());
 			this.cntSucursal.txtCodigo.setText(getIngreso().getAlmacen().getSucursal().getIdsucursal());
 			this.cntSucursal.txtDescripcion.setText(getIngreso().getAlmacen().getSucursal().getDescripcion());
+			this.cntAlmacen.setSeleccionado(getIngreso().getAlmacen());
 			this.cntAlmacen.txtCodigo.setText(getIngreso().getAlmacen().getId().getIdalmacen());
-			this.cntAlmacen.txtCodigo.setText(getIngreso().getAlmacen().getDescripcion());
-			List<DetDocingreso> detDocIngresoL = detDocingresoDAO.getPorIdIngreso(Long.parseLong(getIngreso().getIddocingreso()));
+			this.cntAlmacen.txtDescripcion.setText(getIngreso().getAlmacen().getDescripcion());
+			List<DetDocingreso> detDocIngresoL = detDocingresoDAO.getPorIdIngreso(getIngreso());
 			for(DetDocingreso ingreso : detDocIngresoL){
-				getDetalleTM().addRow(new Object[]{ingreso.getId().getIdproducto(),ingreso.getDescripcion(),ingreso.getIdmedida(),"",ingreso.getCantidad(),ingreso.getPrecio(),ingreso.getPrecio()});				
+				Unimedida unimedida = new UnimedidaDAO().find(ingreso.getIdmedida()); 
+				getDetalleTM().addRow(new Object[]{ingreso.getId().getIdproducto(),ingreso.getDescripcion(),unimedida.getIdunimedida(),
+						unimedida.getDescripcion(),ingreso.getCantidad(),ingreso.getPrecio(),ingreso.getPrecio()});				
 			}
 		}
 	}
@@ -307,13 +318,18 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void actualiza_objeto(Object entidad) {
 		setIngreso((Docingreso) entidad);
+		Id = getIngreso().getIddocingreso();
 		iniciar();
 	}
 
+
 	@SuppressWarnings({ "deprecation"})
 	@Override
-	public void llenarDesdeVista() {		
+	public void llenarDesdeVista() {
+		getIngreso().setIddocingreso(Id);
 		getIngreso().setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
+		getIngreso().setTcambio(Float.parseFloat(this.txtTipoCambio.getText()));
+		getIngreso().setTcmoneda(Float.parseFloat(this.txtTcMoneda.getText()));
 		getIngreso().setSerie(this.txtSerie.getText());
 		getIngreso().setNumero(Integer.parseInt(this.txtNumero_2.getText()));
 		getIngreso().setConcepto(this.cntConcepto.getSeleccionado());
@@ -331,7 +347,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			detPK.setIdingreso(Id);
 			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
 			det.setId(detPK);
-			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
+			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString()); 
 			det.setIdmedida(getDetalleTM().getValueAt(i, 2).toString());
 			det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i, 4).toString())));
 			det.setPrecio(Float.parseFloat(getDetalleTM().getValueAt(i, 5).toString()));
