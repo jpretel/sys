@@ -3,11 +3,6 @@ package vista.contenedores;
 import entity.Responsable;
 
 public class cntResponsable extends AbstractCntBuscar<Responsable> {
-	public cntResponsable() {
-		txtDescripcion.setBounds(46, 0, 144, 20);
-		txtCodigo.setBounds(0, 0, 46, 20);
-		setLayout(null);
-	}
 
 	private static final long serialVersionUID = 1L;
 

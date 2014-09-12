@@ -3,13 +3,6 @@ package vista.contenedores;
 import entity.Sucursal;
 
 public class cntSucursal extends AbstractCntBuscar<Sucursal> {
-	public cntSucursal() {
-		super();
-		txtDescripcion.setBounds(46, 0, 144, 20);
-		txtCodigo.setBounds(0, 0, 46, 20);
-		setLayout(null);
-	}
-
 	private static final long serialVersionUID = 1L;
 
 	@Override

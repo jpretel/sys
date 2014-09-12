@@ -40,7 +40,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 public abstract class AbstractAsientoList extends JInternalFrame {
 	/**
-	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	protected DSGTextFieldCorrelativo txtNumero;

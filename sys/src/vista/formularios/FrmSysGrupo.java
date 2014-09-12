@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -14,7 +13,6 @@ import vista.contenedores.ctnModulo;
 import vista.contenedores.ctnTitulo;
 import vista.controles.DSGTableModel;
 import vista.controles.JTextFieldLimit;
-import vista.utilitarios.ButtonRenderer;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -22,8 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellEditor;
-import javax.swing.JButton;
 
 import dao.SysGrupoDAO;
 import dao.SysModuloDAO;
@@ -36,8 +32,6 @@ import entity.SysOpcion;
 import entity.SysOpcionPK;
 import entity.SysTitulo;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -61,7 +55,7 @@ public class FrmSysGrupo extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
 	
-	private JComboBox combo1;
+	private JComboBox<String> combo1;
 
 	private SysGrupo sysGrupo;
 	private SysGrupo sysGrupo2;
@@ -76,9 +70,6 @@ public class FrmSysGrupo extends AbstractMaestro {
 
 	private SysGrupoDAO sysGrupoDAO = new SysGrupoDAO();
 	private SysOpcionDAO sysOpcionDAO = new SysOpcionDAO();
-
-	private JButton btnILinea;
-	private JButton btnBLinea;
 	private JLabel lblCdModulo;
 	private JLabel lblCdigo_1;
 
@@ -87,10 +78,10 @@ public class FrmSysGrupo extends AbstractMaestro {
 
 		JScrollPane scrollPane = new JScrollPane();
 
-		combo1=new JComboBox();
-		combo1.addItem("grande");
-        combo1.addItem("mediano");
-        combo1.addItem("pequeño");	
+		combo1=new JComboBox<String>();
+		combo1.addItem("Grande");
+        combo1.addItem("Mediano");
+        combo1.addItem("Pequeño");	
         
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -113,8 +104,7 @@ public class FrmSysGrupo extends AbstractMaestro {
 
 			@Override
 			public void addRow() {
-				// TODO Auto-generated method stub
-				
+				addRow(new Object[] { idMas(), "", "", "", });
 			}
 			
 			
@@ -124,6 +114,10 @@ public class FrmSysGrupo extends AbstractMaestro {
 			
 		DefaultCellEditor defaultCellEditor=new DefaultCellEditor(combo1);
 		tblOpciones.getColumn("Prioridad").setCellEditor(defaultCellEditor);
+		
+		getDetalleTM().setObligatorios(0,1);
+		getDetalleTM().setRepetidos(0);
+		getDetalleTM().setScrollAndTable(scrollPaneNum, tblOpciones);
 		
 		JLabel lblCdigo = new JLabel("C\u00F3d Grupo");
 
@@ -136,39 +130,19 @@ public class FrmSysGrupo extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
-
-		btnILinea = new JButton("I Linea");
-		btnILinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				final Object fila[] = { idMas(), "", "", "", };
-				getDetalleTM().addRow(fila);
-			}
-		});
-
-		btnBLinea = new JButton("B Linea");
-		btnBLinea.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = tblOpciones.getSelectedRow();
-				if (ind >= 0)
-					getDetalleTM().removeRow(ind);
-			}
-		});
 		
-		//ctnmodulo = new ctnModulo(new SysModuloDAO());
-		//txtidmodulo.setColumns(10);
+		
 		
 		lblCdModulo = new JLabel("C\u00F3d. Modulo");
 		
-		ctnmodulo = new ctnModulo(new SysModuloDAO());
+		ctnmodulo = new ctnModulo();
 		
 		ctntitulo = new ctnTitulo();
-		ctntitulo.setSysTituloDAO(new SysTituloDAO());
 		//txtidtitulo.setColumns(10);
 		ctntitulo.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				actualizaTitulo();
+				ctntitulo.setData(sysTituloDAO.getPorModulo(ctnmodulo.getSeleccionado()));
 			}
 		});
 		
@@ -178,81 +152,72 @@ public class FrmSysGrupo extends AbstractMaestro {
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
 					.addGap(10)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-							.addGap(6))
+						.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 									.addGap(13)
-									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)
+									.addComponent(this.txtCodigo, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE)
 									.addGap(85))
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addGroup(groupLayout.createSequentialGroup()
-											.addComponent(lblCdigo_1, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+											.addComponent(this.lblCdigo_1, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 											.addGap(13)
-											.addComponent(ctntitulo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-										.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-											.addComponent(lblCdModulo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+											.addComponent(this.ctntitulo, GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(this.lblCdModulo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 											.addGap(13)
-											.addComponent(ctnmodulo, GroupLayout.PREFERRED_SIZE, 126, Short.MAX_VALUE))
-										.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+											.addComponent(this.ctnmodulo, GroupLayout.PREFERRED_SIZE, 182, Short.MAX_VALUE))
+										.addGroup(groupLayout.createSequentialGroup()
 											.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
 											.addGap(13)
-											.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)))
+											.addComponent(this.txtDescripcion, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)))
 									.addGap(8)))
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnILinea, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE))
-							.addGap(6))))
+							.addGap(83)))
+					.addGap(6))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
 							.addContainerGap()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(11)
-									.addComponent(lblCdModulo))
+									.addComponent(this.lblCdModulo))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(9)
-									.addComponent(ctnmodulo, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(this.ctnmodulo, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
 							.addGap(6)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(8)
-									.addComponent(lblCdigo_1))
+									.addComponent(this.lblCdigo_1))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(ctntitulo, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(this.ctntitulo, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblCdigo)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(4)
-									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(4)
-									.addComponent(btnILinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(this.txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 							.addGap(4)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(3)
 									.addComponent(lblDescripcin))
-								.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-									.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(btnBLinea, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(this.txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(11)
-							.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)))
+							.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)))
 					.addGap(7))
 		);
 		pnlContenido.setLayout(groupLayout);
@@ -272,11 +237,6 @@ public class FrmSysGrupo extends AbstractMaestro {
 					}
 				});
 		iniciar();
-	}
-	
-	public void actualizaTitulo(){
-		ctntitulo.setModulo(ctnmodulo.getSeleccionado());
-		ctntitulo.refrescar();
 	}
 	
 	public String idMas(){
@@ -323,6 +283,7 @@ public class FrmSysGrupo extends AbstractMaestro {
 		}
 		//iniciar();
 	}
+	
 
 	@Override
 	public void llenarDesdeVista() {
@@ -353,11 +314,11 @@ public class FrmSysGrupo extends AbstractMaestro {
 			obj.setId(ido);
 			obj.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
 			//System.out.println(getDetalleTM().getValueAt(i, 2));
-			if(getDetalleTM().getValueAt(i, 2).equals("grande")){
+			if(getDetalleTM().getValueAt(i, 2).equals("Grande")){
 				obj.setPrioridad(1);
-			}else if(getDetalleTM().getValueAt(i, 2).equals("mediano")){
+			}else if(getDetalleTM().getValueAt(i, 2).equals("Mediano")){
 				obj.setPrioridad(2);
-			}else if(getDetalleTM().getValueAt(i, 2).equals("pequeño")){
+			}else if(getDetalleTM().getValueAt(i, 2).equals("Pequeño")){
 				obj.setPrioridad(3);
 			}
 			
@@ -374,11 +335,13 @@ public class FrmSysGrupo extends AbstractMaestro {
 		getDetalleTM().limpiar();
 		//setSysOpciones(new ArrayList<SysOpcion>());
 		
-		if (!getEstado().equals(NUEVO) && sysGrupoDAO.findAll().size()>0) {
-			
-			ctnmodulo.setSeleccionado(getSysTitulo().getSysModulo());		
-			ctntitulo.setSeleccionado(getSysTitulo());
-			
+		//if (!getEstado().equals(NUEVO) && sysGrupoDAO.findAll().size()>0) {
+		if (getSysGrupo() != null) {
+			ctnmodulo.txtCodigo.setText(getSysGrupo().getId().getIdmodulo());// .setSeleccionado(getSysTitulo().getSysModulo());
+			ctnmodulo.llenar();
+			ctntitulo.setData(sysTituloDAO.getPorModulo(sysModuloDAO.find(getSysGrupo().getId().getIdmodulo())));
+			ctntitulo.txtCodigo.setText(getSysGrupo().getId().getIdtitulo());
+			ctntitulo.llenar();
 			System.out.println("Mostrar: "+getSysGrupo2().getId().getIdgrupo());
 			txtCodigo.setText(getSysGrupo2().getId().getIdgrupo().toString());
 			txtDescripcion.setText(getSysGrupo2().getDescripcion());
@@ -388,11 +351,11 @@ public class FrmSysGrupo extends AbstractMaestro {
 				
 				String op;
 				if(obj.getPrioridad() == 1){
-					op = "grande";
+					op = "Grande";
 				}else if(obj.getPrioridad() == 2){
-					op = "mediano";
+					op = "Mediano";
 				}else{
-					op = "pequeño";
+					op = "Pequeño";
 				}
 				
 				getDetalleTM().addRow(
@@ -440,12 +403,14 @@ public class FrmSysGrupo extends AbstractMaestro {
 	public void llenar_tablas() {
 		setSysGrupos(getSysGrupoDAO().findAll());
 	}
-
-	public void llenar_contenedores() {
-		ctnmodulo.refrescar();
-		ctntitulo.setModulo(null);
-		ctntitulo.refrescar();
-	}
+	
+	@Override
+	public void actualiza_tablas() {
+		if (ctnmodulo != null)
+			ctnmodulo.setData(sysModuloDAO.findAll());
+		if (ctntitulo != null)
+			ctntitulo.setData(null);
+	};
 	
 	@Override
 	public void vista_edicion() {
@@ -455,12 +420,8 @@ public class FrmSysGrupo extends AbstractMaestro {
 			txtCodigo.setEditable(true);
 		txtDescripcion.setEditable(true);
 		getDetalleTM().setEditar(true);
-		btnILinea.setEnabled(true);
-		btnBLinea.setEnabled(true);
 		this.ctntitulo.txtCodigo.setEditable(true);
-		this.ctntitulo.txtDescripcion.setEditable(true);
 		this.ctnmodulo.txtCodigo.setEditable(true);
-		this.ctnmodulo.txtDescripcion.setEditable(true);
 
 	}
 
@@ -469,12 +430,8 @@ public class FrmSysGrupo extends AbstractMaestro {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
 		getDetalleTM().setEditar(false);
-		btnILinea.setEnabled(false);
-		btnBLinea.setEnabled(false);
 		this.ctntitulo.txtCodigo.setEditable(false);
-		this.ctntitulo.txtDescripcion.setEditable(false);
 		this.ctnmodulo.txtCodigo.setEditable(false);
-		this.ctnmodulo.txtDescripcion.setEditable(false);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ public abstract class AbstractDocForm extends JInternalFrame{
 	protected JTextField txtSerie;
 	protected CntMoneda cntMoneda;	
 	protected CntGrupoCentralizacion cntGrupoCentralizacion;
+	protected JLabel lblGrupoDeCentralizacion;
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -86,30 +87,12 @@ public abstract class AbstractDocForm extends JInternalFrame{
 		
 		txtSerie = new JTextField();
 		txtSerie.setColumns(10);
-		JLabel lblGrupoDeCentralizacion = new JLabel("Operacion");
+		lblGrupoDeCentralizacion = new JLabel("Operacion");
 		
 		cntGrupoCentralizacion = new CntGrupoCentralizacion();
 		JLabel lblMoneda = new JLabel("Moneda");
 		cntMoneda = new CntMoneda();
-		GroupLayout gl_cntMoneda = new GroupLayout(cntMoneda);
-		gl_cntMoneda.setHorizontalGroup(
-			gl_cntMoneda.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_cntMoneda.createSequentialGroup()
-					.addComponent(cntMoneda.txtCodigo, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-					.addGap(1)
-					.addComponent(cntMoneda.txtDescripcion, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
-					.addGap(25)
-					.addComponent(cntMoneda.btnBuscar, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-		);
-		gl_cntMoneda.setVerticalGroup(
-			gl_cntMoneda.createParallelGroup(Alignment.LEADING)
-				.addComponent(cntMoneda.txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-				.addComponent(cntMoneda.txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-				.addGroup(gl_cntMoneda.createSequentialGroup()
-					.addGap(2)
-					.addComponent(cntMoneda.btnBuscar))
-		);
-		cntMoneda.setLayout(gl_cntMoneda);
+		
 		setBounds(100, 100, 854, 465);
 		cntGrupoCentralizacion.txtCodigo.requestFocus();
 		GroupLayout gl_cntGrupoCentralizacion = new GroupLayout(cntGrupoCentralizacion);

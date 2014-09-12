@@ -6,7 +6,6 @@ import java.util.List;
 import dao.ResponsableDAO;
 import entity.Responsable;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -158,11 +157,11 @@ public class FrmResponsable extends AbstractMaestro {
 
 	@Override
 	public void grabar() {	
-		if(getResponsableDAO().find(getResponsable().getIdresponsable()) != null){
+		/*if(getResponsableDAO().find(getResponsable().getIdresponsable()) != null){
 			Historial.validar("Modificar", bkEntidad , getResponsable().historial(), getTitle() );
 		}else{			
 			Historial.validar("Nuevo", getResponsable().historial(), getTitle());
-		}	
+		}*/	
 		getResponsableDAO().crear_editar(getResponsable());
 	}
 

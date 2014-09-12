@@ -3,12 +3,6 @@ package vista.contenedores;
 import entity.Moneda;
 
 public class CntMoneda extends AbstractCntBuscar<Moneda> {
-	public CntMoneda() {
-		btnBuscar.setBounds(191, 2, 28, 16);
-		txtDescripcion.setBounds(47, 0, 144, 20);
-		txtCodigo.setBounds(1, 0, 46, 20);
-		setLayout(null);
-	}
 	/**
 	 * 
 	 */
