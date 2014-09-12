@@ -2,6 +2,7 @@ package vista.formularios;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import vista.contenedores.CntConcepto;
@@ -11,6 +12,7 @@ import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
 import vista.formularios.listas.AbstractDocForm;
+import vista.utilitarios.StringUtils;
 
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
@@ -56,7 +58,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private cntAlmacen cntAlmacen;
 	private JTextArea txtGlosa;
 	private Docingreso ingreso;
-	
+	private Calendar calendar = Calendar.getInstance();
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");		
 	
@@ -227,12 +229,15 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		if (getIngreso() instanceof Docingreso && !getEstado().equals("NUEVO")){		
-			this.txtNumero_2.setText(String.valueOf(getIngreso().getNumero()));
+		if (getIngreso() instanceof Docingreso && !getEstado().equals("NUEVO")){
+			String numero = StringUtils._padl(getIngreso().getNumero(), 8, '0');
+			this.txtNumero_2.setText(numero);
 			this.txtSerie.setText(getIngreso().getSerie());
 			this.cntGrupoCentralizacion.setSeleccionado(getIngreso().getGrupoCentralizacion());
 			this.cntGrupoCentralizacion.txtCodigo.setText(getIngreso().getGrupoCentralizacion().getIdgcentralizacion());
 			this.cntGrupoCentralizacion.txtDescripcion.setText(getIngreso().getGrupoCentralizacion().getDescripcion());
+			this.txtTipoCambio.setText(String.valueOf(getIngreso().getTcambio()));
+			this.txtTcMoneda.setText(String.valueOf(getIngreso().getTcmoneda()));			
 			this.cntMoneda.setSeleccionado(getIngreso().getMoneda());
 			this.cntMoneda.txtCodigo.setText(getIngreso().getMoneda().getIdmoneda());
 			this.cntMoneda.txtDescripcion.setText(getIngreso().getMoneda().getDescripcion());
@@ -248,7 +253,11 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			this.cntAlmacen.setSeleccionado(getIngreso().getAlmacen());
 			this.cntAlmacen.txtCodigo.setText(getIngreso().getAlmacen().getId().getIdalmacen());
 			this.cntAlmacen.txtDescripcion.setText(getIngreso().getAlmacen().getDescripcion());
+			this.txtGlosa.setText(getIngreso().getGlosa());
+			calendar.set(ingreso.getAnio(), ingreso.getMes() - 1 , ingreso.getDia());
+			this.txtFecha.setDate(calendar.getTime());
 			List<DetDocingreso> detDocIngresoL = detDocingresoDAO.getPorIdIngreso(getIngreso());
+			getDetalleTM().limpiar();
 			for(DetDocingreso ingreso : detDocIngresoL){
 				Unimedida unimedida = new UnimedidaDAO().find(ingreso.getIdmedida()); 
 				getDetalleTM().addRow(new Object[]{ingreso.getId().getIdproducto(),ingreso.getDescripcion(),unimedida.getIdunimedida(),
@@ -336,9 +345,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		getIngreso().setMoneda(cntMoneda.getSeleccionado());
 		getIngreso().setResponsable(this.cntResponsable.getSeleccionado());
 		getIngreso().setAlmacen(this.cntAlmacen.getSeleccionado());
-		getIngreso().setDia(txtFecha.getDate().getDay());
-		getIngreso().setMes(this.txtFecha.getDate().getMonth());
-		getIngreso().setAnio(this.txtFecha.getDate().getYear());
+		getIngreso().setDia(this.txtFecha.getDate().getDate());
+		getIngreso().setMes(this.txtFecha.getDate().getMonth() + 1);
+		getIngreso().setAnio(this.txtFecha.getDate().getYear() + 1900);
+		getIngreso().setAniomesdia(((this.txtFecha.getDate().getYear() + 1900) * 10000)+((this.txtFecha.getDate().getMonth() + 1) *100)+this.txtFecha.getDate().getDate());
 		getIngreso().setGlosa(txtGlosa.getText());
 		setDetDocingresoL(new ArrayList<DetDocingreso>());
 		for(int i = 0;i < getDetalleTM().getRowCount();i++){

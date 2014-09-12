@@ -1,10 +1,7 @@
 package entity;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import javax.persistence.*;
-
-import java.util.Date;
 
 @Entity
 @Table(name="docingreso")
@@ -51,6 +48,17 @@ public class Docingreso implements Serializable {
 	@Column(nullable=false)
 	private int dia;	
 	
+	@Column
+	private int aniomesdia;	
+	
+	public int getAniomesdia() {
+		return aniomesdia;
+	}
+
+	public void setAniomesdia(int aniomesdia) {
+		this.aniomesdia = aniomesdia;
+	}
+
 	@Column(nullable=false, precision=10, scale=2)
 	private float tcambio;
 	

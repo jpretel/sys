@@ -5,9 +5,7 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import entity.DetDocingreso;
-import entity.DetDocingresoPK;
 import entity.Docingreso;
 
 public class DetDocIngresoDAO extends AbstractDAO<DetDocingreso> {
