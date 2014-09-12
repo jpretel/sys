@@ -13,6 +13,7 @@ import entity.Documento;
 import vista.barras.BarraMaestro;
 import vista.controles.ComboBox;
 import vista.controles.DSGDatePicker;
+import vista.controles.DSGTextFieldCorrelativo;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -39,8 +40,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected ComboBox<Documento> cboDocumento = new ComboBox<Documento>();
-	protected JTextField txtSerie;
-	protected JTextField txtNumero;
+	protected DSGTextFieldCorrelativo txtSerie;
+	protected DSGTextFieldCorrelativo txtSerie1;
 	private DSGDatePicker txtDesde;
 	private DSGDatePicker txtHasta;
 	protected JScrollPane pnlDocumentos = new JScrollPane();
@@ -53,7 +54,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 	protected String[] cabeceras;
 	
 	protected JLabel lblDocumento;
-	private JTextField textField;
+	private JTextField txtNumero;
 	private JLabel label;
 
 	/**
@@ -91,20 +92,16 @@ public abstract class AbstractDocList extends JInternalFrame {
 		lblDocumento = new JLabel("Documento");
 
 		JLabel lblNmero = new JLabel("Correlativo");
-
-		txtSerie = new JTextField(10);
-		
-		txtNumero = new JTextField(10);
-		
+		txtSerie1 = new DSGTextFieldCorrelativo(4);
+		txtNumero = new DSGTextFieldCorrelativo(8);			
 		JButton btnActualizar = new JButton("Actualizar");
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Object entity = new Object();
-				llenarLista(entity);
+				llenarLista();
 			}
 		});
 		
-		this.textField = new JTextField(10);
+		
 		GroupLayout gl_pnlFiltros = new GroupLayout(pnlFiltros);
 		gl_pnlFiltros.setHorizontalGroup(
 			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
@@ -124,12 +121,12 @@ public abstract class AbstractDocList extends JInternalFrame {
 					.addGap(12)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtSerie1, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_pnlFiltros.createSequentialGroup()
 							.addGap(9)
-							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
+							.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
 						.addComponent(getLabel(), GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
 					.addGap(57)
 					.addComponent(btnActualizar, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
@@ -141,8 +138,8 @@ public abstract class AbstractDocList extends JInternalFrame {
 					.addComponent(lblNmero)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtSerie1, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
 					.addGap(11))
 				.addGroup(Alignment.TRAILING, gl_pnlFiltros.createSequentialGroup()
 					.addContainerGap(31, Short.MAX_VALUE)
@@ -253,10 +250,39 @@ public abstract class AbstractDocList extends JInternalFrame {
 		}
 	}
 	
-	public void llenarLista(Object documento){
+	public void llenarLista(){
+		int idesde,ihasta,inumero = 0,anio_desde,mes_desde,dia_desde,anio_hasta,mes_hasta,dia_hasta;
+		Calendar desde = Calendar.getInstance();
+		if (txtDesde.getDate() == null) {
+			anio_desde = 0;
+			mes_desde = 0;
+			dia_desde = 0;
+		} else {
+			desde.setTime(txtDesde.getDate());
+			anio_desde = desde.get(Calendar.YEAR);
+			mes_desde = desde.get(Calendar.MONTH) + 1;
+			dia_desde = desde.get(Calendar.DAY_OF_MONTH);
+		}
+		Calendar hasta = Calendar.getInstance();
+		if (txtHasta.getDate() == null) {
+			anio_hasta = 0;
+			mes_hasta = 0;
+			dia_hasta = 0;
+		} else {
+			hasta.setTime(txtHasta.getDate());
+			anio_hasta = hasta.get(Calendar.YEAR);
+			mes_hasta = hasta.get(Calendar.MONTH) + 1;
+			dia_hasta = hasta.get(Calendar.DAY_OF_MONTH);
+		}
+		idesde = (anio_desde*10000)+(mes_desde*100)+dia_desde;
+		ihasta = (anio_hasta*10000)+(mes_hasta*100)+dia_hasta;
+		String serie = this.txtSerie1.getText().trim().length()==0?"":this.txtSerie1.getText().trim();
+		if(this.txtNumero.getText().trim().length() > 0)
+			inumero = Integer.parseInt(this.txtNumero.getText().trim());	
+		
 		modelo_lista.limpiar();
-		for (Object [] data : getData(0, 0,
-				0, documento)) {
+		for (Object [] data : getData(idesde, ihasta,
+				serie,inumero)) {
 			modelo_lista.addRow(data);
 		}
 	}
@@ -270,8 +296,7 @@ public abstract class AbstractDocList extends JInternalFrame {
 		return id;
 	}
 	
-	public abstract Object[][] getData(int idesde, int ihasta, int numero,
-			Object ingreso);
+	public abstract Object[][] getData(int idesde, int ihasta, String serie,int numero);
 	
 	public abstract void nuevo();
 	
