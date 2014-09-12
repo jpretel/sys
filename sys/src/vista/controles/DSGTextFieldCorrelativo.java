@@ -48,8 +48,7 @@ public class DSGTextFieldCorrelativo extends JTextField {
 			
 			@Override
 			public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-				
+				selectAll();
 			}
 		});
 	}
