@@ -1,6 +1,7 @@
 package vista.controles;
 
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -42,8 +43,11 @@ public class JTextFieldLimit extends PlainDocument {
 		}
 		if ((getLength() + str.length()) <= limit) {
 			super.insertString(offset, str, attr);
+		} else{
+			Toolkit.getDefaultToolkit().beep();
 		}
 	}
+	
 
 	public static void main(String[] args) {
 		JTextFieldLimitTest frame = new JTextFieldLimitTest();
