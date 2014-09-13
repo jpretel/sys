@@ -1,9 +1,8 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -25,15 +24,20 @@ public class SysTituloDAO extends AbstractDAO<SysTitulo> {
 		return getEntityManager().createQuery(q).getResultList();
 	}
 
-	public void borrarPorModulo(SysModulo modulo) {
-		getEntityManager().getTransaction().begin();
-		CriteriaDelete<SysTitulo> delete = cb
-				.createCriteriaDelete(SysTitulo.class);
-		Root<SysTitulo> c = delete.from(SysTitulo.class);
-		delete.where(cb.equal(c.get("sysModulo"), modulo));
-		Query query = getEntityManager().createQuery(delete);
-		query.executeUpdate();
-		getEntityManager().getTransaction().commit();
+	public List<SysTitulo> aEliminar(SysModulo modulo, List<SysTitulo> titulos) {
+		List<SysTitulo> eliminar = new ArrayList<SysTitulo>();
+		for (SysTitulo o1 : getPorModulo(modulo)) {
+			boolean existe = false;
+			salir: for (SysTitulo o2 : titulos) {
+				if (o1.getId().equals(o2.getId())) {
+					existe = true;
+					break salir;
+				}
+			}
+			if (!existe)
+				eliminar.add(o1);
+		}
+		return eliminar;
 	}
 	
 	public List<SysTitulo> getPorModuloUsuario(SysModulo modulo, Usuario usuario) {
