@@ -1,6 +1,7 @@
 package vista.formularios;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -11,9 +12,12 @@ import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
+import vista.controles.ManejaNumeros;
 import vista.formularios.listas.AbstractDocForm;
+import vista.utilitarios.FormValidador;
 import vista.utilitarios.StringUtils;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,7 +27,9 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.text.MaskFormatter;
 
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
@@ -39,6 +45,9 @@ import entity.DetDocingreso;
 import entity.DetDocingresoPK;
 import entity.Docingreso;
 import entity.Unimedida;
+import java.awt.Rectangle;
+import java.awt.Dimension;
+import java.awt.Point;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 
@@ -61,19 +70,14 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private Calendar calendar = Calendar.getInstance();
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");		
+		pnlPrincipal.setSize(new Dimension(847, 60));
+		pnlPrincipal.setLocation(new Point(0, 41));
+		getBarra().setSize(new Dimension(418, 40));
 	
 		JPanel panel = new JPanel();
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(109)
-					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
-		);
+		panel.setPreferredSize(new Dimension(400, 400));
+		panel.setMinimumSize(new Dimension(400, 400));
+		panel.setBounds(new Rectangle(0, 0, 400, 400));
 		panel.setLayout(null);
 		
 		JLabel lblConcepto = new JLabel("Concepto");
@@ -112,7 +116,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			@Override
 			public void addRow() {
 				if (validaCabecera())
-					addRow(new Object[] {"","","" ,"",0.00,0.00,0.00});
+					addRow(new Object[] {"","","" ,"",0,0,0});
 				else
 					JOptionPane.showMessageDialog(null, "Faltan datos en la cabecera");
 			}
@@ -127,9 +131,25 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		DefaultCellEditor txtproducto = new DefaultCellEditor(txtProducto);
 		tblDetalle.getColumn("IdProducto").setCellEditor(txtproducto);
 		
+	
+			final JTextField nCantidad = new JTextField();
+			ManejaNumeros numero = new ManejaNumeros();
+			nCantidad.addKeyListener(numero);
+			final JTextField nPrecio = new JTextField();
+			nPrecio.addKeyListener(numero);
+			final JTextField nImporte = new JTextField();	
+			nImporte.setEnabled(false);
+			DefaultCellEditor nCantidadDE = new DefaultCellEditor(nCantidad);
+			DefaultCellEditor nPrecioDE = new DefaultCellEditor(nPrecio);
+			DefaultCellEditor nImporteDE = new DefaultCellEditor(nImporte);
+			tblDetalle.getColumn("Cantidad").setCellEditor(nCantidadDE);
+			tblDetalle.getColumn("Precio").setCellEditor(nPrecioDE);
+			tblDetalle.getColumn("Importe").setCellEditor(nImporteDE);		
+		
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
+		getDetalleTM().setObligatorios(0,1,4,5,6);
 		getDetalleTM().setRepetidos(0);
-		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);		
+		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
 		
 		txtProducto.addFocusListener(new FocusAdapter() {
 			@Override
@@ -139,6 +159,34 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getIdunimedida(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 1);
 					getDetalleTM().setValueAt(txtProducto.getSeleccionado().getUnimedida().getDescripcion(), tblDetalle.getSelectedRow(), tblDetalle.getSelectedColumn() + 2);
 				}
+			}
+		});
+		
+		nCantidad.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg){
+					float xCantidad = 0,xPrecio = 0;
+					if (!nCantidad.getText().trim().isEmpty())
+						xCantidad = Float.parseFloat(nCantidad.getText());
+	 
+					if (!nPrecio.getText().trim().isEmpty())		
+						xPrecio = Float.parseFloat(nPrecio.getText());
+					
+					CalculaImporte(xCantidad,xPrecio);					
+			}
+		});
+		
+		nPrecio.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg){
+				float xCantidad = 0,xPrecio = 0;
+				if (!nCantidad.getText().trim().isEmpty())
+					xCantidad = Float.parseFloat(nCantidad.getText());
+ 
+				if (!nPrecio.getText().trim().isEmpty())		
+					xPrecio = Float.parseFloat(nPrecio.getText());
+				
+				CalculaImporte(xCantidad,xPrecio);
 			}
 		});
 		
@@ -198,6 +246,18 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		txtGlosa = new JTextArea();
 		txtGlosa.setBounds(81, 61, 338, 48);
 		panel.add(txtGlosa);
+		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 849, Short.MAX_VALUE)
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(109)
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(100, Short.MAX_VALUE))
+		);
 		getContentPane().setLayout(groupLayout);
 		iniciar();
 	}
@@ -264,6 +324,11 @@ public class FrmDocRecepcion extends AbstractDocForm {
 						unimedida.getDescripcion(),ingreso.getCantidad(),ingreso.getPrecio(),ingreso.getPrecio()});				
 			}
 		}
+	}
+	
+	public void CalculaImporte(float cantidad,float precio){
+		float xImporte = cantidad * precio;
+		getDetalleTM().setValueAt(xImporte, tblDetalle.getSelectedRow(), 6);
 	}
 
 	@Override
@@ -369,35 +434,20 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public boolean isValidaVista() {
 		boolean band = validaCabecera();
+		if(!band){
+			band = validarDetalle();
+		}
 		return band;
 	}
 	
 	public boolean validaCabecera(){
-		if (this.cntGrupoCentralizacion.txtCodigo.getText().isEmpty())
-			return false;
-		
-		if (this.cntMoneda.txtCodigo.getText().isEmpty())
-			return false;
-		
-		if (this.txtTipoCambio.getText().isEmpty())
-			return false;
-		
-		if (this.txtTcMoneda.getText().isEmpty())
-			return false;
-		
-		if (this.cntConcepto.txtCodigo.getText().isEmpty())
-			return false;
-		
-		if (this.cntResponsable.txtCodigo.getText().isEmpty())
-			return false;
-		
-		if (this.cntSucursal.txtCodigo.getText().isEmpty())
-			return false;
-		
-		if (this.cntAlmacen.txtCodigo.getText().isEmpty())
-			return false;
-		
-		return true;
+		return  FormValidador.TextFieldObligatorios(this.cntGrupoCentralizacion.txtCodigo,this.cntMoneda.txtCodigo,
+				this.txtTipoCambio,this.txtTcMoneda,this.cntConcepto.txtCodigo,this.cntResponsable.txtCodigo,
+				this.cntSucursal.txtCodigo,this.cntAlmacen.txtCodigo);
+	}
+	
+	public boolean validarDetalle(){
+		return getDetalleTM().esValido();
 	}
 	
 	public DSGTableModel getDetalleTM(){
