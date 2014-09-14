@@ -14,6 +14,8 @@ public class Kardex implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	private long idreferencia;
 
 	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false)
 	private Sucursal sucursal;
@@ -29,14 +31,13 @@ public class Kardex implements Serializable {
 	private int mes;
 
 	@Column
-	private int anio;
-	
+	private int anio;	
 	
 	private Producto producto;
 
 	private Unimedida unimedida;
 
-	private int factor;
+	private int factor;	
 
 	@Column(precision = 17, scale = 8)
 	private float cantidad;
@@ -53,6 +54,14 @@ public class Kardex implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public long getIdreferencia() {
+		return idreferencia;
+	}
+
+	public void setIdreferencia(long idreferencia) {
+		this.idreferencia = idreferencia;
 	}
 
 	public Sucursal getSucursal() {

@@ -11,6 +11,8 @@ import dao.AsientoDAO;
 import dao.SubdiarioDAO;
 import entity.Asiento;
 import entity.Subdiario;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FrmAsientoList extends AbstractAsientoList {
 	AsientoDAO asientoDAO = new AsientoDAO();
@@ -24,6 +26,10 @@ public class FrmAsientoList extends AbstractAsientoList {
 
 	public FrmAsientoList() {
 		super("Asiento Contable");
+		btnActualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 	}
 
 	@Override
