@@ -4,7 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table(name="Docsalida")
+@Table(name="docsalida")
 @NamedQuery(name="Docsalida.findAll", query="SELECT d FROM Docsalida d")
 public class Docsalida implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -184,10 +184,6 @@ public class Docsalida implements Serializable {
 		this.responsable = responsable;
 	}
 
-	public Almacen getAlmacen() {
-		return almacen;
-	}
-
 	public long getIddocsalida() {
 		return iddocsalida;
 	}
@@ -195,9 +191,21 @@ public class Docsalida implements Serializable {
 	public void setIddocsalida(long iddocsalida) {
 		this.iddocsalida = iddocsalida;
 	}
+	
+	public Almacen getAlmacen() {
+		return almacen;
+	}
 
 	public void setAlmacen(Almacen almacen) {
 		this.almacen = almacen;
+	}
+
+	public Almacen getAlmacen_dest() {
+		return almacen_dest;
+	}
+
+	public void setAlmacen_dest(Almacen almacen_dest) {
+		this.almacen_dest = almacen_dest;
 	}
 
 }

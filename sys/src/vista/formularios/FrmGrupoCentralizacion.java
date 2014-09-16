@@ -20,6 +20,9 @@ import dao.GrupoCentralizacionDAO;
 import dao.SubdiarioDAO;
 import entity.GrupoCentralizacion;
 import vista.contenedores.CntSubdiario;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class FrmGrupoCentralizacion extends AbstractMaestro {
 
@@ -43,18 +46,14 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 	private void initGUI() {
 
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
-		lblCdigo.setBounds(287, 26, 39, 16);
 
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(360, 26, 129, 20);
 		txtCodigo.setColumns(10);
 		txtCodigo.setDocument(new JTextFieldLimit(10, true));
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
-		lblDescripcin.setBounds(287, 55, 68, 16);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 12, 257, 228);
 
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
@@ -62,23 +61,59 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(360, 52, 173, 22);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
-		pnlContenido.setLayout(null);
-		pnlContenido.add(scrollPane);
-		pnlContenido.add(lblCdigo);
-		pnlContenido.add(lblDescripcin);
-		pnlContenido.add(this.txtDescripcion);
-		pnlContenido.add(this.txtCodigo);
-
 		JLabel lblTipoDeAnlisis = new JLabel("Sub Diario");
-		lblTipoDeAnlisis.setBounds(287, 95, 99, 16);
-		pnlContenido.add(lblTipoDeAnlisis);
 
 		cntSubdiario = new CntSubdiario();
-		cntSubdiario.setBounds(327, 118, 202, 20);
-		pnlContenido.add(cntSubdiario);
+		cntSubdiario.btnBuscar.setLocation(189, 0);
+		cntSubdiario.txtDescripcion.setBounds(34, 0, 157, 20);
+		cntSubdiario.txtCodigo.setBounds(1, 0, 35, 20);
+		GroupLayout groupLayout = new GroupLayout(pnlContenido);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(12)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 257, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblTipoDeAnlisis, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
+					.addGap(5)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(cntSubdiario, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+						.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
+					.addGap(10))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(287)
+					.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+					.addGap(34)
+					.addComponent(txtCodigo, GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+					.addGap(149))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(12)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+					.addGap(17))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(26)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(6)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
+					.addGap(11)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblTipoDeAnlisis, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+						.addComponent(cntSubdiario, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
+		);
+		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {

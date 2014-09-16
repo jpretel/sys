@@ -1,7 +1,6 @@
 package vista.formularios;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -17,7 +16,6 @@ import vista.formularios.listas.AbstractDocForm;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.StringUtils;
 
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -29,57 +27,45 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.text.MaskFormatter;
 
-import core.centralizacion.CentralizaAlm;
-import core.centralizacion.ContabAlm;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
-import dao.DetDocIngresoDAO;
-import dao.DocingresoDAO;
+import dao.DetDocSalidaDAO;
+import dao.DocsalidaDAO;
 import dao.GrupoCentralizacionDAO;
 import dao.MonedaDAO;
-import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
-import entity.DetDocingreso;
-import entity.DetDocingresoPK;
-import entity.Docingreso;
+import entity.DetDocsalida;
+import entity.DetDocsalidaPK;
+import entity.Docsalida;
 import entity.Unimedida;
+import java.awt.GridBagLayout;
 
-import java.awt.Rectangle;
-import java.awt.Dimension;
-import java.awt.Point;
-
-public class FrmDocRecepcion extends AbstractDocForm {
+public class FrmDocSalida extends AbstractDocForm {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTable tblDetalle;
 	private JScrollPane scrollPaneDetalle;
-	private List<DetDocingreso> DetDocingresoL;
-	private DocingresoDAO docIngresoDAO = new DocingresoDAO();
-	private DetDocIngresoDAO detDocingresoDAO = new DetDocIngresoDAO();
+	private List<DetDocsalida> DetDocsalidaL;
+	private DocsalidaDAO docSalidaDAO = new DocsalidaDAO();
+	private DetDocSalidaDAO detDocsalidaDAO = new DetDocSalidaDAO();
 	private long Id;
 	private CntConcepto cntConcepto;
 	private cntResponsable cntResponsable;
 	private cntSucursal cntSucursal;
 	private cntAlmacen cntAlmacen;
+	private cntSucursal cntSucursal_dest;
+	private cntAlmacen cntAlmacen_dest;
 	private JTextArea txtGlosa;
-	private Docingreso ingreso;
+	private Docsalida salida;
 	private Calendar calendar = Calendar.getInstance();
-	public FrmDocRecepcion() {
-		super("Nota de Ingreso");		
-		pnlPrincipal.setSize(new Dimension(847, 60));
-		pnlPrincipal.setLocation(new Point(0, 41));
-		getBarra().setSize(new Dimension(418, 40));
-	
+	public FrmDocSalida() {
+		super("Nota de Salida");		
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(400, 400));
-		panel.setMinimumSize(new Dimension(400, 400));
-		panel.setBounds(new Rectangle(0, 0, 400, 400));
 		panel.setLayout(null);
 		
 		JLabel lblConcepto = new JLabel("Concepto");
@@ -98,8 +84,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		lblAlmacen.setBounds(437, 33, 50, 16);
 		panel.add(lblAlmacen);
 		
-		JLabel lblGlosa = new JLabel("Glosa");
-		lblGlosa.setBounds(12, 61, 32, 16);
+		JLabel lblGlosa = new JLabel("Observacion");
+		lblGlosa.setBounds(12, 104, 68, 16);
 		panel.add(lblGlosa);
 		
 		JTextArea textArea = new JTextArea();
@@ -127,7 +113,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		tblDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		scrollPaneDetalle = new JScrollPane(tblDetalle);
-		scrollPaneDetalle.setBounds(12, 119, 824, 170);
+		scrollPaneDetalle.setBounds(12, 174, 824, 126);
 		
 		final TxtProducto txtProducto = new TxtProducto();		
 		DefaultCellEditor txtproducto = new DefaultCellEditor(txtProducto);
@@ -196,8 +182,20 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		
 		cntConcepto = new CntConcepto();
 		cntConcepto.txtDescripcion.setBounds(46, 0, 292, 20);
-		cntConcepto.setBounds(81, 5, 338, 23);
+		cntConcepto.setBounds(90, 5, 338, 23);
 		panel.add(cntConcepto);
+		
+		cntConcepto.txtCodigo.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent evt){
+				if(cntConcepto.txtCodigo.getText().trim().length() > 0 ){
+					if(cntConcepto.getSeleccionado().getEsTransferencia() == 1){
+						cntSucursal_dest.txtCodigo.setEditable(true);
+						cntAlmacen_dest.txtCodigo.setEditable(true);
+					}
+				}
+			}
+		});
 		
 		cntResponsable = new cntResponsable();
 		cntResponsable.txtDescripcion.setBounds(46, 0, 263, 20);
@@ -205,8 +203,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		panel.add(cntResponsable);
 		
 		cntSucursal = new cntSucursal();
+		cntSucursal.btnBuscar.setLocation(90, 3);
 		cntSucursal.txtDescripcion.setBounds(46, 0, 293, 20);
-		cntSucursal.setBounds(80, 33, 339, 23);
+		cntSucursal.setBounds(90, 33, 339, 23);
 		panel.add(cntSucursal);
 		
 		cntAlmacen = new cntAlmacen();
@@ -226,7 +225,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			}
 
 			private void actualizaNumero(String serie) {
-				int numero = docIngresoDAO.getPorSerie(serie);
+				int numero = docSalidaDAO.getPorSerie(serie);
 				numero = numero + 1;
 				if(numero > 0){
 					txtNumero_2.setText(String.valueOf(numero));
@@ -246,27 +245,56 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		});
 		
 		txtGlosa = new JTextArea();
-		txtGlosa.setBounds(81, 61, 338, 48);
+		txtGlosa.setBounds(90, 100, 335, 48);
 		panel.add(txtGlosa);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 849, Short.MAX_VALUE)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(109)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(204, Short.MAX_VALUE)
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(100, Short.MAX_VALUE))
+					.addContainerGap())
 		);
+		
+		cntSucursal cntSucursal_ = new cntSucursal();
+		GridBagLayout gridBagLayout = (GridBagLayout) cntSucursal_.getLayout();
+		gridBagLayout.rowWeights = new double[]{0.0};
+		gridBagLayout.rowHeights = new int[]{20};
+		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 0.0};
+		gridBagLayout.columnWidths = new int[]{46, 106, 28};
+		cntSucursal_.setBounds(90, 67, 339, 23);
+		panel.add(cntSucursal_);
+		
+		JLabel lblSucursalDestino = new JLabel("Sucursal Destino");
+		lblSucursalDestino.setBounds(10, 67, 85, 16);
+		panel.add(lblSucursalDestino);
+		
+		JLabel lblAlmacenDestino = new JLabel("Almacen Destino");
+		lblAlmacenDestino.setBounds(437, 67, 85, 16);
+		panel.add(lblAlmacenDestino);
+		
+		cntAlmacen cntAlmacen_ = new cntAlmacen();
+		GridBagLayout gridBagLayout_1 = (GridBagLayout) cntAlmacen_.getLayout();
+		gridBagLayout_1.rowWeights = new double[]{0.0};
+		gridBagLayout_1.rowHeights = new int[]{20};
+		gridBagLayout_1.columnWeights = new double[]{0.0, 1.0, 0.0};
+		gridBagLayout_1.columnWidths = new int[]{46, 106, 28};
+		cntAlmacen_.setBounds(527, 67, 309, 23);
+		panel.add(cntAlmacen_);
 		getContentPane().setLayout(groupLayout);
 		iniciar();
 	}
 
 	@Override
 	public void nuevo() {
-		setIngreso(new Docingreso());
+		setSalida(new Docsalida());
 		Id = System.nanoTime();
 	}
 
@@ -278,11 +306,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void grabar() {
-		docIngresoDAO.crear_editar(getIngreso());
-		for (DetDocingreso det : getDetDocingresoL()){
-			detDocingresoDAO.crear_editar(det);
+		docSalidaDAO.crear_editar(getSalida());
+		for (DetDocsalida det : getDetDocsalidaL()){
+			detDocsalidaDAO.crear_editar(det);
 		}		
-		ContabAlm.ContabAlm(getIngreso().getIddocingreso(),getIngreso());
 	}
 
 	@Override
@@ -292,39 +319,47 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		if (getIngreso() instanceof Docingreso && !getEstado().equals("NUEVO")){
-			String numero = StringUtils._padl(getIngreso().getNumero(), 8, '0');
+		if (getSalida() instanceof Docsalida && !getEstado().equals("NUEVO")){
+			String numero = StringUtils._padl(getSalida().getNumero(), 8, '0');
 			this.txtNumero_2.setText(numero);
-			this.txtSerie.setText(getIngreso().getSerie());
-			this.cntGrupoCentralizacion.setSeleccionado(getIngreso().getGrupoCentralizacion());
-			this.cntGrupoCentralizacion.txtCodigo.setText(getIngreso().getGrupoCentralizacion().getIdgcentralizacion());
-			this.cntGrupoCentralizacion.txtDescripcion.setText(getIngreso().getGrupoCentralizacion().getDescripcion());
-			this.txtTipoCambio.setText(String.valueOf(getIngreso().getTcambio()));
-			this.txtTcMoneda.setText(String.valueOf(getIngreso().getTcmoneda()));			
-			this.cntMoneda.setSeleccionado(getIngreso().getMoneda());
-			this.cntMoneda.txtCodigo.setText(getIngreso().getMoneda().getIdmoneda());
-			this.cntMoneda.txtDescripcion.setText(getIngreso().getMoneda().getDescripcion());
-			this.cntConcepto.setSeleccionado(getIngreso().getConcepto());
-			this.cntConcepto.txtCodigo.setText(getIngreso().getConcepto().getIdconcepto());
-			this.cntConcepto.txtDescripcion.setText(getIngreso().getConcepto().getDescripcion());
-			this.cntResponsable.setSeleccionado(getIngreso().getResponsable());
-			this.cntResponsable.txtCodigo.setText(getIngreso().getResponsable().getIdresponsable());
-			this.cntResponsable.txtDescripcion.setText(getIngreso().getResponsable().getNombre());
-			this.cntSucursal.setSeleccionado(getIngreso().getAlmacen().getSucursal());
-			this.cntSucursal.txtCodigo.setText(getIngreso().getAlmacen().getSucursal().getIdsucursal());
-			this.cntSucursal.txtDescripcion.setText(getIngreso().getAlmacen().getSucursal().getDescripcion());
-			this.cntAlmacen.setSeleccionado(getIngreso().getAlmacen());
-			this.cntAlmacen.txtCodigo.setText(getIngreso().getAlmacen().getId().getIdalmacen());
-			this.cntAlmacen.txtDescripcion.setText(getIngreso().getAlmacen().getDescripcion());
-			this.txtGlosa.setText(getIngreso().getGlosa());
-			calendar.set(ingreso.getAnio(), ingreso.getMes() - 1 , ingreso.getDia());
+			this.txtSerie.setText(getSalida().getSerie());
+			this.cntGrupoCentralizacion.setSeleccionado(getSalida().getGrupoCentralizacion());
+			this.cntGrupoCentralizacion.txtCodigo.setText(getSalida().getGrupoCentralizacion().getIdgcentralizacion());
+			this.cntGrupoCentralizacion.txtDescripcion.setText(getSalida().getGrupoCentralizacion().getDescripcion());
+			this.txtTipoCambio.setText(String.valueOf(getSalida().getTcambio()));
+			this.txtTcMoneda.setText(String.valueOf(getSalida().getTcmoneda()));			
+			this.cntMoneda.setSeleccionado(getSalida().getMoneda());
+			this.cntMoneda.txtCodigo.setText(getSalida().getMoneda().getIdmoneda());
+			this.cntMoneda.txtDescripcion.setText(getSalida().getMoneda().getDescripcion());
+			this.cntConcepto.setSeleccionado(getSalida().getConcepto());
+			this.cntConcepto.txtCodigo.setText(getSalida().getConcepto().getIdconcepto());
+			this.cntConcepto.txtDescripcion.setText(getSalida().getConcepto().getDescripcion());
+			if(cntConcepto.getSeleccionado().getEsTransferencia() == 1){
+				cntSucursal_dest.txtCodigo.setEditable(true);
+				cntAlmacen_dest.txtCodigo.setEditable(true);
+			}
+			this.cntResponsable.setSeleccionado(getSalida().getResponsable());
+			this.cntResponsable.txtCodigo.setText(getSalida().getResponsable().getIdresponsable());
+			this.cntResponsable.txtDescripcion.setText(getSalida().getResponsable().getNombre());
+			this.cntSucursal.setSeleccionado(getSalida().getAlmacen().getSucursal());
+			this.cntSucursal.txtCodigo.setText(getSalida().getAlmacen().getSucursal().getIdsucursal());
+			this.cntSucursal.txtDescripcion.setText(getSalida().getAlmacen().getSucursal().getDescripcion());
+			this.cntAlmacen.setSeleccionado(getSalida().getAlmacen());
+			this.cntAlmacen.txtCodigo.setText(getSalida().getAlmacen().getId().getIdalmacen());
+			this.cntAlmacen.txtDescripcion.setText(getSalida().getAlmacen().getDescripcion());
+			this.cntSucursal_dest.txtCodigo.setText(getSalida().getAlmacen_dest().getSucursal().getIdsucursal());
+			this.cntSucursal_dest.txtDescripcion.setText(getSalida().getAlmacen_dest().getSucursal().getDescripcion());
+			this.cntAlmacen_dest.txtCodigo.setText(getSalida().getAlmacen_dest().getId().getIdalmacen());
+			this.cntAlmacen_dest.txtDescripcion.setText(getSalida().getAlmacen_dest().getDescripcion());			
+			this.txtGlosa.setText(getSalida().getGlosa());
+			calendar.set(salida.getAnio(), salida.getMes() - 1 , salida.getDia());
 			this.txtFecha.setDate(calendar.getTime());
-			List<DetDocingreso> detDocIngresoL = detDocingresoDAO.getPorIdIngreso(getIngreso());
+			List<DetDocsalida> detDocSalidaL = detDocsalidaDAO.getPorIdSalida(getSalida());
 			getDetalleTM().limpiar();
-			for(DetDocingreso ingreso : detDocIngresoL){
-				Unimedida unimedida = new UnimedidaDAO().find(ingreso.getIdmedida()); 
-				getDetalleTM().addRow(new Object[]{ingreso.getId().getIdproducto(),ingreso.getDescripcion(),unimedida.getIdunimedida(),
-						unimedida.getDescripcion(),ingreso.getCantidad(),ingreso.getPrecio(),ingreso.getPrecio()});				
+			for(DetDocsalida salida : detDocSalidaL){
+				Unimedida unimedida = new UnimedidaDAO().find(salida.getIdmedida()); 
+				getDetalleTM().addRow(new Object[]{salida.getId().getIdproducto(),salida.getDescripcion(),unimedida.getIdunimedida(),
+						unimedida.getDescripcion(),salida.getCantidad(),salida.getPrecio(),salida.getPrecio()});				
 			}
 		}
 	}
@@ -384,6 +419,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		this.txtTcMoneda.setEditable(false);
 		this.txtTipoCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
+		cntSucursal_dest.txtCodigo.setEditable(false);
+		cntAlmacen_dest.txtCodigo.setEditable(false);
 		getDetalleTM().setEditar(false);
 	}
 
@@ -394,8 +431,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
-		setIngreso((Docingreso) entidad);
-		Id = getIngreso().getIddocingreso();
+		setSalida((Docsalida) entidad);
+		Id = getSalida().getIddocsalida();
 		iniciar();
 	}
 
@@ -403,26 +440,27 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@SuppressWarnings({ "deprecation"})
 	@Override
 	public void llenarDesdeVista() {
-		getIngreso().setIddocingreso(Id);
-		getIngreso().setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
-		getIngreso().setTcambio(Float.parseFloat(this.txtTipoCambio.getText()));
-		getIngreso().setTcmoneda(Float.parseFloat(this.txtTcMoneda.getText()));
-		getIngreso().setSerie(this.txtSerie.getText());
-		getIngreso().setNumero(Integer.parseInt(this.txtNumero_2.getText()));
-		getIngreso().setConcepto(this.cntConcepto.getSeleccionado());
-		getIngreso().setMoneda(cntMoneda.getSeleccionado());
-		getIngreso().setResponsable(this.cntResponsable.getSeleccionado());
-		getIngreso().setAlmacen(this.cntAlmacen.getSeleccionado());
-		getIngreso().setDia(this.txtFecha.getDate().getDate());
-		getIngreso().setMes(this.txtFecha.getDate().getMonth() + 1);
-		getIngreso().setAnio(this.txtFecha.getDate().getYear() + 1900);
-		getIngreso().setAniomesdia(((this.txtFecha.getDate().getYear() + 1900) * 10000)+((this.txtFecha.getDate().getMonth() + 1) *100)+this.txtFecha.getDate().getDate());
-		getIngreso().setGlosa(txtGlosa.getText());
-		setDetDocingresoL(new ArrayList<DetDocingreso>());
+		getSalida().setIddocsalida(Id);
+		getSalida().setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
+		getSalida().setTcambio(Float.parseFloat(this.txtTipoCambio.getText()));
+		getSalida().setTcmoneda(Float.parseFloat(this.txtTcMoneda.getText()));
+		getSalida().setSerie(this.txtSerie.getText());
+		getSalida().setNumero(Integer.parseInt(this.txtNumero_2.getText()));
+		getSalida().setConcepto(this.cntConcepto.getSeleccionado());
+		getSalida().setMoneda(cntMoneda.getSeleccionado());
+		getSalida().setResponsable(this.cntResponsable.getSeleccionado());
+		getSalida().setAlmacen(this.cntAlmacen.getSeleccionado());
+		getSalida().setDia(this.txtFecha.getDate().getDate());
+		getSalida().setMes(this.txtFecha.getDate().getMonth() + 1);
+		getSalida().setAnio(this.txtFecha.getDate().getYear() + 1900);
+		getSalida().setAniomesdia(((this.txtFecha.getDate().getYear() + 1900) * 10000)+((this.txtFecha.getDate().getMonth() + 1) *100)+this.txtFecha.getDate().getDate());
+		getSalida().setGlosa(txtGlosa.getText());
+		getSalida().setAlmacen_dest(cntAlmacen_dest.getSeleccionado());
+		setDetDocsalidaL(new ArrayList<DetDocsalida>());
 		for(int i = 0;i < getDetalleTM().getRowCount();i++){
-			DetDocingresoPK detPK = new DetDocingresoPK();
-			DetDocingreso det = new DetDocingreso();
-			detPK.setIdingreso(Id);
+			DetDocsalidaPK detPK = new DetDocsalidaPK();
+			DetDocsalida det = new DetDocsalida();
+			detPK.setIdsalida(Id);
 			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
 			det.setId(detPK);
 			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString()); 
@@ -430,7 +468,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i, 4).toString())));
 			det.setPrecio(Float.parseFloat(getDetalleTM().getValueAt(i, 5).toString()));
 			det.setImporte(Float.parseFloat(getDetalleTM().getValueAt(i, 6).toString()));
-			DetDocingresoL.add(det);
+			getDetDocsalidaL().add(det);
 		}
 	}
 
@@ -456,20 +494,20 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	public DSGTableModel getDetalleTM(){
 		return ((DSGTableModel) tblDetalle.getModel());
 	}
-	
-	public List<DetDocingreso> getDetDocingresoL() {
-		return DetDocingresoL;
+
+	public List<DetDocsalida> getDetDocsalidaL() {
+		return DetDocsalidaL;
 	}
 
-	public void setDetDocingresoL(List<DetDocingreso> detDocingresoL) {
-		DetDocingresoL = detDocingresoL;
+	public void setDetDocsalidaL(List<DetDocsalida> detDocsalidaL) {
+		DetDocsalidaL = detDocsalidaL;
 	}
 
-	public Docingreso getIngreso() {
-		return ingreso;
+	public Docsalida getSalida() {
+		return salida;
 	}
 
-	public void setIngreso(Docingreso ingreso) {
-		this.ingreso = ingreso;
+	public void setSalida(Docsalida salida) {
+		this.salida = salida;
 	}
 }

@@ -37,10 +37,9 @@ public class DetDocingreso implements Serializable {
 	@JoinColumn(name = "idingreso", nullable=false, insertable=false, updatable=false)
 	private Docingreso docingreso;
 	
-	/*@OneToMany
-	@JoinColumn(name="idproducto",referencedColumnName = "idproducto", nullable=false, insertable=false, updatable=false)
-	private List<Producto> productos;*/
-
+	@ManyToOne
+	@JoinColumn(name = "idproducto",insertable=false, updatable=false)
+	private Producto producto;
 	
 	public DetDocingreso() {
 	}
@@ -99,6 +98,14 @@ public class DetDocingreso implements Serializable {
 
 	public void setDocingreso(Docingreso docingreso) {
 		this.docingreso = docingreso;
+	}
+	
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
 	}
 
 }

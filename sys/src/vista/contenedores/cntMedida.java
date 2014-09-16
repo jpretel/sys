@@ -7,8 +7,8 @@ public class cntMedida extends AbstractCntBuscar<Unimedida> {
 
 	@Override
 	public void cargarDatos(Unimedida entity) {
-		txtCodigo.setText("");
-		txtDescripcion.setText("");
+		txtCodigo.setText(entity.getIdunimedida());
+		txtDescripcion.setText(entity.getDescripcion());
 
 	}
 

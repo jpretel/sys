@@ -235,7 +235,6 @@ public class FrmProductos extends AbstractMaestro {
 			cntmarca.setSeleccionado(getProducto().getMarca());
 			cntmedida.setSeleccionado(getProducto().getUnimedida());
 			cntgrupo.setSeleccionado(g);
-			//cntSubGrupo.setGrupo(g);
 			cntSubGrupo.setSeleccionado(sg);
 			
 		} else {
@@ -251,6 +250,7 @@ public class FrmProductos extends AbstractMaestro {
 			this.txtDescripcion.setText(null);
 			this.txtnomcorto.setText(null);
 		}
+		llenar_tablas();
 	}
 
 
@@ -266,7 +266,6 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void llenar_tablas() {
-		System.out.println("entro al metodo");
 		cntgrupo.setData(new GrupoDAO().findAll());
 		cntmarca.setData(new MarcaDAO().findAll());
 		cntmedida.setData(new UnimedidaDAO().findAll());
@@ -279,13 +278,13 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
+	
 
 	}
 
 	@Override
 	public void nuevo() {
-		producto = new Producto();
+		producto = new Producto();		
 	}
 
 	@Override

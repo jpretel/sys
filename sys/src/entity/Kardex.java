@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -17,12 +18,18 @@ public class Kardex implements Serializable {
 	
 	private long idreferencia;
 
-	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false)
-	private Sucursal sucursal;
 	@JoinColumns({
 			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false),
 			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen", insertable = false, updatable = false) })
 	private Almacen almacen;
+	
+	@ManyToOne
+	@JoinColumn(name = "idproducto",referencedColumnName = "idproducto",insertable = false, updatable = false)
+	private Producto producto;
+	
+	@ManyToOne
+	@JoinColumn(name = "idmedida",referencedColumnName = "idmedida",insertable = false, updatable = false)
+	private Unimedida unimedida;
 	
 	@Column
 	private int dia;
@@ -32,15 +39,20 @@ public class Kardex implements Serializable {
 
 	@Column
 	private int anio;	
-	
-	private Producto producto;
-
-	private Unimedida unimedida;
 
 	private int factor;	
 
 	@Column(precision = 17, scale = 8)
 	private float cantidad;
+	
+	@Column(precision = 17, scale = 8)
+	private float precio;
+	
+	@Column(precision = 17, scale = 8)
+	private float importemof;
+	
+	@Column(precision = 17, scale = 8)
+	private float importemex;
 
 	private static final long serialVersionUID = 1L;
 
@@ -62,14 +74,6 @@ public class Kardex implements Serializable {
 
 	public void setIdreferencia(long idreferencia) {
 		this.idreferencia = idreferencia;
-	}
-
-	public Sucursal getSucursal() {
-		return sucursal;
-	}
-
-	public void setSucursal(Sucursal sucursal) {
-		this.sucursal = sucursal;
 	}
 
 	public Almacen getAlmacen() {
@@ -136,4 +140,27 @@ public class Kardex implements Serializable {
 		this.cantidad = cantidad;
 	}
 
+	public float getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(float precio) {
+		this.precio = precio;
+	}
+
+	public float getImportemof() {
+		return importemof;
+	}
+
+	public void setImportemof(float importemof) {
+		this.importemof = importemof;
+	}
+
+	public float getImportemex() {
+		return importemex;
+	}
+
+	public void setImportemex(float importemex) {
+		this.importemex = importemex;
+	}
 }

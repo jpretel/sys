@@ -13,6 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.JXTable;
 
 import vista.barras.PanelBarraMaestroLista;
+import vista.controles.DSGTableModel;
+import vista.controles.DSGTableModelList;
 
 import java.awt.Dimension;
 
@@ -20,7 +22,7 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 	private static final long serialVersionUID = 1L;
 	private JScrollPane scrollPane;
 	public JXTable tblLista;
-	public DefaultTableModel modeloLista = new DefaultTableModel();
+	public DSGTableModelList modeloLista = new DSGTableModelList();
 
 	private PanelBarraMaestroLista barraLista;
 

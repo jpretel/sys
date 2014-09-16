@@ -16,7 +16,6 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	private Object[] obj;
 	private List<Producto> prodList = pdao.findAll();
 	private Producto producto;
-	private FrmProductos frmproductos = new FrmProductos();
 	public FrmListaProductos() {
 		super();
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
@@ -27,6 +26,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	@Override
 	public void irFormulario(String estado) {
+		FrmProductos frmproductos = new FrmProductos();
 		if (RetornarPk() instanceof Object) {
 			producto = pdao.find(RetornarPk());
 		}
@@ -35,10 +35,10 @@ public class FrmListaProductos extends AbstractMaestroLista {
 
 	@Override
 	public void llenar_lista() {
-		System.out.println(prodList.size());
+		modeloLista.limpiar();
 		for (Producto p : prodList) {
 			Subgrupo sg = p.getSubgrupo();
-			Grupo g = (sg == null) ? null : sg.getGrupo();
+			Grupo g = (sg == null) ? null : sg.getGrupo();			
 			modeloLista.addRow(new Object[] { p.getIdproducto(),
 					p.getDescripcion(),
 					(g == null) ? null : g.getDescripcion(),
@@ -65,11 +65,6 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	}
 
 	//Llamar al metodo Llenar Tablas del FrmProductos
-	@Override 
-	public void llenar_tablas() {
-		frmproductos.llenar_tablas();
-	}
-
 	@Override
 	public void vista_edicion() {
 		// TODO Auto-generated method stub
@@ -110,5 +105,10 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	public void eliminar() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void llenar_tablas() {
+				
 	}
 }
