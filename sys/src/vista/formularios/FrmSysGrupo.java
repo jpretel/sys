@@ -335,8 +335,8 @@ public class FrmSysGrupo extends AbstractMaestro {
 		getDetalleTM().limpiar();
 		//setSysOpciones(new ArrayList<SysOpcion>());
 		
-		//if (!getEstado().equals(NUEVO) && sysGrupoDAO.findAll().size()>0) {
-		if (getSysGrupo() != null) {
+		if (!getEstado().equals(NUEVO) && sysGrupoDAO.findAll().size()>0) {
+		//if (getSysGrupo() != null) {
 			ctnmodulo.txtCodigo.setText(getSysGrupo().getId().getIdmodulo());// .setSeleccionado(getSysTitulo().getSysModulo());
 			ctnmodulo.llenar();
 			ctntitulo.setData(sysTituloDAO.getPorModulo(sysModuloDAO.find(getSysGrupo().getId().getIdmodulo())));
@@ -421,7 +421,9 @@ public class FrmSysGrupo extends AbstractMaestro {
 		txtDescripcion.setEditable(true);
 		getDetalleTM().setEditar(true);
 		this.ctntitulo.txtCodigo.setEditable(true);
+		this.ctntitulo.txtDescripcion.setEditable(true);
 		this.ctnmodulo.txtCodigo.setEditable(true);
+		this.ctnmodulo.txtDescripcion.setEditable(true);
 
 	}
 
@@ -431,7 +433,10 @@ public class FrmSysGrupo extends AbstractMaestro {
 		txtDescripcion.setEditable(false);
 		getDetalleTM().setEditar(false);
 		this.ctntitulo.txtCodigo.setEditable(false);
+		this.ctntitulo.txtDescripcion.setEditable(false);
 		this.ctnmodulo.txtCodigo.setEditable(false);
+		this.ctnmodulo.txtDescripcion.setEditable(false);
+
 	}
 
 	@Override
