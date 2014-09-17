@@ -47,7 +47,7 @@ public class FrmLog extends JInternalFrame{
 		setBounds(100, 100, 700, 400);
 		
 		tblLista = new JTable(new DSGTableModel(new String[] { "Fecha",
-				"Usuario", "Form/Accion", "Historia" }) {
+				"Usuario", "Formulario", "Acción", "Historia" }) {
 
 			/**
 			 * 
@@ -92,10 +92,11 @@ public class FrmLog extends JInternalFrame{
 		tblLista.getColumnModel().getColumn(0).setPreferredWidth(80);
 		tblLista.getColumnModel().getColumn(1).setPreferredWidth(50);
 		tblLista.getColumnModel().getColumn(2).setPreferredWidth(50);
-		tblLista.getColumnModel().getColumn(3).setPreferredWidth(300);
+		tblLista.getColumnModel().getColumn(3).setPreferredWidth(30);
+		tblLista.getColumnModel().getColumn(4).setPreferredWidth(300);
 		for (Log obj : ldao.findAll()) {	
 			getDetalleTM().addRow(
-					new Object[] { obj.getDate(), obj.getUsuario(), obj.getNomFormulario() +"/"+ obj.getTipo(), obj.getLog() });
+					new Object[] { obj.getDate(), obj.getUsuario(), obj.getNomFormulario(), obj.getTipo(), obj.getLog() });
 		}
 			 
 	}

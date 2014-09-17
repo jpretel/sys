@@ -408,7 +408,7 @@ public class FrmSysModulo extends AbstractMaestro {
 
 			if (seleccion == 0) {
 				if (getSysModulo() != null) {
-					// getSysTituloDAO().borrarPorModulo(getSysModulo());
+					getSysTituloDAO().borrarPorModulo(getSysModulo());
 					getSysModuloDAO().remove(getSysModulo());
 					for (SysTitulo s : getSysTitulos()) {
 						sysTituloDAO.remove(s);
