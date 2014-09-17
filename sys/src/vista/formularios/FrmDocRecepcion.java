@@ -283,6 +283,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			detDocingresoDAO.crear_editar(det);
 		}		
 		ContabAlm.ContabAlm(getIngreso().getIddocingreso(),getIngreso());
+		String Mensaje = CentralizaAlm.CentralizaAlm(getIngreso().getIddocingreso());
+		System.out.println(Mensaje);
 	}
 
 	@Override

@@ -5,10 +5,12 @@ import java.util.List;
 import dao.DetDocIngresoDAO;
 import dao.DocingresoDAO;
 import dao.KardexDAO;
+import dao.ProductoDAO;
 import dao.UnimedidaDAO;
 import entity.DetDocingreso;
 import entity.Docingreso;
 import entity.Kardex;
+import entity.Producto;
 import entity.Unimedida;
 
 public class ContabAlm {
@@ -29,13 +31,16 @@ public class ContabAlm {
 			for(DetDocingreso det : detIngL){
 				Kardex kardex = new Kardex();
 				kardex.setIdreferencia(id);
+				kardex.setMoneda(ingreso.getMoneda());
+				kardex.setConcepto(ingreso.getConcepto());
 				kardex.setDia(ingreso.getDia());
 				kardex.setMes(ingreso.getMes());
-				kardex.setAnio(ingreso.getAnio());
+				kardex.setAnio(ingreso.getAnio());							
 				kardex.setAlmacen(ingreso.getAlmacen());
-				kardex.setProducto(det.getProducto());
+				Producto producto = new ProductoDAO().find(det.getId().getIdproducto());
+				kardex.setProducto(producto);
 				Unimedida unimedida = new UnimedidaDAO().find(det.getIdmedida());
-				kardex.setUnimedida(unimedida);
+				kardex.setUnimedida(unimedida);				
 				kardex.setCantidad(det.getCantidad());				
 				kardex.setPrecio(det.getPrecio());
 				kardex.setFactor(1);

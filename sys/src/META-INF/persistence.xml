@@ -13,13 +13,18 @@
 		<class>entity.Clieprov</class>
 		<class>entity.Concepto</class>
 		<class>entity.Consumidor</class>
+		<class>entity.ConversionUM</class>
+		<class>entity.ConversionUMPK</class>
 		<class>entity.Cuenta</class>
 		<class>entity.DAsiento</class>
 		<class>entity.DAsientoPK</class>
 		<class>entity.DetDocingreso</class>
 		<class>entity.DetDocingresoPK</class>
+		<class>entity.DetDocsalida</class>
+		<class>entity.DetDocsalidaPK</class>
 		<class>entity.DocFormulario</class>
 		<class>entity.Docingreso</class>
+		<class>entity.Docsalida</class>
 		<class>entity.Documento</class>
 		<class>entity.DocumentoNumero</class>
 		<class>entity.DocumentoNumeroPK</class>
@@ -31,12 +36,14 @@
 		<class>entity.GrupoUsuario</class>
 		<class>entity.GuardarUsuario</class>
 		<class>entity.GuardarUsuarioPK</class>
+		<class>entity.Impuesto</class>
 		<class>entity.Kardex</class>
 		<class>entity.Log</class>
 		<class>entity.Marca</class>
 		<class>entity.Menu</class>
 		<class>entity.Modulo</class>
 		<class>entity.Moneda</class>
+		<class>entity.OrdenCompra</class>
 		<class>entity.Producto</class>
 		<class>entity.PtoEmision</class>
 		<class>entity.Responsable</class>
@@ -64,8 +71,8 @@
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-			 <!--  <property name="eclipselink.logging.level" value="FINEST"/> 
-			 <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> --> 
+			 <!--  <property name="eclipselink.logging.level" value="FINEST"/>  -->
+			 <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>       
 		</properties>
 	</persistence-unit>
 

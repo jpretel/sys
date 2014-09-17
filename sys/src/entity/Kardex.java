@@ -19,17 +19,25 @@ public class Kardex implements Serializable {
 	private long idreferencia;
 
 	@JoinColumns({
-			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false),
-			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen", insertable = false, updatable = false) })
+			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", nullable = false),
+			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen", nullable = false) })
 	private Almacen almacen;
 	
 	@ManyToOne
-	@JoinColumn(name = "idproducto",referencedColumnName = "idproducto",insertable = false, updatable = false)
+	@JoinColumn(name = "idproducto",referencedColumnName = "idproducto",nullable = false)
 	private Producto producto;
 	
 	@ManyToOne
-	@JoinColumn(name = "idmedida",referencedColumnName = "idmedida",insertable = false, updatable = false)
+	@JoinColumn(name = "idmedida",referencedColumnName = "idunimedida",nullable = false)
 	private Unimedida unimedida;
+	
+	@ManyToOne
+	@JoinColumn(name = "idmoneda",referencedColumnName = "idmoneda",nullable = false)
+	private Moneda moneda;
+	
+	@ManyToOne
+	@JoinColumn(name = "idconcepto",referencedColumnName = "idconcepto",nullable = false)
+	private Concepto concepto;
 	
 	@Column
 	private int dia;
@@ -162,5 +170,21 @@ public class Kardex implements Serializable {
 
 	public void setImportemex(float importemex) {
 		this.importemex = importemex;
+	}
+
+	public Moneda getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(Moneda moneda) {
+		this.moneda = moneda;
+	}
+
+	public Concepto getConcepto() {
+		return concepto;
+	}
+
+	public void setConcepto(Concepto concepto) {
+		this.concepto = concepto;
 	}
 }

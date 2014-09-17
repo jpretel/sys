@@ -1,40 +1,28 @@
 package core.centralizacion;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import vista.Sys;
-import dao.AsientoDAO;
 import dao.CfgCentralizaAlmDAO;
-import dao.DAsientoDAO;
-import dao.DetDocIngresoDAO;
-import dao.DocingresoDAO;
+import dao.KardexDAO;
 import entity.Asiento;
 import entity.CfgCentralizaAlm;
 import entity.DAsiento;
 import entity.DAsientoPK;
-import entity.DetDocingreso;
-import entity.Docingreso;
+import entity.Kardex;
 import entity.Moneda;
 import entity.Producto;
-import entity.SysOpcion;
 
 public class CentralizaAlm {
 	
-	public static String CentralizaIngreso(Long id) {
-		DocingresoDAO ingresoDAO = new DocingresoDAO();
-		DetDocIngresoDAO dingresoDAO = new DetDocIngresoDAO();
-		AsientoDAO asientoDAO = new AsientoDAO();
-		DAsientoDAO dasientoDAO = new DAsientoDAO();
-		CfgCentralizaAlmDAO cfgDAO = new CfgCentralizaAlmDAO();
+	public static String CentralizaAlm(Long id) {		
 		
-		Docingreso doc = ingresoDAO.find(id);
-
+		CfgCentralizaAlmDAO cfgDAO = new CfgCentralizaAlmDAO();		
+		KardexDAO kardexDAO = new KardexDAO();
+		Kardex kardex = kardexDAO.getPorIngresoSalidaC(id);
 		Asiento asiento = new Asiento();
 		List<DAsiento> dasiento = new ArrayList<DAsiento>();
 
-		if (doc == null) {
+		if (kardex == null) {
 			return "No hay Documento";
 		}
 		
@@ -42,31 +30,30 @@ public class CentralizaAlm {
 		ida = System.nanoTime();
 		asiento.setIdasiento(ida);
 
-		asiento.setAnio(doc.getAnio());
-		asiento.setMes(doc.getMes());
-		asiento.setDia(doc.getDia());
+		asiento.setAnio(kardex.getAnio());
+		asiento.setMes(kardex.getMes());
+		asiento.setDia(kardex.getDia());
 		asiento.setEstado(1);
-		asiento.setMoneda(doc.getMoneda());
+		asiento.setMoneda(kardex.getMoneda());
 
-		// /asiento.setSubdiario(subdiario);
-		asiento.setNumerador("0000000000");
+		asiento.setNumerador(0);
 		asiento.setTipo('A');
 		
 		int i = 1;
 
 		float tcambio = 2.8F, tcmoneda = 1.3F;
 		
-		Moneda moneda = doc.getMoneda();
+		Moneda moneda = kardex.getMoneda();
 		
-		for (DetDocingreso det : dingresoDAO.findAll()) {
-			BigDecimal precio = det.getPrecio();
-			BigDecimal cantidad = det.getCantidad();
+		for (Kardex det : kardexDAO.getPorIngresoSalidaL(id)) {
+			float precio = det.getPrecio();
+			float cantidad = det.getCantidad();
 			float total = 0;
 			Producto prod = det.getProducto();
 			total = precio * cantidad;
 
 			CfgCentralizaAlm cfg = cfgDAO.getPorConceptoGrupoSubGrupo(
-					doc.getConcepto(), prod.getGrupo(), prod.getSubgrupo());
+					kardex.getConcepto(), prod.getSubgrupo().getGrupo(), prod.getSubgrupo());
 
 			if (cfg == null) {
 				return "No tiene configuracion contable";
