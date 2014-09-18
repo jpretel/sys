@@ -46,13 +46,18 @@ public class FrmListaOrdenCompra extends AbstractDocList {
 
 	@Override
 	public void nuevo() {	
-		//frmo docRecepcion = new FrmDocRecepcion();
-		//init(docRecepcion,"NUEVO",null);
+		AbrirFormulario("NUEVO");
 	}
 	
 	public void AbrirFormulario(int row, String opcion) {
 		FrmDocOrdenCompra frm = new FrmDocOrdenCompra();
 		frm.actualiza_objeto(data[row][data[0].length-1], opcion);
+		Sys.desktoppane.add(frm);
+		frm.moveToFront();
+	}
+	public void AbrirFormulario(String opcion) {
+		FrmDocOrdenCompra frm = new FrmDocOrdenCompra();
+		frm.DoNuevo();
 		Sys.desktoppane.add(frm);
 		frm.moveToFront();
 	}

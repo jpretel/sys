@@ -23,19 +23,19 @@ public class OrdenCompra implements Serializable {
 	private int anio;
 	private int aniomesdia;
 	@ManyToOne
-	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda")
 	private Moneda moneda;
 	@Column(precision = 10, scale = 4)
 	private float tcambio;
 	@Column(precision = 10, scale = 4)
 	private float tcmoneda;
 	@ManyToOne
-	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false, nullable = false)
+	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal")
 	private Sucursal sucursal;
 	@ManyToOne
 	@JoinColumns({
 			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false, nullable = false),
-			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen", insertable = false, updatable = false, nullable = false) })
+			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen") })
 	private Almacen almacen;
 	@ManyToOne
 	@JoinColumn(name = "idresponsable", referencedColumnName = "idresponsable")
