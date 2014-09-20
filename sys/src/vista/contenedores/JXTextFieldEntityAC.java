@@ -348,7 +348,6 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 				}
 			}
 		}
-		System.out.println(getSeleccionado());
 	}
 	
 

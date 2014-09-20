@@ -40,12 +40,12 @@ public class FrmLogin extends JFrame {
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 	private List<ChangeListener> listenerList = new ArrayList<ChangeListener>();
 	private JCheckBox chkGuardar;
-	
+
 	GuardarUsuario gu;
 	GuardarUsuarioPK gupk;
 	GuardarUsuarioDAO gudao = new GuardarUsuarioDAO();
 	InetAddress localHost;
-	
+
 	public FrmLogin() {
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,7 +55,6 @@ public class FrmLogin extends JFrame {
 		setLocationRelativeTo(null);
 		setTitle("Inicio de Sesi\u00F3n");
 		getContentPane().setLayout(null);
-		
 
 		JLabel lblNewLabel = new JLabel("Usuario");
 		lblNewLabel.setBounds(10, 11, 46, 14);
@@ -97,11 +96,11 @@ public class FrmLogin extends JFrame {
 		});
 		btnCancelar.setBounds(190, 92, 89, 23);
 		getContentPane().add(btnCancelar);
-		
+
 		chkGuardar = new JCheckBox("Guardar datos");
 		chkGuardar.setBounds(79, 60, 221, 20);
 		getContentPane().add(chkGuardar);
-		
+
 		try {
 			datosGuardados();
 		} catch (UnknownHostException e1) {
@@ -109,54 +108,53 @@ public class FrmLogin extends JFrame {
 		}
 	}
 
-	private void datosGuardados() throws UnknownHostException{
-		
+	private void datosGuardados() throws UnknownHostException {
+
 		localHost = InetAddress.getLocalHost();
-		
-		for(GuardarUsuario gusu : gudao.findAll()){
-			if(gusu.getId().getNamehost().equals(localHost.getHostName())){
+
+		for (GuardarUsuario gusu : gudao.findAll()) {
+			if (gusu.getId().getNamehost().equals(localHost.getHostName())) {
 				txtUsuario.setText(gusu.getUsuario());
 				txtClave.setText(Encryption.decrypt(gusu.getContra()));
 				chkGuardar.setSelected(true);
 			}
 		}
 	}
-	
+
 	private void iniciarSesion() throws UnknownHostException {
 		Sys.usuario = null;
 		String idusuario, clave;
 		idusuario = txtUsuario.getText();
 		clave = new String(txtClave.getPassword());
-		
+
 		localHost = InetAddress.getLocalHost();
 		gu = new GuardarUsuario();
 		gupk = new GuardarUsuarioPK();
-		
+
 		Usuario usuario = getUsuarioDAO().getPorUsuarioClave(idusuario,
-				Encryption.encrypt(clave));		
-						
+				Encryption.encrypt(clave));
+
 		if (usuario != null) {
 			Sys.usuario = usuario;
 			ChangeEvent ce = new ChangeEvent(this);
 			for (ChangeListener listener : listenerList) {
 				listener.stateChanged(ce);
 			}
-			
+
 			gupk.setIdusuario(usuario.getIdusuario());
-			gupk.setNamehost(localHost.getHostName());			
+			gupk.setNamehost(localHost.getHostName());
 			gu.setId(gupk);
 			gu.setUsuario(idusuario);
 			gu.setContra(Encryption.encrypt(clave));
-			
-			if(chkGuardar.isSelected()){				
+
+			gudao.borrar();
+			if (chkGuardar.isSelected()) {
 				gudao.crear_editar(gu);
-			}else{
-				gudao.remove(gu);
 			}
-			
+
 			this.dispose();
-			
-		} else{
+
+		} else {
 			mensaje_alterta(this, "CLAVEUSUARIO_INC");
 		}
 	}

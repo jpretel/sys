@@ -1,7 +1,6 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -18,16 +17,12 @@ public class SysOpcion implements Serializable {
 
 	@EmbeddedId
 	private SysOpcionPK id;
-
-	@Column(length=75)
-	private String descripcion;
-
-	@Column(length=75)
-	private String imagen;
 	
-	@Column(length=75)
-	private String opcion;
+	@ManyToOne
+	@JoinColumn(name="idformulario", referencedColumnName = "idformulario", nullable=false, insertable=false, updatable=false)
+	private SysFormulario sysFormulario;
 	
+	@Column
 	private int prioridad;
 
 	//bi-directional many-to-one association to SysGrupo
@@ -50,22 +45,6 @@ public class SysOpcion implements Serializable {
 		this.id = id;
 	}
 
-	public String getDescripcion() {
-		return this.descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getImagen() {
-		return this.imagen;
-	}
-
-	public void setImagen(String imagen) {
-		this.imagen = imagen;
-	}
-
 	public int getPrioridad() {
 		return this.prioridad;
 	}
@@ -82,12 +61,12 @@ public class SysOpcion implements Serializable {
 		this.sysGrupo = sysGrupo;
 	}
 
-	public String getOpcion() {
-		return opcion;
+	public SysFormulario getSysFormulario() {
+		return sysFormulario;
 	}
 
-	public void setOpcion(String opcion) {
-		this.opcion = opcion;
+	public void setSysFormulario(SysFormulario sysFormulario) {
+		this.sysFormulario = sysFormulario;
 	}
 	
 	

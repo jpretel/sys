@@ -1,7 +1,6 @@
 package vista;
 
 import java.io.File;
-import java.util.List;
 
 import static vista.utilitarios.UtilMensajes.mensaje_alterta;
 
@@ -39,6 +38,8 @@ public class Sys {
 	private FrmSysConfig frm = new FrmSysConfig();
 	public static MainFrame mainF;
 
+	private String opcion;
+
 	public static void main(String[] args) {
 		try {
 			salir: for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
@@ -60,8 +61,17 @@ public class Sys {
 				| IllegalAccessException
 				| javax.swing.UnsupportedLookAndFeelException ex) {
 		}
-		Sys sys = new Sys();
+		Sys sys = null;
+		if (args != null && args.length > 0 && args[0] != null) {
+			sys = new Sys(args[0]);
+		} else {
+			sys = new Sys("");
+		}
 		sys.iniciar();
+	}
+
+	public Sys(String opcion) {
+		this.opcion = opcion;
 	}
 
 	public void iniciar() {
@@ -83,6 +93,10 @@ public class Sys {
 				cfgInicio.setBase_datos(datos[1]);
 				cfgInicio.setUsuario(datos[2]);
 				cfgInicio.setClave(datos[3]);
+
+				if (this.opcion.equals("UPDATE")){
+					cfgInicio.setTipo_creacion("UPDATE");
+				}
 
 				isOK = ConectionManager.isConexionOK(ConectionManager._mysql,
 						cfgInicio);
@@ -150,7 +164,7 @@ public class Sys {
 		}
 
 		Sys.empresa = empresa;
-		
+
 		FrmLogin frm = new FrmLogin();
 		frm.setVisible(true);
 
@@ -167,6 +181,14 @@ public class Sys {
 				new MainFrame();
 			}
 		});
+	}
+
+	public String getOpcion() {
+		return opcion;
+	}
+
+	public void setOpcion(String opcion) {
+		this.opcion = opcion;
 	}
 
 }

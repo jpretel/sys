@@ -36,8 +36,10 @@ import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 
 import controlador.ControladorOpciones;
+import dao.SysFormularioDAO;
 import dao.SysModuloDAO;
 import core.entity.GrupoMenu;
+import entity.SysFormulario;
 import entity.SysGrupo;
 import entity.SysModulo;
 import entity.SysOpcion;
@@ -51,7 +53,7 @@ public class MainFrame extends JRibbonFrame {
 	static ControladorOpciones cOpciones;
 
 	static SysModuloDAO moduloDAO = new SysModuloDAO();
-
+	SysFormularioDAO fomularioDAO = new SysFormularioDAO();
 	static {
 		cOpciones = new ControladorOpciones();
 	}
@@ -152,17 +154,29 @@ public class MainFrame extends JRibbonFrame {
 				getResizableIconFromResource("/main/resources/salir.png"),
 				"Configuración Inicial", null, CommandButtonKind.POPUP_ONLY);
 
-		RibbonApplicationMenuEntrySecondary[] configs = new RibbonApplicationMenuEntrySecondary[2];
-
+		RibbonApplicationMenuEntrySecondary[] configs = new RibbonApplicationMenuEntrySecondary[4];
+		
 		configs[0] = new RibbonApplicationMenuEntrySecondary(
+				getResizableIconFromResource16x16("/main/resources/salir.png"),
+				"Empresa", cOpciones.returnAction("FrmEmpresa"),
+				CommandButtonKind.ACTION_ONLY);
+		
+		configs[1] = new RibbonApplicationMenuEntrySecondary(
+				getResizableIconFromResource16x16("/main/resources/salir.png"),
+				"Gestion de Formularios", cOpciones.returnAction("FrmSysFormulario"),
+				CommandButtonKind.ACTION_ONLY);
+		
+		configs[2] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
 				"Gestion de Modulos", cOpciones.returnAction("FrmSysModulo"),
 				CommandButtonKind.ACTION_ONLY);
 
-		configs[1] = new RibbonApplicationMenuEntrySecondary(
+		configs[3] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
 				"Gestion de Opciones", cOpciones.returnAction("FrmSysGrupo"),
 				CommandButtonKind.ACTION_ONLY);
+		
+		
 
 		config_popup.addSecondaryMenuGroup("Configuración Inicial", configs);
 
@@ -290,7 +304,7 @@ public class MainFrame extends JRibbonFrame {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// setVisible(false);
-					new vista.Sys().iniciar();
+					new vista.Sys("").iniciar();
 					dispose();
 				}
 			};
@@ -325,12 +339,17 @@ public class MainFrame extends JRibbonFrame {
 					bandas_aux.add(band);
 
 					for (SysOpcion opcion : grupo.getSysOpcions()) {
-
-						opcion.setImagen("/main/resources/iconos/nuevo.png");
+						System.out.println(opcion);
+						System.out.println(opcion.getSysFormulario());
+						SysFormulario formulario = opcion.getSysFormulario();
+						
+						
+						
+						formulario.setImagen("/main/resources/iconos/nuevo.png");
 
 						JCommandButton button = new JCommandButton(
-								opcion.getDescripcion(),
-								getResizableIconFromResource(opcion.getImagen()));
+								formulario.getDescripcion(),
+								getResizableIconFromResource(formulario.getImagen()));
 
 						if (opcion.getPrioridad() == 1) {
 							band.addCommandButton(button, TOP);
@@ -340,7 +359,7 @@ public class MainFrame extends JRibbonFrame {
 							band.addCommandButton(button, LOW);
 						}
 
-						button.addActionListener(cOpciones.returnAction(opcion
+						button.addActionListener(cOpciones.returnAction(formulario
 								.getOpcion()));
 					}
 

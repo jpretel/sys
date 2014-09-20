@@ -7,11 +7,15 @@ import javax.swing.JInternalFrame;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+import vista.Sys;
 import vista.barras.PanelBarraMaestro;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JPanel;
+
+import dao.GrupoUsuarioPrivilegioDAO;
+import entity.GrupoUsuarioPrivilegio;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -25,7 +29,8 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 
 	private String estado;
-
+	private GrupoUsuarioPrivilegioDAO privilegioDAO = new GrupoUsuarioPrivilegioDAO();
+	private GrupoUsuarioPrivilegio privilegio = new GrupoUsuarioPrivilegio();
 	protected static final String EDICION = "EDICION";
 	protected static final String VISTA = "VISTA";
 	protected static final String NUEVO = "NUEVO";
@@ -61,7 +66,23 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		inputMap.put(grabarKey, "grabar");
 		inputMap.put(cancelarKey, "cancelar");
 		inputMap.put(elminarKey, "eliminar");
-
+		privilegio = privilegioDAO.getPorOpcion(
+				this.getClass().getSimpleName(), Sys.usuario.getGrupoUsuario());
+		if (privilegio == null) {
+			privilegio = new GrupoUsuarioPrivilegio();
+			privilegio.setCrear(0);
+			privilegio.setModificar(0);
+			privilegio.setVer(0);
+			privilegio.setEliminar(0);
+		}
+		
+		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+				&& privilegio.getVer() == 0) {
+			UtilMensajes.mensaje_alterta("NOPRIV_VER");
+			this.dispose();
+			return;
+		}
+		
 		getRootPane().getActionMap().put("nuevo", new AbstractAction() {
 			/**
 			 * 
@@ -118,23 +139,23 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public void moveToFront() {
 		super.moveToFront();
 		actualiza_tablas();
-//		Window window = SwingUtilities.getWindowAncestor(this);
-//        Component focusOwner = (window != null) ? window.getFocusOwner() :
-//                                null;
-//        boolean descendant = false;
-//
-//        if (window != null && focusOwner != null &&
-//                      SwingUtilities.isDescendingFrom(focusOwner, this)) {
-//            descendant = true;
-//            requestFocus();
-//        }
-//
-//        super.moveToFront();
-//
-//        if (descendant) {
-//            focusOwner.requestFocus();
-//        }
-    }
+		// Window window = SwingUtilities.getWindowAncestor(this);
+		// Component focusOwner = (window != null) ? window.getFocusOwner() :
+		// null;
+		// boolean descendant = false;
+		//
+		// if (window != null && focusOwner != null &&
+		// SwingUtilities.isDescendingFrom(focusOwner, this)) {
+		// descendant = true;
+		// requestFocus();
+		// }
+		//
+		// super.moveToFront();
+		//
+		// if (descendant) {
+		// focusOwner.requestFocus();
+		// }
+	}
 
 	public void iniciar() {
 		llenar_tablas();
@@ -147,6 +168,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract void nuevo();
 
 	public void editar() {
+		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+				&& privilegio.getModificar() == 0) {
+			UtilMensajes.mensaje_alterta("NOPRIV_MODIFICAR");
+			return;
+		}
 		setEstado(EDICION);
 		getBarra().enEdicion();
 		vista_edicion();
@@ -186,6 +212,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	}
 
 	public void DoGrabar() {
+		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+				&& privilegio.getModificar() == 0) {
+			UtilMensajes.mensaje_alterta("NOPRIV_MODIFICAR");
+			return;
+		}
 		boolean esVistaValido;
 		esVistaValido = isValidaVista();
 		if (esVistaValido) {
@@ -201,6 +232,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	}
 
 	public void DoNuevo() {
+		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+				&& privilegio.getCrear() == 0) {
+			UtilMensajes.mensaje_alterta("NOPRIV_CREAR");
+			return;
+		}
 		nuevo();
 		setEstado(NUEVO);
 		getBarra().enEdicion();
@@ -209,6 +245,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	}
 
 	public void DoEliminar() {
+		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+				&& privilegio.getEliminar() == 0) {
+			UtilMensajes.mensaje_alterta("NOPRIV_ELIMINAR");
+			return;
+		}
 		eliminar();
 		setEstado(VISTA);
 		getBarra().enVista();
@@ -239,13 +280,13 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public void TextFieldsEdicion(boolean band, JTextField... texts) {
 		FormValidador.TextFieldsEdicion(band, texts);
 	}
-	
+
 	public boolean TextFieldObligatorios(JTextField... texts) {
 		return FormValidador.TextFieldObligatorios(texts);
 	}
 
 	public void actualiza_tablas() {
-		
+
 	}
 
 	public void salir() {

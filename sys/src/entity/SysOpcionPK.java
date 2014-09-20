@@ -22,8 +22,8 @@ public class SysOpcionPK implements Serializable {
 	@Column
 	private String idgrupo;
 
-	@Column(nullable=false, length=3)
-	private String idopcion;
+	@Column(nullable=false, length=15)
+	private String idformulario;
 
 	public SysOpcionPK() {
 	}
@@ -45,12 +45,7 @@ public class SysOpcionPK implements Serializable {
 	public void setIdgrupo(String idgrupo) {
 		this.idgrupo = idgrupo;
 	}
-	public String getIdopcion() {
-		return this.idopcion;
-	}
-	public void setIdopcion(String idopcion) {
-		this.idopcion = idopcion;
-	}
+	
 
 	public boolean equals(Object other) {
 		if (this == other) {
@@ -64,7 +59,7 @@ public class SysOpcionPK implements Serializable {
 			this.idmodulo.equals(castOther.idmodulo)
 			&& this.idtitulo.equals(castOther.idtitulo)
 			&& this.idgrupo.equals(castOther.idgrupo)
-			&& (this.idopcion == castOther.idopcion);
+			&& (this.idformulario == castOther.idformulario);
 	}
 
 	public int hashCode() {
@@ -73,8 +68,14 @@ public class SysOpcionPK implements Serializable {
 		hash = hash * prime + this.idmodulo.hashCode();
 		hash = hash * prime + this.idtitulo.hashCode();
 		hash = hash * prime + this.idgrupo.hashCode();
-		hash = hash * prime + this.idopcion.hashCode();
+		hash = hash * prime + this.idformulario.hashCode();
 		
 		return hash;
+	}
+	public String getIdformulario() {
+		return idformulario;
+	}
+	public void setIdformulario(String idformulario) {
+		this.idformulario = idformulario;
 	}
 }

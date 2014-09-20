@@ -4,18 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AreaDAO;
-import dao.CuentaDAO;
 import entity.Area;
-import entity.Cuenta;
-
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import vista.barras.BarraMaestro;
 import vista.controles.JTextFieldLimit;
+import vista.utilitarios.FormValidador;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -35,6 +31,7 @@ public class FrmAreas extends AbstractMaestro {
 	private AreaDAO areaDAO = new AreaDAO();
 
 	private List<Area> areaL = new ArrayList<Area>();
+
 	public List<Area> getAreaL() {
 		return areaL;
 	}
@@ -45,16 +42,16 @@ public class FrmAreas extends AbstractMaestro {
 
 	private JTable tblLista;
 	private JTextField txtCodigo;
-	private JTextField txtDescripcion;	
+	private JTextField txtDescripcion;
 
 	public FrmAreas() {
 		super("Areas");
-		
-		
+
 		JLabel lblCdigo = new JLabel("C\u00F3digo");
 		lblCdigo.setBounds(227, 11, 46, 14);
 
 		txtCodigo = new JTextField();
+		this.txtCodigo.setName("C\u00F3digo");
 		txtCodigo.setBounds(276, 8, 122, 20);
 		txtCodigo.setColumns(10);
 		txtCodigo.setDocument(new JTextFieldLimit(3, true));
@@ -70,47 +67,102 @@ public class FrmAreas extends AbstractMaestro {
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		txtDescripcion = new JTextField();
+		this.txtDescripcion.setName("Descripci\u00F3n");
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(286, 33, 122, 20);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
 
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblCdigo)
-						.addComponent(lblDescripcin))
-					.addGap(5)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtCodigo, GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-							.addGap(44)))
-					.addContainerGap())
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(26)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblCdigo)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblDescripcin)))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)))
-					.addContainerGap())
-		);
+		groupLayout
+				.setHorizontalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addContainerGap()
+										.addComponent(scrollPane,
+												GroupLayout.DEFAULT_SIZE, 226,
+												Short.MAX_VALUE)
+										.addPreferredGap(
+												ComponentPlacement.UNRELATED)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(lblCdigo)
+														.addComponent(
+																lblDescripcin))
+										.addGap(5)
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																txtDescripcion,
+																GroupLayout.DEFAULT_SIZE,
+																142,
+																Short.MAX_VALUE)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addComponent(
+																				txtCodigo,
+																				GroupLayout.DEFAULT_SIZE,
+																				98,
+																				Short.MAX_VALUE)
+																		.addGap(44)))
+										.addContainerGap()));
+		groupLayout
+				.setVerticalGroup(groupLayout
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout
+										.createSequentialGroup()
+										.addGroup(
+												groupLayout
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addGap(26)
+																		.addGroup(
+																				groupLayout
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								lblCdigo)
+																						.addGroup(
+																								groupLayout
+																										.createSequentialGroup()
+																										.addComponent(
+																												txtCodigo,
+																												GroupLayout.PREFERRED_SIZE,
+																												GroupLayout.DEFAULT_SIZE,
+																												GroupLayout.PREFERRED_SIZE)
+																										.addPreferredGap(
+																												ComponentPlacement.RELATED)
+																										.addGroup(
+																												groupLayout
+																														.createParallelGroup(
+																																Alignment.BASELINE)
+																														.addComponent(
+																																txtDescripcion,
+																																GroupLayout.PREFERRED_SIZE,
+																																22,
+																																GroupLayout.PREFERRED_SIZE)
+																														.addComponent(
+																																lblDescripcin)))))
+														.addGroup(
+																groupLayout
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				scrollPane,
+																				GroupLayout.DEFAULT_SIZE,
+																				370,
+																				Short.MAX_VALUE)))
+										.addContainerGap()));
 		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -119,7 +171,7 @@ public class FrmAreas extends AbstractMaestro {
 					public void valueChanged(ListSelectionEvent e) {
 						int selectedRow = tblLista.getSelectedRow();
 						if (selectedRow >= 0)
-							setArea(getAreaL().get(selectedRow));						
+							setArea(getAreaL().get(selectedRow));
 						else
 							setArea(null);
 						llenar_datos();
@@ -140,36 +192,38 @@ public class FrmAreas extends AbstractMaestro {
 
 	@Override
 	public void grabar() {
-		
-		if(getAreaDAO().find(txtCodigo.getText()) != null){
-			bkEntidad = getAreaDAO().find(txtCodigo.getText()).historial();			
+
+		if (getAreaDAO().find(txtCodigo.getText()) != null) {
+			bkEntidad = getAreaDAO().find(txtCodigo.getText()).historial();
 		}
-		
+
 		getArea().setIdarea(txtCodigo.getText());
-		getArea().setDescripcion(txtDescripcion.getText());			
-		
-		if(getAreaDAO().find(getArea().getIdarea()) != null){
-			Historial.validar("Modificar", bkEntidad , getArea().historial(), getTitle());
-		}else{			
-			Historial.validar("Nuevo", getArea().historial(), getTitle() );
-		}	
-		
+		getArea().setDescripcion(txtDescripcion.getText());
+
+		if (getAreaDAO().find(getArea().getIdarea()) != null) {
+			Historial.validar("Modificar", bkEntidad, getArea().historial(),
+					getTitle());
+		} else {
+			Historial.validar("Nuevo", getArea().historial(), getTitle());
+		}
+
 		getAreaDAO().crear_editar(getArea());
 	}
 
 	@Override
 	public void eliminar() {
 		if (getArea() != null) {
-			
-			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");			
-			if (seleccion == 0){
+
+			int seleccion = UtilMensajes.msj_error("ELIMINAR_REG");
+			if (seleccion == 0) {
 				logEliminar(getArea());
-				//Historial.validar("Eliminar", getArea().historial(), getTitle() );
+				// Historial.validar("Eliminar", getArea().historial(),
+				// getTitle() );
 				areaDAO.remove(getArea());
 				iniciar();
-			}			
+			}
 		}
-		
+
 		setEstado(VISTA);
 		vista_noedicion();
 	}
@@ -239,29 +293,26 @@ public class FrmAreas extends AbstractMaestro {
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void actualiza_objeto(Object entidad) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void llenarDesdeVista() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean isValidaVista() {
-		// TODO Auto-generated method stub
-		if (this.txtCodigo.getText().trim().isEmpty()){	
-			JOptionPane.showMessageDialog(null, "Faltan Ingresar Dato Codigo");
-			this.txtCodigo.requestFocus();
+
+		if (!FormValidador.TextFieldObligatorios(txtCodigo, txtDescripcion))
 			return false;
-		}
 		
 		if (getEstado().equals(NUEVO)) {
 			if (areaDAO.find(this.txtCodigo.getText().trim()) != null) {
@@ -270,20 +321,14 @@ public class FrmAreas extends AbstractMaestro {
 				return false;
 			}
 		}
-		
-		if (this.txtDescripcion.getText().trim().isEmpty()){	
-			JOptionPane.showMessageDialog(null, "Faltan Ingresar Dato Descripcion");
-			this.txtDescripcion.requestFocus();
-			return false;
-		}
-		
-		return true;	
+
+		return true;
 	}
 
 	@Override
 	public void limpiarDetalle() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
