@@ -7,6 +7,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import entity.SysGrupo;
+import entity.SysOpcion;
 import entity.SysTitulo;
 import entity.Usuario;
 

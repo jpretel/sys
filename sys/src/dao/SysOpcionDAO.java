@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import entity.SysFormulario;
 import entity.SysGrupo;
 import entity.SysOpcion;
 import entity.Usuario;
@@ -52,6 +53,14 @@ public class SysOpcionDAO extends AbstractDAO<SysOpcion> {
 		q.select(c).where(condicion);
 		SysOpcion sysopcion = getEntityManager().createQuery(q).getSingleResult();
 		return sysopcion;
+	}
+	
+	public List<SysGrupo> getPorFormularios(List<SysFormulario> formularios) {
+		CriteriaQuery q = cb.createQuery(SysGrupo.class);
+		Root<SysOpcion> c = q.from(SysOpcion.class);
+		Predicate condicion = c.get("sysFormulario").in(formularios); 
+		q.select(c.get("sysGrupo")).where(condicion);
+		return getEntityManager().createQuery(q).getResultList();
 	}
 
 }

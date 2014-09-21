@@ -9,6 +9,7 @@ import javax.swing.KeyStroke;
 
 import vista.Sys;
 import vista.barras.PanelBarraMaestro;
+import vista.controles.DSGInternalFrame;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.UtilMensajes;
 
@@ -24,13 +25,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-public abstract class AbstractMaestro extends JInternalFrame {
+public abstract class AbstractMaestro extends DSGInternalFrame {
 
 	private static final long serialVersionUID = 1L;
 
 	private String estado;
-	private GrupoUsuarioPrivilegioDAO privilegioDAO = new GrupoUsuarioPrivilegioDAO();
-	private GrupoUsuarioPrivilegio privilegio = new GrupoUsuarioPrivilegio();
+	//private GrupoUsuarioPrivilegioDAO privilegioDAO = new GrupoUsuarioPrivilegioDAO();
+	//private GrupoUsuarioPrivilegio privilegio = new GrupoUsuarioPrivilegio();
 	protected static final String EDICION = "EDICION";
 	protected static final String VISTA = "VISTA";
 	protected static final String NUEVO = "NUEVO";
@@ -66,22 +67,22 @@ public abstract class AbstractMaestro extends JInternalFrame {
 		inputMap.put(grabarKey, "grabar");
 		inputMap.put(cancelarKey, "cancelar");
 		inputMap.put(elminarKey, "eliminar");
-		privilegio = privilegioDAO.getPorOpcion(
-				this.getClass().getSimpleName(), Sys.usuario.getGrupoUsuario());
-		if (privilegio == null) {
-			privilegio = new GrupoUsuarioPrivilegio();
-			privilegio.setCrear(0);
-			privilegio.setModificar(0);
-			privilegio.setVer(0);
-			privilegio.setEliminar(0);
-		}
+//		privilegio = privilegioDAO.getPorOpcion(
+//				this.getClass().getSimpleName(), Sys.usuario.getGrupoUsuario());
+//		if (privilegio == null) {
+//			privilegio = new GrupoUsuarioPrivilegio();
+//			privilegio.setCrear(0);
+//			privilegio.setModificar(0);
+//			privilegio.setVer(0);
+//			privilegio.setEliminar(0);
+//		}
 		
-		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
-				&& privilegio.getVer() == 0) {
-			UtilMensajes.mensaje_alterta("NOPRIV_VER");
-			this.dispose();
-			return;
-		}
+//		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+//				&& privilegio.getVer() == 0) {
+//			UtilMensajes.mensaje_alterta("NOPRIV_VER");
+//			this.dispose();
+//			return;
+//		}
 		
 		getRootPane().getActionMap().put("nuevo", new AbstractAction() {
 			/**
@@ -168,11 +169,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	public abstract void nuevo();
 
 	public void editar() {
-		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
-				&& privilegio.getModificar() == 0) {
-			UtilMensajes.mensaje_alterta("NOPRIV_MODIFICAR");
-			return;
-		}
+//		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+//				&& privilegio.getModificar() == 0) {
+//			UtilMensajes.mensaje_alterta("NOPRIV_MODIFICAR");
+//			return;
+//		}
 		setEstado(EDICION);
 		getBarra().enEdicion();
 		vista_edicion();
@@ -212,11 +213,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	}
 
 	public void DoGrabar() {
-		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
-				&& privilegio.getModificar() == 0) {
-			UtilMensajes.mensaje_alterta("NOPRIV_MODIFICAR");
-			return;
-		}
+//		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+//				&& privilegio.getModificar() == 0) {
+//			UtilMensajes.mensaje_alterta("NOPRIV_MODIFICAR");
+//			return;
+//		}
 		boolean esVistaValido;
 		esVistaValido = isValidaVista();
 		if (esVistaValido) {
@@ -232,11 +233,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	}
 
 	public void DoNuevo() {
-		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
-				&& privilegio.getCrear() == 0) {
-			UtilMensajes.mensaje_alterta("NOPRIV_CREAR");
-			return;
-		}
+//		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+//				&& privilegio.getCrear() == 0) {
+//			UtilMensajes.mensaje_alterta("NOPRIV_CREAR");
+//			return;
+//		}
 		nuevo();
 		setEstado(NUEVO);
 		getBarra().enEdicion();
@@ -245,11 +246,11 @@ public abstract class AbstractMaestro extends JInternalFrame {
 	}
 
 	public void DoEliminar() {
-		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
-				&& privilegio.getEliminar() == 0) {
-			UtilMensajes.mensaje_alterta("NOPRIV_ELIMINAR");
-			return;
-		}
+//		if (Sys.usuario.getGrupoUsuario().getEsAdministrador() == 0
+//				&& privilegio.getEliminar() == 0) {
+//			UtilMensajes.mensaje_alterta("NOPRIV_ELIMINAR");
+//			return;
+//		}
 		eliminar();
 		setEstado(VISTA);
 		getBarra().enVista();
