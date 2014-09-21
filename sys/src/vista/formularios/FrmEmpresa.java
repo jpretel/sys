@@ -13,8 +13,10 @@ import javax.swing.GroupLayout.Alignment;
 
 import dao.EmpresaDAO;
 import vista.Sys;
+import vista.controles.DSGInternalFrame;
 import vista.controles.JTextFieldLimit;
 import vista.utilitarios.FormValidador;
+import vista.utilitarios.UtilMensajes;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,7 +26,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class FrmEmpresa extends JInternalFrame {
+public class FrmEmpresa extends DSGInternalFrame {
 	/**
 	 * 
 	 */
@@ -231,6 +233,7 @@ public class FrmEmpresa extends JInternalFrame {
 		Sys.empresa.setRuc(txtRUC.getText());
 
 		empresaDAO.edit(Sys.empresa);
+		UtilMensajes.mensaje_alterta("ACTUALIZA_OK");
 		this.dispose();
 	}
 
