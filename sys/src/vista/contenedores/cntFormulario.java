@@ -1,6 +1,6 @@
 package vista.contenedores;
-import entity.SysOpcion;
-public class cntFormulario extends AbstractCntBuscar<SysOpcion> {
+import entity.SysFormulario;
+public class cntFormulario extends AbstractCntBuscar<SysFormulario> {
 	private static final long serialVersionUID = 1L;
 
 	public cntFormulario() {
@@ -11,31 +11,31 @@ public class cntFormulario extends AbstractCntBuscar<SysOpcion> {
 	}
 
 	@Override
-	public void cargarDatos(SysOpcion entity) {
+	public void cargarDatos(SysFormulario entity) {
 		if (entity == null) {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
 		} else {
-			txtCodigo.setText(entity.getOpcion());
+			txtCodigo.setText(entity.getIdformulario());
 			txtDescripcion.setText(entity.getDescripcion());
 		}
 	}
 
 	@Override
-	public boolean coincideBusqueda(SysOpcion entity, String cadena) {
+	public boolean coincideBusqueda(SysFormulario entity, String cadena) {
 		String cad = cadena.toLowerCase();
-		if (entity.getOpcion().toLowerCase().startsWith(cad) || entity.getDescripcion().toLowerCase().startsWith(cad))
+		if (entity.getIdformulario().toLowerCase().startsWith(cad) || entity.getDescripcion().toLowerCase().startsWith(cad))
 			return true;
 		return false;
 	}
 
 	@Override
-	public Object[] entity2Object(SysOpcion entity) {
-		return new Object[] { entity.getOpcion(), entity.getDescripcion() };
+	public Object[] entity2Object(SysFormulario entity) {
+		return new Object[] { entity.getIdformulario(), entity.getDescripcion() };
 	}
 
 	@Override
-	public String getEntityCode(SysOpcion entity) {
-		return entity.getOpcion();
+	public String getEntityCode(SysFormulario entity) {
+		return entity.getIdformulario();
 	}
 }

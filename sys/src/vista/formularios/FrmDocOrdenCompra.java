@@ -34,7 +34,6 @@ import entity.OrdenCompra;
 import entity.Producto;
 import entity.Sucursal;
 
-import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import java.awt.Component;
 
@@ -239,22 +238,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 		txtGlosa = new JTextArea();
 		this.scrollPane.setViewportView(this.txtGlosa);
-		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { lblSucursal, this.cntSucursal, lblAlmacen,
-						this.cntAlmacen, lblResponsable, this.cntResponsable,
-						lblGlosa, this.txtGlosa, this.tblDetalle,
-						this.scrollPaneDetalle, textArea, this.scrollPane }));
-		getContentPane().setLayout(groupLayout);
-		pnlPrincipal.setFocusTraversalPolicy(new FocusTraversalOnArray(
-				new Component[] { txtSerie, txtNumero_2, txtFecha.getEditor(),
-						txtFecha, cntMoneda.txtCodigo,
-						cntMoneda.txtDescripcion, cntMoneda.btnBuscar,
-						txtTcMoneda, lblTipoCambio, txtTipoCambio,
-						cntGrupoCentralizacion.txtCodigo,
-						lblGrupoDeCentralizacion, cntGrupoCentralizacion,
-						cntGrupoCentralizacion.txtDescripcion,
-						cntGrupoCentralizacion.btnBuscar, cntMoneda,
-						lblTcMoneda }));
 		iniciar();
 	}
 
@@ -292,8 +275,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		System.out.println(getOrdencompra());
-		System.out.println(getEstado());
 		if (getOrdencompra() != null) {
 			this.txtNumero_2.setValue(getOrdencompra().getNumero());
 			this.txtSerie.setText(getOrdencompra().getSerie());
