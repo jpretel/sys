@@ -99,20 +99,20 @@ public class PanelBarraDocumento extends JPanel {
 			}
 		});
 		
-		btnNuevo.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnNuevo.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 				.getResource("/main/resources/iconos/nuevo.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 		btnNuevo.setToolTipText("Nuevo");
 		add(btnNuevo);
 		btnEditar
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 						.getResource("/main/resources/iconos/editar.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
 		btnEditar.setToolTipText("Editar");
 		add(btnEditar);
 		btnAnular
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 						.getResource("/main/resources/iconos/anular.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
@@ -140,7 +140,7 @@ public class PanelBarraDocumento extends JPanel {
 			}
 		});
 		btnCancelar
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 						.getResource("/main/resources/iconos/cancelar.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
@@ -148,7 +148,7 @@ public class PanelBarraDocumento extends JPanel {
 		add(btnCancelar);
 
 		btnGrabar
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 						.getResource("/main/resources/iconos/grabar.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
@@ -156,7 +156,7 @@ public class PanelBarraDocumento extends JPanel {
 		add(btnGrabar);
 
 		btnEliminar
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 						.getResource("/main/resources/iconos/eliminar.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
@@ -169,7 +169,7 @@ public class PanelBarraDocumento extends JPanel {
 				//getFormMaestro().salir();
 			}
 		});
-		btnSalir.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnSalir.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 				.getResource("/main/resources/iconos/salir.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 		btnSalir.setToolTipText("Salir");

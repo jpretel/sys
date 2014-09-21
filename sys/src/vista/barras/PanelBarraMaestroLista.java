@@ -100,20 +100,20 @@ public class PanelBarraMaestroLista extends JPanel {
 			}
 		});
 		
-		btnNuevo.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnNuevo.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestroLista.class
 				.getResource("/main/resources/iconos/nuevo.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 		btnNuevo.setToolTipText("Nuevo");
 		add(btnNuevo);
 		btnEditar
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestroLista.class
 						.getResource("/main/resources/iconos/editar.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
 		btnEditar.setToolTipText("Editar");
 		add(btnEditar);
 		btnBuscar
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestroLista.class
 						.getResource("/main/resources/iconos/find.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
@@ -127,7 +127,7 @@ public class PanelBarraMaestroLista extends JPanel {
 			}
 		});
 		btnImprimir
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestroLista.class
 						.getResource("/main/resources/iconos/printer.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
@@ -140,7 +140,7 @@ public class PanelBarraMaestroLista extends JPanel {
 				//getFormMaestro().salir();
 			}
 		});
-		btnSalir.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnSalir.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestroLista.class
 				.getResource("/main/resources/iconos/salir.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 		btnSalir.setToolTipText("Salir");

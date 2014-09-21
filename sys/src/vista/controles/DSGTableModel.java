@@ -16,7 +16,6 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
-import vista.barras.BarraMaestro;
 import vista.utilitarios.JTableUtils;
 import vista.utilitarios.UtilMensajes;
 
@@ -199,7 +198,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 							});
 						}
 					});
-			boton.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+			boton.setIcon(new ImageIcon(new ImageIcon(DSGTableModel.class
 					.getResource("/main/resources/iconos/mas.png"))
 					.getImage().getScaledInstance(12, 12,
 							java.awt.Image.SCALE_DEFAULT)));

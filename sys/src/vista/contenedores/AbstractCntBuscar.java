@@ -9,7 +9,6 @@ import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 
 import vista.Sys;
-import vista.barras.BarraMaestro;
 
 import java.util.List;
 import java.awt.Dimension;
@@ -121,7 +120,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 				txtCodigo.checkForAndShowSuggestions();
 			}
 		});
-		btnBuscar.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnBuscar.setIcon(new ImageIcon(new ImageIcon(AbstractCntBuscar.class
 				.getResource("/main/resources/iconos/vistaprevia.png"))
 				.getImage().getScaledInstance(_dim, _dim,
 						java.awt.Image.SCALE_DEFAULT)));
