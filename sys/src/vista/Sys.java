@@ -17,9 +17,11 @@ import core.inicio.SysCfgInicio;
 import core.security.Encryption;
 import dao.EmpresaDAO;
 import dao.GrupoUsuarioDAO;
+import dao.MonedaDAO;
 import dao.UsuarioDAO;
 import entity.Empresa;
 import entity.GrupoUsuario;
+import entity.Moneda;
 import entity.Usuario;
 
 public class Sys {
@@ -33,6 +35,8 @@ public class Sys {
 
 	public static Usuario usuario;
 	public static Empresa empresa;
+	public static Moneda moneda_of;
+	public static Moneda moneda_ex;
 	public static JDesktopPane desktoppane;
 	public static Mensajes mensajes;
 	private FrmSysConfig frm = new FrmSysConfig();
@@ -131,7 +135,9 @@ public class Sys {
 		frm.dispose();
 
 		EmpresaDAO empresaDAO = new EmpresaDAO();
-
+		
+		MonedaDAO monedaDAO = new MonedaDAO();
+		
 		GrupoUsuario grpAdmin = new GrupoUsuarioDAO().find("ADM");
 
 		if (grpAdmin == null) {
@@ -164,6 +170,23 @@ public class Sys {
 		}
 
 		Sys.empresa = empresa;
+		
+		
+		//Monedas
+		Moneda mof = monedaDAO.getPorTipo(0);
+		
+		Moneda mex = monedaDAO.getPorTipo(1);
+		
+		Sys.moneda_of = mof;
+		Sys.moneda_ex = mex;
+		
+		if (mof == null) {
+			System.out.println("No hay moneda oficial");
+		}
+		
+		if (mex == null) {
+			System.out.println("No hay moneda extranjera");
+		}
 
 		FrmLogin frm = new FrmLogin();
 		frm.setVisible(true);

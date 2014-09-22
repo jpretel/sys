@@ -48,4 +48,17 @@ public class GrupoUsuarioPrivilegioDAO extends
 		return lista.get(0);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<SysFormulario> getFormularioPorGrupoUsuario(GrupoUsuario grupo) {
+		CriteriaQuery q = cb.createQuery(SysFormulario.class);
+
+		Root<GrupoUsuarioPrivilegio> from = q
+				.from(GrupoUsuarioPrivilegio.class);
+
+		Predicate condicion = cb.equal(from.get("grupoUsuario"), grupo);
+		q.select(from.get("sysFormulario")).where(condicion);
+
+		return getEntityManager().createQuery(q).getResultList();
+	}
+
 }

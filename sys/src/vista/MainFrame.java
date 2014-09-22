@@ -53,7 +53,7 @@ public class MainFrame extends JRibbonFrame {
 	static ControladorOpciones cOpciones;
 
 	static SysModuloDAO moduloDAO = new SysModuloDAO();
-	SysFormularioDAO fomularioDAO = new SysFormularioDAO();
+	SysFormularioDAO formularioDAO = new SysFormularioDAO();
 	static {
 		cOpciones = new ControladorOpciones();
 	}
@@ -339,10 +339,10 @@ public class MainFrame extends JRibbonFrame {
 					bandas_aux.add(band);
 
 					for (SysOpcion opcion : grupo.getSysOpcions()) {
-						System.out.println(opcion);
-						System.out.println(opcion.getSysFormulario());
-						SysFormulario formulario = opcion.getSysFormulario();
 						
+						//SysFormulario formulario = opcion.getSysFormulario();
+						
+						SysFormulario formulario = formularioDAO.find(opcion.getId().getIdformulario());
 						
 						
 						formulario.setImagen("/main/resources/iconos/nuevo.png");

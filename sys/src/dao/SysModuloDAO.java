@@ -31,7 +31,7 @@ public class SysModuloDAO extends AbstractDAO<SysModulo> {
 		
 		System.out.println("Grupos: " + opciones);
 		
-		List<SysGrupo> grupos = new SysGrupoDAO().getPorOpciones(opciones);
+		//List<SysGrupo> grupos = new SysGrupoDAO().getPorOpciones(opciones);
 		
 		//System.out.println("Grupos: " + grupos);
 		

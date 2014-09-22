@@ -2,6 +2,7 @@ package vista.formularios;
 
 import static vista.utilitarios.UtilMensajes.mensaje_alterta;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -10,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import vista.MainFrame;
 import vista.Sys;
 import core.security.Encryption;
 import dao.GuardarUsuarioDAO;
@@ -100,6 +102,9 @@ public class FrmLogin extends JFrame {
 		chkGuardar = new JCheckBox("Guardar datos");
 		chkGuardar.setBounds(79, 60, 221, 20);
 		getContentPane().add(chkGuardar);
+		
+		setIconImage(new ImageIcon(
+				FrmLogin.class.getResource("/main/resources/iconos/logo.png")).getImage());
 
 		try {
 			datosGuardados();
@@ -149,7 +154,7 @@ public class FrmLogin extends JFrame {
 
 			gudao.borrar();
 			if (chkGuardar.isSelected()) {
-				gudao.crear_editar(gu);
+				gudao.create(gu);
 			}
 
 			this.dispose();

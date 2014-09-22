@@ -1,6 +1,6 @@
 package vista.utilitarios;
 
- import java.io.IOException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,11 +69,11 @@ public class ObjetoWeb {
 		return null;
 	}
 
-	public static void getTipoCambioSunat(int anio, int mes) {
+	public static List<TipoCambio> getTipoCambioSunat(int anio, int mes) {
 
 		// http: //
 		// www.sunat.gob.pe/cl-at-ittipcam/tcS01Alias?mesElegido=09&anioElegido=2014&mes=01&anho=2014&accion=init&email=
-		List<_TipoCambio> tc = new ArrayList<_TipoCambio>();
+		List<TipoCambio> tc = new ArrayList<TipoCambio>();
 
 		try {
 
@@ -101,61 +101,25 @@ public class ObjetoWeb {
 				Elements de = e.select("td");
 
 				for (int j = 0; j < de.size() / 3; j++) {
-					tc.add(new _TipoCambio(Integer.parseInt(de.get(j * 3 + 0)
+					tc.add(new TipoCambio(Integer.parseInt(de.get(j * 3 + 0)
 							.text()), Float
 							.parseFloat(de.get(j * 3 + 1).text()), Float
 							.parseFloat(de.get(j * 3 + 2).text())));
 				}
 			}
-
-			for (_TipoCambio t : tc) {
-				System.out.println(t.getDia() + " " + t.getCompra() + " "
-						+ t.getVenta());
-			}
+			return tc;
+			// for (_TipoCambio t : tc) {
+			// System.out.println(t.getDia() + " " + t.getCompra() + " "
+			// + t.getVenta());
+			// }
 
 		} catch (IOException e) {
 			e.printStackTrace();
-
+			return null;
 		}
 	}
 
 	public static void main(String[] args) {
 		getTipoCambioSunat(2014, 9);
-	}
-}
-
-class _TipoCambio {
-	private float compra;
-	private float venta;
-	private int dia;
-
-	public _TipoCambio(int dia, float compra, float venta) {
-		this.dia = dia;
-		this.compra = compra;
-		this.venta = venta;
-	}
-
-	public float getCompra() {
-		return compra;
-	}
-
-	public void setCompra(float compra) {
-		this.compra = compra;
-	}
-
-	public float getVenta() {
-		return venta;
-	}
-
-	public void setVenta(float venta) {
-		this.venta = venta;
-	}
-
-	public int getDia() {
-		return dia;
-	}
-
-	public void setDia(int dia) {
-		this.dia = dia;
 	}
 }
