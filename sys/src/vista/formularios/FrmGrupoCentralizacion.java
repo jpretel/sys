@@ -49,7 +49,7 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 
 		txtCodigo = new JTextField();
 		txtCodigo.setColumns(10);
-		txtCodigo.setDocument(new JTextFieldLimit(10, true));
+		txtCodigo.setDocument(new JTextFieldLimit(3, true));
 
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
 
@@ -150,6 +150,7 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 	public void llenarDesdeVista() {
 		getGrupo().setIdgcentralizacion(txtCodigo.getText());
 		getGrupo().setDescripcion(txtDescripcion.getText());
+		getGrupo().setSubdiario(cntSubdiario.getSeleccionado());
 
 	};
 

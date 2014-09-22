@@ -420,8 +420,8 @@ public class FrmTCambio extends AbstractMaestro {
 			id.setDia(cal.get(Calendar.DAY_OF_MONTH));
 			id.setIdmoneda(moneda.getIdmoneda());
 			tcambio.setId(id);
-			tcambio.setVenta(Float.valueOf(getDetalleTM().getValueAt(i, 1).toString()));
-			tcambio.setCompra(Float.valueOf(getDetalleTM().getValueAt(i, 2).toString()));
+			tcambio.setCompra(Float.valueOf(getDetalleTM().getValueAt(i, 1).toString()));
+			tcambio.setVenta(Float.valueOf(getDetalleTM().getValueAt(i, 2).toString()));
 			tipocambio.add(tcambio);
 		}
 	}
