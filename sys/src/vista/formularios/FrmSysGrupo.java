@@ -488,11 +488,13 @@ public class FrmSysGrupo extends AbstractMaestro {
 				} else {
 					op = "Pequeño";
 				}
-
+				
+				SysFormulario form = sysFormularioDAO.find(obj.getId().getIdformulario());
+				
 				getDetalleTM().addRow(
 						new Object[] {
-								obj.getSysFormulario().getIdformulario(),
-								obj.getSysFormulario().getDescripcion(), op });
+								form.getIdformulario(),
+								form.getDescripcion(), op });
 			}
 		} else {
 			txtCodigo.setText("");

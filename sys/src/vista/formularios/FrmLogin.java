@@ -11,7 +11,6 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import vista.MainFrame;
 import vista.Sys;
 import core.security.Encryption;
 import dao.GuardarUsuarioDAO;
