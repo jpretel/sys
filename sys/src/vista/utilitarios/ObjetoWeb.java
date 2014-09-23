@@ -51,12 +51,15 @@ public class ObjetoWeb {
 			for (Element e : rows) {
 				if (e.children().size() > 1) {
 					Element td = e.child(1);
-					if (i == 0)
+					if (i == 0){
 						c.setIdclieprov(td.text().substring(0, 11));
-					if (i == 2)
-						c.setRazonSocial(td.text());
-					if (i == 6)
-						c.setDireccion(td.text());
+						c.setRazonSocial(td.text().substring(14, td.text().length()));
+					}					
+					if (i == 6 || i == 7)
+						if(td.text().length() > 7){
+							c.setDireccion(td.text());
+							break;
+						}							
 				}
 				i += 1;
 			}
