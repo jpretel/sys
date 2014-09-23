@@ -389,17 +389,15 @@ public class FrmSysGrupo extends AbstractMaestro {
 	@Override
 	public void nuevo() {
 		setSysGrupo(new SysGrupo());
-		getSysGrupo().setId(new SysGrupoPK());
-
+		SysGrupoPK id;
+		getSysGrupo().setId(id = new SysGrupoPK());
+		id.setIdgrupo("");
+		id.setIdmodulo("");
+		id.setIdtitulo("");
 		this.ctntitulo.txtCodigo.setText(null);
 		this.ctntitulo.txtDescripcion.setText(null);
 		this.ctnmodulo.txtCodigo.setText(null);
 		this.ctnmodulo.txtDescripcion.setText(null);
-	}
-
-	@Override
-	public void editar() {
-		super.editar();
 	}
 
 	@Override
@@ -444,7 +442,7 @@ public class FrmSysGrupo extends AbstractMaestro {
 			ido.setIdformulario(getDetalleTM().getValueAt(i, 0).toString());
 
 			obj.setId(ido);
-			
+
 			// System.out.println(getDetalleTM().getValueAt(i, 2));
 			if (getDetalleTM().getValueAt(i, 2).equals("Grande")) {
 				obj.setPrioridad(1);
@@ -453,7 +451,7 @@ public class FrmSysGrupo extends AbstractMaestro {
 			} else if (getDetalleTM().getValueAt(i, 2).equals("Pequeño")) {
 				obj.setPrioridad(3);
 			}
-			
+
 			getSysOpciones().add(obj);
 		}
 
@@ -465,15 +463,19 @@ public class FrmSysGrupo extends AbstractMaestro {
 		getDetalleTM().limpiar();
 		// setSysOpciones(new ArrayList<SysOpcion>());
 
-		//if (!getEstado().equals(NUEVO) && sysGrupoDAO.findAll().size() > 0) {
+		// if (!getEstado().equals(NUEVO) && sysGrupoDAO.findAll().size() > 0) {
 		if (getSysGrupo() != null) {
 			ctnmodulo.txtCodigo.setText(getSysGrupo().getId().getIdmodulo());// .setSeleccionado(getSysTitulo().getSysModulo());
 			ctnmodulo.llenar();
-			ctntitulo.setData(sysTituloDAO.getPorModulo(sysModuloDAO
-					.find(getSysGrupo().getId().getIdmodulo())));
+			SysModulo modulo = sysModuloDAO.find(getSysGrupo().getId()
+					.getIdmodulo());
+			if (modulo == null || getEstado().equals(NUEVO))
+				ctntitulo.setData(null);
+			else
+				ctntitulo.setData(sysTituloDAO.getPorModulo(modulo));
 			ctntitulo.txtCodigo.setText(getSysGrupo().getId().getIdtitulo());
 			ctntitulo.llenar();
-			
+
 			txtCodigo.setText(getSysGrupo().getId().getIdgrupo().toString());
 			txtDescripcion.setText(getSysGrupo().getDescripcion());
 			setSysOpciones(getSysOpcionDAO().getPorGrupo(getSysGrupo()));
@@ -488,12 +490,12 @@ public class FrmSysGrupo extends AbstractMaestro {
 				} else {
 					op = "Pequeño";
 				}
-				
-				SysFormulario form = sysFormularioDAO.find(obj.getId().getIdformulario());
-				
+
+				SysFormulario form = sysFormularioDAO.find(obj.getId()
+						.getIdformulario());
+
 				getDetalleTM().addRow(
-						new Object[] {
-								form.getIdformulario(),
+						new Object[] { form.getIdformulario(),
 								form.getDescripcion(), op });
 			}
 		} else {
