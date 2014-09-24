@@ -11,7 +11,6 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.border.EtchedBorder;
 
 import entity.Subdiario;
-import vista.barras.BarraMaestro;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -353,7 +352,7 @@ public abstract class AbstractAsientoList extends JInternalFrame {
 		});
 		pnlOpciones.add(btnCrear, "1, 2, fill, fill");
 
-		btnCrear.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnCrear.setIcon(new ImageIcon(new ImageIcon(AbstractAsientoList.class
 				.getResource("/main/resources/iconos/nuevo.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 
@@ -374,7 +373,7 @@ public abstract class AbstractAsientoList extends JInternalFrame {
 		JButton btnImprimir = new JButton("Imprimir");
 
 		btnImprimir
-				.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+				.setIcon(new ImageIcon(new ImageIcon(AbstractAsientoList.class
 						.getResource("/main/resources/iconos/printer.png"))
 						.getImage().getScaledInstance(_ancho, _alto,
 								java.awt.Image.SCALE_DEFAULT)));
@@ -397,7 +396,7 @@ public abstract class AbstractAsientoList extends JInternalFrame {
 		});
 		pnlOpciones.add(btnVer, "1, 8, fill, fill");
 
-		btnVer.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnVer.setIcon(new ImageIcon(new ImageIcon(AbstractAsientoList.class
 				.getResource("/main/resources/iconos/abrir.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 		setBounds(100, 100, 701, 325);
