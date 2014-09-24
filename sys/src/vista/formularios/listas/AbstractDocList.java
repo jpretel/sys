@@ -1,7 +1,6 @@
 package vista.formularios.listas;
 
 import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -10,9 +9,10 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
 import entity.Documento;
-import vista.barras.BarraMaestro;
+import vista.Sys;
 import vista.controles.ComboBox;
 import vista.controles.DSGDatePicker;
+import vista.controles.DSGInternalFrame;
 import vista.controles.DSGTextFieldCorrelativo;
 
 import java.awt.event.ActionListener;
@@ -34,7 +34,7 @@ import com.jgoodies.forms.factories.FormFactory;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public abstract class AbstractDocList extends JInternalFrame {
+public abstract class AbstractDocList extends DSGInternalFrame {
 	/**
 	 * 
 	 */
@@ -47,26 +47,28 @@ public abstract class AbstractDocList extends JInternalFrame {
 	protected JScrollPane pnlDocumentos = new JScrollPane();
 	protected DSGTableList tblDocumentos;
 	protected DSGTableModelList modelo_lista;
-	
+
 	private static final int _ancho = 20;
 	private static final int _alto = 20;
 
 	protected String[] cabeceras;
-	
+	protected Object[][] data;
 	protected JLabel lblDocumento;
 	private JTextField txtNumero;
 	private JLabel label;
+	protected String instancia;
 
 	/**
 	 * Crea la lista del documento con los filtros por defecto.
 	 */
-	public AbstractDocList(String titulo) {
+	public AbstractDocList(String titulo, String instancia) {
 		setTitle(titulo);
 		setMaximizable(true);
 		setIconifiable(true);
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
+		this.instancia = instancia;
 		getContentPane().add(pnlDocumentos, BorderLayout.CENTER);
 		JPanel pnlFiltros = new JPanel();
 
@@ -93,81 +95,179 @@ public abstract class AbstractDocList extends JInternalFrame {
 
 		JLabel lblNmero = new JLabel("Correlativo");
 		txtSerie1 = new DSGTextFieldCorrelativo(4);
-		txtNumero = new DSGTextFieldCorrelativo(8);			
+		txtNumero = new DSGTextFieldCorrelativo(8);
 		JButton btnActualizar = new JButton("Actualizar");
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				llenarLista();
 			}
 		});
-		
-		
+
 		GroupLayout gl_pnlFiltros = new GroupLayout(pnlFiltros);
-		gl_pnlFiltros.setHorizontalGroup(
-			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(22)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblDesde, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE))
-					.addGap(26)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblHasta, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
-					.addGap(36)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblDocumento)
-						.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
-					.addGap(12)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNmero, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtSerie1, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addGap(9)
-							.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE))
-						.addComponent(getLabel(), GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-					.addGap(57)
-					.addComponent(btnActualizar, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
-		);
-		gl_pnlFiltros.setVerticalGroup(
-			gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNmero)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtSerie1, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addComponent(txtNumero, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-					.addGap(11))
-				.addGroup(Alignment.TRAILING, gl_pnlFiltros.createSequentialGroup()
-					.addContainerGap(31, Short.MAX_VALUE)
-					.addComponent(btnActualizar)
-					.addGap(13))
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(13)
-					.addComponent(lblDesde)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(txtDesde, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-					.addGap(11))
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(11)
-					.addGroup(gl_pnlFiltros.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(lblHasta)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtHasta, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_pnlFiltros.createSequentialGroup()
-							.addComponent(lblDocumento)
-							.addGap(7)
-							.addComponent(cboDocumento, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
-					.addGap(12))
-				.addGroup(gl_pnlFiltros.createSequentialGroup()
-					.addGap(35)
-					.addComponent(getLabel())
-					.addGap(18))
-		);
+		gl_pnlFiltros
+				.setHorizontalGroup(gl_pnlFiltros
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_pnlFiltros
+										.createSequentialGroup()
+										.addGap(22)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																txtDesde,
+																GroupLayout.PREFERRED_SIZE,
+																116,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																lblDesde,
+																GroupLayout.PREFERRED_SIZE,
+																45,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(26)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																txtHasta,
+																GroupLayout.PREFERRED_SIZE,
+																104,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																lblHasta,
+																GroupLayout.PREFERRED_SIZE,
+																37,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(36)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																lblDocumento)
+														.addComponent(
+																cboDocumento,
+																GroupLayout.PREFERRED_SIZE,
+																101,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(12)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																lblNmero,
+																GroupLayout.PREFERRED_SIZE,
+																66,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																txtSerie1,
+																GroupLayout.PREFERRED_SIZE,
+																62,
+																GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(
+												ComponentPlacement.UNRELATED)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addGap(9)
+																		.addComponent(
+																				txtNumero,
+																				GroupLayout.PREFERRED_SIZE,
+																				81,
+																				GroupLayout.PREFERRED_SIZE))
+														.addComponent(
+																getLabel(),
+																GroupLayout.PREFERRED_SIZE,
+																23,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(57)
+										.addComponent(btnActualizar,
+												GroupLayout.PREFERRED_SIZE,
+												101, GroupLayout.PREFERRED_SIZE)));
+		gl_pnlFiltros
+				.setVerticalGroup(gl_pnlFiltros
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_pnlFiltros
+										.createSequentialGroup()
+										.addContainerGap()
+										.addComponent(lblNmero)
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																txtSerie1,
+																GroupLayout.PREFERRED_SIZE,
+																23,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																txtNumero,
+																GroupLayout.PREFERRED_SIZE,
+																23,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(11))
+						.addGroup(
+								Alignment.TRAILING,
+								gl_pnlFiltros.createSequentialGroup()
+										.addContainerGap(31, Short.MAX_VALUE)
+										.addComponent(btnActualizar).addGap(13))
+						.addGroup(
+								gl_pnlFiltros
+										.createSequentialGroup()
+										.addGap(13)
+										.addComponent(lblDesde)
+										.addPreferredGap(
+												ComponentPlacement.RELATED)
+										.addComponent(txtDesde,
+												GroupLayout.PREFERRED_SIZE, 23,
+												GroupLayout.PREFERRED_SIZE)
+										.addGap(11))
+						.addGroup(
+								gl_pnlFiltros
+										.createSequentialGroup()
+										.addGap(11)
+										.addGroup(
+												gl_pnlFiltros
+														.createParallelGroup(
+																Alignment.TRAILING)
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblHasta)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				txtHasta,
+																				GroupLayout.PREFERRED_SIZE,
+																				23,
+																				GroupLayout.PREFERRED_SIZE))
+														.addGroup(
+																gl_pnlFiltros
+																		.createSequentialGroup()
+																		.addComponent(
+																				lblDocumento)
+																		.addGap(7)
+																		.addComponent(
+																				cboDocumento,
+																				GroupLayout.PREFERRED_SIZE,
+																				23,
+																				GroupLayout.PREFERRED_SIZE)))
+										.addGap(12))
+						.addGroup(
+								gl_pnlFiltros.createSequentialGroup()
+										.addGap(35).addComponent(getLabel())
+										.addGap(18)));
 		pnlFiltros.setLayout(gl_pnlFiltros);
 
 		JPanel pnlOpciones = new JPanel();
@@ -176,21 +276,18 @@ public abstract class AbstractDocList extends JInternalFrame {
 				TitledBorder.CENTER, TitledBorder.TOP, null, null));
 		getContentPane().add(pnlOpciones, BorderLayout.WEST);
 		pnlOpciones
-				.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("pref:grow"),},
-			new RowSpec[] {
-				FormFactory.LINE_GAP_ROWSPEC,
-				FormFactory.PREF_ROWSPEC,
-				FormFactory.LINE_GAP_ROWSPEC,
-				FormFactory.PREF_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));
+				.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec
+						.decode("pref:grow"), }, new RowSpec[] {
+						FormFactory.LINE_GAP_ROWSPEC, FormFactory.PREF_ROWSPEC,
+						FormFactory.LINE_GAP_ROWSPEC, FormFactory.PREF_ROWSPEC,
+						FormFactory.RELATED_GAP_ROWSPEC,
+						FormFactory.DEFAULT_ROWSPEC,
+						FormFactory.RELATED_GAP_ROWSPEC,
+						FormFactory.DEFAULT_ROWSPEC,
+						FormFactory.RELATED_GAP_ROWSPEC,
+						FormFactory.DEFAULT_ROWSPEC, }));
 
-		JButton btnCrear = new JButton("Crear");	
+		JButton btnCrear = new JButton("Crear");
 		btnCrear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				nuevo();
@@ -198,60 +295,53 @@ public abstract class AbstractDocList extends JInternalFrame {
 		});
 		pnlOpciones.add(btnCrear, "1, 2, fill, fill");
 
-		btnCrear.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
+		btnCrear.setIcon(new ImageIcon(new ImageIcon(AbstractDocList.class
 				.getResource("/main/resources/iconos/nuevo.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
-				
-				JButton btnEditar = new JButton("Editar");
-				btnEditar.setIcon(new ImageIcon(AbstractDocList.class.getResource("/main/resources/iconos/editar_lista3.png")));
-				btnEditar.addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						editar();						
-					}
-				});
-				pnlOpciones.add(btnEditar, "1, 4");								
-								JButton btnImprimir = new JButton("Imprimir");
-								btnImprimir.addActionListener(new ActionListener() {
-									public void actionPerformed(ActionEvent arg0) {
-										
-									}
-								});
-								pnlOpciones.add(btnImprimir, "1, 6");
-										
-												JButton btnVer = new JButton("Abrir");
-												pnlOpciones.add(btnVer, "1, 8, fill, fill");
-												
-														btnVer.setIcon(new ImageIcon(new ImageIcon(BarraMaestro.class
-																.getResource("/main/resources/iconos/abrir.png")).getImage()
-																.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
+
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.setIcon(new ImageIcon(AbstractDocList.class
+				.getResource("/main/resources/iconos/editar_lista3.png")));
+		btnEditar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				editar();
+			}
+		});
+		pnlOpciones.add(btnEditar, "1, 4");
+		JButton btnImprimir = new JButton("Imprimir");
+		btnImprimir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+			}
+		});
+		btnImprimir
+				.setIcon(new ImageIcon(new ImageIcon(AbstractDocList.class
+						.getResource("/main/resources/iconos/printer.png"))
+						.getImage().getScaledInstance(_ancho, _alto,
+								java.awt.Image.SCALE_DEFAULT)));
+
+		pnlOpciones.add(btnImprimir, "1, 6");
+
+		JButton btnVer = new JButton("Abrir");
+		pnlOpciones.add(btnVer, "1, 8, fill, fill");
+
+		btnVer.setIcon(new ImageIcon(new ImageIcon(AbstractDocList.class
+				.getResource("/main/resources/iconos/abrir.png")).getImage()
+				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
+		btnVer.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ver();
+			}
+		});
 		setBounds(100, 100, 763, 325);
 	}
 
-	public void init(AbstractDocForm obj, String opcion, Object entidad) {
-		if (obj instanceof AbstractDocForm) {
-			getDesktopPane().add(obj);
-			if (opcion.equals("NUEVO"))
-				obj.DoNuevo();
-			if (opcion.equals("VISTA")) {
-				obj.setEstado(opcion);
-				obj.actualiza_objeto(entidad);
-			}
-			if (opcion.equals("EDICION")) {
-				obj.editar();
-				obj.actualiza_objeto(entidad);
-			}
-			try {
-				obj.setSelected(true);
-			} catch (PropertyVetoException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public void llenarLista(){
-		int idesde,ihasta,inumero = 0,anio_desde,mes_desde,dia_desde,anio_hasta,mes_hasta,dia_hasta;
+	public void llenarLista() {
+		int idesde, ihasta, inumero = 0, anio_desde, mes_desde, dia_desde, anio_hasta, mes_hasta, dia_hasta;
 		Calendar desde = Calendar.getInstance();
 		if (txtDesde.getDate() == null) {
 			anio_desde = 0;
@@ -274,36 +364,78 @@ public abstract class AbstractDocList extends JInternalFrame {
 			mes_hasta = hasta.get(Calendar.MONTH) + 1;
 			dia_hasta = hasta.get(Calendar.DAY_OF_MONTH);
 		}
-		idesde = (anio_desde*10000)+(mes_desde*100)+dia_desde;
-		ihasta = (anio_hasta*10000)+(mes_hasta*100)+dia_hasta;
-		String serie = this.txtSerie1.getText().trim().length()==0?"":this.txtSerie1.getText().trim();
-		if(this.txtNumero.getText().trim().length() > 0)
-			inumero = Integer.parseInt(this.txtNumero.getText().trim());	
-		
+		idesde = (anio_desde * 10000) + (mes_desde * 100) + dia_desde;
+		ihasta = (anio_hasta * 10000) + (mes_hasta * 100) + dia_hasta;
+		String serie = this.txtSerie1.getText().trim().length() == 0 ? ""
+				: this.txtSerie1.getText().trim();
+		if (this.txtNumero.getText().trim().length() > 0)
+			inumero = Integer.parseInt(this.txtNumero.getText().trim());
+
 		modelo_lista.limpiar();
-		for (Object [] data : getData(idesde, ihasta,
-				serie,inumero)) {
+		for (Object[] data : getData(idesde, ihasta, serie, inumero)) {
 			modelo_lista.addRow(data);
 		}
 	}
 	
-	
-	public Object RetornarPk() {
-		Object id = null;
-		if (tblDocumentos.getSelectedRow() >= 0) {
-			id = modelo_lista.getValueAt(tblDocumentos.getSelectedRow(), 0);
+	public abstract Object getPK();
+
+	private AbstractDocForm nuevaInstancia() throws InstantiationException,
+			IllegalAccessException, ClassNotFoundException {
+		String urlClase = this.instancia;
+		AbstractDocForm frame = (AbstractDocForm) Class.forName(urlClase)
+				.newInstance();
+		frame.setVisible(true);
+		Sys.desktoppane.add(frame);
+		try {
+			frame.setSelected(true);
+			frame.moveToFront();
+		} catch (PropertyVetoException e) {
+			frame = null;
+			e.printStackTrace();
 		}
-		return id;
+		return frame;
+	}
+
+	public abstract Object[][] getData(int idesde, int ihasta, String serie,
+			int numero);
+
+	public void nuevo() {
+		try {
+			AbstractDocForm form = nuevaInstancia();
+			form.DoNuevo();
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void editar() {
+		Object pk = getPK();
+		if (pk != null) {
+			try {
+				AbstractDocForm form = nuevaInstancia();
+				form.actualiza_objeto(pk);
+				form.editar();
+			} catch (InstantiationException | IllegalAccessException
+					| ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	public abstract Object[][] getData(int idesde, int ihasta, String serie,int numero);
-	
-	public abstract void nuevo();
-	
-	public abstract void editar();
-	
-	public abstract void abrirFormulario(String estado);
-	
+	public void ver() {
+		Object pk = getPK();
+		if (pk != null) {
+			try {
+				AbstractDocForm form = nuevaInstancia();
+				form.actualiza_objeto(pk);
+			} catch (InstantiationException | IllegalAccessException
+					| ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private JLabel getLabel() {
 		if (label == null) {
 			label = new JLabel("-");
