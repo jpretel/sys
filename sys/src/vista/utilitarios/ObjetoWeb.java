@@ -25,7 +25,7 @@ public class ObjetoWeb {
 			Connection.Response res = Jsoup
 					.connect(
 							"http://www.sunat.gob.pe/cl-ti-itmrconsruc/captcha")
-					.data("accion", "random").method(Method.POST).execute();
+					.data("accion", "random").method(Method.GET).execute();
 			
 			Map<String, String> cookie = res.cookies();
 
@@ -119,7 +119,6 @@ public class ObjetoWeb {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("hola");
 		System.out.println(ConsultaRUC("20314727500"));
 	
 		//getTipoCambioSunat(2014, 9);
