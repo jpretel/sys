@@ -16,11 +16,7 @@ import org.jsoup.select.Elements;
 import entity.Clieprov;
 
 public class ObjetoWeb {
-
-	public ObjetoWeb() {
-
-	}
-
+	
 	public static Clieprov ConsultaRUC(String ruc) {
 		String captcha = "";
 
@@ -30,11 +26,11 @@ public class ObjetoWeb {
 					.connect(
 							"http://www.sunat.gob.pe/cl-ti-itmrconsruc/captcha")
 					.data("accion", "random").method(Method.POST).execute();
-
+			
 			Map<String, String> cookie = res.cookies();
 
 			captcha = res.parse().select("body").text();
-
+			
 			Document dRuc = Jsoup
 					.connect(
 							"http://www.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias")
@@ -54,7 +50,7 @@ public class ObjetoWeb {
 					if (i == 0){
 						c.setIdclieprov(td.text().substring(0, 11));
 						c.setRazonSocial(td.text().substring(14, td.text().length()));
-					}					
+					}
 					if (i == 6 || i == 7)
 						if(td.text().length() > 7){
 							c.setDireccion(td.text());
@@ -123,6 +119,9 @@ public class ObjetoWeb {
 	}
 
 	public static void main(String[] args) {
-		getTipoCambioSunat(2014, 9);
+		System.out.println("hola");
+		System.out.println(ConsultaRUC("20314727500"));
+	
+		//getTipoCambioSunat(2014, 9);
 	}
 }
