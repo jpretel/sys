@@ -208,27 +208,27 @@ public class MenuController {
 
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Otratabla");
+		om.setDescripcion("FrmEmpresa");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmEmpresa");
 		om.setPrioridad(3); // 1, 2 o 3
 
 		opciones.add(om);
 
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Otratabla");
+		om.setDescripcion("FrmSysFormulario");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmSysFormulario");
 		om.setPrioridad(3); // 1, 2 o 3
 
 		opciones.add(om);
 
 		om = new OpcionMenu();
 		om.setPosicion(3);
-		om.setDescripcion("Otratabla");
+		om.setDescripcion("FrmCfgCentralizaAlm");
 		om.setImagen("/main/resources/editar.png");
-		om.setOpcion("Frm_Cuentas");
+		om.setOpcion("FrmCfgCentralizaAlm");
 		om.setPrioridad(3); // 1, 2 o 3
 
 		opciones.add(om);

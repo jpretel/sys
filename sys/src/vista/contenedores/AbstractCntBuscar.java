@@ -3,12 +3,14 @@ package vista.contenedores;
 import java.awt.Color;
 import java.awt.Window;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 
 import vista.Sys;
+import vista.controles.FindButton;
 
 import java.util.List;
 import java.awt.Dimension;
@@ -23,6 +25,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.border.MatteBorder;
 import javax.swing.SwingConstants;
+
 import java.awt.Cursor;
 
 public abstract class AbstractCntBuscar<T> extends JPanel {
@@ -32,7 +35,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	private static final long serialVersionUID = 1L;
 	public JXTextFieldEntityAC<T> txtCodigo;
 	public JTextField txtDescripcion;
-	public JLabel btnBuscar;
+	public FindButton btnBuscar;
 
 	private static final int _dim = 16;
 
@@ -42,7 +45,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		this.setBounds(152, 11, 220, 20);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 
-		gridBagLayout.columnWidths = new int[] { 46, 106, 28, 0 };
+		gridBagLayout.columnWidths = new int[] { 46, 106, 20, 0 };
 		gridBagLayout.rowHeights = new int[] { 20, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0, 0.0,
 				Double.MIN_VALUE };
@@ -75,7 +78,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 					txtDescripcion.setText("");
 				}
 			}
-			
+
 			@Override
 			public boolean coincideBusqueda(T dato, String cadena) {
 				return AbstractCntBuscar.this.coincideBusqueda(dato, cadena);
@@ -95,7 +98,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		txtCodigo.setColumns(5);
 		GridBagConstraints gbc_txtCodigo = new GridBagConstraints();
 
-		gbc_txtCodigo.fill = GridBagConstraints.BOTH;
+		gbc_txtCodigo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtCodigo.gridx = 0;
 		gbc_txtCodigo.gridy = 0;
 		add(txtCodigo, gbc_txtCodigo);
@@ -103,29 +106,24 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		txtDescripcion = new JTextField(15);
 		txtDescripcion.setEditable(false);
 		GridBagConstraints gbc_txtDescripcion = new GridBagConstraints();
-		gbc_txtDescripcion.fill = GridBagConstraints.BOTH;
+		gbc_txtDescripcion.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtDescripcion.gridx = 1;
 		gbc_txtDescripcion.gridy = 0;
 		add(txtDescripcion, gbc_txtDescripcion);
 
-		btnBuscar = new JLabel("");
-		btnBuscar.setFocusTraversalPolicyProvider(true);
-		btnBuscar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnBuscar.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnBuscar.setHorizontalAlignment(SwingConstants.CENTER);
+		btnBuscar = new FindButton();
+
 		btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				txtCodigo.requestFocus();
-				txtCodigo.checkForAndShowSuggestions();
+				if (isEnabled()) {
+					txtCodigo.requestFocus();
+					txtCodigo.checkForAndShowSuggestions();
+				}
 			}
 		});
-		btnBuscar.setIcon(new ImageIcon(new ImageIcon(AbstractCntBuscar.class
-				.getResource("/main/resources/iconos/vistaprevia.png"))
-				.getImage().getScaledInstance(_dim, _dim,
-						java.awt.Image.SCALE_DEFAULT)));
+
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
-		gbc_btnBuscar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnBuscar.gridx = 2;
 		gbc_btnBuscar.gridy = 0;
 		add(btnBuscar, gbc_btnBuscar);
@@ -133,7 +131,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 
 	public AbstractCntBuscar() {
 		this(new String[] { "Codigo", "Descripcion" }, new int[] { 90, 200 });
-		setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		setBorder(null);
 	}
 
 	public Window getFormulario() {
@@ -171,9 +169,14 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public abstract Object[] entity2Object(T entity);
 
 	public abstract String getEntityCode(T entity);
-	
+
 	public void llenar() {
 		txtCodigo.setEntityPorCodigo();
 		txtCodigo.cargaDatos();
+	}
+
+	public void setEditable(boolean editar) {
+		txtCodigo.setEditable(editar);
+		btnBuscar.setEnabled(editar);
 	}
 }

@@ -2,13 +2,15 @@ package vista.utilitarios;
 
 import javax.swing.JTextField;
 
+import vista.contenedores.AbstractCntBuscar;
+
 public class FormValidador {
 	public static void TextFieldsEdicion(boolean band, JTextField... texts) {
 		for (JTextField text : texts) {
 			text.setEditable(band);
 		}
 	}
-	
+
 	public static boolean TextFieldObligatorios(JTextField... texts) {
 		for (JTextField text : texts) {
 			if (text.getText().trim().isEmpty()) {
@@ -18,5 +20,11 @@ public class FormValidador {
 			}
 		}
 		return true;
+	}
+
+	public static void CntEdicion(boolean band, AbstractCntBuscar<?>... cnts) {
+		for (AbstractCntBuscar<?> cnt : cnts) {
+			cnt.setEditable(band);
+		}
 	}
 }

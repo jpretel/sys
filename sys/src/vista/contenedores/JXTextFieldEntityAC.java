@@ -144,11 +144,10 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 	}
 
 	public void checkForAndShowSuggestions() {
-		if (!this.isEditable() || !this.isEnabled()) {
+		if (!isEditable() || !isEnabled()) {
 			autoSuggestionPopUpWindow.setVisible(false);
 			return;
 		}
-
 		String typedWord = getText();
 		indice = -1;
 		boolean added = wordTyped(typedWord);
@@ -168,7 +167,9 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 		String typedWord = dato;
 		indice = -1;
+		
 		boolean added = wordTyped(typedWord);
+		
 		if (!added) {
 			indice = -1;
 			autoSuggestionPopUpWindow.setVisible(false);
@@ -184,6 +185,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 		// {
 		// return false;
 		// }
+		
 		boolean hayCoincidencias = false;
 		if (data != null)
 			for (T dato : data) {
@@ -271,7 +273,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		
+
 		boolean band = false;
 		if ((e.getComponent() == table && e.getOppositeComponent() == this)
 				|| (e.getComponent() == this && e.getOppositeComponent() == table)) {
@@ -349,7 +351,6 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 			}
 		}
 	}
-	
 
 	public abstract String getEntityCode(T entity);
 

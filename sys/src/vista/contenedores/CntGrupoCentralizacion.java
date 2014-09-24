@@ -3,11 +3,8 @@ import entity.GrupoCentralizacion;
 
 public class CntGrupoCentralizacion extends AbstractCntBuscar<GrupoCentralizacion> {
 	public CntGrupoCentralizacion() {
-		btnBuscar.setBounds(199, 2, 16, 16);
-		txtDescripcion.setBounds(46, 0, 148, 20);
-		txtCodigo.setBounds(0, 0, 46, 20);
-		setLayout(null);
 	}
+	
 	private static final long serialVersionUID = 1L;
 
 	@Override
