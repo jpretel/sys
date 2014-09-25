@@ -3,20 +3,14 @@ package vista.formularios;
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.JInternalFrame;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import vista.Sys;
 import vista.barras.PanelBarraMaestro;
 import vista.controles.DSGInternalFrame;
 import vista.utilitarios.FormValidador;
-import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JPanel;
-
-import dao.GrupoUsuarioPrivilegioDAO;
-import entity.GrupoUsuarioPrivilegio;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

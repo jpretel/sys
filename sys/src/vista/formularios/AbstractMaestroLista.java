@@ -8,12 +8,10 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTable;
 
 import vista.barras.PanelBarraMaestroLista;
-import vista.controles.DSGTableModel;
 import vista.controles.DSGTableModelList;
 
 import java.awt.Dimension;

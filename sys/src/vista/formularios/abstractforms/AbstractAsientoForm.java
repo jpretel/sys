@@ -1,6 +1,5 @@
 package vista.formularios.abstractforms;
 
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 

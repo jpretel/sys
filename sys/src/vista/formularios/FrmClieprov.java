@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import vista.combobox.ComboBox;
 import vista.controles.JTextFieldLimit;
 import vista.utilitarios.ObjetoWeb;
 import vista.utilitarios.UtilMensajes;
@@ -49,7 +48,6 @@ public class FrmClieprov extends AbstractMaestro {
 	private JTextField txtCodigo;
 	private JTextField txtDireccion;
 	private JTextField txtRuc;
-	private List<String[]> optionList = new ArrayList<String[]>();
 	
 	private JCheckBox chkCliente;		
 	private JCheckBox chkProveedor;
@@ -225,7 +223,6 @@ public class FrmClieprov extends AbstractMaestro {
 	
 	@Override
 	public void llenar_datos() {
-		int index = 0;
 		if (getClieprov() != null && !getEstado().equals(NUEVO)) {
 			txtCodigo.setText(getClieprov().getIdclieprov());
 			txtRazon_Social.setText(getClieprov().getRazonSocial());

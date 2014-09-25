@@ -2,12 +2,10 @@ package vista.formularios;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JComboBox;
 import javax.swing.GroupLayout;
 import javax.swing.ListSelectionModel;
 import javax.swing.GroupLayout.Alignment;
@@ -19,8 +17,6 @@ import vista.utilitarios.FormValidador;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 import dao.TransportistaDAO;
-import entity.SysOpcionPK;
-import entity.Transportista;
 import entity.Transportista;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -69,8 +65,6 @@ public class FrmTransportista extends AbstractMaestro{
 		txtDireccion.setDocument(new JTextFieldLimit(100, true));
 		
 		JLabel lblBrevete = new JLabel("Brevete:");
-		
-		String[] tip_brev={"A1","A2"};
 		
 		JScrollPane scrollPane = new JScrollPane();
 		

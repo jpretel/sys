@@ -16,7 +16,6 @@ import vista.utilitarios.FormValidador;
 import vista.utilitarios.UtilMensajes;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import dao.GrupoDAO;
@@ -74,7 +73,6 @@ public class FrmProductos extends AbstractMaestro {
 		this.producto = producto;
 	}
 
-	protected ProductoDAO pdao = new ProductoDAO();
 	private JTextField txtnomcorto;
 	private JScrollPane scrlImpuestos;
 	private JTable tblImpuestos;
@@ -259,7 +257,7 @@ public class FrmProductos extends AbstractMaestro {
 	}
 
 	public void grabar() {
-		pdao.crear_editar(getProducto());
+		productoDAO.crear_editar(getProducto());
 
 		for (ProductoImpuesto pi : productoimpuestoDAO.aEliminar(getProducto(),
 				impuestos)) {
@@ -386,8 +384,8 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
-		if (pdao.find(txtCodigo.getText()) != null) {
-			bkEntidad = pdao.find(txtCodigo.getText()).historial();
+		if (productoDAO.find(txtCodigo.getText()) != null) {
+			bkEntidad = productoDAO.find(txtCodigo.getText()).historial();
 		}
 
 		String idproducto;
@@ -436,7 +434,7 @@ public class FrmProductos extends AbstractMaestro {
 		}
 
 		if (getEstado().equals(NUEVO)) {
-			if (pdao.find(this.txtCodigo.getText().trim()) != null) {
+			if (productoDAO.find(this.txtCodigo.getText().trim()) != null) {
 				UtilMensajes.mensaje_alterta("CODIGO_EXISTE");
 				this.txtCodigo.requestFocus();
 				return false;

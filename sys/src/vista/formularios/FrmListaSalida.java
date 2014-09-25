@@ -4,9 +4,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import dao.DocingresoDAO;
 import dao.DocsalidaDAO;
-import entity.Docingreso;
 import entity.Docsalida;
 import vista.formularios.listas.AbstractDocList;
 import vista.formularios.listas.DSGTableList;
