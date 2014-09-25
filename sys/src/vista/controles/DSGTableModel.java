@@ -120,6 +120,17 @@ public abstract class DSGTableModel extends DefaultTableModel {
 			}
 		return cadena;
 	}
+	
+	@Override
+	public Class<?> getColumnClass(int c) {
+		int columnCount;
+		// dataModel is an object of the data Model class(default or abstract)
+		columnCount = getRowCount();
+		if (columnCount <= 1) {
+			return String.class;
+		}
+		return getValueAt(0, c).getClass();
+	}
 
 	@Override
 	public void addRow(Object[] rowData) {
@@ -189,7 +200,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 						private static final long serialVersionUID = 1L;
 
 						{
-							
+
 							addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
 									if (getEditar())
@@ -199,10 +210,9 @@ public abstract class DSGTableModel extends DefaultTableModel {
 						}
 					});
 			boton.setIcon(new ImageIcon(new ImageIcon(DSGTableModel.class
-					.getResource("/main/resources/iconos/mas.png"))
-					.getImage().getScaledInstance(12, 12,
-							java.awt.Image.SCALE_DEFAULT)));
-			
+					.getResource("/main/resources/iconos/mas.png")).getImage()
+					.getScaledInstance(12, 12, java.awt.Image.SCALE_DEFAULT)));
+
 			InputMap inputMap = getTable().getInputMap(
 					JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 			inputMap.put(insertarKey, "insertar");

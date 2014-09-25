@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaQuery;
@@ -21,6 +22,21 @@ public class ConversionUMDAO extends AbstractDAO<ConversionUM> {
 		Predicate condicion = cb.equal(c.get("unimedida"), unimedida);
 		q.select(c).where(condicion);
 		return getEntityManager().createQuery(q).getResultList();
-
+	}
+	
+	public List<ConversionUM> aEliminar(Unimedida unimedida, List<ConversionUM> conversiones) {
+		List<ConversionUM> eliminar = new ArrayList<ConversionUM>();
+		for (ConversionUM o1 : getPorUnimedida(unimedida)) {
+			boolean existe = false;
+			salir: for (ConversionUM o2 : conversiones) {
+				if (o1.getId().equals(o2.getId())) {
+					existe = true;
+					break salir;
+				}
+			}
+			if (!existe)
+				eliminar.add(o1);
+		}
+		return eliminar;
 	}
 }

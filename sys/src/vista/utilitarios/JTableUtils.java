@@ -394,3 +394,5 @@ class DoubleRenderer extends DefaultTableCellRenderer {
 		return this;
 	}
 }
+
+

@@ -8,6 +8,8 @@ import vista.controles.JTextFieldLimit;
 import vista.controles.celleditor.TxtUnimedida;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
+import vista.utilitarios.editores.FloatEditor;
+import vista.utilitarios.renderers.FloatRenderer;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -23,6 +25,7 @@ import entity.Unimedida;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumnModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -39,6 +42,7 @@ public class FrmUnimedida extends AbstractMaestro {
 	String bkEntidad = null;
 	private TxtUnimedida txtunimedida;
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
+
 	public List<Unimedida> getUnimedidaL() {
 		return unimedidaL;
 	}
@@ -279,16 +283,16 @@ public class FrmUnimedida extends AbstractMaestro {
 
 			@Override
 			public void addRow() {
-				addRow(new Object[] { "", "", 0.0F });
+				addRow(new Object[] { "", "", new Float(0.0F) });
 			}
 
-		}){
+		}) {
 
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
-			
+
 			@Override
 			public void changeSelection(int row, int column, boolean toggle,
 					boolean extend) {
@@ -297,11 +301,10 @@ public class FrmUnimedida extends AbstractMaestro {
 					String idunimedida = getConversionTM().getValueAt(row, 0)
 							.toString();
 
-					
 					txtunimedida.refresValue(idunimedida);
 				}
 			}
-			
+
 		};
 		this.scrlConversion.setViewportView(tblConversion);
 
@@ -320,20 +323,24 @@ public class FrmUnimedida extends AbstractMaestro {
 					getConversionTM().setValueAt("", row, 1);
 				} else {
 					setText(entity.getIdunimedida());
-					getConversionTM().setValueAt(entity.getIdunimedida(), row, 0);
+					getConversionTM().setValueAt(entity.getIdunimedida(), row,
+							0);
 					getConversionTM().setValueAt(entity.getDescripcion(), row,
 							1);
 				}
 				setSeleccionado(null);
 			}
 		};
-		
+
 		txtunimedida.setData(unimedidaDAO.findAll());
 		txtunimedida.updateCellEditor();
 		getConversionTM().setObligatorios(0, 1);
 		getConversionTM().setRepetidos(0);
 		getConversionTM().setScrollAndTable(scrlConversion, tblConversion);
 
+		TableColumnModel tc = tblConversion.getColumnModel();
+		tc.getColumn(2).setCellRenderer(new FloatRenderer(2));
+		tc.getColumn(2).setCellEditor(new FloatEditor(2));
 		pnlContenido.setLayout(groupLayout);
 
 		tblLista.getSelectionModel().addListSelectionListener(
@@ -357,6 +364,17 @@ public class FrmUnimedida extends AbstractMaestro {
 
 	public void grabar() {
 		getUdao().crear_editar(getUnimedida());
+		for (ConversionUM c : convDAO.aEliminar(getUnimedida(), conversiones)) {
+			convDAO.remove(c);
+		}
+		for (ConversionUM c : conversiones) {
+			if (convDAO.find(c.getId()) == null) {
+				convDAO.create(c);
+			} else {
+				convDAO.edit(c);
+				;
+			}
+		}
 	}
 
 	@Override
@@ -374,10 +392,12 @@ public class FrmUnimedida extends AbstractMaestro {
 			this.txtNomenclatura.setText(this.getUnimedida().getNomenclatura());
 			setConversiones(convDAO.getPorUnimedida(getUnimedida()));
 			for (ConversionUM c : getConversiones()) {
+				Unimedida m_ref = unimedidaDAO.find(c.getId()
+						.getIdunimedida_equiv());
+
 				getConversionTM().addRow(
-						new Object[] { c.getUnimedida_equiv(),
-								c.getUnimedida_equiv().getDescripcion(),
-								c.getFactor() });
+						new Object[] { m_ref.getIdunimedida(),
+								m_ref.getDescripcion(), c.getFactor() });
 			}
 		} else {
 			this.txtCodigo.setText(null);
@@ -466,8 +486,8 @@ public class FrmUnimedida extends AbstractMaestro {
 					.toString());
 
 			c.setId(id);
-
-			c.setFactor((float) getConversionTM().getValueAt(i, 2));
+			c.setFactor(Float.parseFloat(getConversionTM().getValueAt(i, 2).toString()));
+			getConversiones().add(c);
 		}
 	}
 
