@@ -12,19 +12,17 @@ public class DetDocingresoPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(unique=true, nullable=false)
-	private long idingreso;
+	private long iddocingreso;
 
-	@Column(unique=true, nullable=false, length=15)
 	private String idproducto;
 
 	public DetDocingresoPK() {
 	}
 	public long getIdingreso() {
-		return this.idingreso;
+		return this.iddocingreso;
 	}
 	public void setIdingreso(long idingreso) {
-		this.idingreso = idingreso;
+		this.iddocingreso = idingreso;
 	}
 	public String getIdproducto() {
 		return this.idproducto;
@@ -42,7 +40,7 @@ public class DetDocingresoPK implements Serializable {
 		}
 		DetDocingresoPK castOther = (DetDocingresoPK)other;
 		return 
-			(this.idingreso == castOther.idingreso)
+			(this.iddocingreso == castOther.iddocingreso)
 			&& this.idproducto.equals(castOther.idproducto);
 	}
 

@@ -18,7 +18,7 @@ public class DetDocingreso implements Serializable {
 	@EmbeddedId
 	private DetDocingresoPK id;
 
-	@Column(nullable=false, precision=10, scale=2)
+	@Column(nullable=false, precision=10, scale=3)
 	private float cantidad;
 
 	@Column(length=200)
@@ -34,7 +34,7 @@ public class DetDocingreso implements Serializable {
 	private float precio;
 	
 	@ManyToOne
-	@JoinColumn(name = "idingreso", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name = "iddocingreso", referencedColumnName = "iddocingreso", insertable=false, updatable=false)
 	private Docingreso docingreso;
 	
 	@ManyToOne

@@ -28,10 +28,14 @@ public class Docingreso implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "idresponsable", referencedColumnName = "idresponsable", nullable = false)
 	private Responsable responsable;
-
+	
+	@ManyToOne
+	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal" , nullable = false)
+	private Sucursal sucursal;
+	
 	@ManyToOne
 	@JoinColumns({
-		@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal" , nullable = false),
+		@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal" , nullable = false, insertable = false, updatable = false),
 		@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen" , nullable = false)
 	})
 	private Almacen almacen;
@@ -184,6 +188,14 @@ public class Docingreso implements Serializable {
 
 	public void setAlmacen(Almacen almacen) {
 		this.almacen = almacen;
+	}
+
+	public Sucursal getSucursal() {
+		return sucursal;
+	}
+
+	public void setSucursal(Sucursal sucursal) {
+		this.sucursal = sucursal;
 	}
 
 }
