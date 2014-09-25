@@ -1,28 +1,29 @@
 package entity;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="docsalida")
-@NamedQuery(name="Docsalida.findAll", query="SELECT d FROM Docsalida d")
+@Table(name = "docsalida")
+@NamedQuery(name = "Docsalida.findAll", query = "SELECT d FROM Docsalida d")
 public class Docsalida implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(unique=true, nullable=false)
+	@Column(unique = true, nullable = false)
 	private long iddocsalida;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "idgcentralizacion",referencedColumnName = "idgcentralizacion" , nullable = false)
+	@JoinColumn(name = "idgcentralizacion", referencedColumnName = "idgcentralizacion", nullable = false)
 	private GrupoCentralizacion grupoCentralizacion;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda" , nullable = false)
+	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda", nullable = false)
 	private Moneda moneda;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "idconcepto", referencedColumnName = "idconcepto" , nullable = false)
+	@JoinColumn(name = "idconcepto", referencedColumnName = "idconcepto", nullable = false)
 	private Concepto concepto;
 
 	@ManyToOne
@@ -30,35 +31,39 @@ public class Docsalida implements Serializable {
 	private Responsable responsable;
 
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal" , nullable = false),
-		@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen" , nullable = false)
-	})
-	
-	private Almacen almacen;
-	
+	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", nullable = false)
+	private Sucursal sucursal;
+
 	@ManyToOne
 	@JoinColumns({
-		@JoinColumn(name = "idsucursal_dest", referencedColumnName = "idsucursal" , nullable = false),
-		@JoinColumn(name = "idalmacen_dest", referencedColumnName = "idalmacen" , nullable = false)
-	})
+			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false, nullable = false),
+			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen", nullable = false) })
+	private Almacen almacen;
+
+	@JoinColumn(name = "idsucursal_dest", referencedColumnName = "idsucursal", nullable = true)
+	private Sucursal sucursal_dest;
+
+	@ManyToOne
+	@JoinColumns({
+			@JoinColumn(name = "idsucursal_dest", referencedColumnName = "idsucursal", insertable = false, updatable = false, nullable = true),
+			@JoinColumn(name = "idalmacen_dest", referencedColumnName = "idalmacen", nullable = true) })
 	private Almacen almacen_dest;
-	
-	@Column(nullable=false, length=500)
+
+	@Column(nullable = false, length = 500)
 	private String glosa;
-	
-	@Column(nullable=false, length=8)
+
+	@Column(nullable = false, length = 8)
 	private int numero;
 
-	@Column(nullable=false, length=4)
+	@Column(nullable = false, length = 4)
 	private String serie;
-	
-	@Column(nullable=false)
-	private int dia;	
-	
+
+	@Column(nullable = false)
+	private int dia;
+
 	@Column
-	private int aniomesdia;	
-	
+	private int aniomesdia;
+
 	public int getAniomesdia() {
 		return aniomesdia;
 	}
@@ -67,18 +72,18 @@ public class Docsalida implements Serializable {
 		this.aniomesdia = aniomesdia;
 	}
 
-	@Column(nullable=false, precision=10, scale=2)
+	@Column(nullable = false, precision = 10, scale = 2)
 	private float tcambio;
-	
-	@Column(nullable=false, precision=10, scale=2)
+
+	@Column(nullable = false, precision = 10, scale = 2)
 	private float tcmoneda;
-	
+
 	@Column(length = 500)
 	private String direccion;
-	
+
 	@Column(length = 500)
-	private String llevadopor;	
-	
+	private String llevadopor;
+
 	public int getDia() {
 		return dia;
 	}
@@ -87,9 +92,9 @@ public class Docsalida implements Serializable {
 		this.dia = dia;
 	}
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private int mes;
-	
+
 	public int getMes() {
 		return mes;
 	}
@@ -98,7 +103,7 @@ public class Docsalida implements Serializable {
 		this.mes = mes;
 	}
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private int anio;
 
 	public int getAnio() {
@@ -135,7 +140,7 @@ public class Docsalida implements Serializable {
 	public void setSerie(String serie) {
 		this.serie = serie;
 	}
-	
+
 	public Moneda getMoneda() {
 		return moneda;
 	}
@@ -159,7 +164,7 @@ public class Docsalida implements Serializable {
 	public void setTcmoneda(float tcmoneda) {
 		this.tcmoneda = tcmoneda;
 	}
-	
+
 	public GrupoCentralizacion getGrupoCentralizacion() {
 		return grupoCentralizacion;
 	}
@@ -191,7 +196,7 @@ public class Docsalida implements Serializable {
 	public void setIddocsalida(long iddocsalida) {
 		this.iddocsalida = iddocsalida;
 	}
-	
+
 	public Almacen getAlmacen() {
 		return almacen;
 	}
@@ -206,6 +211,38 @@ public class Docsalida implements Serializable {
 
 	public void setAlmacen_dest(Almacen almacen_dest) {
 		this.almacen_dest = almacen_dest;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String getLlevadopor() {
+		return llevadopor;
+	}
+
+	public void setLlevadopor(String llevadopor) {
+		this.llevadopor = llevadopor;
+	}
+
+	public Sucursal getSucursal() {
+		return sucursal;
+	}
+
+	public void setSucursal(Sucursal sucursal) {
+		this.sucursal = sucursal;
+	}
+
+	public Sucursal getSucursal_dest() {
+		return sucursal_dest;
+	}
+
+	public void setSucursal_dest(Sucursal sucursal_dest) {
+		this.sucursal_dest = sucursal_dest;
 	}
 
 }

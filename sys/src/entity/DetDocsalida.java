@@ -33,7 +33,7 @@ public class DetDocsalida implements Serializable {
 	private float precio;
 	
 	@ManyToOne
-	@JoinColumn(name = "idingreso", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name = "iddocsalida", nullable=false, insertable=false, updatable=false)
 	private Docsalida docsalida;
 	
 	@Column(length=15)

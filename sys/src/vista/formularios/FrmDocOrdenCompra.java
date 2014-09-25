@@ -2,7 +2,9 @@ package vista.formularios;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
@@ -11,29 +13,37 @@ import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
 import vista.utilitarios.FormValidador;
+import vista.utilitarios.editores.FloatEditor;
+import vista.utilitarios.renderers.FloatRenderer;
 
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.DefaultCellEditor;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.TableColumnModel;
 
 import dao.AlmacenDAO;
-import dao.GrupoCentralizacionDAO;
+import dao.DOrdenCompraDAO;
+import dao.ImpuestoDAO;
 import dao.MonedaDAO;
 import dao.OrdenCompraDAO;
 import dao.ProductoDAO;
+import dao.ProductoImpuestoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
+import dao.UnimedidaDAO;
+import entity.DOrdenCompra;
+import entity.DOrdenCompraPK;
+import entity.Impuesto;
 import entity.OrdenCompra;
 import entity.Producto;
+import entity.ProductoImpuesto;
 import entity.Sucursal;
-
+import entity.Unimedida;
 
 import java.awt.Component;
 
@@ -43,81 +53,79 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTable tblDetalle;
-	private JScrollPane scrollPaneDetalle;
 	// private List<DetDocingreso> DetDocingresoL;
-	private OrdenCompraDAO ocDAO = new OrdenCompraDAO();
+	private OrdenCompraDAO ordencompraDAO = new OrdenCompraDAO();
+	private DOrdenCompraDAO dordencompraDAO = new DOrdenCompraDAO();
+	private ProductoDAO productoDAO = new ProductoDAO();
+	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
+	private AlmacenDAO almacenDAO = new AlmacenDAO();
+	private ProductoImpuestoDAO pimptoDAO = new ProductoImpuestoDAO();
+	private ImpuestoDAO impuestoDAO = new ImpuestoDAO();
 
+	private TxtProducto txtProducto;
+	private JLabel lblResponsable;
+	private JLabel lblSucursal;
+	private JLabel lblAlmacen;
+	private JLabel lblGlosa;
+	private JScrollPane scrollPaneDetalle;
 	private cntResponsable cntResponsable;
 	private cntSucursal cntSucursal;
 	private cntAlmacen cntAlmacen;
+	private JScrollPane scrlGlosa;
 	private JTextArea txtGlosa;
-	private OrdenCompra ordencompra;
-	private ProductoDAO productoDAO = new ProductoDAO();
-	// private SucursalDAO sucursalDAO = new SucursalDAO();
-	private AlmacenDAO almacenDAO = new AlmacenDAO();
-	protected JScrollPane scrollPane;
+	private JTable tblDetalle;
 
-	private TxtProducto txtProducto;
+	private OrdenCompra ordencompra;
+	private List<DOrdenCompra> dordencompras = new ArrayList<DOrdenCompra>();
 
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
-		cntGrupoCentralizacion.setVisible(false);
-		lblGrupoDeCentralizacion.setVisible(false);
 
 		setEstado(VISTA);
-		JPanel panel = new JPanel();
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
-				Alignment.LEADING).addComponent(panel, Alignment.TRAILING,
-				GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE));
+				Alignment.LEADING).addGap(0, 874, Short.MAX_VALUE));
 		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(
-				Alignment.TRAILING).addGroup(
-				Alignment.LEADING,
-				groupLayout
-						.createSequentialGroup()
-						.addGap(109)
-						.addComponent(panel, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-		panel.setLayout(null);
+				Alignment.LEADING).addGap(0, 681, Short.MAX_VALUE));
 
-		JLabel lblResponsable = new JLabel("Responsable");
-		lblResponsable.setBounds(12, 45, 74, 16);
-		panel.add(lblResponsable);
+		this.lblResponsable = new JLabel("Responsable");
+		this.lblResponsable.setBounds(10, 106, 74, 16);
+		pnlPrincipal.add(this.lblResponsable);
 
-		JLabel lblSucursal = new JLabel("Sucursal");
-		lblSucursal.setBounds(12, 11, 51, 16);
-		panel.add(lblSucursal);
+		this.lblSucursal = new JLabel("Sucursal");
+		this.lblSucursal.setBounds(10, 43, 51, 16);
+		pnlPrincipal.add(this.lblSucursal);
 
-		JLabel lblAlmacen = new JLabel("Almacen");
-		lblAlmacen.setBounds(439, 11, 50, 16);
-		panel.add(lblAlmacen);
+		this.lblAlmacen = new JLabel("Almacen");
+		this.lblAlmacen.setBounds(10, 70, 50, 16);
+		pnlPrincipal.add(this.lblAlmacen);
 
-		JLabel lblGlosa = new JLabel("Glosa");
-		lblGlosa.setBounds(439, 38, 32, 16);
-		panel.add(lblGlosa);
+		this.lblGlosa = new JLabel("Glosa");
+		this.lblGlosa.setBounds(399, 43, 32, 16);
+		pnlPrincipal.add(this.lblGlosa);
 
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(540, 5, 0, 16);
-		panel.add(textArea);
+		this.scrollPaneDetalle = new JScrollPane((Component) null);
+		this.scrollPaneDetalle.setBounds(10, 133, 824, 243);
+		pnlPrincipal.add(this.scrollPaneDetalle);
 
-		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
-				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
-				"Importe" }) {
+		tblDetalle = new JTable(new DSGTableModel(new String[] {
+				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
+				"Cantidad", "P. Unit.", "V. Venta", "%Dscto", "Dscto.",
+				"% Impto", "Impto.", "Total" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean evaluaEdicion(int row, int column) {
-				if (column != 1 || column != 3)
-					return getEditar();
-				else
+				if (column == 1 || column == 2 || column == 3 || column == 8 || column == 10)
 					return false;
+				return getEditar();
 			}
 
 			@Override
 			public void addRow() {
 				if (validaCabecera())
-					addRow(new Object[] { "", "", "", "", 0.00, 0.00, 0.00 });
+					addRow(new Object[] { "", "", "", "", 0.00, 0.00, 0.00,
+							0.00, 0.00, 0.00, 0.00, 0.00 });
 				else
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
@@ -136,32 +144,37 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 							.toString();
 
 					txtProducto.refresValue(idproducto);
+					actualiza_detalle();
 				}
 			}
 		};
 
-		tblDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		scrollPaneDetalle = new JScrollPane(tblDetalle);
-		scrollPaneDetalle.setBounds(12, 95, 824, 220);
-
 		txtProducto = new TxtProducto(tblDetalle, 0) {
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void cargaDatos(Producto entity) {
 
 				int row = tblDetalle.getSelectedRow(), col = 0;
+				float antimpto = 0.0F;
 				if (entity == null) {
 					getDetalleTM().setValueAt("", row, 0);
 					getDetalleTM().setValueAt("", row, 1);
 					getDetalleTM().setValueAt("", row, 2);
 					getDetalleTM().setValueAt("", row, 3);
+
+					getDetalleTM().setValueAt(0.0F, row, 9);
 				} else {
+					List<ProductoImpuesto> imptos = pimptoDAO
+							.getPorProducto(entity);
+					float impto = 0.0F;
+
+					for (ProductoImpuesto pi : imptos) {
+						Impuesto i = impuestoDAO.find(pi.getId()
+								.getIdimpuesto());
+						impto += i.getTasa();
+					}
+
 					setText(entity.getIdproducto());
 					getDetalleTM().setValueAt(entity.getIdproducto(), row, col);
 					getDetalleTM().setValueAt(entity.getDescripcion(), row,
@@ -172,72 +185,109 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 					getDetalleTM().setValueAt(
 							entity.getUnimedida().getDescripcion(), row,
 							col + 3);
+					try {
+						antimpto = Float.parseFloat(getDetalleTM().getValueAt(
+								row, 9).toString());
+
+					} catch (Exception e) {
+						antimpto = 0.0F;
+					}
+
+					if (antimpto == 0.0)
+						getDetalleTM().setValueAt(impto, row, 9);
+
 				}
 				setSeleccionado(null);
 			}
-		}; // TxtProducto(tblDetalle,0);
+		};
+
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
 		getDetalleTM().setRepetidos(0);
 		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
 
-		panel.add(scrollPaneDetalle);
+		this.tblDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.scrollPaneDetalle.setViewportView(this.tblDetalle);
 
-		cntResponsable = new cntResponsable();
-		cntResponsable.txtDescripcion.setBounds(46, 0, 263, 20);
-		cntResponsable.setBounds(80, 38, 309, 23);
-		panel.add(cntResponsable);
+		this.cntResponsable = new cntResponsable();
 
-		cntSucursal = new cntSucursal();
-		cntSucursal.txtDescripcion.setBounds(46, 0, 293, 20);
-		cntSucursal.setBounds(80, 8, 309, 23);
-		panel.add(cntSucursal);
+		this.cntResponsable.setBounds(72, 102, 309, 20);
+		pnlPrincipal.add(this.cntResponsable);
 
-		cntAlmacen = new cntAlmacen();
-		cntAlmacen.txtDescripcion.setBounds(46, 0, 263, 20);
-		cntAlmacen.setBounds(497, 11, 309, 23);
-		panel.add(cntAlmacen);
+		this.cntSucursal = new cntSucursal();
+
+		this.cntSucursal.setBounds(72, 43, 309, 20);
+		pnlPrincipal.add(this.cntSucursal);
+
+		this.cntAlmacen = new cntAlmacen();
+		cntAlmacen.txtCodigo.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				super.focusGained(e);
+				cntAlmacen.setData(almacenDAO.getPorSucursal(cntSucursal
+						.getSeleccionado()));
+			}
+		});
+
+		this.cntAlmacen.setBounds(72, 70, 309, 20);
+		pnlPrincipal.add(this.cntAlmacen);
+
+		this.scrlGlosa = new JScrollPane();
+		this.scrlGlosa.setBounds(436, 43, 395, 79);
+		pnlPrincipal.add(this.scrlGlosa);
+
+		this.txtGlosa = new JTextArea();
+		this.scrlGlosa.setViewportView(this.txtGlosa);
+
+		txtProducto.updateCellEditor();
+		txtProducto.setData(productoDAO.findAll());
 
 		txtSerie.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg) {
-				String serie = txtSerie.getText().trim();
-				if (serie.length() > 0) {
-					String texto = org.codehaus.plexus.util.StringUtils.repeat(
-							"0", 4 - serie.length()) + serie;
-					txtSerie.setText(texto);
-					actualizaNumero(txtSerie.getText());
-				}
+				actualizaNumero(txtSerie.getText());
 			}
 
 			private void actualizaNumero(String serie) {
-				int numero = ocDAO.getPorSerie(serie);
+				int numero = ordencompraDAO.getPorSerie(serie);
 				numero = numero + 1;
 				if (numero > 0) {
 					txtNumero_2.setValue(numero);
-					txtNumero_2.requestFocus();
 					txtFecha.requestFocus();
 				}
 			}
 		});
 
-		cntSucursal.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				if (cntSucursal.txtCodigo.getText().trim().length() > 0) {
-					cntAlmacen.setData(new AlmacenDAO()
-							.getPorSucursal(cntSucursal.getSeleccionado()));
-				}
-			}
-		});
+		getDetalleTM().setNombre_detalle("Detalle de Productos");
+		getDetalleTM().setRepetidos(0);
 
-		this.scrollPane = new JScrollPane();
-		this.scrollPane.setBounds(494, 40, 326, 44);
-		panel.add(this.scrollPane);
+		TableColumnModel tc = tblDetalle.getColumnModel();
 
-		txtGlosa = new JTextArea();
-		this.scrollPane.setViewportView(this.txtGlosa);
+		tc.getColumn(4).setCellEditor(new FloatEditor(3));
+		tc.getColumn(4).setCellRenderer(new FloatRenderer(3));
+
+		tc.getColumn(5).setCellEditor(new FloatEditor(2));
+		tc.getColumn(5).setCellRenderer(new FloatRenderer(2));
+
+		tc.getColumn(6).setCellEditor(new FloatEditor(2));
+		tc.getColumn(6).setCellRenderer(new FloatRenderer(2));
+
+		tc.getColumn(7).setCellEditor(new FloatEditor(2));
+		tc.getColumn(7).setCellRenderer(new FloatRenderer(2));
+
+		tc.getColumn(8).setCellEditor(new FloatEditor(2));
+		tc.getColumn(8).setCellRenderer(new FloatRenderer(2));
+
+		tc.getColumn(9).setCellEditor(new FloatEditor(2));
+		tc.getColumn(9).setCellRenderer(new FloatRenderer(2));
+
+		tc.getColumn(10).setCellEditor(new FloatEditor(2));
+		tc.getColumn(10).setCellRenderer(new FloatRenderer(2));
+
+		tc.getColumn(11).setCellEditor(new FloatEditor(2));
+		tc.getColumn(11).setCellRenderer(new FloatRenderer(2));
+
 		iniciar();
 	}
 
@@ -256,11 +306,20 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	@Override
 	public void grabar() {
-		ocDAO.crear_editar(getOrdencompra());
-		// docIngresoDAO.crear_editar(getIngreso());
-		// for (DetDocingreso det : getDetDocingresoL()){
-		// detDocingresoDAO.crear_editar(det);
-		// }
+		ordencompraDAO.crear_editar(getOrdencompra());
+
+		for (DOrdenCompra d : dordencompraDAO.aEliminar(getOrdencompra(),
+				dordencompras)) {
+			dordencompraDAO.remove(d);
+		}
+
+		for (DOrdenCompra d : dordencompras) {
+			if (dordencompraDAO.find(d.getId()) == null) {
+				dordencompraDAO.create(d);
+			} else {
+				dordencompraDAO.edit(d);
+			}
+		}
 	}
 
 	@Override
@@ -268,16 +327,15 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		// TODO Auto-generated method stub
 	}
 
-	public void cargarDatos(Object id) {
-		setOrdencompra(ocDAO.find(id));
-		// setDasiento(dasientoDAO.getPorAsiento(getAsiento()));
-	}
-
 	@Override
 	public void llenar_datos() {
+		getDetalleTM().limpiar();
+
 		if (getOrdencompra() != null) {
 			this.txtNumero_2.setValue(getOrdencompra().getNumero());
 			this.txtSerie.setText(getOrdencompra().getSerie());
+			this.txtTipoCambio.setValue(getOrdencompra().getTcambio());
+			this.txtTcMoneda.setValue(getOrdencompra().getTcmoneda());
 			// this.cntGrupoCentralizacion.txtCodigo.setText(getOrdencompra().getGrupoCentralizacion().getIdgcentralizacion());
 			// this.cntGrupoCentralizacion.txtDescripcion.setText(getOrdencompra().getGrupoCentralizacion().getDescripcion());
 			cntMoneda.txtCodigo
@@ -304,12 +362,55 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 							: getOrdencompra().getAlmacen().getId()
 									.getIdalmacen());
 			cntAlmacen.llenar();
+
+			dordencompras = dordencompraDAO.getPorOrdenCompra(getOrdencompra());
+
+			for (DOrdenCompra d : dordencompras) {
+				Producto p = d.getProducto();
+				Unimedida u = d.getUnimedida();
+
+				getDetalleTM().addRow(
+						new Object[] { p.getIdproducto(), p.getDescripcion(),
+								u.getIdunimedida(), u.getDescripcion(),
+								d.getCantidad(), d.getPrecio_unitario(),
+								d.getVventa(), d.getPdescuento(),
+								d.getDescuento(), d.getPimpuesto(),
+								d.getImpuesto(), d.getImporte() });
+			}
+
 			// List<DetDocingreso> detDocIngresoL =
 			// detDocingresoDAO.getPorIdIngreso(Long.parseLong(getIngreso().getIddocingreso()));
 			// for(DetDocingreso ingreso : detDocIngresoL){
 			// getDetalleTM().addRow(new
 			// Object[]{ingreso.getId().getIdproducto(),ingreso.getDescripcion(),ingreso.getIdmedida(),"",ingreso.getCantidad(),ingreso.getPrecio(),ingreso.getPrecio()});
 			// }
+		} else {
+			dordencompras = new ArrayList<DOrdenCompra>();
+		}
+	}
+
+	private void actualiza_detalle() {
+		int row = tblDetalle.getSelectedRow();
+		if (row > -1) {
+			float pimpuesto, pdscto, cantidad, pu;
+			float vventa, impuesto, dscto, importe;
+			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
+					.toString());
+			pu = Float.parseFloat(getDetalleTM().getValueAt(row, 5).toString());
+			pdscto = Float.parseFloat(getDetalleTM().getValueAt(row, 7)
+					.toString());
+			pimpuesto = Float.parseFloat(getDetalleTM().getValueAt(row, 9)
+					.toString());
+
+			vventa = cantidad * pu;
+			dscto = vventa * pdscto / 100.00F;
+			impuesto = (vventa - dscto) * pimpuesto / 100.00F;
+			importe = vventa - dscto + impuesto;
+
+			getDetalleTM().setValueAt(vventa, row, 6);
+			getDetalleTM().setValueAt(dscto, row, 8);
+			getDetalleTM().setValueAt(impuesto, row, 10);
+			getDetalleTM().setValueAt(importe, row, 11);
 		}
 	}
 
@@ -321,7 +422,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_tablas() {
-		cntGrupoCentralizacion.setData(new GrupoCentralizacionDAO().findAll());
 		cntMoneda.setData(new MonedaDAO().findAll());
 		cntSucursal.setData(new SucursalDAO().findAll());
 		cntResponsable.setData(new ResponsableDAO().findAll());
@@ -334,14 +434,11 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtFecha.setEditable(true);
 		this.txtTcMoneda.setEditable(true);
 		this.txtTipoCambio.setEditable(true);
-		this.cntGrupoCentralizacion.txtCodigo.setEditable(true);
-		this.cntMoneda.txtCodigo.setEditable(true);
-		this.cntResponsable.txtCodigo.setEditable(true);
-		this.cntSucursal.txtCodigo.setEditable(true);
-		this.cntAlmacen.txtCodigo.setEditable(true);
 		this.txtTcMoneda.setEditable(true);
 		this.txtTipoCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
+		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
+				this.cntAlmacen, this.cntSucursal);
 		getDetalleTM().setEditar(true);
 	}
 
@@ -352,14 +449,11 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtFecha.setEditable(false);
 		this.txtTcMoneda.setEditable(false);
 		this.txtTipoCambio.setEditable(false);
-		this.cntGrupoCentralizacion.txtCodigo.setEditable(false);
-		this.cntMoneda.txtCodigo.setEditable(false);
-		this.cntResponsable.txtCodigo.setEditable(false);
-		this.cntSucursal.txtCodigo.setEditable(false);
-		this.cntAlmacen.txtCodigo.setEditable(false);
 		this.txtTcMoneda.setEditable(false);
 		this.txtTipoCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
+		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
+				this.cntAlmacen, this.cntSucursal);
 		getDetalleTM().setEditar(false);
 	}
 
@@ -369,16 +463,19 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	}
 
 	@Override
-	public void actualiza_objeto(Object entidad) {
+	public void actualiza_objeto(Object id) {
+		setOrdencompra(ordencompraDAO.find(id));
+		llenar_datos();
 
+		getBarra().enVista();
+		vista_noedicion();
 	}
 
 	@Override
 	public void llenarDesdeVista() {
 		Calendar c = Calendar.getInstance();
 		c.setTime(txtFecha.getDate());
-
-		Long id = getOrdencompra().getIdordencompra();
+		Long idoc = getOrdencompra().getIdordencompra();
 		// getIngreso().setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
 		getOrdencompra().setSerie(this.txtSerie.getText());
 		getOrdencompra()
@@ -395,24 +492,66 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 						+ ((c.get(Calendar.MONTH) + 1) * 100)
 						+ c.get(Calendar.DAY_OF_MONTH));
 		getOrdencompra().setGlosa(txtGlosa.getText());
+		getOrdencompra().setTcambio(Float.parseFloat(txtTipoCambio.getText()));
+		getOrdencompra().setTcmoneda(Float.parseFloat(txtTcMoneda.getText()));
+		dordencompras = new ArrayList<DOrdenCompra>();
 
-		// setDetDocingresoL(new ArrayList<DetDocingreso>());
-		// for(int i = 0;i < getDetalleTM().getRowCount();i++){
-		// DetDocingresoPK detPK = new DetDocingresoPK();
-		// DetDocingreso det = new DetDocingreso();
-		// detPK.setIdingreso(Id);
-		// detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
-		// det.setId(detPK);
-		// det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
-		// det.setIdmedida(getDetalleTM().getValueAt(i, 2).toString());
-		// det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i,
-		// 4).toString())));
-		// det.setPrecio(Float.parseFloat(getDetalleTM().getValueAt(i,
-		// 5).toString()));
-		// det.setImporte(Float.parseFloat(getDetalleTM().getValueAt(i,
-		// 6).toString()));
-		// DetDocingresoL.add(det);
-		// }
+		int rows = getDetalleTM().getRowCount();
+
+		for (int row = 0; row < rows; row++) {
+			DOrdenCompra d = new DOrdenCompra();
+			DOrdenCompraPK id = new DOrdenCompraPK();
+
+			String idproducto, idunimedida;
+
+			idproducto = getDetalleTM().getValueAt(row, 0).toString();
+			idunimedida = getDetalleTM().getValueAt(row, 2).toString();
+
+			float cantidad, precio_unitario, vventa, pdescuento, descuento, pimpuesto, impuesto, importe;
+
+			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
+					.toString());
+			precio_unitario = Float.parseFloat(getDetalleTM()
+					.getValueAt(row, 5).toString());
+
+			vventa = Float.parseFloat(getDetalleTM().getValueAt(row, 6)
+					.toString());
+
+			pdescuento = Float.parseFloat(getDetalleTM().getValueAt(row, 7)
+					.toString());
+
+			descuento = Float.parseFloat(getDetalleTM().getValueAt(row, 8)
+					.toString());
+
+			pimpuesto = Float.parseFloat(getDetalleTM().getValueAt(row, 9)
+					.toString());
+
+			impuesto = Float.parseFloat(getDetalleTM().getValueAt(row, 10)
+					.toString());
+
+			importe = Float.parseFloat(getDetalleTM().getValueAt(row, 11)
+					.toString());
+
+			Producto p = productoDAO.find(idproducto);
+			Unimedida u = unimedidaDAO.find(idunimedida);
+
+			id.setIdordencompra(idoc);
+			id.setItem(row);
+
+			d.setId(id);
+			d.setProducto(p);
+			d.setUnimedida(u);
+			d.setCantidad(cantidad);
+			d.setPrecio_unitario(precio_unitario);
+			d.setVventa(vventa);
+			d.setPdescuento(pdescuento);
+			d.setDescuento(descuento);
+			d.setPimpuesto(pimpuesto);
+			d.setImpuesto(impuesto);
+			d.setImporte(importe);
+
+			dordencompras.add(d);
+		}
 	}
 
 	@Override
@@ -428,7 +567,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		return FormValidador.TextFieldObligatorios(cntMoneda.txtCodigo,
 				txtTipoCambio, cntResponsable.txtCodigo, cntSucursal.txtCodigo,
 				cntAlmacen.txtCodigo);
-
 	}
 
 	public DSGTableModel getDetalleTM() {
@@ -441,18 +579,5 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	public void setOrdencompra(OrdenCompra ordencompra) {
 		this.ordencompra = ordencompra;
-	}
-
-	public void actualiza_objeto(Object id, String estado) {
-		// actualizar_tablas();
-		cargarDatos(id);
-		llenar_datos();
-
-		getBarra().enVista();
-		vista_noedicion();
-
-		if (estado.equals(EDICION)) {
-			editar();
-		}
 	}
 }

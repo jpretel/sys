@@ -3,11 +3,8 @@ package vista.contenedores;
 import java.awt.Color;
 import java.awt.Window;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ImageIcon;
 
 import vista.Sys;
 import vista.controles.FindButton;
@@ -23,11 +20,6 @@ import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.border.MatteBorder;
-import javax.swing.SwingConstants;
-
-import java.awt.Cursor;
-
 public abstract class AbstractCntBuscar<T> extends JPanel {
 	/**
 	 * 
@@ -36,9 +28,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public JXTextFieldEntityAC<T> txtCodigo;
 	public JTextField txtDescripcion;
 	public FindButton btnBuscar;
-
-	private static final int _dim = 16;
-
+	
 	public AbstractCntBuscar(String[] cabeceras, int[] anchos) {
 
 		setForeground(Color.LIGHT_GRAY);

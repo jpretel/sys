@@ -16,7 +16,7 @@ public class ProductoImpuesto implements Serializable {
 	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto", insertable = false, updatable = false)
 	private Producto producto;
 	@ManyToOne
-	@JoinColumn(name = "idimpuesto", referencedColumnName = "idreferencia", insertable = false, updatable = false)
+	@JoinColumn(name = "idimpuesto", referencedColumnName = "idimpuesto", insertable = false, updatable = false)
 	private Impuesto impuesto;
 
 	private static final long serialVersionUID = 1L;

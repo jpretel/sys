@@ -2,11 +2,7 @@ package vista.contenedores;
 import entity.Concepto;
 
 public class CntConcepto extends AbstractCntBuscar<Concepto> {
-	public CntConcepto() {
-		txtDescripcion.setBounds(46, 0, 144, 20);
-		txtCodigo.setBounds(0, 0, 46, 20);
-		setLayout(null);
-	}
+	
 	private static final long serialVersionUID = 1L;
 
 	@Override
