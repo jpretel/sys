@@ -1,12 +1,11 @@
 package vista.formularios.listas;
 
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import vista.barras.IFormDocumento;
-import vista.barras.PanelBarraDoc;
+import vista.barras.PanelBarraDocumento;
 import vista.contenedores.CntMoneda;
 
 import java.awt.BorderLayout;
@@ -17,21 +16,20 @@ import org.jdesktop.swingx.JXDatePicker;
 
 import vista.contenedores.CntSubdiario;
 import vista.controles.DSGDatePicker;
+import vista.controles.DSGInternalFrame;
 import vista.controles.DSGTextFieldCorrelativo;
 import vista.controles.DSGTextFieldNumber;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public abstract class AbstractAsientoForm extends JInternalFrame implements
+public abstract class AbstractAsientoForm extends DSGInternalFrame implements
 		IFormDocumento {
 	private static final long serialVersionUID = 1L;
 	
-	private PanelBarraDoc barra;
+	private PanelBarraDocumento barra;
 	protected JPanel pnlPrincipal;
-	protected static final String EDICION = "EDICION";
-	protected static final String VISTA = "VISTA";
-	protected static final String NUEVO = "NUEVO";
+	
 	private String estado;
 	protected DSGTextFieldNumber txtTCambio;
 	protected DSGTextFieldNumber txtTCMoneda;
@@ -51,7 +49,7 @@ public abstract class AbstractAsientoForm extends JInternalFrame implements
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
-		barra = new PanelBarraDoc();
+		barra = new PanelBarraDocumento();
 		barra.setMinimumSize(new Dimension(770, 50));
 		barra.setPreferredSize(new Dimension(770, 37));
 		barra.setBounds(0, 0, 770, 42);
@@ -242,11 +240,11 @@ public abstract class AbstractAsientoForm extends JInternalFrame implements
 
 	public abstract boolean isValidaVista();
 
-	public PanelBarraDoc getBarra() {
+	public PanelBarraDocumento getBarra() {
 		return barra;
 	}
 
-	public void setBarra(PanelBarraDoc barra) {
+	public void setBarra(PanelBarraDocumento barra) {
 		this.barra = barra;
 	}
 

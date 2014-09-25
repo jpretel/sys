@@ -6,7 +6,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import vista.barras.IFormDocumento;
-import vista.barras.PanelBarraDoc;
 import vista.barras.PanelBarraDocumento;
 
 import java.awt.BorderLayout;
@@ -14,7 +13,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.Date;
 
-import vista.contenedores.CntGrupoCentralizacion;
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGDatePicker;
 import vista.controles.DSGTextFieldCorrelativo;
@@ -22,12 +20,11 @@ import vista.controles.DSGTextFieldCorrelativo;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import vista.contenedores.CntSubdiario;
 
 public abstract class AbstractFormDoc extends JInternalFrame implements IFormDocumento{
 	private static final long serialVersionUID = 1L;
 	protected JTextField txtNumero;
-	private PanelBarraDoc barra;
+	private PanelBarraDocumento barra;
 	protected JPanel pnlPrincipal;
 	protected static final String EDICION = "EDICION";
 	protected static final String VISTA = "VISTA";
@@ -49,7 +46,7 @@ public abstract class AbstractFormDoc extends JInternalFrame implements IFormDoc
 		setVisible(true);
 		setResizable(true);
 		int AnchoCabecera = 850;
-		barra = new PanelBarraDoc();
+		barra = new PanelBarraDocumento();
 		barra.setMinimumSize(new Dimension(AnchoCabecera, 30));
 		barra.setPreferredSize(new Dimension(AnchoCabecera, 30));
 		barra.setBounds(0, 0, AnchoCabecera, 42);
@@ -239,10 +236,10 @@ public abstract class AbstractFormDoc extends JInternalFrame implements IFormDoc
 	
 	public abstract void llenarDesdeVista();	
 	public abstract boolean isValidaVista();	
-	public PanelBarraDoc getBarra() {
+	public PanelBarraDocumento getBarra() {
 		return barra;
 	}
-	public void setBarra(PanelBarraDoc barra) {
+	public void setBarra(PanelBarraDocumento barra) {
 		this.barra = barra;
 	}
 	public String getEstado() {

@@ -3,7 +3,6 @@ package vista.barras;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import vista.formularios.listas.AbstractDocForm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +21,7 @@ public class PanelBarraDocumento extends JPanel {
 	private JButton btnEliminar;
 	private JButton btnSalir;
 	private JButton btnCancelar;
-	private AbstractDocForm formMaestro;
+	private IFormDocumento formMaestro;
 	private static final int _ancho = 20;
 	private static final int _alto = 20;
 
@@ -176,11 +175,11 @@ public class PanelBarraDocumento extends JPanel {
 		add(btnSalir);
 	}
 
-	public AbstractDocForm getFormMaestro() {
+	public IFormDocumento getFormMaestro() {
 		return formMaestro;
 	}
 
-	public void setFormMaestro(AbstractDocForm formMaestro) {
+	public void setFormMaestro(IFormDocumento formMaestro) {
 		this.formMaestro = formMaestro;
 	}
 	

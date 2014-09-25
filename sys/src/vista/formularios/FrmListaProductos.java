@@ -6,12 +6,10 @@ import dao.ProductoDAO;
 import entity.Grupo;
 import entity.Producto;
 import entity.Subgrupo;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 
 public class FrmListaProductos extends AbstractMaestroLista {
 	private static final long serialVersionUID = 1L;
-
+	
 	private ProductoDAO pdao = new ProductoDAO();
 	private Object[] obj;
 	private List<Producto> prodList = pdao.findAll();
