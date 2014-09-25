@@ -402,39 +402,36 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void vista_edicion() {
-		this.txtSerie.setEditable(true);
-		this.txtNumero_2.setEditable(true);
+		boolean band;
+
+		band = getEstado().equals(NUEVO);
+
+		FormValidador.TextFieldsEdicion(band, this.txtSerie, this.txtNumero_2);
+		FormValidador.TextFieldsEdicion(true, this.txtTcMoneda,
+				this.txtTipoCambio);
+
 		this.txtFecha.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
-		this.cntGrupoCentralizacion.txtCodigo.setEditable(true);
-		this.cntMoneda.txtCodigo.setEditable(true);
-		this.cntConcepto.txtCodigo.setEditable(true);
-		this.cntResponsable.txtCodigo.setEditable(true);
-		this.cntSucursal.txtCodigo.setEditable(true);
-		this.cntAlmacen.txtCodigo.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
+
+		FormValidador.CntEdicion(true, this.cntGrupoCentralizacion,
+				this.cntMoneda, this.cntConcepto, this.cntResponsable,
+				this.cntSucursal, this.cntAlmacen);
 		getDetalleTM().setEditar(true);
 	}
 
 	@Override
 	public void vista_noedicion() {
-		this.txtSerie.setEditable(false);
-		this.txtNumero_2.setEditable(false);
+
 		this.txtFecha.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
-		this.cntGrupoCentralizacion.txtCodigo.setEditable(false);
-		this.cntMoneda.txtCodigo.setEditable(false);
-		this.cntConcepto.txtCodigo.setEditable(false);
-		this.cntResponsable.txtCodigo.setEditable(false);
-		this.cntSucursal.txtCodigo.setEditable(false);
-		this.cntAlmacen.txtCodigo.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
+
+		FormValidador.TextFieldsEdicion(false, this.txtTcMoneda,
+				this.txtTipoCambio, this.txtSerie, this.txtNumero_2);
+
+		FormValidador.CntEdicion(false, this.cntGrupoCentralizacion,
+				this.cntMoneda, this.cntConcepto, this.cntResponsable,
+				this.cntSucursal, this.cntAlmacen);
+
 		getDetalleTM().setEditar(false);
 	}
 
