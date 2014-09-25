@@ -45,7 +45,7 @@ public class FloatEditor extends DefaultCellEditor {
 		if (value != null) {
 			editor.setValue(null);
 			editor.setFormatterFactory(factory);
-
+			
 			float valor;
 			try {
 				String cad = value.toString();
@@ -57,7 +57,10 @@ public class FloatEditor extends DefaultCellEditor {
 				valor = 0.0F;
 			}
 			editor.setValue(valor);
+			editor.selectAll();
 		}
 		return editor;
 	}
+	
+	
 }
