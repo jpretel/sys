@@ -42,6 +42,10 @@ public class DAsiento implements Serializable {
 	@JoinColumn(name = "idconsumidor", referencedColumnName = "idconsumidor", insertable = false, updatable = false)
 	private Consumidor consumidor;
 	
+	@ManyToOne
+	@JoinColumn(name = "idasiento", referencedColumnName ="idasiento", insertable = false, updatable = false)
+	private Asiento asiento;
+	
 	private static final long serialVersionUID = 1L;
 	
 	public DAsiento() {
@@ -134,5 +138,13 @@ public class DAsiento implements Serializable {
 
 	public void setCuenta(Cuenta cuenta) {
 		this.cuenta = cuenta;
+	}
+
+	public Asiento getAsiento() {
+		return asiento;
+	}
+
+	public void setAsiento(Asiento asiento) {
+		this.asiento = asiento;
 	}
 }
