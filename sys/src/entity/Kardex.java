@@ -15,50 +15,54 @@ public class Kardex implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	private long idreferencia;
 
 	@JoinColumns({
 			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", nullable = false),
 			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen", nullable = false) })
 	private Almacen almacen;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "idproducto",referencedColumnName = "idproducto",nullable = false)
+	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto", nullable = false)
 	private Producto producto;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "idmedida",referencedColumnName = "idunimedida",nullable = false)
+	@JoinColumn(name = "idmedida", referencedColumnName = "idunimedida", nullable = false)
 	private Unimedida unimedida;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "idmoneda",referencedColumnName = "idmoneda",nullable = false)
+	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda", nullable = false)
 	private Moneda moneda;
-	
+
 	@ManyToOne
-	@JoinColumn(name = "idconcepto",referencedColumnName = "idconcepto",nullable = false)
+	@JoinColumn(name = "idconcepto", referencedColumnName = "idconcepto", nullable = false)
 	private Concepto concepto;
 	
 	@Column
-	private int dia;
+	private int fecha;
 	
+	@Column
+	private int dia;
+
 	@Column
 	private int mes;
 
 	@Column
-	private int anio;	
+	private int anio;
 
-	private int factor;	
+	@Column(precision = 1, scale = 0)
+	private int factor;
 
 	@Column(precision = 17, scale = 8)
 	private float cantidad;
-	
+
 	@Column(precision = 17, scale = 8)
 	private float precio;
-	
+
 	@Column(precision = 17, scale = 8)
 	private float importemof;
-	
+
 	@Column(precision = 17, scale = 8)
 	private float importemex;
 
@@ -75,7 +79,7 @@ public class Kardex implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public long getIdreferencia() {
 		return idreferencia;
 	}
@@ -186,5 +190,13 @@ public class Kardex implements Serializable {
 
 	public void setConcepto(Concepto concepto) {
 		this.concepto = concepto;
+	}
+
+	public int getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(int fecha) {
+		this.fecha = fecha;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import entity.Producto;
 
 public class ProductoDAO extends AbstractDAO<Producto> {
@@ -12,20 +13,15 @@ public class ProductoDAO extends AbstractDAO<Producto> {
 		super(Producto.class);
 	}
 	
-	public List<Producto> findAllbyProducto() {
+	public List<Producto> getServicios() {
 		CriteriaQuery<Producto> q = cb.createQuery(Producto.class);
-		Root<Producto> m = q.from(Producto.class);
-		q.select(m);
-		List<Producto>  producto = getEntityManager().createQuery(q).getResultList();
-		return producto;
+		Root<Producto> from = q.from(Producto.class);
+		
+		Predicate condicion = cb.equal( from.get("esServicio"), 1);
+		q.select(from).where(condicion);
+		
+		return getEntityManager().createQuery(q).getResultList();
 	}
-	public Producto RetornarxIdProducto(String IdProducto) {
-		CriteriaQuery<Producto> q = cb.createQuery(Producto.class);
-		Root<Producto> m = q.from(Producto.class);
-		Predicate condicion = cb.equal(m.get("idproductos"), IdProducto);
-		q.select(m).where(condicion);
-		Producto producto = getEntityManager().createQuery(q).getSingleResult();
-		return producto;
-	}
+	
 
 }
