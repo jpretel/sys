@@ -5,24 +5,19 @@ import java.util.List;
 
 import dao.DetDocIngresoDAO;
 import dao.DetDocSalidaDAO;
-import dao.DocingresoDAO;
 import dao.KardexDAO;
-import dao.ProductoDAO;
-import dao.UnimedidaDAO;
 import entity.DetDocingreso;
 import entity.DetDocsalida;
 import entity.Docingreso;
 import entity.Docsalida;
 import entity.Kardex;
-import entity.Producto;
-import entity.Unimedida;
 
 public class ContabilizaAlmacen {
 
 	public static void ContabilizarIngreso(Docingreso ingreso) {
 		long id = ingreso.getIddocingreso();
 		KardexDAO kardexdao = new KardexDAO();
-		// kardexdao.borrarPorIngresoSalida(id);
+		kardexdao.borrarPorIngresoSalida(id);
 
 		float tcambio = 0;
 		String idmoneda = "";

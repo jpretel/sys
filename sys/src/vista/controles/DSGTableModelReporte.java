@@ -53,7 +53,12 @@ public class DSGTableModelReporte extends DefaultTableModel {
 		if (columnCount < 1) {
 			return String.class;
 		}
-		return getValueAt(0, c).getClass();
+		try {
+			return getValueAt(0, c).getClass();
+		} catch (Exception e) {
+			return Object.class;
+		}
+		
 	}
 	
 	private void refrescarRowHeader() {
