@@ -7,4 +7,5 @@ public interface IFormDocumento {
 	public void eliminar();
 	public void DoGrabar();
 	public void cancelar();
+	public void doVerAsiento();
 }

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import vista.Sys;
+import vista.barras.PanelBarraDocumento;
 import vista.contenedores.CntConcepto;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
@@ -26,6 +28,7 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import core.centralizacion.CentralizaAlm;
 import core.centralizacion.ContabilizaAlmacen;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
@@ -38,6 +41,7 @@ import dao.ResponsableDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.Almacen;
+import entity.Asiento;
 import entity.DetDocingreso;
 import entity.DetDocingresoPK;
 import entity.Docingreso;
@@ -45,11 +49,15 @@ import entity.Producto;
 import entity.Sucursal;
 import entity.Unimedida;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 
 import vista.contenedores.CntGrupoCentralizacion;
+
 import javax.swing.JTextField;
+
 import vista.controles.FindButton;
 
 public class FrmDocRecepcion extends AbstractDocForm {
@@ -319,9 +327,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			detDocingresoDAO.crear_editar(det);
 		}
 		ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
-		// String Mensaje = CentralizaAlm.CentralizaAlm(getIngreso()
-		// .getIddocingreso());
-		// System.out.println(Mensaje);
+		CentralizaAlm.CentralizaIngreso(getIngreso().getIddocingreso());
+		setIngreso(docIngresoDAO.find(getIngreso().getIddocingreso()));
 	}
 
 	@Override
@@ -505,8 +512,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			DetDocingreso det = new DetDocingreso();
 			Unimedida unimedida = unimedidaDAO.find(getDetalleTM().getValueAt(
 					i, 2).toString());
-			Producto producto = productoDAO.find(getDetalleTM().getValueAt(i, 0).toString());
-			
+			Producto producto = productoDAO.find(getDetalleTM()
+					.getValueAt(i, 0).toString());
+
 			detPK.setIdingreso(Id);
 			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
 			det.setId(detPK);
@@ -578,5 +586,28 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	public void setIngreso(Docingreso ingreso) {
 		this.ingreso = ingreso;
+	}
+	
+	@Override
+	public void doVerAsiento() {
+		Asiento asiento = getIngreso().getAsiento();
+		
+		FrmAsientoDoc frmAsiento = new FrmAsientoDoc();
+		frmAsiento.actualiza_objeto(asiento.getIdasiento(), "VISTA");
+		Sys.desktoppane.add(frmAsiento);
+		frmAsiento.moveToFront();
+	}
+
+	@Override
+	public void initBarra() {
+		int AnchoCabecera = 850;
+		barra = new PanelBarraDocumento('A');
+		barra.setMinimumSize(new Dimension(AnchoCabecera, 40));
+		barra.setPreferredSize(new Dimension(AnchoCabecera, 40));
+		barra.setBounds(0, 0, AnchoCabecera, 42);
+		barra.setFormMaestro(this);
+		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		getContentPane().add(barra, BorderLayout.NORTH);
 	}
 }

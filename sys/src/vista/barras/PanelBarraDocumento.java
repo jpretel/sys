@@ -20,6 +20,7 @@ public class PanelBarraDocumento extends JPanel {
 	private JButton btnGrabar;
 	private JButton btnEliminar;
 	private JButton btnSalir;
+	private JButton btnVerAsiento;
 	private JButton btnCancelar;
 	private IFormDocumento formMaestro;
 	private static final int _ancho = 18;
@@ -73,8 +74,11 @@ public class PanelBarraDocumento extends JPanel {
 		this.btnSalir = btnSalir;
 	}
 
-	public PanelBarraDocumento() {
-		
+	/*
+	 * Adicionales: A: Ver Asiento
+	 */
+	public PanelBarraDocumento(char... adicionales) {
+
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		btnAnular = new JButton("");
@@ -97,7 +101,7 @@ public class PanelBarraDocumento extends JPanel {
 				getFormMaestro().DoNuevo();
 			}
 		});
-		
+
 		btnNuevo.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
 				.getResource("/main/resources/iconos/nuevo.png")).getImage()
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
@@ -138,11 +142,12 @@ public class PanelBarraDocumento extends JPanel {
 				getFormMaestro().cancelar();
 			}
 		});
-		btnCancelar
-				.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
+
+		btnCancelar.setIcon(new ImageIcon(new ImageIcon(
+				PanelBarraDocumento.class
 						.getResource("/main/resources/iconos/cancelar.png"))
-						.getImage().getScaledInstance(_ancho, _alto,
-								java.awt.Image.SCALE_DEFAULT)));
+				.getImage().getScaledInstance(_ancho, _alto,
+						java.awt.Image.SCALE_DEFAULT)));
 		btnCancelar.setToolTipText("Cancelar");
 		add(btnCancelar);
 
@@ -154,18 +159,38 @@ public class PanelBarraDocumento extends JPanel {
 		btnGrabar.setToolTipText("Grabar");
 		add(btnGrabar);
 
-		btnEliminar
-				.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
+		btnVerAsiento = new JButton("");
+		btnVerAsiento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				getFormMaestro().doVerAsiento();
+			}
+		});
+		btnVerAsiento.setIcon(new ImageIcon(new ImageIcon(
+				PanelBarraDocumento.class
+						.getResource("/main/resources/iconos/verasiento.png"))
+				.getImage().getScaledInstance(_ancho, _alto,
+						java.awt.Image.SCALE_DEFAULT)));
+		if (adicionales != null) {
+			salir: for (char tipo : adicionales) {
+				if (tipo == 'A') {
+					add(btnVerAsiento);
+					break salir;
+				}
+			}
+		}
+
+		btnEliminar.setIcon(new ImageIcon(new ImageIcon(
+				PanelBarraDocumento.class
 						.getResource("/main/resources/iconos/eliminar.png"))
-						.getImage().getScaledInstance(_ancho, _alto,
-								java.awt.Image.SCALE_DEFAULT)));
+				.getImage().getScaledInstance(_ancho, _alto,
+						java.awt.Image.SCALE_DEFAULT)));
 		btnEliminar.setToolTipText("Eliminar");
 		add(btnEliminar);
 
 		btnSalir = new JButton("");
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//getFormMaestro().salir();
+				// getFormMaestro().salir();
 			}
 		});
 		btnSalir.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
@@ -182,7 +207,7 @@ public class PanelBarraDocumento extends JPanel {
 	public void setFormMaestro(IFormDocumento formMaestro) {
 		this.formMaestro = formMaestro;
 	}
-	
+
 	public void enVista() {
 		edicion(true);
 	}
@@ -197,5 +222,22 @@ public class PanelBarraDocumento extends JPanel {
 		getBtnGrabar().setEnabled(!band);
 		getBtnEliminar().setEnabled(band);
 		getBtnNuevo().setEnabled(band);
+		getBtnVerAsiento().setEnabled(band);
+	}
+
+	public JButton getBtnVerAsiento() {
+		return btnVerAsiento;
+	}
+
+	public void setBtnVerAsiento(JButton btnVerAsiento) {
+		this.btnVerAsiento = btnVerAsiento;
+	}
+
+	public JButton getBtnCancelar() {
+		return btnCancelar;
+	}
+
+	public void setBtnCancelar(JButton btnCancelar) {
+		this.btnCancelar = btnCancelar;
 	}
 }

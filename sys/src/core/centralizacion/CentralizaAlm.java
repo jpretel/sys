@@ -1,78 +1,91 @@
 package core.centralizacion;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.AsientoDAO;
 import dao.CfgCentralizaAlmDAO;
+import dao.DAsientoDAO;
+import dao.DocingresoDAO;
 import dao.KardexDAO;
 import entity.Asiento;
 import entity.CfgCentralizaAlm;
+import entity.Concepto;
+import entity.Cuenta;
 import entity.DAsiento;
 import entity.DAsientoPK;
+import entity.Docingreso;
 import entity.Kardex;
 import entity.Moneda;
 import entity.Producto;
+import entity.Subdiario;
 
 public class CentralizaAlm {
-	
-	public static String CentralizaAlm(Long id) {		
-		
-		CfgCentralizaAlmDAO cfgDAO = new CfgCentralizaAlmDAO();		
+
+	public static Asiento CentralizaAlmacen(Asiento asiento, long id, int anio,
+			int mes, int dia, float tcambio, float tcmoneda, Moneda moneda,
+			Concepto concepto, Subdiario subdiario) {
+
+		CfgCentralizaAlmDAO cfgDAO = new CfgCentralizaAlmDAO();
 		KardexDAO kardexDAO = new KardexDAO();
-		Kardex kardex = kardexDAO.getPorIngresoSalidaC(id);
-		Asiento asiento = new Asiento();
+		AsientoDAO asientoDAO = new AsientoDAO();
+		DAsientoDAO dasientoDAO = new DAsientoDAO();
+		long idasiento;
+		if (asiento == null) {
+			idasiento = System.nanoTime();
+			asiento = new Asiento();
+			asiento.setIdasiento(idasiento);
+		} else {
+			idasiento = asiento.getIdasiento();
+		}
 		List<DAsiento> dasiento = new ArrayList<DAsiento>();
 
-		if (kardex == null) {
-			return "No hay Documento";
-		}
-		
-		Long ida;
-		ida = System.nanoTime();
-		asiento.setIdasiento(ida);
-
-		asiento.setAnio(kardex.getAnio());
-		asiento.setMes(kardex.getMes());
-		asiento.setDia(kardex.getDia());
+		asiento.setAnio(anio);
+		asiento.setMes(mes);
+		asiento.setDia(dia);
+		asiento.setFecha(anio * 10000 + mes * 100 + dia);
 		asiento.setEstado(1);
-		asiento.setMoneda(kardex.getMoneda());
-
+		asiento.setMoneda(moneda);
+		asiento.setTcambio(tcambio);
+		asiento.setTcmoneda(tcmoneda);
 		asiento.setNumerador(0);
 		asiento.setTipo('A');
-		
-		int i = 1;
-
-		float tcambio = 2.8F, tcmoneda = 1.3F;
-		
-		Moneda moneda = kardex.getMoneda();
-		
+		asiento.setSubdiario(subdiario);
+		int i = 0;
 		for (Kardex det : kardexDAO.getPorIngresoSalidaL(id)) {
 			float precio = det.getPrecio();
 			float cantidad = det.getCantidad();
 			float total = 0;
+			
 			Producto prod = det.getProducto();
 			total = precio * cantidad;
 
-			CfgCentralizaAlm cfg = cfgDAO.getPorConceptoGrupoSubGrupo(
-					kardex.getConcepto(), prod.getSubgrupo().getGrupo(), prod.getSubgrupo());
+			CfgCentralizaAlm cfg = cfgDAO.getPorConceptoGrupoSubGrupo(concepto,
+					prod.getSubgrupo().getGrupo(), prod.getSubgrupo());
 
 			if (cfg == null) {
-				return "No tiene configuracion contable";
+				System.out.println("No tiene configuracion contable "
+						+ concepto.getDescripcion() + " "
+						+ prod.getSubgrupo().getGrupo().getIdgrupo() + " "
+						+ prod.getSubgrupo().getId().getIdsubgrupo());
 			}
 
 			// Insertar cuenta de Debe
 			DAsiento da = new DAsiento();
 			DAsientoPK pk = new DAsientoPK();
 
-			pk.setIdasiento(ida);
+			pk.setIdasiento(idasiento);
 			pk.setItem(i);
 			da.setId(pk);
 			da.setCuenta(cfg.getCta_debe());
 
 			LlenarDebeHaber(moneda.getTipo(), da, total, tcambio, tcmoneda, 'D');
-			// Solo si tiene analisis por producto
-			da.setProducto(prod);
-			da.setCantidad(cantidad);
 
+			if (cfg.getCta_debe().getA_producto() == 1) {
+				da.setProducto(prod);
+				da.setCantidad(cantidad);
+			}
+			
 			dasiento.add(da);
 
 			i++;
@@ -80,19 +93,44 @@ public class CentralizaAlm {
 			da = new DAsiento();
 			pk = new DAsientoPK();
 
-			pk.setIdasiento(ida);
+			pk.setIdasiento(idasiento);
 			pk.setItem(i);
 			da.setId(pk);
 			da.setCuenta(cfg.getCta_haber());
-			
-			LlenarDebeHaber(moneda.getTipo(), da, total, tcambio, tcmoneda, 'H');
 
+			LlenarDebeHaber(moneda.getTipo(), da, total, tcambio, tcmoneda, 'H');
+			
+			if (cfg.getCta_haber().getA_producto() == 1) {
+				da.setProducto(prod);
+				da.setCantidad(cantidad);
+			}
+			
 			dasiento.add(da);
 
 			i++;
 		}
-		
-		return "";
+
+		asientoDAO.crear_editar(asiento);
+		dasientoDAO.borrarPorAsiento(asiento);
+		dasientoDAO.create(dasiento);
+
+		return asiento;
+
+	}
+
+	public static void CentralizaIngreso(long idingreso) {
+
+		DocingresoDAO docingresoDAO = new DocingresoDAO();
+		Docingreso ingreso = docingresoDAO.find(idingreso);
+
+		Asiento asiento = CentralizaAlmacen(ingreso.getAsiento(), idingreso,
+				ingreso.getAnio(), ingreso.getMes(), ingreso.getDia(),
+				ingreso.getTcambio(), ingreso.getTcmoneda(),
+				ingreso.getMoneda(), ingreso.getConcepto(), ingreso
+						.getGrupoCentralizacion().getSubdiario());
+		ingreso.setAsiento(asiento);
+
+		docingresoDAO.crear_editar(ingreso);
 	}
 
 	public static void LlenarDebeHaber(int tipo_moneda, DAsiento da,

@@ -16,7 +16,7 @@ public class DAsiento implements Serializable {
 	@EmbeddedId
 	private DAsientoPK id;
 
-	@JoinColumn(name = "idcuenta", referencedColumnName = "idcuenta", insertable = false, updatable = false)
+	@JoinColumn(name = "idcuenta", referencedColumnName = "idcuenta")
 	private Cuenta cuenta;
 
 	private float debe;
@@ -32,14 +32,14 @@ public class DAsiento implements Serializable {
 	private float haber_ex;
 	
 	// Analisis por Producto
-	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto", insertable = false, updatable = false)
+	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
 	private Producto producto;
 	
 	@Column(scale = 17, precision = 8)
 	private float cantidad;
 	
 	// Analisis por Centro de Costo
-	@JoinColumn(name = "idconsumidor", referencedColumnName = "idconsumidor", insertable = false, updatable = false)
+	@JoinColumn(name = "idconsumidor", referencedColumnName = "idconsumidor")
 	private Consumidor consumidor;
 	
 	@ManyToOne

@@ -28,7 +28,7 @@ public class Asiento implements Serializable {
 	private int anio;
 
 	@Column
-	private int aniomesdia;
+	private int fecha;
 
 	@Column
 	private int numerador;
@@ -141,14 +141,6 @@ public class Asiento implements Serializable {
 		this.tipo = tipo;
 	}
 
-	public int getAniomesdia() {
-		return aniomesdia;
-	}
-
-	public void setAniomesdia(int aniomesdia) {
-		this.aniomesdia = aniomesdia;
-	}
-
 	public float getDebe() {
 		return debe;
 	}
@@ -216,5 +208,13 @@ public class Asiento implements Serializable {
 
 	public void setTcmoneda(float tcmoneda) {
 		this.tcmoneda = tcmoneda;
+	}
+
+	public int getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(int fecha) {
+		this.fecha = fecha;
 	}
 }

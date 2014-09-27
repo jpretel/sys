@@ -42,7 +42,7 @@ public class AsientoDAO extends AbstractDAO<Asiento> {
 		CriteriaQuery<Asiento> q = cb.createQuery(Asiento.class);
 		Root<Asiento> c = q.from(Asiento.class);
 		
-		Expression<Integer> expfecha = c.get("aniomesdia");
+		Expression<Integer> expfecha = c.get("fecha");
 				
 		Predicate ps = null;
 		

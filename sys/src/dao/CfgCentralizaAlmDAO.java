@@ -20,22 +20,32 @@ public class CfgCentralizaAlmDAO extends AbstractDAO<CfgCentralizaAlm> {
 
 	public List<CfgCentralizaAlm> getPorConcepto(Concepto concepto) {
 		factory.getCache().evictAll();
-		CriteriaQuery<CfgCentralizaAlm> q = cb.createQuery(CfgCentralizaAlm.class);
+		CriteriaQuery<CfgCentralizaAlm> q = cb
+				.createQuery(CfgCentralizaAlm.class);
 		Root<CfgCentralizaAlm> c = q.from(CfgCentralizaAlm.class);
 		Predicate condicion = cb.equal(c.get("concepto"), concepto);
-		q.select(c).where(condicion);	
+		q.select(c).where(condicion);
 		return getEntityManager().createQuery(q).getResultList();
 	}
-	
-	public CfgCentralizaAlm getPorConceptoGrupoSubGrupo(Concepto concepto, Grupo grupo, Subgrupo subgrupo) {
-		CriteriaQuery<CfgCentralizaAlm> q = cb.createQuery(CfgCentralizaAlm.class);
+
+	public CfgCentralizaAlm getPorConceptoGrupoSubGrupo(Concepto concepto,
+			Grupo grupo, Subgrupo subgrupo) {
+		CriteriaQuery<CfgCentralizaAlm> q = cb
+				.createQuery(CfgCentralizaAlm.class);
 		Root<CfgCentralizaAlm> c = q.from(CfgCentralizaAlm.class);
-		Predicate condicion = cb.and(cb.equal(c.get("concepto"), concepto), cb.equal(c.get("grupo"), grupo), cb.equal(c.get("subgrupo"), subgrupo));
-		q.select(c).where(condicion);	
-		return getEntityManager().createQuery(q).getSingleResult();
+		Predicate condicion = cb.and(cb.equal(c.get("concepto"), concepto),
+				cb.equal(c.get("grupo"), grupo),
+				cb.equal(c.get("subgrupo"), subgrupo));
+		q.select(c).where(condicion);
+		try {
+			return getEntityManager().createQuery(q).getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
 	}
-	
-	public List<CfgCentralizaAlm> aEliminar(Concepto concepto, List<CfgCentralizaAlm> centraliza) {
+
+	public List<CfgCentralizaAlm> aEliminar(Concepto concepto,
+			List<CfgCentralizaAlm> centraliza) {
 		List<CfgCentralizaAlm> eliminar = new ArrayList<CfgCentralizaAlm>();
 		for (CfgCentralizaAlm o1 : getPorConcepto(concepto)) {
 			boolean existe = false;

@@ -53,7 +53,11 @@ public class Docingreso implements Serializable {
 	private int dia;	
 	
 	@Column
-	private int aniomesdia;	
+	private int aniomesdia;
+	
+	@ManyToOne
+	@JoinColumn(name="idasiento", referencedColumnName="idasiento")
+	private Asiento asiento;
 	
 	public int getAniomesdia() {
 		return aniomesdia;
@@ -196,6 +200,14 @@ public class Docingreso implements Serializable {
 
 	public void setSucursal(Sucursal sucursal) {
 		this.sucursal = sucursal;
+	}
+
+	public Asiento getAsiento() {
+		return asiento;
+	}
+
+	public void setAsiento(Asiento asiento) {
+		this.asiento = asiento;
 	}
 
 }

@@ -22,7 +22,7 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 		IFormDocumento {
 	private static final long serialVersionUID = 1L;
 	protected JTextField txtNumero;
-	private PanelBarraDocumento barra;
+	protected PanelBarraDocumento barra;
 	protected JPanel pnlPrincipal;
 	private String estado;
 	protected DSGTextFieldCorrelativo txtNumero_2;
@@ -41,16 +41,9 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 		setClosable(true);
 		setVisible(true);
 		setResizable(true);
+		initBarra();
 		int AnchoCabecera = 850;
-		barra = new PanelBarraDocumento();
-		barra.setMinimumSize(new Dimension(AnchoCabecera, 40));
-		barra.setPreferredSize(new Dimension(AnchoCabecera, 40));
-		barra.setBounds(0, 0, AnchoCabecera, 42);
-		barra.setFormMaestro(this);
-		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		getContentPane().add(barra, BorderLayout.NORTH);
-
+		
 		pnlPrincipal = new JPanel();
 		pnlPrincipal.setMinimumSize(new Dimension(AnchoCabecera, 500));
 		pnlPrincipal.setPreferredSize(new Dimension(AnchoCabecera, 500));
@@ -111,6 +104,18 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 				this.txtTcMoneda.setBounds(776, 12, 55, 20);
 				txtTcMoneda.setColumns(10);
 				this.pnlPrincipal.add(this.txtTcMoneda);
+	}
+	
+	public void initBarra() {
+		int AnchoCabecera = 850;
+		barra = new PanelBarraDocumento();
+		barra.setMinimumSize(new Dimension(AnchoCabecera, 40));
+		barra.setPreferredSize(new Dimension(AnchoCabecera, 40));
+		barra.setBounds(0, 0, AnchoCabecera, 42);
+		barra.setFormMaestro(this);
+		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		getContentPane().add(barra, BorderLayout.NORTH);
 	}
 
 	public void iniciar() {
@@ -194,6 +199,10 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 	public abstract void llenarDesdeVista();
 
 	public abstract boolean isValidaVista();
+	
+	public void doVerAsiento(){
+		
+	}
 
 	public PanelBarraDocumento getBarra() {
 		return barra;

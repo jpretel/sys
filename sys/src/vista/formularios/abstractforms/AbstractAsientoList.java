@@ -1,7 +1,6 @@
 package vista.formularios.abstractforms;
 
 import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -31,6 +30,7 @@ import com.jgoodies.forms.factories.FormFactory;
 
 import vista.contenedores.CntSubdiario;
 import vista.controles.DSGDatePicker;
+import vista.controles.DSGInternalFrame;
 import vista.controles.DSGTableList;
 import vista.controles.DSGTableModelList;
 import vista.controles.DSGTextFieldCorrelativo;
@@ -39,7 +39,7 @@ import vista.utilitarios.renderers.DDMMYYYYRenderer;
 
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-public abstract class AbstractAsientoList extends JInternalFrame {
+public abstract class AbstractAsientoList extends DSGInternalFrame {
 	/**
 	 * 
 	 */
