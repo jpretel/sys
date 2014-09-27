@@ -34,6 +34,7 @@ public class ContabilizaAlmacen {
 			for (DetDocingreso det : detIngL) {
 				Kardex kardex = new Kardex();
 				kardex.setIdreferencia(id);
+				kardex.setTipo('I');
 				kardex.setMoneda(ingreso.getMoneda());
 				kardex.setConcepto(ingreso.getConcepto());
 				kardex.setDia(ingreso.getDia());
@@ -41,6 +42,7 @@ public class ContabilizaAlmacen {
 				kardex.setAnio(ingreso.getAnio());
 				kardex.setFecha(ingreso.getAnio() * 10000 + ingreso.getMes()
 						* 100 + ingreso.getDia());
+				kardex.setSucursal(ingreso.getSucursal());
 				kardex.setAlmacen(ingreso.getAlmacen());
 				Producto producto = new ProductoDAO().find(det.getId()
 						.getIdproducto());
@@ -84,6 +86,7 @@ public class ContabilizaAlmacen {
 		for (DetDocingreso det : detIngL) {
 			Kardex kardex = new Kardex();
 			kardex.setIdreferencia(id);
+			kardex.setTipo('I');
 			kardex.setMoneda(ingreso.getMoneda());
 			kardex.setConcepto(ingreso.getConcepto());
 			kardex.setDia(ingreso.getDia());
@@ -91,6 +94,7 @@ public class ContabilizaAlmacen {
 			kardex.setAnio(ingreso.getAnio());
 			kardex.setFecha(ingreso.getAnio() * 10000 + ingreso.getMes() * 100
 					+ ingreso.getDia());
+			kardex.setSucursal(ingreso.getSucursal());
 			kardex.setAlmacen(ingreso.getAlmacen());
 			Producto producto = new ProductoDAO().find(det.getId()
 					.getIdproducto());
@@ -129,6 +133,7 @@ public class ContabilizaAlmacen {
 		for (DetDocsalida det : detSal) {
 			Kardex kardex = new Kardex();
 			kardex.setIdreferencia(id);
+			kardex.setTipo('S');
 			kardex.setMoneda(salida.getMoneda());
 			kardex.setConcepto(salida.getConcepto());
 			kardex.setDia(salida.getDia());
@@ -136,6 +141,7 @@ public class ContabilizaAlmacen {
 			kardex.setAnio(salida.getAnio());
 			kardex.setFecha(salida.getAnio() * 10000 + salida.getMes() * 100
 					+ salida.getDia());
+			kardex.setSucursal(salida.getSucursal());
 			kardex.setAlmacen(salida.getAlmacen());
 			Producto producto = new ProductoDAO().find(det.getId()
 					.getIdproducto());

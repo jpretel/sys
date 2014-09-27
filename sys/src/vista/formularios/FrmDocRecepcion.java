@@ -26,7 +26,6 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import core.centralizacion.CentralizaAlm;
 import core.centralizacion.ContabilizaAlmacen;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;

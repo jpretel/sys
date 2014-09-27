@@ -37,7 +37,7 @@ public class KardexDAO extends AbstractDAO<Kardex> {
 
 	public float getSaldoAntesDe(int fecha, Producto producto,
 			Sucursal sucursal, Almacen almacen) {
-
+		float saldo = 0.0F;
 		CriteriaQuery<Kardex> q = cb.createQuery(Kardex.class);
 		Root from = q.from(Kardex.class);
 		// cb.equal(from.get("anio"), anio),
@@ -56,8 +56,12 @@ public class KardexDAO extends AbstractDAO<Kardex> {
 		q.select(cb.sum(cb.prod(from.get("factor"), from.get("cantidad"))))
 				.where(condicion);
 		Query query = em.createQuery(q);
-
-		return (float) query.getSingleResult();
+		try {
+			saldo = (float) query.getSingleResult();
+		}catch(Exception e) {
+			saldo = 0;
+		}
+		return saldo;
 	}
 
 	public List<Kardex> getMovimientos(int fecha_d, int fecha_h,
@@ -77,6 +81,8 @@ public class KardexDAO extends AbstractDAO<Kardex> {
 			condicion = cb.and(condicion,
 					cb.equal(from.get("almacen"), almacen));
 		}
+		
+		q.select(from).where(condicion).orderBy(cb.asc(from.get("fecha")), cb.desc(from.get("factor")));
 		Query query = em.createQuery(q);
 		return query.getResultList();
 	}

@@ -17,7 +17,10 @@ public class Kardex implements Serializable {
 	private int id;
 
 	private long idreferencia;
-
+	
+	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false,  nullable = false)
+	private Sucursal sucursal;
+	
 	@JoinColumns({
 			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", nullable = false),
 			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen", nullable = false) })
@@ -65,7 +68,10 @@ public class Kardex implements Serializable {
 
 	@Column(precision = 17, scale = 8)
 	private float importemex;
-
+	
+	@Column
+	private char tipo;
+	
 	private static final long serialVersionUID = 1L;
 
 	public Kardex() {
@@ -198,5 +204,21 @@ public class Kardex implements Serializable {
 
 	public void setFecha(int fecha) {
 		this.fecha = fecha;
+	}
+
+	public char getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(char tipo) {
+		this.tipo = tipo;
+	}
+
+	public Sucursal getSucursal() {
+		return sucursal;
+	}
+
+	public void setSucursal(Sucursal sucursal) {
+		this.sucursal = sucursal;
 	}
 }

@@ -64,35 +64,10 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 		this.txtNumero_2.setBounds(116, 12, 80, 20);
 		txtNumero_2.setColumns(10);
 
-		JLabel lblFecha = new JLabel("Fecha");
-		lblFecha.setBounds(206, 15, 53, 14);
-
 		txtFecha = new DSGDatePicker();
 		this.txtFecha.setBounds(245, 11, 101, 22);
 		txtFecha.getEditor().setLocation(0, 8);
 		txtFecha.setDate(new Date());
-
-		txtTipoCambio = new DSGTextFieldNumber(4);
-		this.txtTipoCambio.setBounds(641, 12, 55, 20);
-		txtTipoCambio.setMinimumSize(new Dimension(30, 20));
-		txtTipoCambio.setPreferredSize(new Dimension(30, 20));
-		txtTipoCambio.setColumns(10);
-
-		lblTipoCambio = new JLabel("T. Cambio");
-		this.lblTipoCambio.setBounds(591, 15, 53, 14);
-
-		lblTcMoneda = new JLabel("T.C. Moneda");
-		this.lblTcMoneda.setBounds(704, 15, 62, 14);
-
-		txtTcMoneda = new DSGTextFieldNumber(4);
-		this.txtTcMoneda.setBounds(776, 12, 55, 20);
-		txtTcMoneda.setColumns(10);
-
-		txtSerie = new DSGTextFieldCorrelativo(4);
-		this.txtSerie.setBounds(72, 12, 44, 20);
-		txtSerie.setColumns(10);
-		JLabel lblMoneda = new JLabel("Moneda");
-		lblMoneda.setBounds(353, 15, 53, 14);
 		cntMoneda = new CntMoneda();
 		this.cntMoneda.setBounds(400, 12, 181, 20);
 		
@@ -101,16 +76,41 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 
 		this.pnlPrincipal.setLayout(null);
 		this.pnlPrincipal.add(lblNumero);
+								
+										JLabel lblFecha = new JLabel("Fecha");
+										lblFecha.setBounds(206, 15, 53, 14);
+										this.pnlPrincipal.add(lblFecha);
+								JLabel lblMoneda = new JLabel("Moneda");
+								lblMoneda.setBounds(353, 15, 53, 14);
+								this.pnlPrincipal.add(lblMoneda);
+						
+								lblTipoCambio = new JLabel("T. Cambio");
+								this.lblTipoCambio.setBounds(591, 15, 53, 14);
+								this.pnlPrincipal.add(this.lblTipoCambio);
+				
+						lblTcMoneda = new JLabel("T.C. Moneda");
+						this.lblTcMoneda.setBounds(704, 15, 62, 14);
+						this.pnlPrincipal.add(this.lblTcMoneda);
+		
+				txtSerie = new DSGTextFieldCorrelativo(4);
+				this.txtSerie.setBounds(72, 12, 44, 20);
+				txtSerie.setColumns(10);
+				this.pnlPrincipal.add(this.txtSerie);
 		this.pnlPrincipal.add(this.txtNumero_2);
-		this.pnlPrincipal.add(this.txtSerie);
 		this.pnlPrincipal.add(this.txtFecha);
-		this.pnlPrincipal.add(lblFecha);
-		this.pnlPrincipal.add(lblMoneda);
 		this.pnlPrincipal.add(this.cntMoneda);
-		this.pnlPrincipal.add(this.lblTcMoneda);
-		this.pnlPrincipal.add(this.txtTcMoneda);
-		this.pnlPrincipal.add(this.lblTipoCambio);
-		this.pnlPrincipal.add(this.txtTipoCambio);
+		
+				txtTipoCambio = new DSGTextFieldNumber(4);
+				this.txtTipoCambio.setBounds(641, 12, 55, 20);
+				txtTipoCambio.setMinimumSize(new Dimension(30, 20));
+				txtTipoCambio.setPreferredSize(new Dimension(30, 20));
+				txtTipoCambio.setColumns(10);
+				this.pnlPrincipal.add(this.txtTipoCambio);
+		
+				txtTcMoneda = new DSGTextFieldNumber(4);
+				this.txtTcMoneda.setBounds(776, 12, 55, 20);
+				txtTcMoneda.setColumns(10);
+				this.pnlPrincipal.add(this.txtTcMoneda);
 	}
 
 	public void iniciar() {

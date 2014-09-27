@@ -2,6 +2,8 @@ package vista.contenedores;
 import entity.Concepto;
 
 public class CntConcepto extends AbstractCntBuscar<Concepto> {
+	public CntConcepto() {
+	}
 	
 	private static final long serialVersionUID = 1L;
 

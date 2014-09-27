@@ -36,9 +36,40 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import vista.controles.DSGTableModel;
+import vista.controles.DSGTableModelReporte;
 
 public class JTableUtils {
 
+	public static JList<String> buildRowHeader(final JTable table,
+			final DSGTableModelReporte model) {
+		final Vector<String> headers = new Vector<String>();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			headers.add(String.valueOf(i + 1).toUpperCase());
+		}
+
+		// headers.add("+");
+		ListModel<String> lm = new AbstractListModel<String>() {
+			private static final long serialVersionUID = -401435697781157444L;
+
+			public int getSize() {
+				return headers.size();
+			}
+
+			public String getElementAt(int index) {
+				return headers.get(index);
+			}
+		};
+
+		final JList<String> rowHeader = new JList<String>(lm);
+		rowHeader.setOpaque(false);
+		rowHeader.setFixedCellWidth(30);
+
+		rowHeader.setCellRenderer(new RowHeaderRenderer(table));
+		rowHeader.setBackground(table.getBackground());
+		rowHeader.setForeground(table.getForeground());
+		return rowHeader;
+	}
+	
 	public static JList<String> buildRowHeader(final JTable table,
 			final DSGTableModel model) {
 		final Vector<String> headers = new Vector<String>();
@@ -142,7 +173,7 @@ public class JTableUtils {
 		rowHeader.addMouseListener(mouseAdapter);
 		rowHeader.addMouseMotionListener(mouseAdapter);
 		rowHeader.addMouseWheelListener(mouseAdapter);
-		rowHeader.setCellRenderer(new RowHeaderRenderer(table, model));
+		rowHeader.setCellRenderer(new RowHeaderRenderer(table));
 		rowHeader.setBackground(table.getBackground());
 		rowHeader.setForeground(table.getForeground());
 		return rowHeader;
@@ -157,7 +188,7 @@ public class JTableUtils {
 		private static final long serialVersionUID = 1L;
 		private JTable table;
 
-		public RowHeaderRenderer(JTable table, DSGTableModel model) {
+		public RowHeaderRenderer(JTable table) {
 			this.table = table;
 			JTableHeader header = this.table.getTableHeader();
 			setOpaque(true);

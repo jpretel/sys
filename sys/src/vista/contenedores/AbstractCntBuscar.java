@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 import vista.Sys;
 import vista.controles.FindButton;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.awt.Dimension;
 
@@ -28,7 +30,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public JXTextFieldEntityAC<T> txtCodigo;
 	public JTextField txtDescripcion;
 	public FindButton btnBuscar;
-	
+
 	public AbstractCntBuscar(String[] cabeceras, int[] anchos) {
 
 		setForeground(Color.LIGHT_GRAY);
@@ -102,6 +104,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		add(txtDescripcion, gbc_txtDescripcion);
 
 		btnBuscar = new FindButton();
+		this.btnBuscar.setFocusable(false);
 
 		btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
@@ -159,12 +162,12 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public abstract Object[] entity2Object(T entity);
 
 	public abstract String getEntityCode(T entity);
-	
+
 	public void setText(String codigo) {
 		txtCodigo.setText(codigo);
 		this.llenar();
 	}
-	
+
 	public void llenar() {
 		txtCodigo.setEntityPorCodigo();
 		txtCodigo.cargaDatos();
@@ -173,5 +176,26 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public void setEditable(boolean editar) {
 		txtCodigo.setEditable(editar);
 		btnBuscar.setEnabled(editar);
+	}
+
+	public String getCntName() {
+		Type genericSuperclass = this.getClass().getGenericSuperclass();
+		if (genericSuperclass instanceof ParameterizedType) {
+			ParameterizedType pt = (ParameterizedType) genericSuperclass;
+			Type type = pt.getActualTypeArguments()[0];
+			String classname = type.getTypeName();
+			int i = 0;
+			salir: while (classname.indexOf(".") > -1) {
+				classname = classname.substring(classname.indexOf(".") + 1,
+						classname.length());
+				if (i == 100) {
+					classname = "Desconocido";
+					break salir;
+				}
+				i++;
+			}
+			return classname;
+		}
+		return "Desconocido";
 	}
 }

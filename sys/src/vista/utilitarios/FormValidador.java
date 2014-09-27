@@ -27,4 +27,15 @@ public class FormValidador {
 			cnt.setEditable(band);
 		}
 	}
+	
+	public static boolean CntObligatorios(AbstractCntBuscar<?>... cnts) {
+		for (AbstractCntBuscar<?> cnt : cnts) {
+			if (cnt.getSeleccionado() == null) {
+				UtilMensajes.mensaje_alterta("DATO_REQUERIDO", cnt.getCntName());
+				cnt.txtCodigo.requestFocus();
+				return false;
+			}
+		}
+		return true;
+	}
 }

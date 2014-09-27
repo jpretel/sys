@@ -34,7 +34,7 @@ public class ControladorOpciones {
 		String urlClase = "vista.formularios." + clase.trim();
 		JInternalFrame frame = (JInternalFrame) Class.forName(urlClase)
 				.newInstance();
-		System.out.println(frame);
+		frame.setVisible(true);
 		getDesktopPane().add(frame);
 		try {
 			frame.setSelected(true);
