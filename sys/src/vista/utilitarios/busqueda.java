@@ -46,6 +46,10 @@ public class busqueda extends modalInternalFrame {
 		textField.setColumns(10);
 
 		JButton btnNewButton = new JButton("Buscar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnNewButton.setBounds(360, 10, 69, 23);
 		getContentPane().add(btnNewButton);
 
@@ -98,7 +102,7 @@ public class busqueda extends modalInternalFrame {
 
 			}
 		});
-		btnAcptar.setBounds(272, 245, 69, 23);
+		btnAcptar.setBounds(355, 251, 69, 23);
 		getContentPane().add(btnAcptar);
 
 		int nFila = lista.length;
