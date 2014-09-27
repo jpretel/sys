@@ -19,6 +19,7 @@ import entity.TCambio;
 import entity.TCambioPK;
 import vista.Sys;
 import vista.controles.DSGTableModel;
+import vista.utilitarios.FormValidador;
 import vista.utilitarios.ObjetoWeb;
 import vista.utilitarios.TipoCambio;
 import vista.utilitarios.renderers.DDMMYYYYRenderer;
@@ -382,7 +383,7 @@ public class FrmTCambio extends AbstractMaestro {
 		comboBox.setEnabled(false);
 		spinner.setEnabled(false);
 		btnActualizar.setEnabled(true);
-		cntMoneda.txtCodigo.setEditable(false);
+		FormValidador.CntEdicion(false, cntMoneda);
 	}
 
 	@Override
@@ -391,7 +392,7 @@ public class FrmTCambio extends AbstractMaestro {
 		comboBox.setEnabled(true);
 		spinner.setEnabled(true);
 		btnActualizar.setEnabled(false);
-		cntMoneda.txtCodigo.setEditable(true);
+		FormValidador.CntEdicion(true, cntMoneda);
 	}
 
 	@Override

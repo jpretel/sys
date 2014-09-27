@@ -159,7 +159,12 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	public abstract Object[] entity2Object(T entity);
 
 	public abstract String getEntityCode(T entity);
-
+	
+	public void setText(String codigo) {
+		txtCodigo.setText(codigo);
+		this.llenar();
+	}
+	
 	public void llenar() {
 		txtCodigo.setEntityPorCodigo();
 		txtCodigo.cargaDatos();

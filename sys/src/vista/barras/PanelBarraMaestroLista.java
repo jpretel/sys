@@ -24,8 +24,8 @@ public class PanelBarraMaestroLista extends JPanel {
 	private JButton btnSalir;
 	private JButton btnImprimir;
 	private AbstractMaestroLista formMaestro;
-	private static final int _ancho = 20;
-	private static final int _alto = 20;
+	private static final int _ancho = 18;
+	private static final int _alto = 18;
 
 	public JButton getBtnNuevo() {
 		return btnNuevo;

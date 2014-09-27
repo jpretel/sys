@@ -76,6 +76,7 @@ public class FrmProductos extends AbstractMaestro {
 	private JTextField txtnomcorto;
 	private JScrollPane scrlImpuestos;
 	private JTable tblImpuestos;
+	private JCheckBox chkServicio;
 
 	public FrmProductos() {
 		super("Productos");
@@ -90,7 +91,7 @@ public class FrmProductos extends AbstractMaestro {
 
 		cntgrupo = new cntGrupo();
 
-		cntgrupo.setBounds(149, 10, 290, 25);
+		cntgrupo.setBounds(149, 10, 290, 20);
 		panel_1.add(cntgrupo);
 
 		JLabel lblSubgrupoDeProductos = new JLabel("SubFamilia de Productos");
@@ -106,7 +107,7 @@ public class FrmProductos extends AbstractMaestro {
 			}
 		});
 
-		cntSubGrupo.setBounds(149, 40, 290, 25);
+		cntSubGrupo.setBounds(149, 40, 290, 20);
 		panel_1.add(cntSubGrupo);
 
 		JLabel lblNewLabel = new JLabel("Codigo");
@@ -125,7 +126,7 @@ public class FrmProductos extends AbstractMaestro {
 		txtCodigo.setBounds(149, 65, 96, 20);
 		panel_1.add(txtCodigo);
 		txtCodigo.setColumns(10);
-		txtCodigo.setDocument(new JTextFieldLimit(3, true));
+		txtCodigo.setDocument(new JTextFieldLimit(20, true));
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setBounds(149, 90, 290, 20);
@@ -145,7 +146,7 @@ public class FrmProductos extends AbstractMaestro {
 
 		cntmedida = new cntMedida();
 
-		cntmedida.setBounds(149, 147, 290, 25);
+		cntmedida.setBounds(149, 147, 290, 20);
 		panel_1.add(cntmedida);
 
 		JLabel lblMarcas = new JLabel("Marca de Producto");
@@ -154,7 +155,7 @@ public class FrmProductos extends AbstractMaestro {
 
 		cntmarca = new cntMarca();
 
-		cntmarca.setBounds(149, 172, 290, 25);
+		cntmarca.setBounds(149, 172, 290, 20);
 		panel_1.add(cntmarca);
 
 		JPanel panel = new JPanel();
@@ -230,6 +231,10 @@ public class FrmProductos extends AbstractMaestro {
 		};
 		txtimpuesto.updateCellEditor();
 		this.scrlImpuestos.setViewportView(this.tblImpuestos);
+
+		this.chkServicio = new JCheckBox("Es Servicio");
+		this.chkServicio.setBounds(283, 85, 97, 23);
+		panel.add(this.chkServicio);
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
 				Alignment.LEADING).addGroup(
@@ -294,6 +299,7 @@ public class FrmProductos extends AbstractMaestro {
 			txtCodigo.setEditable(true);
 		txtDescripcion.setEditable(true);
 		txtnomcorto.setEditable(true);
+		chkServicio.setEnabled(true);
 		getImpuestoTM().setEditar(true);
 		FormValidador.CntEdicion(true, cntgrupo, cntSubGrupo, cntmedida,
 				cntmarca);
@@ -304,6 +310,7 @@ public class FrmProductos extends AbstractMaestro {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
 		txtnomcorto.setEditable(false);
+		chkServicio.setEnabled(false);
 		getImpuestoTM().setEditar(false);
 		FormValidador.CntEdicion(false, cntgrupo, cntSubGrupo, cntmedida,
 				cntmarca);
@@ -323,6 +330,8 @@ public class FrmProductos extends AbstractMaestro {
 			cntmedida.setSeleccionado(getProducto().getUnimedida());
 			cntgrupo.setSeleccionado(g);
 			cntSubGrupo.setSeleccionado(sg);
+
+			chkServicio.setSelected((getProducto().getEsServicio() == 1));
 			impuestos = productoimpuestoDAO.getPorProducto(getProducto());
 
 			for (ProductoImpuesto i : impuestos) {
@@ -344,6 +353,7 @@ public class FrmProductos extends AbstractMaestro {
 			this.txtCodigo.setText(null);
 			this.txtDescripcion.setText(null);
 			this.txtnomcorto.setText(null);
+			this.chkServicio.setSelected(false);
 			impuestos = new ArrayList<ProductoImpuesto>();
 		}
 		llenar_tablas();
@@ -396,7 +406,7 @@ public class FrmProductos extends AbstractMaestro {
 		getProducto().setSubgrupo(this.cntSubGrupo.getSeleccionado());
 		getProducto().setUnimedida(this.cntmedida.getSeleccionado());
 		getProducto().setMarca(this.cntmarca.getSeleccionado());
-
+		getProducto().setEsServicio(this.chkServicio.isSelected() ? 1 : 0);
 		int rows = tblImpuestos.getRowCount();
 
 		impuestos = new ArrayList<ProductoImpuesto>();

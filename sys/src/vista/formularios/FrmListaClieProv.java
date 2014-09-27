@@ -29,6 +29,7 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 
 	@Override
 	public void llenar_lista() {
+		modeloLista.limpiar();
 		for (Clieprov c: clieprovL) {
 			modeloLista.addRow(new Object[]{c.getIdclieprov(),c.getRuc(),c.getRazonSocial(),c.getDireccion()});
 		}

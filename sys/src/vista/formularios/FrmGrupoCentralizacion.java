@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
 import vista.controles.JTextFieldLimit;
+import vista.utilitarios.FormValidador;
 import vista.utilitarios.MaestroTableModel;
 import vista.utilitarios.UtilMensajes;
 
@@ -20,6 +21,7 @@ import dao.GrupoCentralizacionDAO;
 import dao.SubdiarioDAO;
 import entity.GrupoCentralizacion;
 import vista.contenedores.CntSubdiario;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -65,9 +67,6 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 		JLabel lblTipoDeAnlisis = new JLabel("Sub Diario");
 
 		cntSubdiario = new CntSubdiario();
-		cntSubdiario.btnBuscar.setLocation(189, 0);
-		cntSubdiario.txtDescripcion.setBounds(34, 0, 157, 20);
-		cntSubdiario.txtCodigo.setBounds(1, 0, 35, 20);
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -172,9 +171,13 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 		if (getGrupo() != null) {
 			txtCodigo.setText(getGrupo().getIdgcentralizacion());
 			txtDescripcion.setText(getGrupo().getDescripcion());
+			cntSubdiario.txtCodigo.setText(getGrupo().getSubdiario().getIdsubdiario());
+			cntSubdiario.llenar();
 		} else {
 			txtCodigo.setText("");
 			txtDescripcion.setText("");
+			cntSubdiario.txtCodigo.setText("");
+			cntSubdiario.llenar();
 		}
 	}
 
@@ -204,7 +207,7 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 	public void vista_edicion() {
 		if (getEstado().equals(NUEVO))
 			txtCodigo.setEditable(true);
-
+		FormValidador.CntEdicion(true, cntSubdiario);
 		tblLista.setEnabled(false);
 		TextFieldsEdicion(true, txtDescripcion);
 	}
@@ -212,6 +215,7 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 	@Override
 	public void vista_noedicion() {
 		TextFieldsEdicion(false, txtCodigo, txtDescripcion);
+		FormValidador.CntEdicion(false, cntSubdiario);
 		tblLista.setEnabled(true);
 	}
 
@@ -230,7 +234,7 @@ public class FrmGrupoCentralizacion extends AbstractMaestro {
 	@Override
 	public boolean isValidaVista() {
 
-		if (!TextFieldObligatorios(txtCodigo, txtDescripcion))
+		if (!TextFieldObligatorios(txtCodigo, txtDescripcion, cntSubdiario.txtCodigo))
 			return false;
 
 		if (getEstado().equals(NUEVO)) {

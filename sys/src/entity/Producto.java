@@ -31,6 +31,9 @@ public class Producto implements Serializable {
 
 	@Column(name = "es_venta")
 	private int esVenta;
+	
+	@Column(name = "es_servicio", precision = 1, scale = 0)
+	private int esServicio;
 
 	@Override
 	public String toString() {
@@ -138,5 +141,13 @@ public class Producto implements Serializable {
 				+ esVenta + ", subgrupo: " + subgrupo.getDescripcion()
 				+ ", marca: " + marca.getIdmarca() + ", unimedida: "
 				+ unimedida.getDescripcion();
+	}
+
+	public int getEsServicio() {
+		return esServicio;
+	}
+
+	public void setEsServicio(int esServicio) {
+		this.esServicio = esServicio;
 	}
 }

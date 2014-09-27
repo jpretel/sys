@@ -31,13 +31,17 @@ public class KardexDAO extends AbstractDAO<Kardex> {
 	public float getSaldoAntesDe(int anio, int mes, int dia, Producto producto,
 			Sucursal sucursal, Almacen almacen) {
 
-		int fecha = anio * 1000 + mes * 100 + dia;
+		return getSaldoAntesDe(anio * 1000 + mes * 100 + dia, producto,
+				sucursal, almacen);
+	}
+
+	public float getSaldoAntesDe(int fecha, Producto producto,
+			Sucursal sucursal, Almacen almacen) {
 
 		CriteriaQuery<Kardex> q = cb.createQuery(Kardex.class);
 		Root from = q.from(Kardex.class);
-
-		Predicate condicion = cb.and(cb.equal(from.get("anio"), anio),
-				cb.equal(from.get("producto"), producto),
+		// cb.equal(from.get("anio"), anio),
+		Predicate condicion = cb.and(cb.equal(from.get("producto"), producto),
 				cb.lessThan(from.get("fecha"), fecha));
 
 		if (almacen == null) {
@@ -49,7 +53,7 @@ public class KardexDAO extends AbstractDAO<Kardex> {
 					cb.equal(from.get("almacen"), almacen));
 		}
 
-		q.select(cb.max(cb.prod(from.get("factor"), from.get("cantidad"))))
+		q.select(cb.sum(cb.prod(from.get("factor"), from.get("cantidad"))))
 				.where(condicion);
 		Query query = em.createQuery(q);
 

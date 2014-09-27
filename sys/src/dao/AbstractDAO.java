@@ -22,7 +22,7 @@ public abstract class AbstractDAO<T> {
 	protected EntityManager em;
 	protected CriteriaBuilder cb;
 	
-	public AbstractDAO(Class<T> entityClass) {
+	public static EntityManagerFactory getEntityManagerFactory() {
 		Map<String, String> persistenceMap = new HashMap<String, String>();
 
 		persistenceMap.put("javax.persistence.jdbc.url",
@@ -42,8 +42,14 @@ public abstract class AbstractDAO<T> {
 						"drop-and-create-tables");
 			}
 		}
+		
+		return Persistence.createEntityManagerFactory("sys", persistenceMap);
+		
+	}
+	
+	public AbstractDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;
-		factory = Persistence.createEntityManagerFactory("sys", persistenceMap);
+		factory = getEntityManagerFactory();
 		em = factory.createEntityManager();
 		cb = getEntityManager().getCriteriaBuilder();
 	}

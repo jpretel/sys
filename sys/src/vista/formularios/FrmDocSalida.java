@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
+import core.centralizacion.ContabilizaAlmacen;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
 import dao.DetDocSalidaDAO;
@@ -315,6 +316,8 @@ public class FrmDocSalida extends AbstractDocForm {
 		for (DetDocsalida det : getDetDocsalidaL()) {
 			detDocsalidaDAO.crear_editar(det);
 		}
+		
+		ContabilizaAlmacen.ContabilizarSalida(getSalida());
 	}
 
 	@Override

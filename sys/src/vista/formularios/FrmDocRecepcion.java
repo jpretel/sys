@@ -27,7 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import core.centralizacion.CentralizaAlm;
-import core.centralizacion.ContabAlm;
+import core.centralizacion.ContabilizaAlmacen;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
 import dao.DetDocIngresoDAO;
@@ -50,6 +50,8 @@ import java.awt.Rectangle;
 import java.awt.Dimension;
 
 import vista.contenedores.CntGrupoCentralizacion;
+import javax.swing.JTextField;
+import vista.controles.FindButton;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 	/**
@@ -75,6 +77,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private JScrollPane scrlGlosa;
 
 	private TxtProducto txtProducto;
+	private JLabel lblNewLabel;
+	private JTextField textField;
+	private JTextField textField_1;
+	private FindButton findButton;
 
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");
@@ -264,6 +270,24 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 		txtGlosa = new JTextArea();
 		scrlGlosa.setViewportView(txtGlosa);
+		
+		this.lblNewLabel = new JLabel("Doc. Anexo");
+		this.lblNewLabel.setBounds(8, 148, 62, 14);
+		pnlPrincipal.add(this.lblNewLabel);
+		
+		this.textField = new JTextField();
+		this.textField.setBounds(72, 145, 44, 20);
+		pnlPrincipal.add(this.textField);
+		this.textField.setColumns(10);
+		
+		this.textField_1 = new JTextField();
+		this.textField_1.setColumns(10);
+		this.textField_1.setBounds(116, 145, 80, 20);
+		pnlPrincipal.add(this.textField_1);
+		
+		this.findButton = new FindButton();
+		this.findButton.setBounds(198, 145, 20, 20);
+		pnlPrincipal.add(this.findButton);
 		iniciar();
 	}
 
@@ -293,7 +317,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		for (DetDocingreso det : getDetDocingresoL()) {
 			detDocingresoDAO.crear_editar(det);
 		}
-		ContabAlm.ContabAlm(getIngreso().getIddocingreso(), getIngreso());
+		ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
 		// String Mensaje = CentralizaAlm.CentralizaAlm(getIngreso()
 		// .getIddocingreso());
 		// System.out.println(Mensaje);
