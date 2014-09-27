@@ -162,7 +162,7 @@ public class FrmKardex extends AbstractReporte {
 		j++;
 		fila[j] = "";
 		j++;
-		fila[j] = "";
+		fila[j] = "(Saldo Inicial)";
 		j++;
 		fila[j] = 0.0;
 		j++;

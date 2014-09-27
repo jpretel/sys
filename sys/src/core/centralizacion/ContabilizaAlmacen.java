@@ -1,5 +1,6 @@
 package core.centralizacion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.DetDocIngresoDAO;
@@ -17,63 +18,11 @@ import entity.Producto;
 import entity.Unimedida;
 
 public class ContabilizaAlmacen {
-	public static void ContabAlm(long id, Object entity) {
-		KardexDAO kardexdao = new KardexDAO();
-		kardexdao.borrarPorIngresoSalida(id);
-
-		float tcambio = 0;
-		String idmoneda = "";
-		float importemof = 0;
-		float importemex = 0;
-		if (entity instanceof Docingreso) {
-			DetDocIngresoDAO detIngDAO = new DetDocIngresoDAO();
-			Docingreso ingreso = new DocingresoDAO().find(id);
-			tcambio = ingreso.getTcambio();
-			idmoneda = ingreso.getMoneda().getIdmoneda();
-			List<DetDocingreso> detIngL = detIngDAO.getPorIdIngreso(ingreso);
-			for (DetDocingreso det : detIngL) {
-				Kardex kardex = new Kardex();
-				kardex.setIdreferencia(id);
-				kardex.setTipo('I');
-				kardex.setMoneda(ingreso.getMoneda());
-				kardex.setConcepto(ingreso.getConcepto());
-				kardex.setDia(ingreso.getDia());
-				kardex.setMes(ingreso.getMes());
-				kardex.setAnio(ingreso.getAnio());
-				kardex.setFecha(ingreso.getAnio() * 10000 + ingreso.getMes()
-						* 100 + ingreso.getDia());
-				kardex.setSucursal(ingreso.getSucursal());
-				kardex.setAlmacen(ingreso.getAlmacen());
-				Producto producto = new ProductoDAO().find(det.getId()
-						.getIdproducto());
-				kardex.setProducto(producto);
-				Unimedida unimedida = new UnimedidaDAO()
-						.find(det.getIdmedida());
-				kardex.setUnimedida(unimedida);
-				kardex.setCantidad(det.getCantidad());
-				kardex.setPrecio(det.getPrecio());
-				kardex.setFactor(1);
-				if (idmoneda == "01") {
-					importemof = det.getPrecio() * det.getCantidad();
-					importemex = (det.getPrecio() * det.getCantidad())
-							* tcambio;
-				} else {
-					importemof = (det.getPrecio() * det.getCantidad())
-							/ tcambio;
-					importemex = det.getPrecio() * det.getCantidad();
-				}
-				kardex.setImportemof(importemof);
-				kardex.setImportemex(importemex);
-				kardexdao.crear_editar(kardex);
-			}
-		}
-
-	}
 
 	public static void ContabilizarIngreso(Docingreso ingreso) {
 		long id = ingreso.getIddocingreso();
 		KardexDAO kardexdao = new KardexDAO();
-		kardexdao.borrarPorIngresoSalida(id);
+		// kardexdao.borrarPorIngresoSalida(id);
 
 		float tcambio = 0;
 		String idmoneda = "";
@@ -83,6 +32,8 @@ public class ContabilizaAlmacen {
 		tcambio = ingreso.getTcambio();
 		idmoneda = ingreso.getMoneda().getIdmoneda();
 		List<DetDocingreso> detIngL = detIngDAO.getPorIdIngreso(ingreso);
+		List<Kardex> kardex_list = new ArrayList<Kardex>();
+
 		for (DetDocingreso det : detIngL) {
 			Kardex kardex = new Kardex();
 			kardex.setIdreferencia(id);
@@ -96,11 +47,8 @@ public class ContabilizaAlmacen {
 					+ ingreso.getDia());
 			kardex.setSucursal(ingreso.getSucursal());
 			kardex.setAlmacen(ingreso.getAlmacen());
-			Producto producto = new ProductoDAO().find(det.getId()
-					.getIdproducto());
-			kardex.setProducto(producto);
-			Unimedida unimedida = new UnimedidaDAO().find(det.getIdmedida());
-			kardex.setUnimedida(unimedida);
+			kardex.setProducto(det.getProducto());
+			kardex.setUnimedida(det.getUnimedida());
 			kardex.setCantidad(det.getCantidad());
 			kardex.setPrecio(det.getPrecio());
 			kardex.setFactor(1);
@@ -113,10 +61,11 @@ public class ContabilizaAlmacen {
 			}
 			kardex.setImportemof(importemof);
 			kardex.setImportemex(importemex);
-			kardexdao.crear_editar(kardex);
+			kardex_list.add(kardex);
 		}
+		kardexdao.create(kardex_list);
 	}
-	
+
 	public static void ContabilizarSalida(Docsalida salida) {
 		long id = salida.getIddocsalida();
 		KardexDAO kardexdao = new KardexDAO();
@@ -129,7 +78,8 @@ public class ContabilizaAlmacen {
 		DetDocSalidaDAO detSalDAO = new DetDocSalidaDAO();
 		tcambio = salida.getTcambio();
 		idmoneda = salida.getMoneda().getIdmoneda();
-		List<DetDocsalida> detSal= detSalDAO.getPorIdSalida(salida);
+		List<DetDocsalida> detSal = detSalDAO.getPorIdSalida(salida);
+		List<Kardex> kardex_list = new ArrayList<Kardex>();
 		for (DetDocsalida det : detSal) {
 			Kardex kardex = new Kardex();
 			kardex.setIdreferencia(id);
@@ -143,11 +93,8 @@ public class ContabilizaAlmacen {
 					+ salida.getDia());
 			kardex.setSucursal(salida.getSucursal());
 			kardex.setAlmacen(salida.getAlmacen());
-			Producto producto = new ProductoDAO().find(det.getId()
-					.getIdproducto());
-			kardex.setProducto(producto);
-			Unimedida unimedida = new UnimedidaDAO().find(det.getIdmedida());
-			kardex.setUnimedida(unimedida);
+			kardex.setProducto(det.getProducto());
+			kardex.setUnimedida(det.getUnimedida());
 			kardex.setCantidad(det.getCantidad());
 			kardex.setPrecio(det.getPrecio());
 			kardex.setFactor(-1);
@@ -160,8 +107,8 @@ public class ContabilizaAlmacen {
 			}
 			kardex.setImportemof(importemof);
 			kardex.setImportemex(importemex);
-			kardexdao.crear_editar(kardex);
+			kardex_list.add(kardex);
 		}
-
+		kardexdao.create(kardex_list);
 	}
 }

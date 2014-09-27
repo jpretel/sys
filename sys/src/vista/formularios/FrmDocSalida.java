@@ -58,6 +58,8 @@ public class FrmDocSalida extends AbstractDocForm {
 	private DetDocSalidaDAO detDocsalidaDAO = new DetDocSalidaDAO();
 	private MonedaDAO monedaDAO = new MonedaDAO();
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
+	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
+	private ProductoDAO productoDAO = new ProductoDAO();
 	private CntConcepto cntConcepto;
 	private cntResponsable cntResponsable;
 	private cntSucursal cntSucursal;
@@ -71,6 +73,7 @@ public class FrmDocSalida extends AbstractDocForm {
 	private JScrollPane scrlGlosa;
 	private JLabel lblOperacin;
 	private TxtProducto txtProducto;
+
 	public FrmDocSalida() {
 		super("Nota de Salida");
 
@@ -107,7 +110,7 @@ public class FrmDocSalida extends AbstractDocForm {
 			public boolean evaluaEdicion(int row, int column) {
 				if (column == 1 || column == 3)
 					return false;
-				
+
 				return getEditar();
 			}
 
@@ -121,6 +124,7 @@ public class FrmDocSalida extends AbstractDocForm {
 			}
 		}) {
 			private static final long serialVersionUID = 1L;
+
 			public void changeSelection(int row, int column, boolean toggle,
 					boolean extend) {
 				super.changeSelection(row, column, toggle, extend);
@@ -139,12 +143,12 @@ public class FrmDocSalida extends AbstractDocForm {
 		scrollPaneDetalle = new JScrollPane(tblDetalle);
 		scrollPaneDetalle.setBounds(12, 197, 824, 187);
 
-		txtProducto = new TxtProducto(tblDetalle, 0){
+		txtProducto = new TxtProducto(tblDetalle, 0) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void cargaDatos(Producto entity) {
-				
+
 				int row = tblDetalle.getSelectedRow(), col = 0;
 				if (entity == null) {
 					getDetalleTM().setValueAt("", row, 0);
@@ -166,14 +170,14 @@ public class FrmDocSalida extends AbstractDocForm {
 			}
 		};
 		txtProducto.updateCellEditor();
-		
+
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
 		getDetalleTM().setObligatorios(0, 1, 4, 5, 6);
 		getDetalleTM().setRepetidos(0);
 		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
-		
+
 		TableColumnModel tc = tblDetalle.getColumnModel();
-		
+
 		tc.getColumn(4).setCellEditor(new FloatEditor(3));
 		tc.getColumn(4).setCellRenderer(new FloatRenderer(3));
 
@@ -316,7 +320,7 @@ public class FrmDocSalida extends AbstractDocForm {
 		for (DetDocsalida det : getDetDocsalidaL()) {
 			detDocsalidaDAO.crear_editar(det);
 		}
-		
+
 		ContabilizaAlmacen.ContabilizarSalida(getSalida());
 	}
 
@@ -383,22 +387,22 @@ public class FrmDocSalida extends AbstractDocForm {
 			this.cntAlmacen.txtCodigo.setText((almacen == null) ? "" : almacen
 					.getId().getIdalmacen());
 			this.cntAlmacen.llenar();
-			
-			
+
 			if (sucursal_dest == null) {
 				this.cntSucursal_dest.txtCodigo.setText("");
 				this.cntAlmacen_dest.setData(null);
 			} else {
-				this.cntSucursal_dest.txtCodigo.setText(sucursal_dest.getIdsucursal());
-				this.cntAlmacen_dest.setData(almacenDAO.getPorSucursal(sucursal_dest));
+				this.cntSucursal_dest.txtCodigo.setText(sucursal_dest
+						.getIdsucursal());
+				this.cntAlmacen_dest.setData(almacenDAO
+						.getPorSucursal(sucursal_dest));
 			}
 			this.cntSucursal_dest.llenar();
 
-			this.cntAlmacen_dest.txtCodigo.setText((almacen_dest == null) ? "" : almacen_dest
-					.getId().getIdalmacen());
+			this.cntAlmacen_dest.txtCodigo.setText((almacen_dest == null) ? ""
+					: almacen_dest.getId().getIdalmacen());
 			this.cntAlmacen_dest.llenar();
-			
-			
+
 			this.txtGlosa.setText(getSalida().getGlosa());
 			calendar.set(salida.getAnio(), salida.getMes() - 1, salida.getDia());
 			this.txtFecha.setDate(calendar.getTime());
@@ -406,13 +410,13 @@ public class FrmDocSalida extends AbstractDocForm {
 					.getPorIdSalida(getSalida());
 			getDetalleTM().limpiar();
 			for (DetDocsalida salida : detDocSalidaL) {
-				Unimedida unimedida = new UnimedidaDAO().find(salida
-						.getIdmedida());
+				Producto producto = productoDAO.find(salida.getId()
+						.getIdproducto());
 				getDetalleTM().addRow(
-						new Object[] { salida.getId().getIdproducto(),
-								salida.getDescripcion(),
-								unimedida.getIdunimedida(),
-								unimedida.getDescripcion(),
+						new Object[] { producto.getIdproducto(),
+								producto.getDescripcion(),
+								salida.getUnimedida().getIdunimedida(),
+								salida.getUnimedida().getDescripcion(),
 								salida.getCantidad(), salida.getPrecio(),
 								salida.getImporte() });
 			}
@@ -423,16 +427,17 @@ public class FrmDocSalida extends AbstractDocForm {
 		float xImporte = cantidad * precio;
 		getDetalleTM().setValueAt(xImporte, tblDetalle.getSelectedRow(), 6);
 	}
-	
+
 	private void actualiza_detalle() {
 		int row = tblDetalle.getSelectedRow();
 		if (row > -1) {
 			float cantidad, precio, importe;
-			
+
 			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
 					.toString());
-			precio = Float.parseFloat(getDetalleTM().getValueAt(row, 5).toString());
-			
+			precio = Float.parseFloat(getDetalleTM().getValueAt(row, 5)
+					.toString());
+
 			importe = cantidad * precio;
 
 			getDetalleTM().setValueAt(importe, row, 6);
@@ -528,14 +533,23 @@ public class FrmDocSalida extends AbstractDocForm {
 		getSalida().setAlmacen_dest(cntAlmacen_dest.getSeleccionado());
 		setDetDocsalidaL(new ArrayList<DetDocsalida>());
 		for (int i = 0; i < getDetalleTM().getRowCount(); i++) {
+			String idunimedida, idproducto;
+			Producto p;
+			Unimedida u;
+			idproducto = getDetalleTM().getValueAt(i, 0).toString();
+			idunimedida = getDetalleTM().getValueAt(i, 2).toString();
+
+			p = productoDAO.find(idproducto);
+			u = unimedidaDAO.find(idunimedida);
+
 			DetDocsalidaPK detPK = new DetDocsalidaPK();
 			DetDocsalida det = new DetDocsalida();
 			detPK.setIdsalida(id);
-			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
+			detPK.setIdproducto(idproducto);
 			det.setId(detPK);
 			det.setDocsalida(getSalida());
-			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
-			det.setIdmedida(getDetalleTM().getValueAt(i, 2).toString());
+			det.setProducto(p);
+			det.setUnimedida(u);
 			det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i, 4)
 					.toString())));
 			det.setPrecio(Float.parseFloat(getDetalleTM().getValueAt(i, 5)

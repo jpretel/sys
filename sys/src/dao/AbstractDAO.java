@@ -21,7 +21,7 @@ public abstract class AbstractDAO<T> {
 	protected EntityManagerFactory factory;
 	protected EntityManager em;
 	protected CriteriaBuilder cb;
-	
+
 	public static EntityManagerFactory getEntityManagerFactory() {
 		Map<String, String> persistenceMap = new HashMap<String, String>();
 
@@ -42,11 +42,11 @@ public abstract class AbstractDAO<T> {
 						"drop-and-create-tables");
 			}
 		}
-		
+
 		return Persistence.createEntityManagerFactory("sys", persistenceMap);
-		
+
 	}
-	
+
 	public AbstractDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;
 		factory = getEntityManagerFactory();
@@ -61,6 +61,14 @@ public abstract class AbstractDAO<T> {
 	public void create(T entity) {
 		getEntityManager().getTransaction().begin();
 		getEntityManager().persist(entity);
+		getEntityManager().getTransaction().commit();
+	}
+
+	public void create(List<T> entities) {
+		getEntityManager().getTransaction().begin();
+		for (T entity : entities) {
+			getEntityManager().persist(entity);
+		}
 		getEntityManager().getTransaction().commit();
 	}
 

@@ -62,7 +62,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private List<DetDocingreso> DetDocingresoL;
 	private DocingresoDAO docIngresoDAO = new DocingresoDAO();
 	private DetDocIngresoDAO detDocingresoDAO = new DetDocIngresoDAO();
+	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
+	private ProductoDAO productoDAO = new ProductoDAO();
 	// private long Id;
 	private CntConcepto cntConcepto;
 	private cntResponsable cntResponsable;
@@ -269,21 +271,21 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 		txtGlosa = new JTextArea();
 		scrlGlosa.setViewportView(txtGlosa);
-		
+
 		this.lblNewLabel = new JLabel("Doc. Anexo");
 		this.lblNewLabel.setBounds(8, 148, 62, 14);
 		pnlPrincipal.add(this.lblNewLabel);
-		
+
 		this.textField = new JTextField();
 		this.textField.setBounds(72, 145, 44, 20);
 		pnlPrincipal.add(this.textField);
 		this.textField.setColumns(10);
-		
+
 		this.textField_1 = new JTextField();
 		this.textField_1.setColumns(10);
 		this.textField_1.setBounds(116, 145, 80, 20);
 		pnlPrincipal.add(this.textField_1);
-		
+
 		this.findButton = new FindButton();
 		this.findButton.setBounds(198, 145, 20, 20);
 		pnlPrincipal.add(this.findButton);
@@ -394,8 +396,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					.getPorIdIngreso(getIngreso());
 			getDetalleTM().limpiar();
 			for (DetDocingreso ingreso : detDocIngresoL) {
-				Unimedida unimedida = new UnimedidaDAO().find(ingreso
-						.getIdmedida());
+				Unimedida unimedida = ingreso.getUnimedida();
 				getDetalleTM().addRow(
 						new Object[] { ingreso.getId().getIdproducto(),
 								ingreso.getDescripcion(),
@@ -502,17 +503,22 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		for (int i = 0; i < getDetalleTM().getRowCount(); i++) {
 			DetDocingresoPK detPK = new DetDocingresoPK();
 			DetDocingreso det = new DetDocingreso();
+			Unimedida unimedida = unimedidaDAO.find(getDetalleTM().getValueAt(
+					i, 2).toString());
+			Producto producto = productoDAO.find(getDetalleTM().getValueAt(i, 0).toString());
+			
 			detPK.setIdingreso(Id);
 			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
 			det.setId(detPK);
 			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
-			det.setIdmedida(getDetalleTM().getValueAt(i, 2).toString());
+			det.setUnimedida(unimedida);
 			det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i, 4)
 					.toString())));
 			det.setPrecio(Float.parseFloat(getDetalleTM().getValueAt(i, 5)
 					.toString()));
 			det.setImporte(Float.parseFloat(getDetalleTM().getValueAt(i, 6)
 					.toString()));
+			det.setProducto(producto);
 			DetDocingresoL.add(det);
 		}
 	}
