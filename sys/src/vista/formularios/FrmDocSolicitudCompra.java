@@ -485,10 +485,9 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 	}
 
 	public boolean validaCabecera() {
-		// if (this.cntGrupoCentralizacion.txtCodigo.getText().isEmpty())
-		// return false;
-		//
-		return FormValidador.TextFieldObligatorios( cntResponsable.txtCodigo, cntSucursal.txtCodigo,
+		
+		return FormValidador.TextFieldObligatorios( cntMoneda.txtCodigo,
+				txtTipoCambio, cntResponsable.txtCodigo, cntSucursal.txtCodigo,
 				cntAlmacen.txtCodigo);
 	}
 
