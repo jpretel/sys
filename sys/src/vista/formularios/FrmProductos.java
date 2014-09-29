@@ -1,4 +1,4 @@
-package vista.formularios;
+	package vista.formularios;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -77,6 +77,7 @@ public class FrmProductos extends AbstractMaestro {
 	private JScrollPane scrlImpuestos;
 	private JTable tblImpuestos;
 	private JCheckBox chkServicio;
+	private JLabel lblImpuestos;
 
 	public FrmProductos() {
 		super("Productos");
@@ -176,7 +177,7 @@ public class FrmProductos extends AbstractMaestro {
 		panel.add(chckbxEsProductoTerminado);
 
 		this.scrlImpuestos = new JScrollPane();
-		this.scrlImpuestos.setBounds(10, 11, 267, 184);
+		this.scrlImpuestos.setBounds(10, 27, 267, 168);
 		panel.add(this.scrlImpuestos);
 
 		this.tblImpuestos = new JTable(new DSGTableModel(new String[] {
@@ -210,6 +211,8 @@ public class FrmProductos extends AbstractMaestro {
 		};
 
 		getImpuestoTM().setNombre_detalle("Impuestos");
+		getImpuestoTM().setObligatorios(0);
+		getImpuestoTM().setRepetidos(0);
 		getImpuestoTM().setScrollAndTable(scrlImpuestos, tblImpuestos);
 
 		txtimpuesto = new TxtImpuesto(tblImpuestos, 0) {
@@ -235,6 +238,10 @@ public class FrmProductos extends AbstractMaestro {
 		this.chkServicio = new JCheckBox("Es Servicio");
 		this.chkServicio.setBounds(283, 85, 97, 23);
 		panel.add(this.chkServicio);
+		
+		this.lblImpuestos = new JLabel("Impuestos");
+		this.lblImpuestos.setBounds(10, 11, 75, 14);
+		panel.add(this.lblImpuestos);
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
 				Alignment.LEADING).addGroup(
