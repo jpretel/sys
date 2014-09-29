@@ -39,6 +39,7 @@ import dao.MonedaDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
+import dao.TCambioDAO;
 import dao.UnimedidaDAO;
 import entity.Almacen;
 import entity.Asiento;
@@ -47,6 +48,7 @@ import entity.DetDocingresoPK;
 import entity.Docingreso;
 import entity.Producto;
 import entity.Sucursal;
+import entity.TCambio;
 import entity.Unimedida;
 
 import java.awt.BorderLayout;
@@ -271,8 +273,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 							.getPorSucursal(cntSucursal.getSeleccionado()));
 				}
 			}
-		});
-
+		});		
+		
 		this.scrlGlosa = new JScrollPane();
 		this.scrlGlosa.setBounds(506, 142, 325, 61);
 		pnlPrincipal.add(this.scrlGlosa);
@@ -298,7 +300,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		this.findButton.setBounds(198, 145, 20, 20);
 		pnlPrincipal.add(this.findButton);
 		iniciar();
-	}
+	}	
 
 	@Override
 	public void nuevo() {
@@ -481,12 +483,12 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	}
 
-	@SuppressWarnings({ "deprecation" })
+	@SuppressWarnings({ "deprecation"})
 	@Override
 	public void llenarDesdeVista() {
 		Long Id = getIngreso().getIddocingreso();
-
-		getIngreso().setIddocingreso(Id);
+		System.out.println(Id);
+		//getIngreso().setIddocingreso(Id);
 		getIngreso().setGrupoCentralizacion(
 				cntGrupoCentralizacion.getSeleccionado());
 		getIngreso().setTcambio(Float.parseFloat(this.txtTipoCambio.getText()));
