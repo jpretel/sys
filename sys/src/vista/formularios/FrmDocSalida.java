@@ -202,7 +202,9 @@ public class FrmDocSalida extends AbstractDocForm {
 						cntSucursal_dest.setEditable(true);
 						cntAlmacen_dest.setEditable(true);
 					} else {
+						cntSucursal_dest.txtCodigo.setText("");
 						cntSucursal_dest.setEditable(false);
+						cntAlmacen_dest.txtCodigo.setText("");
 						cntAlmacen_dest.setEditable(false);
 					}
 				}
@@ -254,8 +256,7 @@ public class FrmDocSalida extends AbstractDocForm {
 				}
 			}
 		});
-
-		/* cntSucursal cntSucursal_ = new cntSucursal(); */
+		
 		cntSucursal_dest = new cntSucursal();
 
 		cntSucursal_dest.setBounds(116, 102, 297, 20);

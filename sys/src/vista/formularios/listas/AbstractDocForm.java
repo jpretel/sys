@@ -4,12 +4,16 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import dao.TCambioDAO;
+import entity.TCambio;
 import vista.barras.IFormDocumento;
 import vista.barras.PanelBarraDocumento;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Date;
 
 import vista.contenedores.CntMoneda;
@@ -33,7 +37,8 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 	protected DSGDatePicker txtFecha;
 	protected DSGTextFieldCorrelativo txtSerie;
 	protected CntMoneda cntMoneda;
-
+	private TCambioDAO tcambioDAO = new TCambioDAO();
+	
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -103,7 +108,32 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 				txtTcMoneda = new DSGTextFieldNumber(4);
 				this.txtTcMoneda.setBounds(776, 12, 55, 20);
 				txtTcMoneda.setColumns(10);
+				txtTcMoneda.setText(String.valueOf(1.000));
 				this.pnlPrincipal.add(this.txtTcMoneda);
+				
+				cntMoneda.txtCodigo.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusLost(FocusEvent arg0){
+						actualizaTCambio();
+					}
+				});
+				
+				txtFecha.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusLost(FocusEvent arg0){
+						actualizaTCambio();
+					}
+				});		
+	}
+	
+	public void actualizaTCambio(){
+		final int dia = this.txtFecha.getDate().getDate();
+		final int mes = this.txtFecha.getDate().getMonth() + 1;
+		final int anio = this.txtFecha.getDate().getYear() + 1900;
+		if(cntMoneda.txtCodigo.getText().trim().length() > 0 && dia > 0 ){					
+			TCambio tcambio = tcambioDAO.getFechaMoneda(cntMoneda.getSeleccionado(), anio, mes, dia);
+			this.txtTipoCambio.setText(String.valueOf(tcambio.getCompra()));
+		}
 	}
 	
 	public void initBarra() {

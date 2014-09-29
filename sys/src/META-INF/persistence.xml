@@ -6,7 +6,6 @@
 		<class>entity.Asiento</class>
 		<class>entity.CfgCentralizaAlm</class>
 		<class>entity.CfgCentralizaAlmPK</class>
-		<class>entity.CierrePeriodo</class>
 		<class>entity.Clieprov</class>
 		<class>entity.Concepto</class>
 		<class>entity.Consumidor</class>
@@ -86,7 +85,8 @@
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
 			<property name="eclipselink.jdbc.batch-writing.sizeg" value="1000"/>
 			 <!-- <property name="eclipselink.logging.level" value="FINEST"/> --> 
-			 <!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> -->
+			 <!-- -->
+			 <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> 
 		</properties>
 	</persistence-unit>
 

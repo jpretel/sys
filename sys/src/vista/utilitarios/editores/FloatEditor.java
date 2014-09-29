@@ -27,7 +27,6 @@ public class FloatEditor extends DefaultCellEditor {
 
 		decimalSymbols.setDecimalSeparator('.');
 		decimalSymbols.setGroupingSeparator(',');
-		// setHorizontalAlignment(RIGHT);
 
 		factory = new DefaultFormatterFactory(
 				new NumberFormatter(
