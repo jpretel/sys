@@ -39,7 +39,6 @@ import dao.MonedaDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
-import dao.TCambioDAO;
 import dao.UnimedidaDAO;
 import entity.Almacen;
 import entity.Asiento;
@@ -48,7 +47,6 @@ import entity.DetDocingresoPK;
 import entity.Docingreso;
 import entity.Producto;
 import entity.Sucursal;
-import entity.TCambio;
 import entity.Unimedida;
 
 import java.awt.BorderLayout;
@@ -61,6 +59,8 @@ import vista.contenedores.CntGrupoCentralizacion;
 import javax.swing.JTextField;
 
 import vista.controles.FindButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 	/**
@@ -89,8 +89,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	private TxtProducto txtProducto;
 	private JLabel lblNewLabel;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtSerieCompra;
+	private JTextField txtNumeroCompra;
 	private FindButton findButton;
 
 	public FrmDocRecepcion() {
@@ -286,21 +286,35 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		this.lblNewLabel.setBounds(8, 148, 62, 14);
 		pnlPrincipal.add(this.lblNewLabel);
 
-		this.textField = new JTextField();
-		this.textField.setBounds(72, 145, 44, 20);
-		pnlPrincipal.add(this.textField);
-		this.textField.setColumns(10);
+		this.txtSerieCompra = new JTextField();
+		this.txtSerieCompra.setBounds(72, 145, 44, 20);
+		pnlPrincipal.add(this.txtSerieCompra);
+		this.txtSerieCompra.setColumns(10);
 
-		this.textField_1 = new JTextField();
-		this.textField_1.setColumns(10);
-		this.textField_1.setBounds(116, 145, 80, 20);
-		pnlPrincipal.add(this.textField_1);
+		this.txtNumeroCompra = new JTextField();
+		this.txtNumeroCompra.setColumns(10);
+		this.txtNumeroCompra.setBounds(116, 145, 80, 20);
+		pnlPrincipal.add(this.txtNumeroCompra);
 
 		this.findButton = new FindButton();
+		findButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				llenarDetalleRecepcion();
+			}
+		});
 		this.findButton.setBounds(198, 145, 20, 20);
 		pnlPrincipal.add(this.findButton);
 		iniciar();
 	}	
+	
+	public void llenarDetalleRecepcion(){		
+		String serie = this.txtSerieCompra.getText();
+		String numero = this.txtNumeroCompra.getText();
+		if (serie.trim().length() > 0 && numero.trim().length() > 0){
+			
+		}
+	}
 
 	@Override
 	public void nuevo() {
@@ -420,7 +434,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void llenar_lista() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -488,9 +501,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	public void llenarDesdeVista() {
 		Long Id = getIngreso().getIddocingreso();
 		System.out.println(Id);
-		//getIngreso().setIddocingreso(Id);
 		getIngreso().setGrupoCentralizacion(
-				cntGrupoCentralizacion.getSeleccionado());
+		cntGrupoCentralizacion.getSeleccionado());
 		getIngreso().setTcambio(Float.parseFloat(this.txtTipoCambio.getText()));
 		getIngreso().setTcmoneda(Float.parseFloat(this.txtTcMoneda.getText()));
 		getIngreso().setSerie(this.txtSerie.getText());

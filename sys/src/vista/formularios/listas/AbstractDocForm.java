@@ -37,7 +37,7 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 	protected DSGDatePicker txtFecha;
 	protected DSGTextFieldCorrelativo txtSerie;
 	protected CntMoneda cntMoneda;
-	private TCambioDAO tcambioDAO = new TCambioDAO();
+	private TCambioDAO tcambioDAO = null;
 	
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
