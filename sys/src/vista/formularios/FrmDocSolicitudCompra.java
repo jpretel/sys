@@ -17,6 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.table.TableColumnModel;
 
+import core.centralizacion.ContabilizaSlcCompras;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
@@ -28,6 +29,7 @@ import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
 import dao.AlmacenDAO;
 import dao.DSolicitudCompraDAO;
+import dao.KardexSlcCompraDAO;
 import dao.MonedaDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
@@ -41,18 +43,19 @@ import entity.SolicitudCompra;
 import entity.Sucursal;
 import entity.Unimedida;
 
-public class FrmDocSolicitudCompra extends AbstractDocForm{
+public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private SolicitudCompraDAO solicitudcompraDAO = new SolicitudCompraDAO();
 	private DSolicitudCompraDAO dsolicitudcompraDAO = new DSolicitudCompraDAO();
 	private ProductoDAO productoDAO = new ProductoDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
+	private KardexSlcCompraDAO kardexSlcCompraDAO = new KardexSlcCompraDAO();
 
 	private TxtProducto txtProducto;
 	private JLabel lblResponsable;
@@ -69,7 +72,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 
 	private SolicitudCompra solicitudcompra;
 	private List<DSolicitudCompra> dsolicitudcompras = new ArrayList<DSolicitudCompra>();
-	
+
 	public FrmDocSolicitudCompra() {
 		super("Solicitud de Compra");
 
@@ -92,7 +95,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] {
 				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
-				"Cantidad"}) {
+				"Cantidad" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -105,7 +108,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 			@Override
 			public void addRow() {
 				if (validaCabecera())
-					addRow(new Object[] { "", "", "", "", ""});
+					addRow(new Object[] { "", "", "", "", 0.0 });
 				else
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
@@ -124,7 +127,6 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 							.toString();
 
 					txtProducto.refresValue(idproducto);
-					actualiza_detalle();
 				}
 			}
 		};
@@ -135,29 +137,24 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 			@Override
 			public void cargaDatos(Producto entity) {
 
-				int row = tblDetalle.getSelectedRow(), col = 0;
-				
+				int row = tblDetalle.getSelectedRow();
+
 				if (entity == null) {
 					getDetalleTM().setValueAt("", row, 0);
 					getDetalleTM().setValueAt("", row, 1);
 					getDetalleTM().setValueAt("", row, 2);
 					getDetalleTM().setValueAt("", row, 3);
 
-
 				} else {
-					
+
 					setText(entity.getIdproducto());
 					getDetalleTM().setValueAt(entity.getIdproducto(), row, 0);
-					getDetalleTM().setValueAt(entity.getDescripcion(), row,
-							1);
+					getDetalleTM().setValueAt(entity.getDescripcion(), row, 1);
 					getDetalleTM().setValueAt(
-							entity.getUnimedida().getIdunimedida(), row,
-							 2);
+							entity.getUnimedida().getIdunimedida(), row, 2);
 					getDetalleTM().setValueAt(
-							entity.getUnimedida().getDescripcion(), row,
-							 3);
-					
-					
+							entity.getUnimedida().getDescripcion(), row, 3);
+
 				}
 				setSeleccionado(null);
 			}
@@ -191,57 +188,160 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 		this.txtGlosa = new JTextArea();
 		this.scrlGlosa.setViewportView(this.txtGlosa);
 		GroupLayout groupLayout_1 = new GroupLayout(pnlPrincipal);
-		groupLayout_1.setHorizontalGroup(
-			groupLayout_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout_1.createSequentialGroup()
-					.addGap(10)
-					.addGroup(groupLayout_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout_1.createSequentialGroup()
-							.addGroup(groupLayout_1.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout_1.createSequentialGroup()
-									.addComponent(lblSucursal, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
-									.addGap(11)
-									.addComponent(cntSucursal, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout_1.createSequentialGroup()
-									.addComponent(lblAlmacen, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-									.addGap(12)
-									.addComponent(cntAlmacen, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lblResponsable, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-								.addGroup(groupLayout_1.createSequentialGroup()
-									.addGap(62)
-									.addComponent(cntResponsable, GroupLayout.PREFERRED_SIZE, 309, GroupLayout.PREFERRED_SIZE)))
-							.addGap(18)
-							.addComponent(lblGlosa, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-							.addGap(5)
-							.addComponent(scrlGlosa, GroupLayout.PREFERRED_SIZE, 395, GroupLayout.PREFERRED_SIZE))
-						.addComponent(scrollPaneDetalle, GroupLayout.DEFAULT_SIZE, 824, Short.MAX_VALUE))
-					.addGap(4))
-		);
-		groupLayout_1.setVerticalGroup(
-			groupLayout_1.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout_1.createSequentialGroup()
-					.addGap(43)
-					.addGroup(groupLayout_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout_1.createSequentialGroup()
-							.addGroup(groupLayout_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblSucursal, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-								.addComponent(cntSucursal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(7)
-							.addGroup(groupLayout_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblAlmacen, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-								.addComponent(cntAlmacen, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(12)
-							.addGroup(groupLayout_1.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout_1.createSequentialGroup()
-									.addGap(4)
-									.addComponent(lblResponsable, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-								.addComponent(cntResponsable, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(lblGlosa, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-						.addComponent(scrlGlosa, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE))
-					.addGap(11)
-					.addComponent(scrollPaneDetalle, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
-					.addGap(19))
-		);
+		groupLayout_1
+				.setHorizontalGroup(groupLayout_1
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout_1
+										.createSequentialGroup()
+										.addGap(10)
+										.addGroup(
+												groupLayout_1
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout_1
+																		.createSequentialGroup()
+																		.addGroup(
+																				groupLayout_1
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addGroup(
+																								groupLayout_1
+																										.createSequentialGroup()
+																										.addComponent(
+																												lblSucursal,
+																												GroupLayout.PREFERRED_SIZE,
+																												51,
+																												GroupLayout.PREFERRED_SIZE)
+																										.addGap(11)
+																										.addComponent(
+																												cntSucursal,
+																												GroupLayout.PREFERRED_SIZE,
+																												309,
+																												GroupLayout.PREFERRED_SIZE))
+																						.addGroup(
+																								groupLayout_1
+																										.createSequentialGroup()
+																										.addComponent(
+																												lblAlmacen,
+																												GroupLayout.PREFERRED_SIZE,
+																												50,
+																												GroupLayout.PREFERRED_SIZE)
+																										.addGap(12)
+																										.addComponent(
+																												cntAlmacen,
+																												GroupLayout.PREFERRED_SIZE,
+																												309,
+																												GroupLayout.PREFERRED_SIZE))
+																						.addComponent(
+																								lblResponsable,
+																								GroupLayout.PREFERRED_SIZE,
+																								74,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addGroup(
+																								groupLayout_1
+																										.createSequentialGroup()
+																										.addGap(62)
+																										.addComponent(
+																												cntResponsable,
+																												GroupLayout.PREFERRED_SIZE,
+																												309,
+																												GroupLayout.PREFERRED_SIZE)))
+																		.addGap(18)
+																		.addComponent(
+																				lblGlosa,
+																				GroupLayout.PREFERRED_SIZE,
+																				32,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(5)
+																		.addComponent(
+																				scrlGlosa,
+																				GroupLayout.PREFERRED_SIZE,
+																				395,
+																				GroupLayout.PREFERRED_SIZE))
+														.addComponent(
+																scrollPaneDetalle,
+																GroupLayout.DEFAULT_SIZE,
+																824,
+																Short.MAX_VALUE))
+										.addGap(4)));
+		groupLayout_1
+				.setVerticalGroup(groupLayout_1
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								groupLayout_1
+										.createSequentialGroup()
+										.addGap(43)
+										.addGroup(
+												groupLayout_1
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																groupLayout_1
+																		.createSequentialGroup()
+																		.addGroup(
+																				groupLayout_1
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								lblSucursal,
+																								GroupLayout.PREFERRED_SIZE,
+																								16,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								cntSucursal,
+																								GroupLayout.PREFERRED_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addGap(7)
+																		.addGroup(
+																				groupLayout_1
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								lblAlmacen,
+																								GroupLayout.PREFERRED_SIZE,
+																								16,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								cntAlmacen,
+																								GroupLayout.PREFERRED_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addGap(12)
+																		.addGroup(
+																				groupLayout_1
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addGroup(
+																								groupLayout_1
+																										.createSequentialGroup()
+																										.addGap(4)
+																										.addComponent(
+																												lblResponsable,
+																												GroupLayout.PREFERRED_SIZE,
+																												16,
+																												GroupLayout.PREFERRED_SIZE))
+																						.addComponent(
+																								cntResponsable,
+																								GroupLayout.PREFERRED_SIZE,
+																								GroupLayout.DEFAULT_SIZE,
+																								GroupLayout.PREFERRED_SIZE)))
+														.addComponent(
+																lblGlosa,
+																GroupLayout.PREFERRED_SIZE,
+																16,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																scrlGlosa,
+																GroupLayout.PREFERRED_SIZE,
+																79,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(11)
+										.addComponent(scrollPaneDetalle,
+												GroupLayout.DEFAULT_SIZE, 243,
+												Short.MAX_VALUE).addGap(19)));
 		pnlPrincipal.setLayout(groupLayout_1);
 
 		txtProducto.updateCellEditor();
@@ -264,10 +364,14 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 		});
 
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
-		getDetalleTM().setObligatorios(3,4);
+		getDetalleTM().setObligatorios(0, 1, 2, 3, 4);
 		getDetalleTM().setRepetidos(0);
 
-		
+		TableColumnModel tc = tblDetalle.getColumnModel();
+
+		tc.getColumn(4).setCellEditor(new FloatEditor(2));
+		tc.getColumn(4).setCellRenderer(new FloatRenderer(2));
+
 		iniciar();
 	}
 
@@ -286,10 +390,12 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 
 	@Override
 	public void grabar() {
+		kardexSlcCompraDAO.borrarPorIdSolicitudCompra(getsolicitudcompra()
+				.getIdsolicitudcompra());
 		solicitudcompraDAO.crear_editar(getsolicitudcompra());
 
-		for (DSolicitudCompra d : dsolicitudcompraDAO.aEliminar(getsolicitudcompra(),
-				dsolicitudcompras)) {
+		for (DSolicitudCompra d : dsolicitudcompraDAO.aEliminar(
+				getsolicitudcompra(), dsolicitudcompras)) {
 			dsolicitudcompraDAO.remove(d);
 		}
 
@@ -300,6 +406,9 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 				dsolicitudcompraDAO.edit(d);
 			}
 		}
+
+		ContabilizaSlcCompras.ContabilizaSolicitud(getsolicitudcompra()
+				.getIdsolicitudcompra());
 	}
 
 	@Override
@@ -322,14 +431,14 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 					.setText((getsolicitudcompra().getMoneda() == null) ? ""
 							: getsolicitudcompra().getMoneda().getIdmoneda());
 			cntMoneda.llenar();
-			cntResponsable.txtCodigo
-					.setText((getsolicitudcompra().getResponsable() == null) ? ""
-							: getsolicitudcompra().getResponsable()
-									.getIdresponsable());
+			cntResponsable.txtCodigo.setText((getsolicitudcompra()
+					.getResponsable() == null) ? "" : getsolicitudcompra()
+					.getResponsable().getIdresponsable());
 			cntResponsable.llenar();
 			cntSucursal.txtCodigo
 					.setText((getsolicitudcompra().getSucursal() == null) ? ""
-							: getsolicitudcompra().getSucursal().getIdsucursal());
+							: getsolicitudcompra().getSucursal()
+									.getIdsucursal());
 			Sucursal s = getsolicitudcompra().getSucursal();
 			cntSucursal.llenar();
 			if (s == null) {
@@ -343,7 +452,8 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 									.getIdalmacen());
 			cntAlmacen.llenar();
 
-			dsolicitudcompras = dsolicitudcompraDAO.getPorSolicitudCompra(getsolicitudcompra());
+			dsolicitudcompras = dsolicitudcompraDAO
+					.getPorSolicitudCompra(getsolicitudcompra());
 
 			for (DSolicitudCompra d : dsolicitudcompras) {
 				Producto p = d.getProducto();
@@ -352,17 +462,12 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 				getDetalleTM().addRow(
 						new Object[] { p.getIdproducto(), p.getDescripcion(),
 								u.getIdunimedida(), u.getDescripcion(),
-								d.getCantidad()});
+								d.getCantidad() });
 			}
 
 		} else {
 			dsolicitudcompras = new ArrayList<DSolicitudCompra>();
 		}
-	}
-
-	private void actualiza_detalle() {
-		int row = tblDetalle.getSelectedRow();
-		
 	}
 
 	@Override
@@ -429,10 +534,11 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 		Long idoc = getsolicitudcompra().getIdsolicitudcompra();
 		// getIngreso().setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
 		getsolicitudcompra().setSerie(this.txtSerie.getText());
-		getsolicitudcompra()
-				.setNumero(Integer.parseInt(this.txtNumero_2.getText()));
+		getsolicitudcompra().setNumero(
+				Integer.parseInt(this.txtNumero_2.getText()));
 		getsolicitudcompra().setMoneda(cntMoneda.getSeleccionado());
-		getsolicitudcompra().setResponsable(this.cntResponsable.getSeleccionado());
+		getsolicitudcompra().setResponsable(
+				this.cntResponsable.getSeleccionado());
 		getsolicitudcompra().setSucursal(cntSucursal.getSeleccionado());
 		getsolicitudcompra().setAlmacen(this.cntAlmacen.getSeleccionado());
 		getsolicitudcompra().setDia(c.get(Calendar.DAY_OF_MONTH));
@@ -443,8 +549,10 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 						+ ((c.get(Calendar.MONTH) + 1) * 100)
 						+ c.get(Calendar.DAY_OF_MONTH));
 		getsolicitudcompra().setGlosa(txtGlosa.getText());
-		getsolicitudcompra().setTcambio(Float.parseFloat(txtTipoCambio.getText()));
-		getsolicitudcompra().setTcmoneda(Float.parseFloat(txtTcMoneda.getText()));
+		getsolicitudcompra().setTcambio(
+				Float.parseFloat(txtTipoCambio.getText()));
+		getsolicitudcompra().setTcmoneda(
+				Float.parseFloat(txtTcMoneda.getText()));
 		dsolicitudcompras = new ArrayList<DSolicitudCompra>();
 
 		int rows = getDetalleTM().getRowCount();
@@ -462,18 +570,18 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 
 			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
 					.toString());
-			
+
 			Producto p = productoDAO.find(idproducto);
 			Unimedida u = unimedidaDAO.find(idunimedida);
 
 			id.setIdsolicitudcompra(idoc);
-			id.setItem(row);
+			id.setItem(row + 1);
 
 			d.setId(id);
 			d.setProducto(p);
 			d.setUnimedida(u);
 			d.setCantidad(cantidad);
-			
+
 			dsolicitudcompras.add(d);
 		}
 	}
@@ -485,8 +593,8 @@ public class FrmDocSolicitudCompra extends AbstractDocForm{
 	}
 
 	public boolean validaCabecera() {
-		
-		return FormValidador.TextFieldObligatorios( cntMoneda.txtCodigo,
+
+		return FormValidador.TextFieldObligatorios(cntMoneda.txtCodigo,
 				txtTipoCambio, cntResponsable.txtCodigo, cntSucursal.txtCodigo,
 				cntAlmacen.txtCodigo);
 	}
