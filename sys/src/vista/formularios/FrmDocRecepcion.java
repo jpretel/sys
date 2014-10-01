@@ -32,19 +32,23 @@ import core.centralizacion.CentralizaAlm;
 import core.centralizacion.ContabilizaAlmacen;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
+import dao.DOrdenCompraDAO;
 import dao.DetDocIngresoDAO;
 import dao.DocingresoDAO;
 import dao.GrupoCentralizacionDAO;
 import dao.MonedaDAO;
+import dao.OrdenCompraDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.Almacen;
 import entity.Asiento;
+import entity.DOrdenCompra;
 import entity.DetDocingreso;
 import entity.DetDocingresoPK;
 import entity.Docingreso;
+import entity.OrdenCompra;
 import entity.Producto;
 import entity.Sucursal;
 import entity.Unimedida;
@@ -59,6 +63,7 @@ import vista.contenedores.CntGrupoCentralizacion;
 import javax.swing.JTextField;
 
 import vista.controles.FindButton;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -86,7 +91,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private CntGrupoCentralizacion cntGrupoCentralizacion;
 	private JLabel lblOperacin;
 	private JScrollPane scrlGlosa;
-
+	private OrdenCompraDAO ordencompraDAO = new OrdenCompraDAO();
+	private DOrdenCompraDAO dordencompraDAO = new DOrdenCompraDAO();
 	private TxtProducto txtProducto;
 	private JLabel lblNewLabel;
 	private JTextField txtSerieCompra;
@@ -95,8 +101,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");
-		// pnlPrincipal.setSize(new Dimension(847, 60));
-		// pnlPrincipal.setLocation(new Point(0, 41));
 
 		this.cntGrupoCentralizacion = new CntGrupoCentralizacion();
 		this.cntGrupoCentralizacion.setBounds(72, 40, 192, 20);
@@ -111,7 +115,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		pnlPrincipal.add(this.lblOperacin);
 		getBarra().setSize(new Dimension(418, 40));
 
-		// JPanel pnlPrincipal = new JPanel();
 		pnlPrincipal.setPreferredSize(new Dimension(400, 400));
 		pnlPrincipal.setMinimumSize(new Dimension(400, 400));
 		pnlPrincipal.setBounds(new Rectangle(0, 0, 400, 400));
@@ -229,7 +232,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		cntConcepto = new CntConcepto();
 		cntConcepto.setBounds(72, 69, 338, 20);
 		pnlPrincipal.add(cntConcepto);
-
+		
 		cntResponsable = new cntResponsable();
 		cntResponsable.setBounds(508, 69, 309, 20);
 		pnlPrincipal.add(cntResponsable);
@@ -290,11 +293,31 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		this.txtSerieCompra.setBounds(72, 145, 44, 20);
 		pnlPrincipal.add(this.txtSerieCompra);
 		this.txtSerieCompra.setColumns(10);
-
+		
+		txtSerieCompra.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent evt){
+				System.out.println("Hizo este..");
+				String texto = org.codehaus.plexus.util.StringUtils.repeat(
+						"0", 4 - txtSerieCompra.getText().length()) + txtSerieCompra.getText();
+				txtSerieCompra.setText(texto);
+			}
+		});		
+		
+		
 		this.txtNumeroCompra = new JTextField();
 		this.txtNumeroCompra.setColumns(10);
 		this.txtNumeroCompra.setBounds(116, 145, 80, 20);
 		pnlPrincipal.add(this.txtNumeroCompra);
+		
+		txtNumeroCompra.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent evt){
+				String texto = org.codehaus.plexus.util.StringUtils.repeat(
+						"0", 8 - txtNumeroCompra.getText().length()) + txtNumeroCompra.getText();
+				txtNumeroCompra.setText(texto);
+			}
+		});
 
 		this.findButton = new FindButton();
 		findButton.addMouseListener(new MouseAdapter() {
@@ -305,6 +328,23 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		});
 		this.findButton.setBounds(198, 145, 20, 20);
 		pnlPrincipal.add(this.findButton);
+		
+		cntConcepto.txtCodigo.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent evt){
+				if(cntConcepto.txtCodigo.getText().trim().length() > 0){
+					if (cntConcepto.getSeleccionado().getSolcitaCompra() > 0){
+						txtSerieCompra.setEditable(true);
+						txtNumeroCompra.setEditable(true);
+						findButton.setEnabled(true);
+					}else{
+						txtSerieCompra.setEditable(false);
+						txtNumeroCompra.setEditable(false);
+						findButton.setEnabled(false);	
+					}					
+				}					
+			}
+	});
 		iniciar();
 	}	
 	
@@ -312,7 +352,22 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		String serie = this.txtSerieCompra.getText();
 		String numero = this.txtNumeroCompra.getText();
 		if (serie.trim().length() > 0 && numero.trim().length() > 0){
-			
+			OrdenCompra ordencompra = ordencompraDAO.getPorSerieNumero(serie,numero);
+			List<DOrdenCompra> lDOrdenCompras = dordencompraDAO.getPorOrdenCompra(ordencompra);
+			int i = 1;
+			/*		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
+				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
+				"Importe" })*/
+			for(DOrdenCompra dordencompra : lDOrdenCompras){
+				getDetalleTM().setValueAt(dordencompra.getProducto().getIdproducto(), i, 0);
+				getDetalleTM().setValueAt(dordencompra.getProducto().getDescripcion(), i, 1);
+				getDetalleTM().setValueAt(dordencompra.getUnimedida().getIdunimedida(), i, 2);
+				getDetalleTM().setValueAt(dordencompra.getUnimedida().getDescripcion(), i, 3);
+				getDetalleTM().setValueAt(dordencompra.getCantidad(), i, 4);
+				getDetalleTM().setValueAt(dordencompra.getPrecio_unitario(), i, 5);
+				getDetalleTM().setValueAt(dordencompra.getImporte(), i, 6);
+				i +=1; 
+			}
 		}
 	}
 
@@ -441,7 +496,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		cntGrupoCentralizacion.setData(new GrupoCentralizacionDAO().findAll());
 		cntMoneda.setData(new MonedaDAO().findAll());
 		cntSucursal.setData(new SucursalDAO().findAll());
-		cntConcepto.setData(new ConceptoDAO().findAll());
+		cntConcepto.setData(new ConceptoDAO().getPorTipo("I"));
 		cntResponsable.setData(new ResponsableDAO().findAll());
 		txtProducto.setData(new ProductoDAO().findAll());
 	}
@@ -458,6 +513,19 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 		this.txtFecha.setEditable(true);
 		this.txtGlosa.setEditable(true);
+		if(cntConcepto.txtCodigo.getText().trim().length() > 0){
+			if(cntConcepto.getSeleccionado().getSolcitaCompra() > 0){
+				txtSerieCompra.setEditable(true);
+				txtNumeroCompra.setEditable(true);
+			}else{
+				txtSerieCompra.setEditable(false);
+				txtNumeroCompra.setEditable(false);
+			}
+		}else{
+			txtSerieCompra.setEditable(false);
+			txtNumeroCompra.setEditable(false);
+		}
+			
 
 		FormValidador.CntEdicion(true, this.cntGrupoCentralizacion,
 				this.cntMoneda, this.cntConcepto, this.cntResponsable,
@@ -470,7 +538,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 		this.txtFecha.setEditable(false);
 		this.txtGlosa.setEditable(false);
-
+		this.txtSerieCompra.setEditable(false);
+		this.txtNumeroCompra.setEditable(false);
+		this.findButton.setEnabled(false);
 		FormValidador.TextFieldsEdicion(false, this.txtTcMoneda,
 				this.txtTipoCambio, this.txtSerie, this.txtNumero_2);
 
