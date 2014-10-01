@@ -32,6 +32,7 @@
 		<class>entity.DocumentoNumeroPK</class>
 		<class>entity.Empleado</class>
 		<class>entity.Empresa</class>
+		<class>entity.Equipo</class>
 		<class>entity.Flujo</class>
 		<class>entity.Grupo</class>
 		<class>entity.GrupoCentralizacion</class>
@@ -42,6 +43,7 @@
 		<class>entity.GuardarUsuarioPK</class>
 		<class>entity.Impuesto</class>
 		<class>entity.Kardex</class>
+		<class>entity.KardexSlcCompra</class>
 		<class>entity.Log</class>
 		<class>entity.Marca</class>
 		<class>entity.Menu</class>
@@ -57,6 +59,8 @@
 		<class>entity.Ruc</class>
 		<class>entity.SolicitudCompra</class>
 		<class>entity.Subdiario</class>
+		<class>entity.Subequipo</class>
+		<class>entity.SubequipoPK</class>
 		<class>entity.Subgrupo</class>
 		<class>entity.SubgrupoPK</class>
 		<class>entity.Sucursal</class>
@@ -85,8 +89,8 @@
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
 			<property name="eclipselink.jdbc.batch-writing.sizeg" value="1000"/>
 			 <!-- <property name="eclipselink.logging.level" value="FINEST"/> --> 
-			 <!-- -->
-			 <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> 
+			 <!-- 
+			 <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> -->
 		</properties>
 	</persistence-unit>
 

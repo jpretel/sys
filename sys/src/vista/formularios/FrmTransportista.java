@@ -19,6 +19,7 @@ import vista.utilitarios.UtilMensajes;
 import dao.TransportistaDAO;
 import entity.Transportista;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JSeparator;
 
 public class FrmTransportista extends AbstractMaestro{
 
@@ -44,146 +45,91 @@ public class FrmTransportista extends AbstractMaestro{
 		tblLista = new JTable();
 		
 		JLabel lblNewLabel = new JLabel("DNI:");
+		lblNewLabel.setBounds(252, 14, 46, 14);
 		
 		txtDNI = new JTextField();
+		txtDNI.setBounds(308, 11, 112, 20);
 		txtDNI.setColumns(10);
 		this.txtDNI.setName("DNI");
 		txtDNI.setDocument(new JTextFieldLimit(8, true));
 		
 		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setBounds(252, 42, 46, 14);
 		
 		txtNombre = new JTextField();
+		txtNombre.setBounds(308, 39, 221, 20);
 		txtNombre.setColumns(10);
 		this.txtNombre.setName("Nombre");
 		txtNombre.setDocument(new JTextFieldLimit(50, true));
 		
 		JLabel lblDireccin = new JLabel("Direcci\u00F3n:");
+		lblDireccin.setBounds(252, 70, 59, 14);
 		
 		txtDireccion = new JTextField();
+		txtDireccion.setBounds(308, 67, 221, 20);
 		txtDireccion.setColumns(10);
 		this.txtDireccion.setName("Dirección");
 		txtDireccion.setDocument(new JTextFieldLimit(100, true));
 		
-		JLabel lblBrevete = new JLabel("Brevete:");
+		JLabel lblBrevete = new JLabel("Brevete");
+		lblBrevete.setBounds(252, 98, 46, 14);
 		
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 11, 232, 236);
 		
 		tblLista = new JTable(new MaestroTableModel());
 		scrollPane.setViewportView(tblLista);
 		tblLista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JLabel lblCategoria = new JLabel("Categoria:");
+		lblCategoria.setBounds(252, 124, 59, 14);
 		
 		txtCategoria = new JTextField();
+		txtCategoria.setBounds(308, 121, 108, 20);
 		txtCategoria.setName("Categoría");
 		txtCategoria.setColumns(10);
 		txtCategoria.setDocument(new JTextFieldLimit(10, true));
 		
 		JLabel lblNumLicencia = new JLabel("Num. Licen:");
+		lblNumLicencia.setBounds(252, 155, 56, 14);
 		
 		txtLicencia = new JTextField();
+		txtLicencia.setBounds(308, 152, 221, 20);
 		txtLicencia.setName("Numero de Licencia");
 		txtLicencia.setColumns(10);
 		txtLicencia.setDocument(new JTextFieldLimit(20, true));
 		
 		JLabel lblFecVenc = new JLabel("Fec. Venc:");
+		lblFecVenc.setBounds(252, 186, 59, 14);
 		
 		txtFechVenc = new JTextField();
+		txtFechVenc.setBounds(308, 180, 111, 20);
 		txtFechVenc.setName("Fecha de Vencimiento");
 		txtFechVenc.setColumns(10);
 		txtFechVenc.setDocument(new JTextFieldLimit(10, true));
+		pnlContenido.setLayout(null);
 		
-		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(10)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addComponent(lblCategoria, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
-									.addContainerGap())
-								.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-										.addGap(10)
-										.addComponent(txtDNI, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
-										.addContainerGap())
-									.addGroup(groupLayout.createSequentialGroup()
-										.addComponent(lblNombre, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-										.addGap(10)
-										.addComponent(txtNombre, GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-										.addContainerGap())
-									.addComponent(lblDireccin, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
-									.addComponent(lblBrevete, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-									.addGroup(groupLayout.createSequentialGroup()
-										.addGap(56)
-										.addComponent(txtDireccion, GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-										.addContainerGap()))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(10)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblFecVenc, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNumLicencia)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(56)
-									.addComponent(txtFechVenc, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(56)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(txtCategoria, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtLicencia, GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))))
-							.addContainerGap())))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(11)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(3)
-											.addComponent(lblNewLabel))
-										.addComponent(txtDNI, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(11)
-											.addComponent(lblNombre))
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(8)
-											.addComponent(txtNombre, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-									.addGap(11)
-									.addComponent(lblDireccin)
-									.addGap(14)
-									.addComponent(lblBrevete)
-									.addGap(9)
-									.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblCategoria)
-										.addComponent(txtCategoria, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(txtLicencia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGroup(groupLayout.createSequentialGroup()
-											.addGap(3)
-											.addComponent(lblNumLicencia)))
-									.addGap(14)
-									.addComponent(lblFecVenc))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(67)
-							.addComponent(txtDireccion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(93)
-							.addComponent(txtFechVenc, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addGap(11))
-		);
-		pnlContenido.setLayout(groupLayout);
+		JSeparator separator = new JSeparator();
+		separator.setBounds(308, 106, 221, 7);
+		pnlContenido.add(separator);
+		pnlContenido.add(scrollPane);
+		pnlContenido.add(lblCategoria);
+		pnlContenido.add(lblNewLabel);
+		pnlContenido.add(txtDNI);
+		pnlContenido.add(lblNombre);
+		pnlContenido.add(txtNombre);
+		pnlContenido.add(lblDireccin);
+		pnlContenido.add(lblBrevete);
+		pnlContenido.add(txtDireccion);
+		pnlContenido.add(lblFecVenc);
+		pnlContenido.add(lblNumLicencia);
+		pnlContenido.add(txtFechVenc);
+		pnlContenido.add(txtCategoria);
+		pnlContenido.add(txtLicencia);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setBounds(308, 211, 221, 7);
+		pnlContenido.add(separator_1);
 		
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
