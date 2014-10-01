@@ -121,8 +121,16 @@ public class MainFrame extends JRibbonFrame {
 			if (i == 0) {
 				moduloIncial = m;
 			}
+			
+			String url = null;
+			if(m.getImagen() == null || m.getImagen().toString().trim().length() < 1){
+				url = "/main/resources/salir.png";
+			}else{
+				url = "/main/resources/" + m.getImagen().toString().trim();
+			}
+			
 			RibbonApplicationMenuEntrySecondary secondary = new RibbonApplicationMenuEntrySecondary(
-					getResizableIconFromResource16x16("/main/resources/salir.png"),
+					getResizableIconFromResource16x16(url),
 					m.getDescripcion(), new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
@@ -344,12 +352,18 @@ public class MainFrame extends JRibbonFrame {
 						
 						SysFormulario formulario = formularioDAO.find(opcion.getId().getIdformulario());
 						
+						String url = null;
+						if(formulario.getImagen() == null || formulario.getImagen().toString().trim().length()<1){
+							url = "/main/resources/iconos/nuevo.png";
+						}else{
+							url = "/main/resources/iconos/" + formulario.getImagen().toString().trim();
+						}
 						
-						formulario.setImagen("/main/resources/iconos/nuevo.png");
+						//formulario.setImagen("/main/resources/iconos/nuevo.png");
 
 						JCommandButton button = new JCommandButton(
 								formulario.getDescripcion(),
-								getResizableIconFromResource(formulario.getImagen()));
+								getResizableIconFromResource(url));
 
 						if (opcion.getPrioridad() == 1) {
 							band.addCommandButton(button, TOP);

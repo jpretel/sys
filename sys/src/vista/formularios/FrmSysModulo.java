@@ -1,12 +1,22 @@
 package vista.formularios;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import vista.barras.PanelBarraMaestro;
 import vista.controles.DSGTableModel;
 import vista.controles.JTextFieldLimit;
 import vista.utilitarios.MaestroTableModel;
@@ -24,11 +34,11 @@ import entity.SysGrupo;
 import entity.SysModulo;
 import entity.SysTitulo;
 import entity.SysTituloPK;
-
 import vista.utilitarios.UtilMensajes;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
 
 public class FrmSysModulo extends AbstractMaestro {
 
@@ -43,6 +53,9 @@ public class FrmSysModulo extends AbstractMaestro {
 	SysGrupoDAO sgdao = new SysGrupoDAO();
 	SysOpcionDAO sodao = new SysOpcionDAO();
 
+	private JFileChooser fc=null;
+	private BufferedImage imagen;
+	
 	private JTable tblTitulo;
 	private JTextField txtCodigo;
 	private JTextField txtDescripcion;
@@ -55,6 +68,9 @@ public class FrmSysModulo extends AbstractMaestro {
 	private SysModuloDAO sysModuloDAO = new SysModuloDAO();
 
 	private SysTituloDAO sysTituloDAO = new SysTituloDAO();
+	private JLabel lblImagen;
+	private JTextField txtImagen;
+	private JButton btnImg;
 
 	public FrmSysModulo() {
 		super("Gestión de Módulos");
@@ -102,121 +118,89 @@ public class FrmSysModulo extends AbstractMaestro {
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(75, true));
+		
+		lblImagen = new JLabel("Imagen");
+		
+		txtImagen = new JTextField();
+		txtImagen.setColumns(10);
+		
+		btnImg = new JButton("");
+		
+		btnImg.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/find.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		
+		btnImg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 try {
+					cargarImagen();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout
-				.setHorizontalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGap(10)
-										.addComponent(scrollPane,
-												GroupLayout.DEFAULT_SIZE, 199,
-												Short.MAX_VALUE)
-										.addGap(4)
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblCdigo,
-																				GroupLayout.PREFERRED_SIZE,
-																				66,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(19)
-																		.addComponent(
-																				this.txtCodigo,
-																				GroupLayout.PREFERRED_SIZE,
-																				67,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				lblDescripcin,
-																				GroupLayout.PREFERRED_SIZE,
-																				66,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(19)
-																		.addComponent(
-																				this.txtDescripcion,
-																				GroupLayout.PREFERRED_SIZE,
-																				126,
-																				GroupLayout.PREFERRED_SIZE))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(2)
-																		.addComponent(
-																				scrollPaneNum,
-																				GroupLayout.DEFAULT_SIZE,
-																				314,
-																				Short.MAX_VALUE)))
-										.addGap(10)));
-		groupLayout
-				.setVerticalGroup(groupLayout
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout
-										.createSequentialGroup()
-										.addGroup(
-												groupLayout
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(11)
-																		.addComponent(
-																				scrollPane,
-																				GroupLayout.DEFAULT_SIZE,
-																				234,
-																				Short.MAX_VALUE))
-														.addGroup(
-																groupLayout
-																		.createSequentialGroup()
-																		.addGap(15)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addGap(3)
-																										.addComponent(
-																												lblCdigo))
-																						.addComponent(
-																								this.txtCodigo,
-																								GroupLayout.PREFERRED_SIZE,
-																								GroupLayout.DEFAULT_SIZE,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addGap(4)
-																		.addGroup(
-																				groupLayout
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								groupLayout
-																										.createSequentialGroup()
-																										.addGap(3)
-																										.addComponent(
-																												lblDescripcin))
-																						.addComponent(
-																								this.txtDescripcion,
-																								GroupLayout.PREFERRED_SIZE,
-																								GroupLayout.DEFAULT_SIZE,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addGap(6)
-																		.addComponent(
-																				scrollPaneNum,
-																				GroupLayout.DEFAULT_SIZE,
-																				180,
-																				Short.MAX_VALUE)))
-										.addGap(11)));
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(10)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+					.addGap(4)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblCdigo, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addGap(19)
+							.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblDescripcin, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addGap(19)
+							.addComponent(txtDescripcion, GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(lblImagen, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addGap(19)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtImagen, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGap(204)
+									.addComponent(btnImg, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(2)
+							.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)))
+					.addGap(10))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(11)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+					.addGap(11))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(15)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblCdigo))
+						.addComponent(txtCodigo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(8)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblDescripcin))
+						.addComponent(txtDescripcion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(5)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblImagen))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(3)
+							.addComponent(txtImagen, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnImg))
+					.addGap(4)
+					.addComponent(scrollPaneNum, GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+					.addGap(11))
+		);
 		pnlContenido.setLayout(groupLayout);
 		tblLista.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -234,6 +218,50 @@ public class FrmSysModulo extends AbstractMaestro {
 		cargar();
 	}
 
+	public void cargarImagen() throws IOException{		
+		
+		fc=new JFileChooser();
+		
+	    int r=fc.showOpenDialog(null);
+	   
+	    
+	    if(r==JFileChooser.APPROVE_OPTION){	 	    	
+			imagen=ImageIO.read(fc.getSelectedFile().toURL());	
+			
+			String url = CargarURL(fc.getSelectedFile().toURL().toString());
+			String extension = url.substring(url.length()-3).trim();
+			
+			if(extension.equals("jpg") || extension.equals("png")){
+		    	txtImagen.setText(url);
+		    }else{		    	
+		    	fc = null;
+		    	UtilMensajes.mensaje_error("IMAGEN_ERROR");
+		    }
+	    }    
+	}
+	
+	public void guardarImg() throws MalformedURLException, IOException{		
+		
+		String url = CargarURL(fc.getSelectedFile().toURL().toString());
+		String extension = url.substring(url.length()-3);
+		
+		ImageIO.write(imagen, extension, new File("src//main/resources/iconos/"+ url));
+		
+	}
+	
+	public static String CargarURL(String url){
+		int aux;
+		for(int i = url.length()-1; i<=url.length();i--){
+			if(url.charAt(i) == '/'){
+				aux = i;
+				url = url.substring(i+1, url.length());
+				break;
+			}
+		}
+		
+		return url;
+	}
+	
 	public String idMas() {
 		int tot;
 
@@ -277,6 +305,16 @@ public class FrmSysModulo extends AbstractMaestro {
 		for (SysTitulo obj : getSysTitulos()) {
 			getSysTituloDAO().crear_editar(obj);
 		}
+		
+		try {
+			if(!(fc==null)){					
+				guardarImg();	
+				fc = null;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -293,7 +331,8 @@ public class FrmSysModulo extends AbstractMaestro {
 	public void llenarDesdeVista() {
 		getSysModulo().setIdmodulo(this.txtCodigo.getText().trim());
 		getSysModulo().setDescripcion(this.txtDescripcion.getText().trim());
-
+		getSysModulo().setImagen(this.txtImagen.getText().trim());
+		
 		setSysTitulos(new ArrayList<SysTitulo>());
 
 		for (int i = 0; i < getTituloTM().getRowCount(); i++) {
@@ -319,6 +358,7 @@ public class FrmSysModulo extends AbstractMaestro {
 		if (getSysModulo() != null) {
 			txtCodigo.setText(getSysModulo().getIdmodulo());
 			txtDescripcion.setText(getSysModulo().getDescripcion());
+			txtImagen.setText(getSysModulo().getImagen());
 			setSysTitulos(getSysTituloDAO().getPorModulo(getSysModulo()));
 
 			for (SysTitulo obj : getSysTitulos()) {
@@ -336,7 +376,6 @@ public class FrmSysModulo extends AbstractMaestro {
 			filas.add("TABLAS");
 			filas.add("DOCUMENTOS");
 			filas.add("REPORTES");
-			filas.add("PATA JOEL");
 			for (int i = 0; i < filas.size(); i++) {
 				final Object fila[] = { "00" + (i + 1), filas.get(i) };
 				getTituloTM().addRow(fila);
@@ -380,6 +419,7 @@ public class FrmSysModulo extends AbstractMaestro {
 		else
 			txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(true);
+		btnImg.setEnabled(true);
 		getTituloTM().setEditar(true);
 
 	}
@@ -388,6 +428,8 @@ public class FrmSysModulo extends AbstractMaestro {
 	public void vista_noedicion() {
 		txtCodigo.setEditable(false);
 		txtDescripcion.setEditable(false);
+		txtImagen.setEditable(false);
+		btnImg.setEnabled(false);
 		getTituloTM().setEditar(false);
 	}
 
