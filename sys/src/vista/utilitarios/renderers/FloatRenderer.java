@@ -40,6 +40,7 @@ public class FloatRenderer extends DefaultTableCellRenderer {
 			valor = 0;
 		}
 		setText(nf.format(valor));
+		
 		return this;
 	}
 }

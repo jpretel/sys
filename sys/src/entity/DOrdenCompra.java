@@ -50,6 +50,12 @@ public class DOrdenCompra implements Serializable {
 
 	@Column(precision = 17, scale = 2)
 	private float importe;
+	
+	private char tipo_referencia; // [S] Solicitud de Compra
+	
+	private long idreferencia;
+	
+	private int itemreferencia;
 
 	public DOrdenCompra() {
 		super();
@@ -149,6 +155,30 @@ public class DOrdenCompra implements Serializable {
 
 	public void setOrdencompra(OrdenCompra ordencompra) {
 		this.ordencompra = ordencompra;
+	}
+
+	public char getTipo_referencia() {
+		return tipo_referencia;
+	}
+
+	public void setTipo_referencia(char tipo_referencia) {
+		this.tipo_referencia = tipo_referencia;
+	}
+
+	public long getIdreferencia() {
+		return idreferencia;
+	}
+
+	public void setIdreferencia(long idreferencia) {
+		this.idreferencia = idreferencia;
+	}
+
+	public int getItemreferencia() {
+		return itemreferencia;
+	}
+
+	public void setItemreferencia(int itemreferencia) {
+		this.itemreferencia = itemreferencia;
 	}
 
 }
