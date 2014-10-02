@@ -68,5 +68,15 @@ public class OrdenCompraDAO extends AbstractDAO<OrdenCompra> {
 		
 		return getEntityManager().createQuery(q).getResultList();
 	}
-
+	
+	public OrdenCompra getPorSerieNumero(String serie,String numero){
+		CriteriaQuery<OrdenCompra> q = cb.createQuery(OrdenCompra.class);
+		Root<OrdenCompra> c = q.from(OrdenCompra.class);
+		Predicate ps = null;
+		ps = cb.equal(c.get("serie"), serie);
+		ps = cb.and(ps,cb.equal(c.get("numero"), numero));
+		q.select(c).where(ps);
+		
+		return getEntityManager().createQuery(q).getSingleResult();
+	}
 }
