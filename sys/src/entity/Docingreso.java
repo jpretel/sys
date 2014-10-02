@@ -40,6 +40,18 @@ public class Docingreso implements Serializable {
 	})
 	private Almacen almacen;
 	
+	@ManyToOne
+	@JoinColumn(name = "idordencompra", referencedColumnName = "idordencompra",nullable = false)
+	private OrdenCompra ordencompra;
+	
+	public OrdenCompra getOrdencompra() {
+		return ordencompra;
+	}
+
+	public void setOrdencompra(OrdenCompra ordencompra) {
+		this.ordencompra = ordencompra;
+	}
+
 	@Column(nullable=false, length=500)
 	private String glosa;
 	

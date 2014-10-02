@@ -98,7 +98,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private JTextField txtSerieCompra;
 	private JTextField txtNumeroCompra;
 	private FindButton findButton;
-
+	private OrdenCompra ordencompra = null;
+	
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");
 
@@ -352,21 +353,14 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		String serie = this.txtSerieCompra.getText();
 		String numero = this.txtNumeroCompra.getText();
 		if (serie.trim().length() > 0 && numero.trim().length() > 0){
-			OrdenCompra ordencompra = ordencompraDAO.getPorSerieNumero(serie,numero);
+			ordencompra = ordencompraDAO.getPorSerieNumero(serie,numero);
 			List<DOrdenCompra> lDOrdenCompras = dordencompraDAO.getPorOrdenCompra(ordencompra);
-			int i = 1;
-			/*		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
-				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
-				"Importe" })*/
-			for(DOrdenCompra dordencompra : lDOrdenCompras){
-				getDetalleTM().setValueAt(dordencompra.getProducto().getIdproducto(), i, 0);
-				getDetalleTM().setValueAt(dordencompra.getProducto().getDescripcion(), i, 1);
-				getDetalleTM().setValueAt(dordencompra.getUnimedida().getIdunimedida(), i, 2);
-				getDetalleTM().setValueAt(dordencompra.getUnimedida().getDescripcion(), i, 3);
-				getDetalleTM().setValueAt(dordencompra.getCantidad(), i, 4);
-				getDetalleTM().setValueAt(dordencompra.getPrecio_unitario(), i, 5);
-				getDetalleTM().setValueAt(dordencompra.getImporte(), i, 6);
-				i +=1; 
+		
+			for(DOrdenCompra dordencompra : lDOrdenCompras){				
+				getDetalleTM().addRow(new Object[]{dordencompra.getProducto().getIdproducto(),
+						dordencompra.getProducto().getDescripcion(),dordencompra.getUnimedida().getIdunimedida(),
+						dordencompra.getUnimedida().getDescripcion(),dordencompra.getCantidad(),dordencompra.getPrecio_unitario(),
+						dordencompra.getImporte()});
 			}
 		}
 	}
@@ -409,7 +403,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		if (getIngreso() != null) {
+		if (getIngreso() != null && !getEstado().equals("NUEVO")) {
 
 			Sucursal sucursal;
 			Almacen almacen;
@@ -445,7 +439,12 @@ public class FrmDocRecepcion extends AbstractDocForm {
 							: getIngreso().getConcepto().getIdconcepto());
 
 			this.cntConcepto.llenar();
-
+			
+			if(this.cntConcepto.getSeleccionado().getSolcitaCompra() == 1){
+				txtSerieCompra.setText(getIngreso().getOrdencompra().getSerie());
+				String xnumero = StringUtils._padl(getIngreso().getNumero(), 8, '0');
+				txtNumeroCompra.setText(xnumero);
+			}
 			this.cntResponsable.txtCodigo.setText((getIngreso()
 					.getResponsable() == null) ? "" : getIngreso()
 					.getResponsable().getIdresponsable());
@@ -524,8 +523,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		}else{
 			txtSerieCompra.setEditable(false);
 			txtNumeroCompra.setEditable(false);
-		}
-			
+		}			
 
 		FormValidador.CntEdicion(true, this.cntGrupoCentralizacion,
 				this.cntMoneda, this.cntConcepto, this.cntResponsable,
@@ -535,7 +533,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void vista_noedicion() {
-
 		this.txtFecha.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		this.txtSerieCompra.setEditable(false);
@@ -578,6 +575,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		getIngreso().setSerie(this.txtSerie.getText());
 		getIngreso().setNumero(Integer.parseInt(this.txtNumero_2.getText()));
 		getIngreso().setConcepto(this.cntConcepto.getSeleccionado());
+		if(cntConcepto.getSeleccionado().getSolcitaCompra() > 0 ){
+			if(ordencompra != null)
+				getIngreso().setOrdencompra(ordencompra);
+		}
 		getIngreso().setMoneda(cntMoneda.getSeleccionado());
 		getIngreso().setResponsable(this.cntResponsable.getSeleccionado());
 		getIngreso().setSucursal(this.cntSucursal.getSeleccionado());

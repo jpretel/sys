@@ -130,9 +130,10 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 		final int dia = this.txtFecha.getDate().getDate();
 		final int mes = this.txtFecha.getDate().getMonth() + 1;
 		final int anio = this.txtFecha.getDate().getYear() + 1900;
-		if(cntMoneda.txtCodigo.getText().trim().length() > 0 && dia > 0 ){					
-			TCambio tcambio = tcambioDAO.getFechaMoneda(cntMoneda.getSeleccionado(), anio, mes, dia);
-			this.txtTipoCambio.setText(String.valueOf(tcambio.getCompra()));
+		if(cntMoneda.txtCodigo.getText().trim().length() > 0 && dia > 0 ){
+			/*TCambio tcambio = tcambioDAO.getFechaMoneda(cntMoneda.getSeleccionado(), anio, mes, dia);
+			if(tcambio != null)
+				this.txtTipoCambio.setText(String.valueOf(tcambio.getCompra()));*/		
 		}
 	}
 	
