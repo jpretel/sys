@@ -19,6 +19,7 @@ import vista.utilitarios.renderers.FloatRenderer;
 import vista.utilitarios.renderers.ReferenciaDOC;
 import vista.utilitarios.renderers.ReferenciaDOCRenderer;
 
+import javax.persistence.Tuple;
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -36,9 +37,11 @@ import dao.ImpuestoDAO;
 import dao.KardexSlcCompraDAO;
 import dao.MonedaDAO;
 import dao.OrdenCompraDAO;
+import dao.OrdenServicioDAO;
 import dao.ProductoDAO;
 import dao.ProductoImpuestoDAO;
 import dao.ResponsableDAO;
+import dao.SolicitudCompraDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.DOrdenCompra;
@@ -47,6 +50,7 @@ import entity.Impuesto;
 import entity.OrdenCompra;
 import entity.Producto;
 import entity.ProductoImpuesto;
+import entity.SolicitudCompra;
 import entity.Sucursal;
 import entity.Unimedida;
 
@@ -257,7 +261,30 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.lblReferencia.setBounds(400, 107, 74, 16);
 		pnlPrincipal.add(this.lblReferencia);
 
-		this.cntReferenciaDoc = new CntReferenciaDoc((Object[][]) null);
+		this.cntReferenciaDoc = new CntReferenciaDoc(){
+			private static final long serialVersionUID = 1L;
+			private SolicitudCompraDAO solicitudCompraDAO = new SolicitudCompraDAO();
+			@Override
+			public void buscarReferencia() {
+				String serie;
+				int numero;
+				serie = this.txtSerie.getText();
+				numero = Integer.parseInt(this.txtNumero.getText());
+				SolicitudCompra solicitudCompra =solicitudCompraDAO.getPorSerieNumero(serie, numero);
+				
+				if (solicitudCompra != null) {
+					List<Tuple> saldos = new KardexSlcCompraDAO().getSaldoSolicitudCompra(solicitudCompra, getOrdencompra());
+					for (Tuple t : saldos) {
+//						System.out.println(t);
+//						System.out.println(t.get("idordencompra"));
+						Producto p = (Producto) t.get("producto");
+						float cantidad = (float) t.get("cantidad");
+						System.out.println(p);
+						System.out.println(cantidad);
+					}
+				}
+			}
+		};
 		this.cntReferenciaDoc.setBounds(464, 102, 180, 20);
 		pnlPrincipal.add(this.cntReferenciaDoc);
 

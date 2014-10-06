@@ -29,9 +29,6 @@ public abstract class AbstractAsientoForm extends DSGInternalFrame implements
 
 	private PanelBarraDocumento barra;
 	protected JPanel pnlPrincipal;
-	protected static final String EDICION = "EDICION";
-	protected static final String VISTA = "VISTA";
-	protected static final String NUEVO = "NUEVO";
 	private String estado;
 	private DSGTextFieldNumber txtTCambio;
 	private DSGTextFieldNumber txtTCMoneda;

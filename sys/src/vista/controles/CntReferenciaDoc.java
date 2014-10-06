@@ -43,7 +43,7 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public CntReferenciaDoc(String[] cabeceras, int[] anchos, Object[][] data) {
+	public CntReferenciaDoc(String[] cabeceras, int[] anchos) {
 		this.cabeceras = cabeceras;
 		this.data = data;
 		setForeground(Color.LIGHT_GRAY);
@@ -109,10 +109,7 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (isEnabled()) {
-					if (refWindow.isVisible())
-						refWindow.setVisible(false);
-					else
-						mostrarReferencias();
+					buscarReferencia();
 				}
 			}
 		});
@@ -130,9 +127,9 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 		});
 	}
 
-	public CntReferenciaDoc(Object[][] data) {
+	public CntReferenciaDoc() {
 		this(new String[] { "Doc.", "Correlativo", "Fecha" }, new int[] { 90,
-				200, 200 }, data);
+				200, 200 });
 		setBorder(null);
 	}
 
@@ -180,5 +177,9 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 		if (!band) {
 			refWindow.setVisible(false);
 		}
+	}
+	
+	public void buscarReferencia() {
+		System.out.println("Sobreescribir el método: buscarReferencia()");
 	}
 }

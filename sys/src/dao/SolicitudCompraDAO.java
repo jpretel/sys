@@ -7,6 +7,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import entity.OrdenServicio;
 import entity.SolicitudCompra;
 import entity.SolicitudCompra;
 
@@ -15,6 +16,20 @@ public class SolicitudCompraDAO extends AbstractDAO<SolicitudCompra>{
 	public SolicitudCompraDAO() {
 		super(SolicitudCompra.class);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public SolicitudCompra getPorSerieNumero(String serie, int numero){
+		CriteriaQuery<SolicitudCompra> q = cb.createQuery(SolicitudCompra.class);
+		Root<SolicitudCompra> from = q.from(SolicitudCompra.class);
+		
+		Predicate ps = cb.and(cb.equal(from.get("serie"), serie), cb.equal(from.get("numero"), numero));
+		
+		q.select(from).where(ps);
+		try {
+			return getEntityManager().createQuery(q).getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
