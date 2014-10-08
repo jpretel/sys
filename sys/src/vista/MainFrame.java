@@ -162,7 +162,7 @@ public class MainFrame extends JRibbonFrame {
 				getResizableIconFromResource("/main/resources/salir.png"),
 				"Configuración Inicial", null, CommandButtonKind.POPUP_ONLY);
 
-		RibbonApplicationMenuEntrySecondary[] configs = new RibbonApplicationMenuEntrySecondary[4];
+		RibbonApplicationMenuEntrySecondary[] configs = new RibbonApplicationMenuEntrySecondary[5];
 		
 		configs[0] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
@@ -182,6 +182,11 @@ public class MainFrame extends JRibbonFrame {
 		configs[3] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
 				"Gestion de Opciones", cOpciones.returnAction("FrmSysGrupo"),
+				CommandButtonKind.ACTION_ONLY);
+	
+		configs[4] = new RibbonApplicationMenuEntrySecondary(
+				getResizableIconFromResource16x16("/main/resources/salir.png"),
+				"Privilegios por Usuario", cOpciones.returnAction("FrmPrivilegiosUsuario"),
 				CommandButtonKind.ACTION_ONLY);
 		
 		

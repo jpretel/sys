@@ -69,6 +69,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 					txtCodigo.setText("");
 					txtDescripcion.setText("");
 				}
+				AbstractCntBuscar.this.afterUpdateData();
 			}
 
 			@Override
@@ -88,20 +89,11 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		};
 
 		txtCodigo.setColumns(5);
-		GridBagConstraints gbc_txtCodigo = new GridBagConstraints();
-
-		gbc_txtCodigo.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtCodigo.gridx = 0;
-		gbc_txtCodigo.gridy = 0;
-		add(txtCodigo, gbc_txtCodigo);
+		
 
 		txtDescripcion = new JTextField(15);
 		txtDescripcion.setEditable(false);
-		GridBagConstraints gbc_txtDescripcion = new GridBagConstraints();
-		gbc_txtDescripcion.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtDescripcion.gridx = 1;
-		gbc_txtDescripcion.gridy = 0;
-		add(txtDescripcion, gbc_txtDescripcion);
+		
 
 		btnBuscar = new FindButton();
 		this.btnBuscar.setFocusable(false);
@@ -115,11 +107,27 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 				}
 			}
 		});
+		GridBagConstraints gbc_txtCodigo = new GridBagConstraints();
 
+		gbc_txtCodigo.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtCodigo.gridx = 0;
+		gbc_txtCodigo.gridy = 0;
+		add(txtCodigo, gbc_txtCodigo);
+		
+		GridBagConstraints gbc_txtDescripcion = new GridBagConstraints();
+		gbc_txtDescripcion.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtDescripcion.gridx = 1;
+		gbc_txtDescripcion.gridy = 0;
+		add(txtDescripcion, gbc_txtDescripcion);
+		
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
 		gbc_btnBuscar.gridx = 2;
 		gbc_btnBuscar.gridy = 0;
 		add(btnBuscar, gbc_btnBuscar);
+	}
+
+	public void afterUpdateData() {
+		
 	}
 
 	public AbstractCntBuscar() {
