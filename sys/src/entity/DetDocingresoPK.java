@@ -9,12 +9,11 @@ import javax.persistence.*;
  */
 @Embeddable
 public class DetDocingresoPK implements Serializable {
-	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
 	private long iddocingreso;
 
-	private String idproducto;
+	private int item;
 
 	public DetDocingresoPK() {
 	}
@@ -24,13 +23,13 @@ public class DetDocingresoPK implements Serializable {
 	public void setIdingreso(long idingreso) {
 		this.iddocingreso = idingreso;
 	}
-	public String getIdproducto() {
-		return this.idproducto;
+	
+	public int getItem() {
+		return item;
 	}
-	public void setIdproducto(String idproducto) {
-		this.idproducto = idproducto;
+	public void setItem(int item) {
+		this.item = item;
 	}
-
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
@@ -40,14 +39,13 @@ public class DetDocingresoPK implements Serializable {
 		}
 		DetDocingresoPK castOther = (DetDocingresoPK)other;
 		return 
-			(this.iddocingreso == castOther.iddocingreso)
-			&& this.idproducto.equals(castOther.idproducto);
+			(this.iddocingreso == castOther.iddocingreso);
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + this.idproducto.hashCode();
+		hash = hash * prime + this.item;
 		
 		return hash;
 	}

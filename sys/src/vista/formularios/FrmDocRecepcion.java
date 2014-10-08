@@ -143,7 +143,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
 				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
-				"Importe" }) {
+				"Importe"}) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -354,8 +354,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		String numero = this.txtNumeroCompra.getText();
 		if (serie.trim().length() > 0 && numero.trim().length() > 0){
 			ordencompra = ordencompraDAO.getPorSerieNumero(serie,numero);
-			List<DOrdenCompra> lDOrdenCompras = dordencompraDAO.getPorOrdenCompra(ordencompra);
-		
+			List<DOrdenCompra> lDOrdenCompras = dordencompraDAO.getPorOrdenCompra(ordencompra);		
 			for(DOrdenCompra dordencompra : lDOrdenCompras){				
 				getDetalleTM().addRow(new Object[]{dordencompra.getProducto().getIdproducto(),
 						dordencompra.getProducto().getDescripcion(),dordencompra.getUnimedida().getIdunimedida(),
@@ -474,9 +473,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			getDetalleTM().limpiar();
 			for (DetDocingreso ingreso : detDocIngresoL) {
 				Unimedida unimedida = ingreso.getUnimedida();
+				Producto p = ingreso.getProducto();
 				getDetalleTM().addRow(
-						new Object[] { ingreso.getId().getIdproducto(),
-								ingreso.getDescripcion(),
+						new Object[] { p.getIdproducto(),
+								p.getDescripcion(),
 								unimedida.getIdunimedida(),
 								unimedida.getDescripcion(),
 								ingreso.getCantidad(), ingreso.getPrecio(),
@@ -487,7 +487,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenar_lista() {
-		// TODO Auto-generated method stub
+	
 	}
 
 	@Override
@@ -502,8 +502,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void vista_edicion() {
+		//Verificar que no este en un proceso hacia adelante esto falta.....
 		boolean band;
-
 		band = getEstado().equals(NUEVO);
 
 		FormValidador.TextFieldsEdicion(band, this.txtSerie, this.txtNumero_2);
@@ -601,8 +601,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					.getValueAt(i, 0).toString());
 
 			detPK.setIdingreso(Id);
-			detPK.setIdproducto(getDetalleTM().getValueAt(i, 0).toString());
-			det.setId(detPK);
+			detPK.setItem(i + 1); // Actualizamos la posicion			
+			
 			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
 			det.setUnimedida(unimedida);
 			det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i, 4)
@@ -634,9 +634,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					.toString());
 			precio = Float.parseFloat(getDetalleTM().getValueAt(row, 5)
 					.toString());
-
 			importe = cantidad * precio;
-
 			getDetalleTM().setValueAt(importe, row, 6);
 		}
 	}

@@ -35,12 +35,17 @@ public class DetDocingreso implements Serializable {
 	private Docingreso docingreso;
 	
 	@ManyToOne
-	@JoinColumn(name = "idproducto",insertable=false, updatable=false)
+	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
 	private Producto producto;
 	
 	@ManyToOne
 	@JoinColumn(name="idunimedida", referencedColumnName="idunimedida")
 	private Unimedida unimedida;
+	
+	@ManyToOne
+	@JoinColumns({@JoinColumn(name = "idordencompra", referencedColumnName = "idordencompra"),
+		@JoinColumn(name = "item" , referencedColumnName = "item")})
+	private DOrdenCompra dordencompra;
 	
 	public DetDocingreso() {
 	}

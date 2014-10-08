@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -30,7 +31,7 @@ public class DetDocsalida implements Serializable {
 	private Unimedida unimedida;
 
 	@ManyToOne
-	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto", insertable = false, updatable = false)
+	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
 	private Producto producto;
 
 	@ManyToOne

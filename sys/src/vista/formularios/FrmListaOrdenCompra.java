@@ -36,7 +36,6 @@ public class FrmListaOrdenCompra extends AbstractDocList {
 		tblDocumentos.setModel(modelo_lista);
 
 		pnlDocumentos.setViewportView(tblDocumentos);
-		//llenarLista();
 	}
 
 	private static final long serialVersionUID = 1L;

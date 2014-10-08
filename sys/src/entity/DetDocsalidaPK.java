@@ -14,7 +14,7 @@ public class DetDocsalidaPK implements Serializable {
 
 	private long iddocsalida;
 
-	private String idproducto;
+	private int item;
 
 	public DetDocsalidaPK() {
 	}
@@ -27,11 +27,12 @@ public class DetDocsalidaPK implements Serializable {
 		this.iddocsalida = iddocsalida;
 	}
 
-	public String getIdproducto() {
-		return this.idproducto;
+	public int getItem() {
+		return item;
 	}
-	public void setIdproducto(String idproducto) {
-		this.idproducto = idproducto;
+
+	public void setItem(int item) {
+		this.item = item;
 	}
 
 	public boolean equals(Object other) {
@@ -43,14 +44,13 @@ public class DetDocsalidaPK implements Serializable {
 		}
 		DetDocsalidaPK castOther = (DetDocsalidaPK)other;
 		return 
-			(this.iddocsalida == castOther.iddocsalida)
-			&& this.idproducto.equals(castOther.idproducto);
+			(this.iddocsalida == castOther.iddocsalida);
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + this.idproducto.hashCode();
+		hash = hash * prime + this.item;
 		
 		return hash;
 	}
