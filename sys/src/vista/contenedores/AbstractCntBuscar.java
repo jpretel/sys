@@ -89,11 +89,9 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		};
 
 		txtCodigo.setColumns(5);
-		
 
 		txtDescripcion = new JTextField(15);
 		txtDescripcion.setEditable(false);
-		
 
 		btnBuscar = new FindButton();
 		this.btnBuscar.setFocusable(false);
@@ -113,13 +111,13 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		gbc_txtCodigo.gridx = 0;
 		gbc_txtCodigo.gridy = 0;
 		add(txtCodigo, gbc_txtCodigo);
-		
+
 		GridBagConstraints gbc_txtDescripcion = new GridBagConstraints();
 		gbc_txtDescripcion.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtDescripcion.gridx = 1;
 		gbc_txtDescripcion.gridy = 0;
 		add(txtDescripcion, gbc_txtDescripcion);
-		
+
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
 		gbc_btnBuscar.gridx = 2;
 		gbc_btnBuscar.gridy = 0;
@@ -127,7 +125,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	}
 
 	public void afterUpdateData() {
-		
+
 	}
 
 	public AbstractCntBuscar() {
@@ -187,23 +185,26 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	}
 
 	public String getCntName() {
-		Type genericSuperclass = this.getClass().getGenericSuperclass();
-		if (genericSuperclass instanceof ParameterizedType) {
-			ParameterizedType pt = (ParameterizedType) genericSuperclass;
-			Type type = pt.getActualTypeArguments()[0];
-			String classname = type.getTypeName();
-			int i = 0;
-			salir: while (classname.indexOf(".") > -1) {
-				classname = classname.substring(classname.indexOf(".") + 1,
-						classname.length());
-				if (i == 100) {
-					classname = "Desconocido";
-					break salir;
+		if (this.getName() == null || this.getName().isEmpty()) {
+			Type genericSuperclass = this.getClass().getGenericSuperclass();
+			if (genericSuperclass instanceof ParameterizedType) {
+				ParameterizedType pt = (ParameterizedType) genericSuperclass;
+				Type type = pt.getActualTypeArguments()[0];
+				String classname = type.getTypeName();
+				int i = 0;
+				salir: while (classname.indexOf(".") > -1) {
+					classname = classname.substring(classname.indexOf(".") + 1,
+							classname.length());
+					if (i == 100) {
+						classname = "Desconocido";
+						break salir;
+					}
+					i++;
 				}
-				i++;
+				return classname;
 			}
-			return classname;
-		}
-		return "Desconocido";
+			return "Desconocido";
+		} else
+			return getName();
 	}
 }

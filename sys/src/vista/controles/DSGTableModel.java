@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -30,6 +31,8 @@ public abstract class DSGTableModel extends DefaultTableModel {
 
 	private int[] obligatorios;
 	private int[] repetidos;
+
+	private DSGVNDetalle[] valNumeros;
 
 	private JScrollPane scrollPane;
 	private JTable table;
@@ -93,6 +96,14 @@ public abstract class DSGTableModel extends DefaultTableModel {
 					}
 				}
 			}
+
+			if (valNumeros != null) {
+				for (DSGVNDetalle val : valNumeros) {
+					if (!val.validarModelo(this, cabeceras)) {
+						return false;
+					}
+				}
+			}
 		}
 		return true;
 	}
@@ -120,7 +131,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 			}
 		return cadena;
 	}
-	
+
 	@Override
 	public Class<?> getColumnClass(int c) {
 		int columnCount;
@@ -166,6 +177,10 @@ public abstract class DSGTableModel extends DefaultTableModel {
 
 	public void setRepetidos(int... repetidos) {
 		this.repetidos = repetidos;
+	}
+	
+	public void setValidaNumero(DSGVNDetalle... validadores) {
+		this.valNumeros = validadores;
 	}
 
 	public JScrollPane getScrollPane() {

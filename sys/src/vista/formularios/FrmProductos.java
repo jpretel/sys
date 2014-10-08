@@ -1,4 +1,4 @@
-	package vista.formularios;
+package vista.formularios;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -10,37 +10,48 @@ import vista.contenedores.cntMarca;
 import vista.contenedores.cntMedida;
 import vista.contenedores.cntSubGrupo;
 import vista.controles.DSGTableModel;
+import vista.controles.DSGVNDetalle;
 import vista.controles.JTextFieldLimit;
+import vista.controles.celleditor.TxtAlmacen;
 import vista.controles.celleditor.TxtImpuesto;
+import vista.controles.celleditor.TxtSucursal;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.UtilMensajes;
+import vista.utilitarios.editores.FloatEditor;
+import vista.utilitarios.renderers.FloatRenderer;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import dao.AlmacenDAO;
 import dao.GrupoDAO;
 import dao.ImpuestoDAO;
 import dao.MarcaDAO;
 import dao.ProductoDAO;
 import dao.ProductoImpuestoDAO;
+import dao.ProductoStockMinimoDAO;
 import dao.SubgrupoDAO;
+import dao.SucursalDAO;
 import dao.UnimedidaDAO;
+import entity.Almacen;
+import entity.AlmacenPK;
 import entity.Grupo;
 import entity.Impuesto;
-import entity.Marca;
 import entity.Producto;
 import entity.ProductoImpuesto;
 import entity.ProductoImpuestoPK;
+import entity.ProductoStockMinimo;
+import entity.ProductoStockMinimoPK;
 import entity.Subgrupo;
-import entity.Unimedida;
+import entity.Sucursal;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
+import javax.swing.table.TableColumnModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import java.awt.Dimension;
 
 public class FrmProductos extends AbstractMaestro {
 	/**
@@ -58,30 +69,29 @@ public class FrmProductos extends AbstractMaestro {
 	private ImpuestoDAO impuestoDAO = new ImpuestoDAO();
 	private TxtImpuesto txtimpuesto;
 	private List<ProductoImpuesto> impuestos;
+	private List<ProductoStockMinimo> stockMinimo;
 	private ProductoImpuestoDAO productoimpuestoDAO = new ProductoImpuestoDAO();
-	Grupo grupo = new Grupo();
-	Subgrupo subgrupo = new Subgrupo();
-	Unimedida umedida = new Unimedida();
-	Marca marca = new Marca();
-	String bkEntidad = null;
-
-	public Producto getProducto() {
-		return producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
+	private ProductoStockMinimoDAO productoStockMinimoDAO = new ProductoStockMinimoDAO();
 
 	private JTextField txtnomcorto;
 	private JScrollPane scrlImpuestos;
 	private JTable tblImpuestos;
+	private JTable tblStockMinimo;
 	private JCheckBox chkServicio;
 	private JLabel lblImpuestos;
+	private JLabel lblStockMnimo;
+	private JScrollPane scrlStockMinimo;
+	private TxtSucursal txtsucursal;
+	private TxtAlmacen txtalmacen;
+	private SucursalDAO sucursalDAO = new SucursalDAO();
+	private AlmacenDAO almacenDAO = new AlmacenDAO();
 
 	public FrmProductos() {
 		super("Productos");
+		setSize(new Dimension(582, 386));
+
 		JTabbedPane tabPanel = new JTabbedPane(JTabbedPane.TOP);
+		tabPanel.setBounds(10, 11, 550, 305);
 
 		JPanel panel_1 = new JPanel();
 		tabPanel.addTab("Datos Generales del Producto", null, panel_1, null);
@@ -124,18 +134,21 @@ public class FrmProductos extends AbstractMaestro {
 		panel_1.add(lblNombreCorto);
 
 		txtCodigo = new JTextField();
+		this.txtCodigo.setName("C\u00F3digo del Producto");
 		txtCodigo.setBounds(149, 65, 96, 20);
 		panel_1.add(txtCodigo);
 		txtCodigo.setColumns(10);
 		txtCodigo.setDocument(new JTextFieldLimit(20, true));
 
 		txtDescripcion = new JTextField();
+		this.txtDescripcion.setName("Descripci\u00F3n del Producto");
 		txtDescripcion.setBounds(149, 90, 290, 20);
 		panel_1.add(txtDescripcion);
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setDocument(new JTextFieldLimit(70, true));
 
 		txtnomcorto = new JTextField();
+		this.txtnomcorto.setName("Nombre Corto del Producto");
 		txtnomcorto.setBounds(149, 115, 86, 20);
 		panel_1.add(txtnomcorto);
 		txtnomcorto.setColumns(10);
@@ -177,7 +190,7 @@ public class FrmProductos extends AbstractMaestro {
 		panel.add(chckbxEsProductoTerminado);
 
 		this.scrlImpuestos = new JScrollPane();
-		this.scrlImpuestos.setBounds(10, 27, 267, 168);
+		this.scrlImpuestos.setBounds(10, 27, 267, 85);
 		panel.add(this.scrlImpuestos);
 
 		this.tblImpuestos = new JTable(new DSGTableModel(new String[] {
@@ -233,32 +246,124 @@ public class FrmProductos extends AbstractMaestro {
 			}
 		};
 		txtimpuesto.updateCellEditor();
+		pnlContenido.setLayout(null);
 		this.scrlImpuestos.setViewportView(this.tblImpuestos);
 
 		this.chkServicio = new JCheckBox("Es Servicio");
 		this.chkServicio.setBounds(283, 85, 97, 23);
 		panel.add(this.chkServicio);
-		
+
 		this.lblImpuestos = new JLabel("Impuestos");
 		this.lblImpuestos.setBounds(10, 11, 75, 14);
 		panel.add(this.lblImpuestos);
-		GroupLayout groupLayout = new GroupLayout(pnlContenido);
-		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
-				Alignment.LEADING).addGroup(
-				Alignment.TRAILING,
-				groupLayout
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(tabPanel, GroupLayout.DEFAULT_SIZE, 437,
-								Short.MAX_VALUE).addContainerGap()));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(
-				Alignment.TRAILING).addGroup(
-				groupLayout
-						.createSequentialGroup()
-						.addContainerGap()
-						.addComponent(tabPanel, GroupLayout.DEFAULT_SIZE, 312,
-								Short.MAX_VALUE).addContainerGap()));
-		pnlContenido.setLayout(groupLayout);
+
+		this.lblStockMnimo = new JLabel("Stock M\u00EDnimo");
+		this.lblStockMnimo.setBounds(10, 123, 75, 14);
+		panel.add(this.lblStockMnimo);
+
+		this.scrlStockMinimo = new JScrollPane();
+		this.scrlStockMinimo.setBounds(10, 148, 413, 118);
+		panel.add(this.scrlStockMinimo);
+
+		tblStockMinimo = new JTable(new DSGTableModel(new String[] {
+				"Cód. Sucursal", "Sucursal", "Cód Almacen", "Almacen",
+				"Cantidad" }) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean evaluaEdicion(int row, int column) {
+				if (column == 1 || column == 3)
+					return false;
+				return getEditar();
+			}
+
+			@Override
+			public void addRow() {
+				addRow(new Object[] { "", "", "", "", 0.0F });
+			}
+
+		}) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void changeSelection(int row, int column, boolean toggle,
+					boolean extend) {
+				super.changeSelection(row, column, toggle, extend);
+				if (row > -1) {
+					Sucursal sucursal = null;
+					String idsucursal = getStockMinimoTM().getValueAt(row, 0)
+							.toString();
+					String idalmacen = getStockMinimoTM().getValueAt(row, 2)
+							.toString();
+					txtsucursal.refresValue(idsucursal);
+					sucursal = sucursalDAO.find(idsucursal);
+					if (sucursal == null)
+						txtalmacen.setData(null);
+					else
+						txtalmacen.setData(almacenDAO.getPorSucursal(sucursal));
+					txtalmacen.refresValue(idalmacen);
+				}
+			}
+		};
+		scrlStockMinimo.setViewportView(tblStockMinimo);
+
+		txtsucursal = new TxtSucursal(tblStockMinimo, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Sucursal entity) {
+				int row = tblStockMinimo.getSelectedRow();
+				if (entity == null) {
+					setText("");
+					getStockMinimoTM().setValueAt("", row, 0);
+					getStockMinimoTM().setValueAt("", row, 1);
+				} else {
+					setText(entity.getIdsucursal());
+					getStockMinimoTM().setValueAt(entity.getIdsucursal(), row,
+							0);
+					getStockMinimoTM().setValueAt(entity.getDescripcion(), row,
+							1);
+				}
+				setSeleccionado(null);
+			}
+		};
+		txtsucursal.updateCellEditor();
+		txtsucursal.setData(sucursalDAO.findAll());
+		txtalmacen = new TxtAlmacen(tblStockMinimo, 2) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Almacen entity) {
+				int row = tblStockMinimo.getSelectedRow();
+				if (entity == null) {
+					setText("");
+					getStockMinimoTM().setValueAt("", row, 2);
+					getStockMinimoTM().setValueAt("", row, 3);
+				} else {
+					setText(entity.getId().getIdalmacen());
+					getStockMinimoTM().setValueAt(
+							entity.getId().getIdalmacen(), row, 2);
+					getStockMinimoTM().setValueAt(entity.getDescripcion(), row,
+							3);
+				}
+				setSeleccionado(null);
+			}
+		};
+		txtalmacen.updateCellEditor();
+		getStockMinimoTM().setNombre_detalle("Stock Mínimo");
+		getStockMinimoTM().setScrollAndTable(scrlStockMinimo, tblStockMinimo);
+		getStockMinimoTM().setObligatorios(0, 1, 2, 3);
+		getStockMinimoTM().setRepetidos(0, 2);
+		getStockMinimoTM().setValidaNumero(
+				new DSGVNDetalle(DSGVNDetalle.Operador.MAYOR, 0, 4));
+
+		TableColumnModel tc = tblStockMinimo.getColumnModel();
+
+		tc.getColumn(4).setCellEditor(new FloatEditor(6));
+		tc.getColumn(4).setCellRenderer(new FloatRenderer(6));
+
+		pnlContenido.add(tabPanel);
+
 	}
 
 	@Override
@@ -281,6 +386,20 @@ public class FrmProductos extends AbstractMaestro {
 				productoimpuestoDAO.create(pi);
 			} else {
 				productoimpuestoDAO.edit(pi);
+			}
+		}
+
+		for (ProductoStockMinimo ps : productoStockMinimoDAO.aEliminar(
+				getProducto(), stockMinimo)) {
+			productoStockMinimoDAO.remove(ps);
+		}
+
+		for (ProductoStockMinimo ps : stockMinimo) {
+			System.out.println("aa");
+			if (productoStockMinimoDAO.find(ps.getId()) == null) {
+				productoStockMinimoDAO.create(ps);
+			} else {
+				productoStockMinimoDAO.edit(ps);
 			}
 		}
 
@@ -308,6 +427,7 @@ public class FrmProductos extends AbstractMaestro {
 		txtnomcorto.setEditable(true);
 		chkServicio.setEnabled(true);
 		getImpuestoTM().setEditar(true);
+		getStockMinimoTM().setEditar(true);
 		FormValidador.CntEdicion(true, cntgrupo, cntSubGrupo, cntmedida,
 				cntmarca);
 	}
@@ -319,6 +439,7 @@ public class FrmProductos extends AbstractMaestro {
 		txtnomcorto.setEditable(false);
 		chkServicio.setEnabled(false);
 		getImpuestoTM().setEditar(false);
+		getStockMinimoTM().setEditar(false);
 		FormValidador.CntEdicion(false, cntgrupo, cntSubGrupo, cntmedida,
 				cntmarca);
 	}
@@ -326,6 +447,7 @@ public class FrmProductos extends AbstractMaestro {
 	@Override
 	public void llenar_datos() {
 		getImpuestoTM().limpiar();
+		getStockMinimoTM().limpiar();
 		if (!getEstado().equals(NUEVO)) {
 			Subgrupo sg = getProducto().getSubgrupo();
 			Grupo g = (sg == null) ? null : sg.getGrupo();
@@ -341,11 +463,28 @@ public class FrmProductos extends AbstractMaestro {
 			chkServicio.setSelected((getProducto().getEsServicio() == 1));
 			impuestos = productoimpuestoDAO.getPorProducto(getProducto());
 
+			stockMinimo = productoStockMinimoDAO.getPorProducto(getProducto());
+
 			for (ProductoImpuesto i : impuestos) {
 				Impuesto im = impuestoDAO.find(i.getId().getIdimpuesto());
 				getImpuestoTM()
 						.addRow(new Object[] { im.getIdimpuesto(),
 								im.getDescripcion() });
+			}
+
+			for (ProductoStockMinimo stock : stockMinimo) {
+				Sucursal sucursal = sucursalDAO.find(stock.getId()
+						.getIdsucursal());
+				AlmacenPK pkAlm = new AlmacenPK();
+				pkAlm.setIdsucursal(stock.getId().getIdsucursal());
+				pkAlm.setIdalmacen(stock.getId().getIdalmacen());
+				Almacen almacen = almacenDAO.find(pkAlm);
+
+				getStockMinimoTM()
+						.addRow(new Object[] { sucursal.getIdsucursal(),
+								sucursal.getDescripcion(),
+								almacen.getId().getIdalmacen(),
+								almacen.getDescripcion(), stock.getCantidad() });
 			}
 
 		} else {
@@ -426,29 +565,45 @@ public class FrmProductos extends AbstractMaestro {
 			pi.setId(id);
 			impuestos.add(pi);
 		}
+		
+		rows = getStockMinimoTM().getRowCount();
+		
+		stockMinimo = new ArrayList<ProductoStockMinimo>();
+
+		for (int i = 0; i < rows; i++) {
+			String idsucursal, idalmacen;
+			float cantidad;
+
+			ProductoStockMinimo ps = new ProductoStockMinimo();
+			ProductoStockMinimoPK id = new ProductoStockMinimoPK();
+
+			idsucursal = getStockMinimoTM().getValueAt(i, 0).toString();
+			idalmacen = getStockMinimoTM().getValueAt(i, 2).toString();
+
+			cantidad = Float.parseFloat(getStockMinimoTM().getValueAt(i, 4)
+					.toString());
+
+			id.setIdproducto(idproducto);
+			id.setIdsucursal(idsucursal);
+			id.setIdalmacen(idalmacen);
+
+			ps.setId(id);
+			ps.setCantidad(cantidad);
+
+			ps.setId(id);
+			stockMinimo.add(ps);
+		}
 	}
 
 	@Override
 	public boolean isValidaVista() {
-		if (this.cntgrupo.txtCodigo.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO",
-					"Familia de Productos");
-			this.cntgrupo.txtCodigo.requestFocus();
+		if (!FormValidador.CntObligatorios(cntgrupo, cntSubGrupo)) {
 			return false;
 		}
 
-		if (this.cntSubGrupo.txtCodigo.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO",
-					"SubFamilia de Productos");
-			this.cntSubGrupo.txtCodigo.requestFocus();
+		if (!FormValidador.TextFieldObligatorios(txtCodigo, txtDescripcion,
+				txtnomcorto))
 			return false;
-		}
-
-		if (this.txtCodigo.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Código");
-			this.txtCodigo.requestFocus();
-			return false;
-		}
 
 		if (getEstado().equals(NUEVO)) {
 			if (productoDAO.find(this.txtCodigo.getText().trim()) != null) {
@@ -457,27 +612,15 @@ public class FrmProductos extends AbstractMaestro {
 				return false;
 			}
 		}
-		if (this.txtDescripcion.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Descripción");
-			this.txtDescripcion.requestFocus();
+
+		if (!FormValidador.CntObligatorios(cntmedida)) {
 			return false;
 		}
 
-		if (this.txtnomcorto.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Nombre corto");
-			this.txtnomcorto.requestFocus();
+		if (!getImpuestoTM().esValido()) {
 			return false;
 		}
-
-		if (this.cntmedida.txtCodigo.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Unidad de Medida");
-			this.cntmedida.txtCodigo.requestFocus();
-			return false;
-		}
-
-		if (this.cntmarca.txtCodigo.getText().trim().isEmpty()) {
-			UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Marca de Producto");
-			this.cntmarca.txtCodigo.requestFocus();
+		if (!getStockMinimoTM().esValido()) {
 			return false;
 		}
 
@@ -488,9 +631,21 @@ public class FrmProductos extends AbstractMaestro {
 		return (DSGTableModel) tblImpuestos.getModel();
 	}
 
+	public DSGTableModel getStockMinimoTM() {
+		return (DSGTableModel) tblStockMinimo.getModel();
+	}
+
 	@Override
 	public void eliminar() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
 	}
 }
