@@ -17,6 +17,9 @@ import entity.Usuario;
 
 public class PrivUsuarioAlmacenDAO extends AbstractDAO<PrivUsuarioAlmacen> {
 
+	private SucursalDAO sucursalDAO = new SucursalDAO();
+	private AlmacenDAO almacenDAO = new AlmacenDAO();
+
 	public PrivUsuarioAlmacenDAO() {
 		super(PrivUsuarioAlmacen.class);
 	}
@@ -42,25 +45,34 @@ public class PrivUsuarioAlmacenDAO extends AbstractDAO<PrivUsuarioAlmacen> {
 	}
 
 	public List<Sucursal> getSucursalPorUsuario(Usuario usuario) {
-		CriteriaQuery<Sucursal> q = cb.createQuery(Sucursal.class);
-		Root<PrivUsuarioAlmacen> from = q.from(PrivUsuarioAlmacen.class);
-		Predicate condicion = cb.equal(from.get("usuario"), usuario);
+		if (usuario.getGrupoUsuario().getEsAdministrador() == 0) {
+			CriteriaQuery<Sucursal> q = cb.createQuery(Sucursal.class);
+			Root<PrivUsuarioAlmacen> from = q.from(PrivUsuarioAlmacen.class);
+			Predicate condicion = cb.equal(from.get("usuario"), usuario);
 
-		Join sucursal = from.join("sucursal", JoinType.INNER);
+			Join sucursal = from.join("sucursal", JoinType.INNER);
 
-		q.select(sucursal).where(condicion);
-		return getEntityManager().createQuery(q).getResultList();
+			q.select(sucursal).where(condicion);
+			return getEntityManager().createQuery(q).getResultList();
+		} else {
+			return sucursalDAO.findAll();
+		}
 	}
 
 	public List<Almacen> getAlmacenPorUsuario(Usuario usuario, Sucursal sucursal) {
-		CriteriaQuery<Almacen> q = cb.createQuery(Almacen.class);
-		Root<PrivUsuarioAlmacen> from = q.from(PrivUsuarioAlmacen.class);
-		Predicate condicion = cb.and(cb.equal(from.get("usuario"), usuario),
-				cb.equal(from.get("sucursal"), sucursal));
+		if (usuario.getGrupoUsuario().getEsAdministrador() == 0) {
+			CriteriaQuery<Almacen> q = cb.createQuery(Almacen.class);
+			Root<PrivUsuarioAlmacen> from = q.from(PrivUsuarioAlmacen.class);
+			Predicate condicion = cb.and(
+					cb.equal(from.get("usuario"), usuario),
+					cb.equal(from.get("sucursal"), sucursal));
 
-		Join almacen = from.join("almacen", JoinType.INNER);
+			Join almacen = from.join("almacen", JoinType.INNER);
 
-		q.select(almacen).where(condicion);
-		return getEntityManager().createQuery(q).getResultList();
+			q.select(almacen).where(condicion);
+			return getEntityManager().createQuery(q).getResultList();
+		} else {
+			return almacenDAO.getPorSucursal(sucursal);
+		}
 	}
 }
