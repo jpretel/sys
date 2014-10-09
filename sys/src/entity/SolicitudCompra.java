@@ -21,14 +21,8 @@ public class SolicitudCompra implements Serializable {
 	private int dia;
 	private int mes;
 	private int anio;
-	private int aniomesdia;
-	@ManyToOne
-	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda")
-	private Moneda moneda;
-	@Column(precision = 10, scale = 4)
-	private float tcambio;
-	@Column(precision = 10, scale = 4)
-	private float tcmoneda;
+	private int fecha;
+
 	@ManyToOne
 	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal")
 	private Sucursal sucursal;
@@ -88,30 +82,6 @@ public class SolicitudCompra implements Serializable {
 		this.anio = anio;
 	}
 
-	public Moneda getMoneda() {
-		return moneda;
-	}
-
-	public void setMoneda(Moneda moneda) {
-		this.moneda = moneda;
-	}
-
-	public float getTcambio() {
-		return tcambio;
-	}
-
-	public void setTcambio(float tcambio) {
-		this.tcambio = tcambio;
-	}
-
-	public float getTcmoneda() {
-		return tcmoneda;
-	}
-
-	public void setTcmoneda(float tcmoneda) {
-		this.tcmoneda = tcmoneda;
-	}
-
 	public Sucursal getSucursal() {
 		return sucursal;
 	}
@@ -144,20 +114,20 @@ public class SolicitudCompra implements Serializable {
 		this.glosa = glosa;
 	}
 
-	public int getAniomesdia() {
-		return aniomesdia;
-	}
-
-	public void setAniomesdia(int aniomesdia) {
-		this.aniomesdia = aniomesdia;
-	}
-
 	public Long getIdsolicitudcompra() {
 		return idsolicitudcompra;
 	}
 
 	public void setIdsolicitudcompra(Long idsolicitudcompra) {
 		this.idsolicitudcompra = idsolicitudcompra;
+	}
+
+	public int getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(int fecha) {
+		this.fecha = fecha;
 	}
 
 }

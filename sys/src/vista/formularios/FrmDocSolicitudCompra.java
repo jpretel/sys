@@ -30,7 +30,6 @@ import vista.utilitarios.renderers.FloatRenderer;
 import dao.AlmacenDAO;
 import dao.DSolicitudCompraDAO;
 import dao.KardexSlcCompraDAO;
-import dao.MonedaDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SolicitudCompraDAO;
@@ -75,6 +74,9 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 	public FrmDocSolicitudCompra() {
 		super("Solicitud de Compra");
+		txtFecha.setBounds(245, 11, 101, 22);
+		txtNumero_2.setBounds(116, 12, 80, 20);
+		txtSerie.setBounds(72, 12, 44, 20);
 
 		setEstado(VISTA);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -84,14 +86,19 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 				Alignment.LEADING).addGap(0, 681, Short.MAX_VALUE));
 
 		this.lblResponsable = new JLabel("Responsable");
+		this.lblResponsable.setBounds(10, 106, 74, 16);
 
 		this.lblSucursal = new JLabel("Sucursal");
+		this.lblSucursal.setBounds(10, 43, 51, 16);
 
 		this.lblAlmacen = new JLabel("Almacen");
+		this.lblAlmacen.setBounds(10, 70, 50, 16);
 
 		this.lblGlosa = new JLabel("Glosa");
+		this.lblGlosa.setBounds(399, 43, 32, 16);
 
 		this.scrollPaneDetalle = new JScrollPane((Component) null);
+		this.scrollPaneDetalle.setBounds(10, 133, 824, 243);
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] {
 				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
@@ -170,10 +177,13 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		this.scrollPaneDetalle.setViewportView(this.tblDetalle);
 
 		this.cntResponsable = new cntResponsable();
+		this.cntResponsable.setBounds(72, 102, 309, 20);
 
 		this.cntSucursal = new cntSucursal();
+		this.cntSucursal.setBounds(72, 43, 309, 20);
 
 		this.cntAlmacen = new cntAlmacen();
+		this.cntAlmacen.setBounds(72, 70, 309, 20);
 		cntAlmacen.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -184,165 +194,20 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		});
 
 		this.scrlGlosa = new JScrollPane();
+		this.scrlGlosa.setBounds(436, 43, 395, 79);
 
 		this.txtGlosa = new JTextArea();
 		this.scrlGlosa.setViewportView(this.txtGlosa);
-		GroupLayout groupLayout_1 = new GroupLayout(pnlPrincipal);
-		groupLayout_1
-				.setHorizontalGroup(groupLayout_1
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout_1
-										.createSequentialGroup()
-										.addGap(10)
-										.addGroup(
-												groupLayout_1
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout_1
-																		.createSequentialGroup()
-																		.addGroup(
-																				groupLayout_1
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								groupLayout_1
-																										.createSequentialGroup()
-																										.addComponent(
-																												lblSucursal,
-																												GroupLayout.PREFERRED_SIZE,
-																												51,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addGap(11)
-																										.addComponent(
-																												cntSucursal,
-																												GroupLayout.PREFERRED_SIZE,
-																												309,
-																												GroupLayout.PREFERRED_SIZE))
-																						.addGroup(
-																								groupLayout_1
-																										.createSequentialGroup()
-																										.addComponent(
-																												lblAlmacen,
-																												GroupLayout.PREFERRED_SIZE,
-																												50,
-																												GroupLayout.PREFERRED_SIZE)
-																										.addGap(12)
-																										.addComponent(
-																												cntAlmacen,
-																												GroupLayout.PREFERRED_SIZE,
-																												309,
-																												GroupLayout.PREFERRED_SIZE))
-																						.addComponent(
-																								lblResponsable,
-																								GroupLayout.PREFERRED_SIZE,
-																								74,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addGroup(
-																								groupLayout_1
-																										.createSequentialGroup()
-																										.addGap(62)
-																										.addComponent(
-																												cntResponsable,
-																												GroupLayout.PREFERRED_SIZE,
-																												309,
-																												GroupLayout.PREFERRED_SIZE)))
-																		.addGap(18)
-																		.addComponent(
-																				lblGlosa,
-																				GroupLayout.PREFERRED_SIZE,
-																				32,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(5)
-																		.addComponent(
-																				scrlGlosa,
-																				GroupLayout.PREFERRED_SIZE,
-																				395,
-																				GroupLayout.PREFERRED_SIZE))
-														.addComponent(
-																scrollPaneDetalle,
-																GroupLayout.DEFAULT_SIZE,
-																824,
-																Short.MAX_VALUE))
-										.addGap(4)));
-		groupLayout_1
-				.setVerticalGroup(groupLayout_1
-						.createParallelGroup(Alignment.LEADING)
-						.addGroup(
-								groupLayout_1
-										.createSequentialGroup()
-										.addGap(43)
-										.addGroup(
-												groupLayout_1
-														.createParallelGroup(
-																Alignment.LEADING)
-														.addGroup(
-																groupLayout_1
-																		.createSequentialGroup()
-																		.addGroup(
-																				groupLayout_1
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								lblSucursal,
-																								GroupLayout.PREFERRED_SIZE,
-																								16,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								cntSucursal,
-																								GroupLayout.PREFERRED_SIZE,
-																								GroupLayout.DEFAULT_SIZE,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addGap(7)
-																		.addGroup(
-																				groupLayout_1
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addComponent(
-																								lblAlmacen,
-																								GroupLayout.PREFERRED_SIZE,
-																								16,
-																								GroupLayout.PREFERRED_SIZE)
-																						.addComponent(
-																								cntAlmacen,
-																								GroupLayout.PREFERRED_SIZE,
-																								GroupLayout.DEFAULT_SIZE,
-																								GroupLayout.PREFERRED_SIZE))
-																		.addGap(12)
-																		.addGroup(
-																				groupLayout_1
-																						.createParallelGroup(
-																								Alignment.LEADING)
-																						.addGroup(
-																								groupLayout_1
-																										.createSequentialGroup()
-																										.addGap(4)
-																										.addComponent(
-																												lblResponsable,
-																												GroupLayout.PREFERRED_SIZE,
-																												16,
-																												GroupLayout.PREFERRED_SIZE))
-																						.addComponent(
-																								cntResponsable,
-																								GroupLayout.PREFERRED_SIZE,
-																								GroupLayout.DEFAULT_SIZE,
-																								GroupLayout.PREFERRED_SIZE)))
-														.addComponent(
-																lblGlosa,
-																GroupLayout.PREFERRED_SIZE,
-																16,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(
-																scrlGlosa,
-																GroupLayout.PREFERRED_SIZE,
-																79,
-																GroupLayout.PREFERRED_SIZE))
-										.addGap(11)
-										.addComponent(scrollPaneDetalle,
-												GroupLayout.DEFAULT_SIZE, 243,
-												Short.MAX_VALUE).addGap(19)));
-		pnlPrincipal.setLayout(groupLayout_1);
+		pnlPrincipal.setLayout(null);
+		pnlPrincipal.add(this.lblSucursal);
+		pnlPrincipal.add(this.cntSucursal);
+		pnlPrincipal.add(this.lblAlmacen);
+		pnlPrincipal.add(this.cntAlmacen);
+		pnlPrincipal.add(this.lblResponsable);
+		pnlPrincipal.add(this.cntResponsable);
+		pnlPrincipal.add(this.lblGlosa);
+		pnlPrincipal.add(this.scrlGlosa);
+		pnlPrincipal.add(this.scrollPaneDetalle);
 
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
@@ -423,14 +288,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		if (getsolicitudcompra() != null) {
 			this.txtNumero_2.setValue(getsolicitudcompra().getNumero());
 			this.txtSerie.setText(getsolicitudcompra().getSerie());
-			this.txtTipoCambio.setValue(getsolicitudcompra().getTcambio());
-			this.txtTcMoneda.setValue(getsolicitudcompra().getTcmoneda());
-			// this.cntGrupoCentralizacion.txtCodigo.setText(getsolicitudcompra().getGrupoCentralizacion().getIdgcentralizacion());
-			// this.cntGrupoCentralizacion.txtDescripcion.setText(getsolicitudcompra().getGrupoCentralizacion().getDescripcion());
-			cntMoneda.txtCodigo
-					.setText((getsolicitudcompra().getMoneda() == null) ? ""
-							: getsolicitudcompra().getMoneda().getIdmoneda());
-			cntMoneda.llenar();
+
 			cntResponsable.txtCodigo.setText((getsolicitudcompra()
 					.getResponsable() == null) ? "" : getsolicitudcompra()
 					.getResponsable().getIdresponsable());
@@ -478,7 +336,6 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_tablas() {
-		cntMoneda.setData(new MonedaDAO().findAll());
 		cntSucursal.setData(new SucursalDAO().findAll());
 		cntResponsable.setData(new ResponsableDAO().findAll());
 	}
@@ -488,12 +345,8 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		this.txtSerie.setEditable(true);
 		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
-		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
+		FormValidador.CntEdicion(true, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
 		getDetalleTM().setEditar(true);
 	}
@@ -503,12 +356,8 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		this.txtSerie.setEditable(false);
 		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
-		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
+		FormValidador.CntEdicion(false, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
 		getDetalleTM().setEditar(false);
 	}
@@ -536,7 +385,6 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		getsolicitudcompra().setSerie(this.txtSerie.getText());
 		getsolicitudcompra().setNumero(
 				Integer.parseInt(this.txtNumero_2.getText()));
-		getsolicitudcompra().setMoneda(cntMoneda.getSeleccionado());
 		getsolicitudcompra().setResponsable(
 				this.cntResponsable.getSeleccionado());
 		getsolicitudcompra().setSucursal(cntSucursal.getSeleccionado());
@@ -544,15 +392,12 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		getsolicitudcompra().setDia(c.get(Calendar.DAY_OF_MONTH));
 		getsolicitudcompra().setMes(c.get(Calendar.MONTH) + 1);
 		getsolicitudcompra().setAnio(c.get(Calendar.YEAR));
-		getsolicitudcompra().setAniomesdia(
+		getsolicitudcompra().setFecha(
 				(c.get(Calendar.YEAR) * 10000)
 						+ ((c.get(Calendar.MONTH) + 1) * 100)
 						+ c.get(Calendar.DAY_OF_MONTH));
 		getsolicitudcompra().setGlosa(txtGlosa.getText());
-		getsolicitudcompra().setTcambio(
-				Float.parseFloat(txtTipoCambio.getText()));
-		getsolicitudcompra().setTcmoneda(
-				Float.parseFloat(txtTcMoneda.getText()));
+
 		dsolicitudcompras = new ArrayList<DSolicitudCompra>();
 
 		int rows = getDetalleTM().getRowCount();
@@ -594,9 +439,8 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 	public boolean validaCabecera() {
 
-		return FormValidador.TextFieldObligatorios(cntMoneda.txtCodigo,
-				txtTipoCambio, cntResponsable.txtCodigo, cntSucursal.txtCodigo,
-				cntAlmacen.txtCodigo);
+		return FormValidador.TextFieldObligatorios(cntResponsable.txtCodigo,
+				cntSucursal.txtCodigo, cntAlmacen.txtCodigo);
 	}
 
 	public DSGTableModel getDetalleTM() {

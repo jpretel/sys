@@ -8,10 +8,10 @@ import dao.CfgCentralizaAlmDAO;
 import dao.DAsientoDAO;
 import dao.DocingresoDAO;
 import dao.KardexDAO;
+import dao.TCambioDAO;
 import entity.Asiento;
 import entity.CfgCentralizaAlm;
 import entity.Concepto;
-import entity.Cuenta;
 import entity.DAsiento;
 import entity.DAsientoPK;
 import entity.Docingreso;
@@ -56,7 +56,7 @@ public class CentralizaAlm {
 			float precio = det.getPrecio();
 			float cantidad = det.getCantidad();
 			float total = 0;
-			
+
 			Producto prod = det.getProducto();
 			total = precio * cantidad;
 
@@ -85,7 +85,7 @@ public class CentralizaAlm {
 				da.setProducto(prod);
 				da.setCantidad(cantidad);
 			}
-			
+
 			dasiento.add(da);
 
 			i++;
@@ -99,12 +99,12 @@ public class CentralizaAlm {
 			da.setCuenta(cfg.getCta_haber());
 
 			LlenarDebeHaber(moneda.getTipo(), da, total, tcambio, tcmoneda, 'H');
-			
+
 			if (cfg.getCta_haber().getA_producto() == 1) {
 				da.setProducto(prod);
 				da.setCantidad(cantidad);
 			}
-			
+
 			dasiento.add(da);
 
 			i++;
@@ -120,12 +120,20 @@ public class CentralizaAlm {
 
 	public static void CentralizaIngreso(long idingreso) {
 
+		float tcambio, tcmoneda;
+
+		TCambioDAO tcambioDAO = new TCambioDAO();
+
 		DocingresoDAO docingresoDAO = new DocingresoDAO();
 		Docingreso ingreso = docingresoDAO.find(idingreso);
 
+		tcambio = tcambioDAO.getFechaMoneda(ingreso.getMoneda(),
+				ingreso.getAnio(), ingreso.getMes(), ingreso.getDia()).getCompra();
+		tcmoneda = 1.0F; //
+		
 		Asiento asiento = CentralizaAlmacen(ingreso.getAsiento(), idingreso,
 				ingreso.getAnio(), ingreso.getMes(), ingreso.getDia(),
-				ingreso.getTcambio(), ingreso.getTcmoneda(),
+				tcambio, tcmoneda,
 				ingreso.getMoneda(), ingreso.getConcepto(), ingreso
 						.getGrupoCentralizacion().getSubdiario());
 		ingreso.setAsiento(asiento);

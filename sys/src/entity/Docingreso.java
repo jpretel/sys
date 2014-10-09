@@ -65,25 +65,11 @@ public class Docingreso implements Serializable {
 	private int dia;	
 	
 	@Column
-	private int aniomesdia;
+	private int fecha;
 	
 	@ManyToOne
 	@JoinColumn(name="idasiento", referencedColumnName="idasiento")
 	private Asiento asiento;
-	
-	public int getAniomesdia() {
-		return aniomesdia;
-	}
-
-	public void setAniomesdia(int aniomesdia) {
-		this.aniomesdia = aniomesdia;
-	}
-
-	@Column(nullable=false, precision=10, scale=2)
-	private float tcambio;
-	
-	@Column(nullable=false, precision=10, scale=2)
-	private float tcmoneda;	
 	
 	public int getDia() {
 		return dia;
@@ -157,22 +143,6 @@ public class Docingreso implements Serializable {
 	public void setMoneda(Moneda moneda) {
 		this.moneda = moneda;
 	}
-
-	public float getTcambio() {
-		return tcambio;
-	}
-
-	public void setTcambio(float tcambio) {
-		this.tcambio = tcambio;
-	}
-
-	public float getTcmoneda() {
-		return tcmoneda;
-	}
-
-	public void setTcmoneda(float tcmoneda) {
-		this.tcmoneda = tcmoneda;
-	}
 	
 	public GrupoCentralizacion getGrupoCentralizacion() {
 		return grupoCentralizacion;
@@ -220,6 +190,14 @@ public class Docingreso implements Serializable {
 
 	public void setAsiento(Asiento asiento) {
 		this.asiento = asiento;
+	}
+
+	public int getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(int fecha) {
+		this.fecha = fecha;
 	}
 
 }

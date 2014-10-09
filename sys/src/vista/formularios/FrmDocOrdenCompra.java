@@ -13,10 +13,8 @@ import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
 import vista.utilitarios.FormValidador;
-import vista.utilitarios.NumberUtils;
 import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
-import vista.utilitarios.renderers.ReferenciaDOC;
 import vista.utilitarios.renderers.ReferenciaDOCRenderer;
 
 import javax.persistence.Tuple;
@@ -37,7 +35,6 @@ import dao.ImpuestoDAO;
 import dao.KardexSlcCompraDAO;
 import dao.MonedaDAO;
 import dao.OrdenCompraDAO;
-import dao.OrdenServicioDAO;
 import dao.ProductoDAO;
 import dao.ProductoImpuestoDAO;
 import dao.ResponsableDAO;
@@ -57,6 +54,8 @@ import entity.Unimedida;
 import java.awt.Component;
 
 import vista.controles.CntReferenciaDoc;
+import vista.contenedores.CntMoneda;
+import vista.controles.DSGTextFieldNumber;
 
 public class FrmDocOrdenCompra extends AbstractDocForm {
 
@@ -91,10 +90,12 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private List<DOrdenCompra> dordencompras = new ArrayList<DOrdenCompra>();
 	private JLabel lblReferencia;
 	private CntReferenciaDoc cntReferenciaDoc;
+	private CntMoneda cntMoneda;
+	private DSGTextFieldNumber txtTCambio;
+	private DSGTextFieldNumber txtTCMoneda;
 
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
-		txtTcMoneda.setText("");
 
 		setEstado(VISTA);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -126,7 +127,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		tblDetalle = new JTable(new DSGTableModel(new String[] {
 				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
 				"Cantidad", "P. Unit.", "V. Venta", "%Dscto", "Dscto.",
-				"% Impto", "Impto.", "Total", "Referencia" }) {
+				"% Impto", "Impto.", "Total" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -141,8 +142,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			public void addRow() {
 				if (validaCabecera())
 					addRow(new Object[] { "", "", "", "", 0.00, 0.00, 0.00,
-							0.00, 0.00, 0.00, 0.00, 0.00,
-							new ReferenciaDOC('S', 288805053875329L, 1) });
+							0.00, 0.00, 0.00, 0.00, 0.00 });
 				else
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
@@ -261,22 +261,26 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.lblReferencia.setBounds(400, 107, 74, 16);
 		pnlPrincipal.add(this.lblReferencia);
 
-		this.cntReferenciaDoc = new CntReferenciaDoc(){
+		this.cntReferenciaDoc = new CntReferenciaDoc() {
 			private static final long serialVersionUID = 1L;
 			private SolicitudCompraDAO solicitudCompraDAO = new SolicitudCompraDAO();
+
 			@Override
 			public void buscarReferencia() {
 				String serie;
 				int numero;
 				serie = this.txtSerie.getText();
 				numero = Integer.parseInt(this.txtNumero.getText());
-				SolicitudCompra solicitudCompra =solicitudCompraDAO.getPorSerieNumero(serie, numero);
-				
+				SolicitudCompra solicitudCompra = solicitudCompraDAO
+						.getPorSerieNumero(serie, numero);
+
 				if (solicitudCompra != null) {
-					List<Tuple> saldos = new KardexSlcCompraDAO().getSaldoSolicitudCompra(solicitudCompra, getOrdencompra());
+					List<Tuple> saldos = new KardexSlcCompraDAO()
+							.getSaldoSolicitudCompra(solicitudCompra,
+									getOrdencompra());
 					for (Tuple t : saldos) {
-//						System.out.println(t);
-//						System.out.println(t.get("idordencompra"));
+						// System.out.println(t);
+						// System.out.println(t.get("idordencompra"));
 						Producto p = (Producto) t.get("producto");
 						float cantidad = (float) t.get("cantidad");
 						System.out.println(p);
@@ -287,6 +291,19 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		};
 		this.cntReferenciaDoc.setBounds(464, 102, 180, 20);
 		pnlPrincipal.add(this.cntReferenciaDoc);
+
+		this.cntMoneda = new CntMoneda();
+		this.cntMoneda.setBounds(379, 12, 192, 20);
+		pnlPrincipal.add(this.cntMoneda);
+
+		this.txtTCambio = new DSGTextFieldNumber(4);
+		this.txtTCambio.setBounds(594, 12, 74, 20);
+		pnlPrincipal.add(this.txtTCambio);
+
+		this.txtTCMoneda = new DSGTextFieldNumber(4);
+		this.txtTCMoneda.setBounds(699, 12, 74, 20);
+		pnlPrincipal.add(this.txtTCMoneda);
+		this.txtTCMoneda.setValue(1);
 
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
@@ -389,8 +406,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		if (getOrdencompra() != null) {
 			this.txtNumero_2.setValue(getOrdencompra().getNumero());
 			this.txtSerie.setText(getOrdencompra().getSerie());
-			this.txtTipoCambio.setValue(getOrdencompra().getTcambio());
-			this.txtTcMoneda.setValue(getOrdencompra().getTcmoneda());
+			this.txtTCambio.setValue(getOrdencompra().getTcambio());
+			this.txtTCMoneda.setValue(getOrdencompra().getTcmoneda());
 			// this.cntGrupoCentralizacion.txtCodigo.setText(getOrdencompra().getGrupoCentralizacion().getIdgcentralizacion());
 			// this.cntGrupoCentralizacion.txtDescripcion.setText(getOrdencompra().getGrupoCentralizacion().getDescripcion());
 			cntMoneda.txtCodigo
@@ -423,17 +440,14 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			for (DOrdenCompra d : dordencompras) {
 				Producto p = d.getProducto();
 				Unimedida u = d.getUnimedida();
-				ReferenciaDOC ref = new ReferenciaDOC();
-				ref.setTipo_referencia(d.getTipo_referencia());
-				ref.setIdreferencia(d.getIdreferencia());
-				ref.setItem_referencia(d.getItemreferencia());
+
 				getDetalleTM().addRow(
 						new Object[] { p.getIdproducto(), p.getDescripcion(),
 								u.getIdunimedida(), u.getDescripcion(),
 								d.getCantidad(), d.getPrecio_unitario(),
 								d.getVventa(), d.getPdescuento(),
 								d.getDescuento(), d.getPimpuesto(),
-								d.getImpuesto(), d.getImporte(), ref });
+								d.getImpuesto(), d.getImporte() });
 			}
 
 			// List<DetDocingreso> detDocIngresoL =
@@ -492,10 +506,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtSerie.setEditable(true);
 		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
+		this.txtTCMoneda.setEditable(true);
+		this.txtTCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
 		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
@@ -507,10 +519,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtSerie.setEditable(false);
 		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
+		this.txtTCMoneda.setEditable(false);
+		this.txtTCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
@@ -547,13 +557,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		getOrdencompra().setDia(c.get(Calendar.DAY_OF_MONTH));
 		getOrdencompra().setMes(c.get(Calendar.MONTH) + 1);
 		getOrdencompra().setAnio(c.get(Calendar.YEAR));
-		getOrdencompra().setAniomesdia(
+		getOrdencompra().setFecha(
 				(c.get(Calendar.YEAR) * 10000)
 						+ ((c.get(Calendar.MONTH) + 1) * 100)
 						+ c.get(Calendar.DAY_OF_MONTH));
 		getOrdencompra().setGlosa(txtGlosa.getText());
-		getOrdencompra().setTcambio(Float.parseFloat(txtTipoCambio.getText()));
-		getOrdencompra().setTcmoneda(Float.parseFloat(txtTcMoneda.getText()));
+		getOrdencompra().setTcambio(Float.parseFloat(txtTCambio.getText()));
+		getOrdencompra().setTcmoneda(Float.parseFloat(txtTCMoneda.getText()));
 		dordencompras = new ArrayList<DOrdenCompra>();
 
 		int rows = getDetalleTM().getRowCount();
@@ -561,7 +571,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		for (int row = 0; row < rows; row++) {
 			DOrdenCompra d = new DOrdenCompra();
 			DOrdenCompraPK id = new DOrdenCompraPK();
-			ReferenciaDOC refDOC = new ReferenciaDOC();
+
 			String idproducto, idunimedida;
 
 			idproducto = getDetalleTM().getValueAt(row, 0).toString();
@@ -592,8 +602,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			importe = Float.parseFloat(getDetalleTM().getValueAt(row, 11)
 					.toString());
 
-			refDOC = (ReferenciaDOC) getDetalleTM().getValueAt(row, 12);
-
 			Producto p = productoDAO.find(idproducto);
 			Unimedida u = unimedidaDAO.find(idunimedida);
 
@@ -612,15 +620,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			d.setImpuesto(impuesto);
 			d.setImporte(importe);
 
-			if (refDOC != null) {
-				d.setTipo_referencia(refDOC.getTipo_referencia());
-				d.setIdreferencia(refDOC.getIdreferencia());
-				d.setItemreferencia(refDOC.getItem_referencia());
-			} else {
-				d.setTipo_referencia(' ');
-				d.setIdreferencia(0);
-				d.setItemreferencia(0);
-			}
 			dordencompras.add(d);
 		}
 	}
@@ -632,12 +631,12 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	}
 
 	public boolean validaCabecera() {
-		// if (this.cntGrupoCentralizacion.txtCodigo.getText().isEmpty())
-		// return false;
-		//
-		return FormValidador.TextFieldObligatorios(cntMoneda.txtCodigo,
-				txtTipoCambio, cntResponsable.txtCodigo, cntSucursal.txtCodigo,
-				cntAlmacen.txtCodigo);
+
+		if (!FormValidador.CntObligatorios(cntMoneda, cntResponsable,
+				cntSucursal, cntAlmacen))
+			return false;
+
+		return true;
 	}
 
 	public DSGTableModel getDetalleTM() {

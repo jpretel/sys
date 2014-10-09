@@ -42,6 +42,8 @@ import entity.Sucursal;
 import entity.Unimedida;
 
 import java.awt.Component;
+import vista.contenedores.CntMoneda;
+import vista.controles.DSGTextFieldNumber;
 
 public class FrmDocOrdenServicio extends AbstractDocForm {
 
@@ -71,6 +73,9 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 
 	private OrdenServicio ordenservicio;
 	private List<DOrdenServicio> dordenservicios = new ArrayList<DOrdenServicio>();
+	private CntMoneda cntMoneda;
+	private DSGTextFieldNumber txtTCambio;
+	private DSGTextFieldNumber txtTCMoneda;
 
 	public FrmDocOrdenServicio() {
 		super("Orden de Servicio");
@@ -211,7 +216,18 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 		this.txtGlosa = new JTextArea();
 		this.scrlGlosa.setViewportView(this.txtGlosa);
 
-		
+		this.cntMoneda = new CntMoneda();
+		this.cntMoneda.setBounds(389, 12, 192, 20);
+		pnlPrincipal.add(this.cntMoneda);
+
+		this.txtTCambio = new DSGTextFieldNumber(0);
+		this.txtTCambio.setBounds(603, 12, 65, 20);
+		pnlPrincipal.add(this.txtTCambio);
+
+		this.txtTCMoneda = new DSGTextFieldNumber(0);
+		this.txtTCMoneda.setBounds(704, 12, 65, 20);
+		pnlPrincipal.add(this.txtTCMoneda);
+
 		txtSerie.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg) {
@@ -288,8 +304,8 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 		if (getOrdenservicio() != null) {
 			this.txtNumero_2.setValue(getOrdenservicio().getNumero());
 			this.txtSerie.setText(getOrdenservicio().getSerie());
-			this.txtTipoCambio.setValue(getOrdenservicio().getTcambio());
-			this.txtTcMoneda.setValue(getOrdenservicio().getTcmoneda());
+			this.txtTCambio.setValue(getOrdenservicio().getTcambio());
+			this.txtTCMoneda.setValue(getOrdenservicio().getTcmoneda());
 			this.txtGlosa.setText(getOrdenservicio().getGlosa());
 			cntMoneda.txtCodigo
 					.setText((getOrdenservicio().getMoneda() == null) ? ""
@@ -347,9 +363,9 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
 					.toString());
 			pu = Float.parseFloat(getDetalleTM().getValueAt(row, 5).toString());
-			
+
 			importe = cantidad * pu;
-			
+
 			getDetalleTM().setValueAt(importe, row, 6);
 		}
 	}
@@ -372,10 +388,8 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 		this.txtSerie.setEditable(true);
 		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
+		this.txtTCMoneda.setEditable(true);
+		this.txtTCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
 		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
@@ -387,10 +401,8 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 		this.txtSerie.setEditable(false);
 		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
+		this.txtTCMoneda.setEditable(false);
+		this.txtTCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
@@ -433,9 +445,8 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 						+ ((c.get(Calendar.MONTH) + 1) * 100)
 						+ c.get(Calendar.DAY_OF_MONTH));
 		getOrdenservicio().setGlosa(txtGlosa.getText());
-		getOrdenservicio()
-				.setTcambio(Float.parseFloat(txtTipoCambio.getText()));
-		getOrdenservicio().setTcmoneda(Float.parseFloat(txtTcMoneda.getText()));
+		getOrdenservicio().setTcambio(Float.parseFloat(txtTCambio.getText()));
+		getOrdenservicio().setTcmoneda(Float.parseFloat(txtTCMoneda.getText()));
 		dordenservicios = new ArrayList<DOrdenServicio>();
 
 		int rows = getDetalleTM().getRowCount();
@@ -483,12 +494,12 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 	}
 
 	public boolean validaCabecera() {
-		// if (this.cntGrupoCentralizacion.txtCodigo.getText().isEmpty())
-		// return false;
-		//
-		return FormValidador.TextFieldObligatorios(cntMoneda.txtCodigo,
-				txtTipoCambio, cntResponsable.txtCodigo, cntSucursal.txtCodigo,
-				cntAlmacen.txtCodigo);
+		
+		if (!FormValidador.CntObligatorios(cntMoneda, cntResponsable,
+				cntSucursal, cntAlmacen))
+			return false;
+
+		return true;
 	}
 
 	public DSGTableModel getDetalleTM() {
