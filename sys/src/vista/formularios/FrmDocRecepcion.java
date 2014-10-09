@@ -38,9 +38,9 @@ import dao.DocingresoDAO;
 import dao.GrupoCentralizacionDAO;
 import dao.MonedaDAO;
 import dao.OrdenCompraDAO;
+import dao.PrivUsuarioAlmacenDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
-import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.Almacen;
 import entity.Asiento;
@@ -66,6 +66,7 @@ import vista.controles.FindButton;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import vista.contenedores.CntMoneda;
 
 public class FrmDocRecepcion extends AbstractDocForm {
@@ -102,6 +103,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private OrdenCompra ordencompra = null;
 	private CntMoneda cntMoneda;
 	private JLabel lblMoneda;
+	private PrivUsuarioAlmacenDAO privUsuarioAlmacenDAO = new PrivUsuarioAlmacenDAO();
 
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");
@@ -271,13 +273,17 @@ public class FrmDocRecepcion extends AbstractDocForm {
 				}
 			}
 		});
-
-		cntSucursal.txtCodigo.addFocusListener(new FocusAdapter() {
+		
+		cntAlmacen.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent arg0) {
-				if (cntSucursal.txtCodigo.getText().trim().length() > 0) {
-					cntAlmacen.setData(new AlmacenDAO()
-							.getPorSucursal(cntSucursal.getSeleccionado()));
+			public void focusGained(FocusEvent arg0) {
+				if (cntSucursal.getSeleccionado() != null) {
+					cntAlmacen.setData(privUsuarioAlmacenDAO
+							.getAlmacenPorUsuario(Sys.usuario,
+									cntSucursal.getSeleccionado()));
+				} else {
+					cntAlmacen.setData(null);
+					
 				}
 			}
 		});
@@ -509,7 +515,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	public void llenar_tablas() {
 		cntGrupoCentralizacion.setData(new GrupoCentralizacionDAO().findAll());
 		cntMoneda.setData(new MonedaDAO().findAll());
-		cntSucursal.setData(new SucursalDAO().findAll());
+		cntSucursal.setData(privUsuarioAlmacenDAO
+				.getSucursalPorUsuario(Sys.usuario));
 		cntConcepto.setData(new ConceptoDAO().getPorTipo("I"));
 		cntResponsable.setData(new ResponsableDAO().findAll());
 		txtProducto.setData(new ProductoDAO().findAll());
@@ -574,7 +581,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		vista_noedicion();
 
 	}
-	
+
 	@Override
 	public void llenarDesdeVista() {
 		Long Id = getIngreso().getIddocingreso();
