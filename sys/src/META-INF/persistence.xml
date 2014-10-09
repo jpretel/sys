@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="sys" transaction-type="RESOURCE_LOCAL">
 		<class>entity.Almacen</class>
 		<class>entity.AlmacenPK</class>
@@ -6,6 +9,7 @@
 		<class>entity.Asiento</class>
 		<class>entity.CfgCentralizaAlm</class>
 		<class>entity.CfgCentralizaAlmPK</class>
+		<class>entity.CierrePeriodo</class>
 		<class>entity.Clieprov</class>
 		<class>entity.Concepto</class>
 		<class>entity.Consumidor</class>
@@ -51,9 +55,13 @@
 		<class>entity.Moneda</class>
 		<class>entity.OrdenCompra</class>
 		<class>entity.OrdenServicio</class>
+		<class>entity.PrivUsuarioAlmacen</class>
+		<class>entity.PrivUsuarioAlmacenPK</class>
 		<class>entity.Producto</class>
 		<class>entity.ProductoImpuesto</class>
 		<class>entity.ProductoImpuestoPK</class>
+		<class>entity.ProductoStockMinimo</class>
+		<class>entity.ProductoStockMinimoPK</class>
 		<class>entity.PtoEmision</class>
 		<class>entity.Responsable</class>
 		<class>entity.Ruc</class>
@@ -78,19 +86,19 @@
 		<class>entity.SysTitulo</class>
 		<class>entity.SysTituloPK</class>
 		<class>entity.TCambio</class>
-        <class>entity.TCambioPK</class>
-        <class>entity.Transportista</class>
-        <class>entity.Unimedida</class>
+		<class>entity.TCambioPK</class>
+		<class>entity.Transportista</class>
+		<class>entity.Unimedida</class>
 		<class>entity.Usuario</class>
-
-
+		<shared-cache-mode>NONE</shared-cache-mode>
+		
 		<properties>
-			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-			<property name="eclipselink.jdbc.batch-writing" value="JDBC"/>
-			<property name="eclipselink.jdbc.batch-writing.sizeg" value="1000"/>
-			 <!-- <property name="eclipselink.logging.level" value="FINEST"/> --> 
-			 <!-- -->
-			 <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> 
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />
+			<property name="eclipselink.jdbc.batch-writing.sizeg" value="1000" />
+			<!-- <property name="eclipselink.logging.level" value="FINEST" /> -->
+
+			<!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> -->
 		</properties>
 	</persistence-unit>
 
