@@ -18,7 +18,7 @@ public class Docingreso implements Serializable {
 	private GrupoCentralizacion grupoCentralizacion;
 	
 	@ManyToOne
-	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda" , nullable = false)
+	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda")
 	private Moneda moneda;
 	
 	@ManyToOne
@@ -66,6 +66,9 @@ public class Docingreso implements Serializable {
 	
 	@Column
 	private int fecha;
+	
+	@Column
+	private int aniomesdia;
 	
 	@ManyToOne
 	@JoinColumn(name="idasiento", referencedColumnName="idasiento")
@@ -198,6 +201,14 @@ public class Docingreso implements Serializable {
 
 	public void setFecha(int fecha) {
 		this.fecha = fecha;
+	}
+
+	public int getAniomesdia() {
+		return aniomesdia;
+	}
+
+	public void setAniomesdia(int aniomesdia) {
+		this.aniomesdia = aniomesdia;
 	}
 
 }

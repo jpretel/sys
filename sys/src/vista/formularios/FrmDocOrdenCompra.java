@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
+import core.centralizacion.ContabilizaComprasRecepcion;
 import core.centralizacion.ContabilizaSlcCompras;
 import dao.AlmacenDAO;
 import dao.DOrdenCompraDAO;
@@ -353,7 +354,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		tc.getColumn(11).setCellEditor(new FloatEditor(2));
 		tc.getColumn(11).setCellRenderer(new FloatRenderer(2));
 
-		tc.getColumn(12).setCellRenderer(new ReferenciaDOCRenderer());
+		//tc.getColumn(12).setCellRenderer(new ReferenciaDOCRenderer());
 
 		iniciar();
 	}
@@ -390,8 +391,9 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			}
 		}
 
-		ContabilizaSlcCompras.ContabilizaOrdenCompra(getOrdencompra()
-				.getIdordencompra());
+		/*ContabilizaSlcCompras.ContabilizaOrdenCompra(getOrdencompra()
+				.getIdordencompra());*/
+		ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(getOrdencompra().getIdordencompra(),1,"Compra");
 	}
 
 	@Override

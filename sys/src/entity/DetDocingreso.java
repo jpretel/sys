@@ -44,7 +44,7 @@ public class DetDocingreso implements Serializable {
 	
 	@ManyToOne
 	@JoinColumns({@JoinColumn(name = "idordencompra", referencedColumnName = "idordencompra"),
-		@JoinColumn(name = "item" , referencedColumnName = "item")})
+		@JoinColumn(name = "item_compra" , referencedColumnName = "item")})
 	private DOrdenCompra dordencompra;
 	
 	public DetDocingreso() {
@@ -112,6 +112,14 @@ public class DetDocingreso implements Serializable {
 
 	public void setUnimedida(Unimedida unimedida) {
 		this.unimedida = unimedida;
+	}
+
+	public DOrdenCompra getDordencompra() {
+		return dordencompra;
+	}
+
+	public void setDordencompra(DOrdenCompra dordencompra) {
+		this.dordencompra = dordencompra;
 	}
 
 }

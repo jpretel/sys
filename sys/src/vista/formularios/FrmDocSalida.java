@@ -347,21 +347,19 @@ public class FrmDocSalida extends AbstractDocForm {
 
 			this.txtNumero_2.setText(numero);
 			this.txtSerie.setText(getSalida().getSerie());
-			// this.cntGrupoCentralizacion.setSeleccionado(getSalida().getGrupoCentralizacion());
 			this.cntGrupoCentralizacion.txtCodigo.setText(getSalida()
 					.getGrupoCentralizacion().getIdgcentralizacion());
 			this.cntGrupoCentralizacion.llenar();
-			// this.cntGrupoCentralizacion.txtDescripcion.setText(getSalida().getGrupoCentralizacion().getDescripcion());
+			
 
 			this.txtTipoCambio
 					.setText(String.valueOf(getSalida().getTcambio()));
 			this.txtTcMoneda.setText(String.valueOf(getSalida().getTcmoneda()));
-			// this.cntMoneda.setSeleccionado(getSalida().getMoneda());
+			
 			this.cntMoneda.txtCodigo.setText(getSalida().getMoneda()
 					.getIdmoneda());
 			this.cntMoneda.llenar();
-			// this.cntMoneda.txtDescripcion.setText(getSalida().getMoneda().getDescripcion());
-			// this.cntConcepto.setSeleccionado(getSalida().getConcepto());
+			
 			this.cntConcepto.txtCodigo.setText(getSalida().getConcepto()
 					.getIdconcepto());
 			this.cntConcepto.llenar();
@@ -370,7 +368,8 @@ public class FrmDocSalida extends AbstractDocForm {
 				cntSucursal_dest.txtCodigo.setEditable(true);
 				cntAlmacen_dest.txtCodigo.setEditable(true);
 			}
-			// this.cntResponsable.setSeleccionado(getSalida().getResponsable());
+			
+			
 			this.cntResponsable.txtCodigo.setText(getSalida().getResponsable()
 					.getIdresponsable());
 			this.cntResponsable.llenar();
@@ -411,8 +410,7 @@ public class FrmDocSalida extends AbstractDocForm {
 					.getPorIdSalida(getSalida());
 			getDetalleTM().limpiar();
 			for (DetDocsalida salida : detDocSalidaL) {
-				Producto producto = productoDAO.find(salida.getId()
-						.getIdproducto());
+				Producto producto = salida.getProducto();
 				getDetalleTM().addRow(
 						new Object[] { producto.getIdproducto(),
 								producto.getDescripcion(),
@@ -546,7 +544,7 @@ public class FrmDocSalida extends AbstractDocForm {
 			DetDocsalidaPK detPK = new DetDocsalidaPK();
 			DetDocsalida det = new DetDocsalida();
 			detPK.setIdsalida(id);
-			detPK.setIdproducto(idproducto);
+			detPK.setItem(i+1);			
 			det.setId(detPK);
 			det.setDocsalida(getSalida());
 			det.setProducto(p);

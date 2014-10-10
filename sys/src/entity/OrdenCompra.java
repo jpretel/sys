@@ -22,6 +22,7 @@ public class OrdenCompra implements Serializable {
 	private int mes;
 	private int anio;
 	private int fecha;
+	private int aniomesdia;
 	@ManyToOne
 	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda")
 	private Moneda moneda;
@@ -158,6 +159,14 @@ public class OrdenCompra implements Serializable {
 
 	public void setFecha(int fecha) {
 		this.fecha = fecha;
+	}
+
+	public int getAniomesdia() {
+		return aniomesdia;
+	}
+
+	public void setAniomesdia(int aniomesdia) {
+		this.aniomesdia = aniomesdia;
 	}
 
 }
