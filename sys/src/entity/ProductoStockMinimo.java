@@ -35,7 +35,10 @@ public class ProductoStockMinimo implements Serializable {
 
 	@Column(precision = 17, scale = 6)
 	private float cantidad;
-
+	
+	@Column(precision = 17, scale = 6)
+	private float reposicion;
+	
 	public ProductoStockMinimoPK getId() {
 		return id;
 	}
@@ -74,5 +77,13 @@ public class ProductoStockMinimo implements Serializable {
 
 	public void setCantidad(float cantidad) {
 		this.cantidad = cantidad;
+	}
+
+	public float getReposicion() {
+		return reposicion;
+	}
+
+	public void setReposicion(float reposicion) {
+		this.reposicion = reposicion;
 	}
 }

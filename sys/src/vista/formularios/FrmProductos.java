@@ -267,7 +267,7 @@ public class FrmProductos extends AbstractMaestro {
 
 		tblStockMinimo = new JTable(new DSGTableModel(new String[] {
 				"Cód. Sucursal", "Sucursal", "Cód Almacen", "Almacen",
-				"Cantidad" }) {
+				"Mínimo", "Reposición" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -279,7 +279,7 @@ public class FrmProductos extends AbstractMaestro {
 
 			@Override
 			public void addRow() {
-				addRow(new Object[] { "", "", "", "", 0.0F });
+				addRow(new Object[] { "", "", "", "", 0.0F, 0.0F });
 			}
 
 		}) {
@@ -356,12 +356,15 @@ public class FrmProductos extends AbstractMaestro {
 		getStockMinimoTM().setRepetidos(0, 2);
 		getStockMinimoTM().setValidaNumero(
 				new DSGVNDetalle(DSGVNDetalle.Operador.MAYOR, 0, 4));
-
+		
 		TableColumnModel tc = tblStockMinimo.getColumnModel();
 
 		tc.getColumn(4).setCellEditor(new FloatEditor(6));
 		tc.getColumn(4).setCellRenderer(new FloatRenderer(6));
-
+		
+		tc.getColumn(5).setCellEditor(new FloatEditor(6));
+		tc.getColumn(5).setCellRenderer(new FloatRenderer(6));
+		
 		pnlContenido.add(tabPanel);
 
 	}
@@ -395,7 +398,6 @@ public class FrmProductos extends AbstractMaestro {
 		}
 
 		for (ProductoStockMinimo ps : stockMinimo) {
-			System.out.println("aa");
 			if (productoStockMinimoDAO.find(ps.getId()) == null) {
 				productoStockMinimoDAO.create(ps);
 			} else {
@@ -484,7 +486,7 @@ public class FrmProductos extends AbstractMaestro {
 						.addRow(new Object[] { sucursal.getIdsucursal(),
 								sucursal.getDescripcion(),
 								almacen.getId().getIdalmacen(),
-								almacen.getDescripcion(), stock.getCantidad() });
+								almacen.getDescripcion(), stock.getCantidad(), stock.getReposicion() });
 			}
 
 		} else {
@@ -572,7 +574,7 @@ public class FrmProductos extends AbstractMaestro {
 
 		for (int i = 0; i < rows; i++) {
 			String idsucursal, idalmacen;
-			float cantidad;
+			float cantidad, reposicion;
 
 			ProductoStockMinimo ps = new ProductoStockMinimo();
 			ProductoStockMinimoPK id = new ProductoStockMinimoPK();
@@ -582,14 +584,16 @@ public class FrmProductos extends AbstractMaestro {
 
 			cantidad = Float.parseFloat(getStockMinimoTM().getValueAt(i, 4)
 					.toString());
-
+			reposicion = Float.parseFloat(getStockMinimoTM().getValueAt(i, 5)
+					.toString());
+			
 			id.setIdproducto(idproducto);
 			id.setIdsucursal(idsucursal);
 			id.setIdalmacen(idalmacen);
 
 			ps.setId(id);
 			ps.setCantidad(cantidad);
-
+			ps.setReposicion(reposicion);
 			ps.setId(id);
 			stockMinimo.add(ps);
 		}

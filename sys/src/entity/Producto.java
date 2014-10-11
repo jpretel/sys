@@ -31,7 +31,7 @@ public class Producto implements Serializable {
 
 	@Column(name = "es_venta")
 	private int esVenta;
-	
+
 	@Column(name = "es_servicio", precision = 1, scale = 0)
 	private int esServicio;
 
@@ -53,10 +53,12 @@ public class Producto implements Serializable {
 
 	// bi-directional many-to-one association to Marca
 	@ManyToOne
+	@JoinColumn(name = "idmarca", referencedColumnName = "idmarca")
 	private Marca marca;
 
 	// bi-directional many-to-one association to Unimedida
 	@ManyToOne
+	@JoinColumn(name = "idunimedida", referencedColumnName = "idunimedida")
 	private Unimedida unimedida;
 
 	public Producto() {
