@@ -45,6 +45,7 @@ import entity.Producto;
 import entity.Sucursal;
 import entity.Unimedida;
 import vista.contenedores.CntGrupoCentralizacion;
+import vista.contenedores.CntMoneda;
 
 public class FrmDocSalida extends AbstractDocForm {
 	/**
@@ -73,6 +74,8 @@ public class FrmDocSalida extends AbstractDocForm {
 	private JScrollPane scrlGlosa;
 	private JLabel lblOperacin;
 	private TxtProducto txtProducto;
+	private JLabel label;
+	private CntMoneda cntMoneda;
 
 	public FrmDocSalida() {
 		super("Nota de Salida");
@@ -300,6 +303,14 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.lblOperacin = new JLabel("Operaci\u00F3n");
 		this.lblOperacin.setBounds(9, 45, 54, 16);
 		pnlPrincipal.add(this.lblOperacin);
+		
+		this.label = new JLabel("Concepto");
+		this.label.setBounds(369, 15, 54, 16);
+		pnlPrincipal.add(this.label);
+		
+		this.cntMoneda = new CntMoneda();
+		this.cntMoneda.setBounds(434, 12, 192, 20);
+		pnlPrincipal.add(this.cntMoneda);
 		iniciar();
 	}
 
@@ -350,11 +361,6 @@ public class FrmDocSalida extends AbstractDocForm {
 			this.cntGrupoCentralizacion.txtCodigo.setText(getSalida()
 					.getGrupoCentralizacion().getIdgcentralizacion());
 			this.cntGrupoCentralizacion.llenar();
-			
-
-			this.txtTipoCambio
-					.setText(String.valueOf(getSalida().getTcambio()));
-			this.txtTcMoneda.setText(String.valueOf(getSalida().getTcmoneda()));
 			
 			this.cntMoneda.txtCodigo.setText(getSalida().getMoneda()
 					.getIdmoneda());
@@ -464,16 +470,12 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.txtSerie.setEditable(true);
 		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
 		this.cntGrupoCentralizacion.txtCodigo.setEditable(true);
 		this.cntMoneda.txtCodigo.setEditable(true);
 		this.cntConcepto.txtCodigo.setEditable(true);
 		this.cntResponsable.txtCodigo.setEditable(true);
 		this.cntSucursal.txtCodigo.setEditable(true);
 		this.cntAlmacen.txtCodigo.setEditable(true);
-		this.txtTcMoneda.setEditable(true);
-		this.txtTipoCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
 		getDetalleTM().setEditar(true);
 	}
@@ -483,16 +485,12 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.txtSerie.setEditable(false);
 		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
 		this.cntGrupoCentralizacion.txtCodigo.setEditable(false);
 		this.cntMoneda.txtCodigo.setEditable(false);
 		this.cntConcepto.txtCodigo.setEditable(false);
 		this.cntResponsable.txtCodigo.setEditable(false);
 		this.cntSucursal.txtCodigo.setEditable(false);
 		this.cntAlmacen.txtCodigo.setEditable(false);
-		this.txtTcMoneda.setEditable(false);
-		this.txtTipoCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		this.cntSucursal_dest.txtCodigo.setEditable(false);
 		this.cntAlmacen_dest.txtCodigo.setEditable(false);
@@ -511,8 +509,6 @@ public class FrmDocSalida extends AbstractDocForm {
 		getSalida().setIddocsalida(id);
 		getSalida().setGrupoCentralizacion(
 				cntGrupoCentralizacion.getSeleccionado());
-		getSalida().setTcambio(Float.parseFloat(this.txtTipoCambio.getText()));
-		getSalida().setTcmoneda(Float.parseFloat(this.txtTcMoneda.getText()));
 		getSalida().setSerie(this.txtSerie.getText());
 		getSalida().setNumero(Integer.parseInt(this.txtNumero_2.getText()));
 		getSalida().setConcepto(this.cntConcepto.getSeleccionado());
@@ -571,8 +567,7 @@ public class FrmDocSalida extends AbstractDocForm {
 	public boolean validaCabecera() {
 		return FormValidador.TextFieldObligatorios(
 				this.cntGrupoCentralizacion.txtCodigo,
-				this.cntMoneda.txtCodigo, this.txtTipoCambio, this.txtTcMoneda,
-				this.cntConcepto.txtCodigo, this.cntResponsable.txtCodigo,
+				this.cntMoneda.txtCodigo, this.cntConcepto.txtCodigo, this.cntResponsable.txtCodigo,
 				this.cntSucursal.txtCodigo, this.cntAlmacen.txtCodigo);
 	}
 

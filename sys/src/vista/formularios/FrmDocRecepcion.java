@@ -28,8 +28,6 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import core.centralizacion.CentralizaAlm;
-import core.centralizacion.ContabilizaAlmacen;
 import core.centralizacion.ContabilizaComprasRecepcion;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
@@ -69,6 +67,7 @@ import vista.controles.FindButton;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import vista.contenedores.CntMoneda;
 
 public class FrmDocRecepcion extends AbstractDocForm {
 	/**
@@ -101,7 +100,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private JTextField txtNumeroCompra;
 	private FindButton findButton;
 	private OrdenCompra ordencompra = null;
-	
+	private CntMoneda cntMoneda;
+	private JLabel lblMoneda;
+
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");
 		this.cntGrupoCentralizacion = new CntGrupoCentralizacion();
@@ -144,7 +145,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
 				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
-				"Importe","OC"}) {
+				"Importe", "OC" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -158,7 +159,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			@Override
 			public void addRow() {
 				if (validaCabecera())
-					addRow(new Object[] { "", "", "", "", 0, 0, 0,null});
+					addRow(new Object[] { "", "", "", "", 0, 0, 0, null });
 				else
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
@@ -231,13 +232,13 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		tc.getColumn(7).setWidth(0);
 		tc.getColumn(7).setMinWidth(0);
 		tc.getColumn(7).setMaxWidth(0);
-		
+
 		pnlPrincipal.add(scrollPaneDetalle);
 
 		cntConcepto = new CntConcepto();
 		cntConcepto.setBounds(72, 69, 338, 20);
 		pnlPrincipal.add(cntConcepto);
-		
+
 		cntResponsable = new cntResponsable();
 		cntResponsable.setBounds(508, 69, 309, 20);
 		pnlPrincipal.add(cntResponsable);
@@ -281,8 +282,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 							.getPorSucursal(cntSucursal.getSeleccionado()));
 				}
 			}
-		});		
-		
+		});
+
 		this.scrlGlosa = new JScrollPane();
 		this.scrlGlosa.setBounds(506, 142, 325, 61);
 		pnlPrincipal.add(this.scrlGlosa);
@@ -298,31 +299,32 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		this.txtSerieCompra.setBounds(72, 145, 44, 20);
 		pnlPrincipal.add(this.txtSerieCompra);
 		this.txtSerieCompra.setColumns(10);
-		
+
 		txtSerieCompra.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent evt){
-				if(txtSerieCompra.isEditable()){
+			public void focusLost(FocusEvent evt) {
+				if (txtSerieCompra.isEditable()) {
 					String texto = org.codehaus.plexus.util.StringUtils.repeat(
-							"0", 4 - txtSerieCompra.getText().length()) + txtSerieCompra.getText();
+							"0", 4 - txtSerieCompra.getText().length())
+							+ txtSerieCompra.getText();
 					txtSerieCompra.setText(texto);
-				}				
+				}
 			}
-		});		
-		
-		
+		});
+
 		this.txtNumeroCompra = new JTextField();
 		this.txtNumeroCompra.setColumns(10);
 		this.txtNumeroCompra.setBounds(116, 145, 80, 20);
 		pnlPrincipal.add(this.txtNumeroCompra);
-		
+
 		txtNumeroCompra.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent evt){
-				if(txtNumeroCompra.isEditable()){
+			public void focusLost(FocusEvent evt) {
+				if (txtNumeroCompra.isEditable()) {
 					String texto = org.codehaus.plexus.util.StringUtils.repeat(
-							"0", 8 - txtNumeroCompra.getText().length()) + txtNumeroCompra.getText();
-					txtNumeroCompra.setText(texto);					
+							"0", 8 - txtNumeroCompra.getText().length())
+							+ txtNumeroCompra.getText();
+					txtNumeroCompra.setText(texto);
 				}
 			}
 		});
@@ -336,42 +338,59 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		});
 		this.findButton.setBounds(198, 145, 20, 20);
 		pnlPrincipal.add(this.findButton);
-		
+
 		cntConcepto.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusLost(FocusEvent evt){
-				if(cntConcepto.txtCodigo.getText().trim().length() > 0){
-					if (cntConcepto.getSeleccionado().getSolcitaCompra() > 0){
+			public void focusLost(FocusEvent evt) {
+				if (cntConcepto.txtCodigo.getText().trim().length() > 0) {
+					if (cntConcepto.getSeleccionado().getSolcitaCompra() > 0) {
 						txtSerieCompra.setEditable(true);
 						txtNumeroCompra.setEditable(true);
 						findButton.setEnabled(true);
-					}else{
+					} else {
 						txtSerieCompra.setEditable(false);
 						txtNumeroCompra.setEditable(false);
-						findButton.setEnabled(false);	
-					}					
-				}					
+						findButton.setEnabled(false);
+					}
+				}
 			}
-	});
+		});
+
+		this.cntMoneda = new CntMoneda();
+		this.cntMoneda.setBounds(412, 12, 192, 20);
+		pnlPrincipal.add(this.cntMoneda);
+
+		this.lblMoneda = new JLabel("Moneda");
+		this.lblMoneda.setBounds(356, 15, 54, 16);
+		pnlPrincipal.add(this.lblMoneda);
 		iniciar();
-	}	
-	
-	public void llenarDetalleRecepcion(){		
+	}
+
+	public void llenarDetalleRecepcion() {
 		String serie = this.txtSerieCompra.getText();
 		String numero = this.txtNumeroCompra.getText();
-		if (serie.trim().length() > 0 && numero.trim().length() > 0){
-			ordencompra = ordencompraDAO.getPorSerieNumero(serie,numero);
-			KardexCompraRecepcionDAO kardexCompraRecepcionDAO = new KardexCompraRecepcionDAO(); 
-			List<DOrdenCompra> lDOrdenCompras = dordencompraDAO.getPorOrdenCompra(ordencompra);		
-			for(DOrdenCompra dordencompra : lDOrdenCompras){
+		if (serie.trim().length() > 0 && numero.trim().length() > 0) {
+			ordencompra = ordencompraDAO.getPorSerieNumero(serie, numero);
+			KardexCompraRecepcionDAO kardexCompraRecepcionDAO = new KardexCompraRecepcionDAO();
+			List<DOrdenCompra> lDOrdenCompras = dordencompraDAO
+					.getPorOrdenCompra(ordencompra);
+			for (DOrdenCompra dordencompra : lDOrdenCompras) {
 				float sum_cantidad = 0;
-				for(KardexCompraRecepcion kardexCompraRecepcion: kardexCompraRecepcionDAO.getPorDOrdenCompra(dordencompra)){
-					sum_cantidad = sum_cantidad + (kardexCompraRecepcion.getCantidad() * kardexCompraRecepcion.getFactor());
+				for (KardexCompraRecepcion kardexCompraRecepcion : kardexCompraRecepcionDAO
+						.getPorDOrdenCompra(dordencompra)) {
+					sum_cantidad = sum_cantidad
+							+ (kardexCompraRecepcion.getCantidad() * kardexCompraRecepcion
+									.getFactor());
 				}
-				getDetalleTM().addRow(new Object[]{dordencompra.getProducto().getIdproducto(),
-						dordencompra.getProducto().getDescripcion(),dordencompra.getUnimedida().getIdunimedida(),
-						dordencompra.getUnimedida().getDescripcion(),sum_cantidad,dordencompra.getPrecio_unitario(),
-						dordencompra.getImporte(),dordencompra});
+				getDetalleTM().addRow(
+						new Object[] {
+								dordencompra.getProducto().getIdproducto(),
+								dordencompra.getProducto().getDescripcion(),
+								dordencompra.getUnimedida().getIdunimedida(),
+								dordencompra.getUnimedida().getDescripcion(),
+								sum_cantidad,
+								dordencompra.getPrecio_unitario(),
+								dordencompra.getImporte(), dordencompra });
 			}
 		}
 	}
@@ -402,9 +421,12 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		for (DetDocingreso det : getDetDocingresoL()) {
 			detDocingresoDAO.crear_editar(det);
 		}
-		ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(getIngreso().getIddocingreso(), -1, "Recepcion");
-		/*ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
-		CentralizaAlm.CentralizaIngreso(getIngreso().getIddocingreso());*/
+		ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(getIngreso()
+				.getIddocingreso(), -1, "Recepcion");
+		/*
+		 * ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
+		 * CentralizaAlm.CentralizaIngreso(getIngreso().getIddocingreso());
+		 */
 		setIngreso(docIngresoDAO.find(getIngreso().getIddocingreso()));
 	}
 
@@ -432,9 +454,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					.getGrupoCentralizacion().getIdgcentralizacion());
 			this.cntGrupoCentralizacion.llenar();
 
-			//this.txtTipoCambio.setValue(getIngreso().getTcambio());
+			// this.txtTipoCambio.setValue(getIngreso().getTcambio());
 
-			//this.txtTcMoneda.setValue(getIngreso().getTcmoneda());
+			// this.txtTcMoneda.setValue(getIngreso().getTcmoneda());
 
 			this.cntMoneda.txtCodigo
 					.setText((getIngreso().getMoneda() == null) ? ""
@@ -451,10 +473,12 @@ public class FrmDocRecepcion extends AbstractDocForm {
 							: getIngreso().getConcepto().getIdconcepto());
 
 			this.cntConcepto.llenar();
-			
-			if(this.cntConcepto.getSeleccionado().getSolcitaCompra() == 1){
-				txtSerieCompra.setText(getIngreso().getOrdencompra().getSerie());
-				String xnumero = StringUtils._padl(getIngreso().getNumero(), 8, '0');
+
+			if (this.cntConcepto.getSeleccionado().getSolcitaCompra() == 1) {
+				txtSerieCompra
+						.setText(getIngreso().getOrdencompra().getSerie());
+				String xnumero = StringUtils._padl(getIngreso().getNumero(), 8,
+						'0');
 				txtNumeroCompra.setText(xnumero);
 			}
 			this.cntResponsable.txtCodigo.setText((getIngreso()
@@ -488,8 +512,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 				Unimedida unimedida = ingreso.getUnimedida();
 				Producto p = ingreso.getProducto();
 				getDetalleTM().addRow(
-						new Object[] { p.getIdproducto(),
-								p.getDescripcion(),
+						new Object[] { p.getIdproducto(), p.getDescripcion(),
 								unimedida.getIdunimedida(),
 								unimedida.getDescripcion(),
 								ingreso.getCantidad(), ingreso.getPrecio(),
@@ -500,7 +523,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenar_lista() {
-	
+
 	}
 
 	@Override
@@ -515,31 +538,31 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void vista_edicion() {
-		//Verificar que no este en un proceso hacia adelante esto falta.....
+		// Verificar que no este en un proceso hacia adelante esto falta.....
 		boolean band;
 		band = getEstado().equals(NUEVO);
 
 		FormValidador.TextFieldsEdicion(band, this.txtSerie, this.txtNumero_2);
-		FormValidador.TextFieldsEdicion(true, this.txtTcMoneda,
-				this.txtTipoCambio);
+		// FormValidador.TextFieldsEdicion(true, this.txtTcMoneda,
+		// this.txtTipoCambio);
 
 		this.txtFecha.setEditable(true);
 		this.txtGlosa.setEditable(true);
-		if(cntConcepto.txtCodigo.getText().trim().length() > 0){
-			if(cntConcepto.getSeleccionado().getSolcitaCompra() > 0){
+		if (cntConcepto.txtCodigo.getText().trim().length() > 0) {
+			if (cntConcepto.getSeleccionado().getSolcitaCompra() > 0) {
 				txtSerieCompra.setEditable(true);
 				txtNumeroCompra.setEditable(true);
 				findButton.setEnabled(true);
-			}else{
+			} else {
 				txtSerieCompra.setEditable(false);
 				txtNumeroCompra.setEditable(false);
 				findButton.setEnabled(false);
 			}
-		}else{
+		} else {
 			txtSerieCompra.setEditable(false);
 			txtNumeroCompra.setEditable(false);
 			findButton.setEnabled(false);
-		}			
+		}
 
 		FormValidador.CntEdicion(true, this.cntGrupoCentralizacion,
 				this.cntMoneda, this.cntConcepto, this.cntResponsable,
@@ -554,8 +577,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		this.txtSerieCompra.setEditable(false);
 		this.txtNumeroCompra.setEditable(false);
 		this.findButton.setEnabled(false);
-		FormValidador.TextFieldsEdicion(false, this.txtTcMoneda,
-				this.txtTipoCambio, this.txtSerie, this.txtNumero_2);
+		// FormValidador.TextFieldsEdicion(false, this.txtTcMoneda,
+		// this.txtTipoCambio, this.txtSerie, this.txtNumero_2);
 
 		FormValidador.CntEdicion(false, this.cntGrupoCentralizacion,
 				this.cntMoneda, this.cntConcepto, this.cntResponsable,
@@ -578,18 +601,18 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	}
 
-	@SuppressWarnings({ "deprecation"})
+	@SuppressWarnings({ "deprecation" })
 	@Override
 	public void llenarDesdeVista() {
 		Long Id = getIngreso().getIddocingreso();
 		System.out.println(Id);
 		getIngreso().setGrupoCentralizacion(
-		cntGrupoCentralizacion.getSeleccionado());
+				cntGrupoCentralizacion.getSeleccionado());
 		getIngreso().setSerie(this.txtSerie.getText());
 		getIngreso().setNumero(Integer.parseInt(this.txtNumero_2.getText()));
 		getIngreso().setConcepto(this.cntConcepto.getSeleccionado());
-		if(cntConcepto.getSeleccionado().getSolcitaCompra() > 0 ){
-			if(ordencompra != null)
+		if (cntConcepto.getSeleccionado().getSolcitaCompra() > 0) {
+			if (ordencompra != null)
 				getIngreso().setOrdencompra(ordencompra);
 		}
 		getIngreso().setMoneda(cntMoneda.getSeleccionado());
@@ -614,7 +637,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					.getValueAt(i, 0).toString());
 
 			detPK.setIdingreso(Id);
-			detPK.setItem(i + 1); // Actualizamos la posicion			
+			detPK.setItem(i + 1); // Actualizamos la posicion
 			det.setId(detPK);
 			det.setDescripcion(getDetalleTM().getValueAt(i, 1).toString());
 			det.setUnimedida(unimedida);
@@ -624,8 +647,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					.toString()));
 			det.setImporte(Float.parseFloat(getDetalleTM().getValueAt(i, 6)
 					.toString()));
-			det.setProducto(producto);			
-			det.setDordencompra((DOrdenCompra)(getDetalleTM().getValueAt(i, 7)));
+			det.setProducto(producto);
+			det.setDordencompra((DOrdenCompra) (getDetalleTM().getValueAt(i, 7)));
 			DetDocingresoL.add(det);
 		}
 	}
@@ -656,9 +679,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	public boolean validaCabecera() {
 		return FormValidador.TextFieldObligatorios(
 				this.cntGrupoCentralizacion.txtCodigo,
-				this.cntMoneda.txtCodigo, this.txtTipoCambio, this.txtTcMoneda,
-				this.cntConcepto.txtCodigo, this.cntResponsable.txtCodigo,
-				this.cntSucursal.txtCodigo, this.cntAlmacen.txtCodigo);
+				this.cntMoneda.txtCodigo, this.cntConcepto.txtCodigo,
+				this.cntResponsable.txtCodigo, this.cntSucursal.txtCodigo,
+				this.cntAlmacen.txtCodigo);
 	}
 
 	public boolean validarDetalle() {
@@ -684,11 +707,11 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	public void setIngreso(Docingreso ingreso) {
 		this.ingreso = ingreso;
 	}
-	
+
 	@Override
 	public void doVerAsiento() {
 		Asiento asiento = getIngreso().getAsiento();
-		
+
 		FrmAsientoDoc frmAsiento = new FrmAsientoDoc();
 		frmAsiento.actualiza_objeto(asiento.getIdasiento(), "VISTA");
 		Sys.desktoppane.add(frmAsiento);
