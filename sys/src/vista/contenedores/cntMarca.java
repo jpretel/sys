@@ -11,8 +11,10 @@ public class cntMarca extends AbstractCntBuscar<Marca> {
 
 	@Override
 	public void cargarDatos(Marca entity) {
-		txtCodigo.setText(entity.getIdmarca());
-		txtDescripcion.setText(entity.getDescripcion());
+		if(entity != null){
+			txtCodigo.setText(entity.getIdmarca());
+			txtDescripcion.setText(entity.getDescripcion());
+		}
 	}
 
 	@Override

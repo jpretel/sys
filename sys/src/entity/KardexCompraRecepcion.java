@@ -24,6 +24,13 @@ public class KardexCompraRecepcion implements Serializable {
 			@JoinColumn(name = "idordencompra", referencedColumnName = "idordencompra", nullable = false),
 			@JoinColumn(name = "item_compra", referencedColumnName = "item", nullable = false) })
 	private DOrdenCompra dordencompra;
+	
+	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name = "iddocingreso",referencedColumnName = "iddocingreso"),
+		@JoinColumn(name = "item_recepcion",referencedColumnName = "item")
+	})
+	private DetDocingreso detdocingreso;
 
 	@ManyToOne
 	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
@@ -37,6 +44,8 @@ public class KardexCompraRecepcion implements Serializable {
 	@Column(precision = 17, scale = 6)
 	private float cantidad;
 	private static final long serialVersionUID = 1L;
+	
+	private long idreferencia;
 
 	public KardexCompraRecepcion() {
 		super();
@@ -88,5 +97,21 @@ public class KardexCompraRecepcion implements Serializable {
 
 	public void setDordencompra(DOrdenCompra dordencompra) {
 		this.dordencompra = dordencompra;
+	}
+
+	public DetDocingreso getDetdocingreso() {
+		return detdocingreso;
+	}
+
+	public void setDetdocingreso(DetDocingreso detdocingreso) {
+		this.detdocingreso = detdocingreso;
+	}
+
+	public long getIdreferencia() {
+		return idreferencia;
+	}
+
+	public void setIdreferencia(long idreferencia) {
+		this.idreferencia = idreferencia;
 	}
 }

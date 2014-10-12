@@ -1,7 +1,4 @@
 package core.centralizacion;
-
-import java.util.List;
-
 import dao.DOrdenCompraDAO;
 import dao.DetDocIngresoDAO;
 import dao.DocingresoDAO;
@@ -23,7 +20,7 @@ public class ContabilizaComprasRecepcion {
 		Docingreso docingreso = null;
 		KardexCompraRecepcion kardexCompraRecepcion = new KardexCompraRecepcion();
 		KardexCompraRecepcionDAO kardexCompraRecepcionDAO = new KardexCompraRecepcionDAO();
-		//kardexCompraRecepcionDAO.borrarPorCompraFactor(id, factor);
+		kardexCompraRecepcionDAO.borrarPorRefCompraFactor(id,factor);
 		if(tabla == "Compra"){			
 			ordenCompra = ordenCompraDAO.find(id);
 			for(DOrdenCompra dordenCompra : dordenCompraDAO.getPorOrdenCompra(ordenCompra)){
@@ -41,8 +38,10 @@ public class ContabilizaComprasRecepcion {
 				kardexCompraRecepcion.setFactor(factor);
 				kardexCompraRecepcion.setProducto(detdocingreso.getProducto());
 				kardexCompraRecepcion.setUnimedida(detdocingreso.getUnimedida());
+				kardexCompraRecepcion.setDetdocingreso(detdocingreso);
 			}
 		}
+		kardexCompraRecepcion.setIdreferencia(id);
 		kardexCompraRecepcionDAO.crear_editar(kardexCompraRecepcion);		
 		return true;
 	}
