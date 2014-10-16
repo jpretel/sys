@@ -76,7 +76,7 @@ public class FrmTCambio extends AbstractMaestro {
 		this.lblMes = new JLabel("Mes");
 
 		this.spinner = new JSpinner();
-		
+
 		this.spinner.setValue(calendar.get(Calendar.YEAR));
 		this.comboBox = new JComboBox<String>();
 
@@ -122,16 +122,16 @@ public class FrmTCambio extends AbstractMaestro {
 				llenar();
 			}
 		});
-		
+
 		this.spinner.addChangeListener(new ChangeListener() {
 
-	        @Override
-	        public void stateChanged(ChangeEvent e) {
-	            llenar();
-	        }
-	    });
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				llenar();
+			}
+		});
 		this.cntMoneda.txtCodigo.addFocusListener(new FocusAdapter() {
-			
+
 			@Override
 			public void focusLost(FocusEvent e) {
 				llenar();
@@ -272,7 +272,13 @@ public class FrmTCambio extends AbstractMaestro {
 		max = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
 		for (int i = 1; i <= max; i++) {
-			TCambio tc = tcambioDAO.getFechaMoneda(moneda, anio, mes, i);
+			TCambioPK pk = new TCambioPK();
+			pk.setIdmoneda(moneda.getIdmoneda());
+			pk.setAnio(anio);
+			pk.setMes(mes);
+			pk.setDia(i);
+
+			TCambio tc = tcambioDAO.find(pk);
 
 			if (tc == null) {
 				tc = new TCambio();
@@ -417,12 +423,14 @@ public class FrmTCambio extends AbstractMaestro {
 			TCambioPK id = new TCambioPK();
 			cal.setTime((Date) getDetalleTM().getValueAt(i, 0));
 			id.setAnio(cal.get(Calendar.YEAR));
-			id.setMes(cal.get(Calendar.MONTH)+1);
+			id.setMes(cal.get(Calendar.MONTH) + 1);
 			id.setDia(cal.get(Calendar.DAY_OF_MONTH));
 			id.setIdmoneda(moneda.getIdmoneda());
 			tcambio.setId(id);
-			tcambio.setCompra(Float.valueOf(getDetalleTM().getValueAt(i, 1).toString()));
-			tcambio.setVenta(Float.valueOf(getDetalleTM().getValueAt(i, 2).toString()));
+			tcambio.setCompra(Float.valueOf(getDetalleTM().getValueAt(i, 1)
+					.toString()));
+			tcambio.setVenta(Float.valueOf(getDetalleTM().getValueAt(i, 2)
+					.toString()));
 			tipocambio.add(tcambio);
 		}
 	}
