@@ -36,7 +36,7 @@ public class ContabilizaSlcCompras {
 
 		for (DSolicitudCompra ds : dsolicitud) {
 			KardexSlcCompra kardex = new KardexSlcCompra();
-			kardex.setDsolicitudcompra(ds);
+			kardex.setSolicitudcompra(solicitud);
 			kardex.setProducto(ds.getProducto());
 			kardex.setUnimedida(ds.getUnimedida());
 			kardex.setFactor(1);

@@ -51,7 +51,7 @@ public class SolicitudCompraDAO extends AbstractDAO<SolicitudCompra>{
 		CriteriaQuery<SolicitudCompra> q = cb.createQuery(SolicitudCompra.class);
 		Root<SolicitudCompra> c = q.from(SolicitudCompra.class);
 		
-		Expression<Integer> expfecha = c.get("aniomesdia");
+		Expression<Integer> expfecha = c.get("fecha");
 				
 		Predicate ps = null;
 		

@@ -13,9 +13,9 @@ import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
 import vista.utilitarios.FormValidador;
+import vista.utilitarios.UtilMensajes;
 import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
-import vista.utilitarios.renderers.ReferenciaDOCRenderer;
 
 import javax.persistence.Tuple;
 import javax.swing.JLabel;
@@ -29,7 +29,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
 import core.centralizacion.ContabilizaComprasRecepcion;
-import core.centralizacion.ContabilizaSlcCompras;
 import dao.AlmacenDAO;
 import dao.DOrdenCompraDAO;
 import dao.ImpuestoDAO;
@@ -58,6 +57,10 @@ import vista.controles.CntReferenciaDoc;
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 
+import javax.swing.JButton;
+import javax.swing.JTabbedPane;
+import javax.swing.JPanel;
+
 public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	/**
@@ -79,12 +82,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private JLabel lblSucursal;
 	private JLabel lblAlmacen;
 	private JLabel lblGlosa;
-	private JScrollPane scrollPaneDetalle;
+	private JScrollPane srlConsolidado;
 	private cntResponsable cntResponsable;
 	private cntSucursal cntSucursal;
 	private cntAlmacen cntAlmacen;
 	private JScrollPane scrlGlosa;
 	private JTextArea txtGlosa;
+	private JTable tblConsolidado;
 	private JTable tblDetalle;
 
 	private OrdenCompra ordencompra;
@@ -94,6 +98,11 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private CntMoneda cntMoneda;
 	private DSGTextFieldNumber txtTCambio;
 	private DSGTextFieldNumber txtTCMoneda;
+	
+	private JTabbedPane tabbedPane;
+	private JPanel pnlConsolidado;
+	private JPanel pnlDetalle;
+	private JScrollPane srlDetalle;
 
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
@@ -120,113 +129,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.lblGlosa = new JLabel("Glosa");
 		this.lblGlosa.setBounds(399, 43, 32, 16);
 		pnlPrincipal.add(this.lblGlosa);
-
-		this.scrollPaneDetalle = new JScrollPane((Component) null);
-		this.scrollPaneDetalle.setBounds(10, 133, 824, 243);
-		pnlPrincipal.add(this.scrollPaneDetalle);
-
-		tblDetalle = new JTable(new DSGTableModel(new String[] {
-				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
-				"Cantidad", "P. Unit.", "V. Venta", "%Dscto", "Dscto.",
-				"% Impto", "Impto.", "Total" }) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean evaluaEdicion(int row, int column) {
-				if (column == 1 || column == 2 || column == 3 || column == 8
-						|| column == 10 || column == 12)
-					return false;
-				return getEditar();
-			}
-
-			@Override
-			public void addRow() {
-				if (validaCabecera())
-					addRow(new Object[] { "", "", "", "", 0.00, 0.00, 0.00,
-							0.00, 0.00, 0.00, 0.00, 0.00 });
-				else
-					JOptionPane.showMessageDialog(null,
-							"Faltan datos en la cabecera");
-			}
-		}) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public void changeSelection(int row, int column, boolean toggle,
-					boolean extend) {
-				super.changeSelection(row, column, toggle, extend);
-				if (row > -1) {
-					String idproducto = getDetalleTM().getValueAt(row, 0)
-							.toString();
-
-					txtProducto.refresValue(idproducto);
-					actualiza_detalle();
-				}
-			}
-		};
-
-		txtProducto = new TxtProducto(tblDetalle, 0) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void cargaDatos(Producto entity) {
-
-				int row = tblDetalle.getSelectedRow(), col = 0;
-				float antimpto = 0.0F;
-				if (entity == null) {
-					getDetalleTM().setValueAt("", row, 0);
-					getDetalleTM().setValueAt("", row, 1);
-					getDetalleTM().setValueAt("", row, 2);
-					getDetalleTM().setValueAt("", row, 3);
-
-					getDetalleTM().setValueAt(0.0F, row, 9);
-				} else {
-					List<ProductoImpuesto> imptos = pimptoDAO
-							.getPorProducto(entity);
-					float impto = 0.0F;
-
-					for (ProductoImpuesto pi : imptos) {
-						Impuesto i = impuestoDAO.find(pi.getId()
-								.getIdimpuesto());
-						impto += i.getTasa();
-					}
-
-					setText(entity.getIdproducto());
-					getDetalleTM().setValueAt(entity.getIdproducto(), row, col);
-					getDetalleTM().setValueAt(entity.getDescripcion(), row,
-							col + 1);
-					getDetalleTM().setValueAt(
-							entity.getUnimedida().getIdunimedida(), row,
-							col + 2);
-					getDetalleTM().setValueAt(
-							entity.getUnimedida().getDescripcion(), row,
-							col + 3);
-					try {
-						antimpto = Float.parseFloat(getDetalleTM().getValueAt(
-								row, 9).toString());
-
-					} catch (Exception e) {
-						antimpto = 0.0F;
-					}
-
-					if (antimpto == 0.0)
-						getDetalleTM().setValueAt(impto, row, 9);
-
-				}
-				setSeleccionado(null);
-			}
-		};
-
-		txtProducto.updateCellEditor();
-		txtProducto.setData(productoDAO.findAll());
-		getDetalleTM().setNombre_detalle("Detalle de Productos");
-		getDetalleTM().setRepetidos(0);
-		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
-
-		this.tblDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.scrollPaneDetalle.setViewportView(this.tblDetalle);
 
 		this.cntResponsable = new cntResponsable();
 
@@ -280,13 +182,14 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 							.getSaldoSolicitudCompra(solicitudCompra,
 									getOrdencompra());
 					for (Tuple t : saldos) {
-						// System.out.println(t);
-						// System.out.println(t.get("idordencompra"));
+						
 						Producto p = (Producto) t.get("producto");
 						float cantidad = (float) t.get("cantidad");
 						System.out.println(p);
 						System.out.println(cantidad);
 					}
+				} else {
+					UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
 				}
 			}
 		};
@@ -305,6 +208,133 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtTCMoneda.setBounds(699, 12, 74, 20);
 		pnlPrincipal.add(this.txtTCMoneda);
 		this.txtTCMoneda.setValue(1);
+
+		this.tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		this.tabbedPane.setBounds(20, 133, 811, 243);
+		pnlPrincipal.add(this.tabbedPane);
+
+		this.pnlConsolidado = new JPanel();
+		this.tabbedPane.addTab("Consolidado", null, this.pnlConsolidado, null);
+		this.pnlConsolidado.setLayout(null);
+
+		this.srlConsolidado = new JScrollPane((Component) null);
+		this.srlConsolidado.setBounds(10, 11, 786, 193);
+		this.pnlConsolidado.add(this.srlConsolidado);
+
+		/*
+		 * Tabla de Consolidado
+		 */
+		tblConsolidado = new JTable(new DSGTableModel(new String[] {
+				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
+				"Cantidad", "P. Unit.", "V. Venta", "%Dscto", "Dscto.",
+				"% Impto", "Impto.", "Total" }) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean evaluaEdicion(int row, int column) {
+				if (column == 1 || column == 2 || column == 3 || column == 8
+						|| column == 10 || column == 12)
+					return false;
+				return getEditar();
+			}
+
+			@Override
+			public void addRow() {
+				if (validaCabecera())
+					addRow(new Object[] { "", "", "", "", 0.00, 0.00, 0.00,
+							0.00, 0.00, 0.00, 0.00, 0.00 });
+				else
+					JOptionPane.showMessageDialog(null,
+							"Faltan datos en la cabecera");
+			}
+		}) {
+			/**
+							 * 
+							 */
+			private static final long serialVersionUID = 1L;
+
+			public void changeSelection(int row, int column, boolean toggle,
+					boolean extend) {
+				super.changeSelection(row, column, toggle, extend);
+				if (row > -1) {
+					String idproducto = getConsolidadoTM().getValueAt(row, 0)
+							.toString();
+
+					txtProducto.refresValue(idproducto);
+					actualiza_detalle();
+				}
+			}
+		};
+
+		txtProducto = new TxtProducto(tblConsolidado, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Producto entity) {
+
+				int row = tblConsolidado.getSelectedRow(), col = 0;
+				float antimpto = 0.0F;
+				if (entity == null) {
+					getConsolidadoTM().setValueAt("", row, 0);
+					getConsolidadoTM().setValueAt("", row, 1);
+					getConsolidadoTM().setValueAt("", row, 2);
+					getConsolidadoTM().setValueAt("", row, 3);
+
+					getConsolidadoTM().setValueAt(0.0F, row, 9);
+				} else {
+					List<ProductoImpuesto> imptos = pimptoDAO
+							.getPorProducto(entity);
+					float impto = 0.0F;
+
+					for (ProductoImpuesto pi : imptos) {
+						Impuesto i = impuestoDAO.find(pi.getId()
+								.getIdimpuesto());
+						impto += i.getTasa();
+					}
+
+					setText(entity.getIdproducto());
+					getConsolidadoTM().setValueAt(entity.getIdproducto(), row, col);
+					getConsolidadoTM().setValueAt(entity.getDescripcion(), row,
+							col + 1);
+					getConsolidadoTM().setValueAt(
+							entity.getUnimedida().getIdunimedida(), row,
+							col + 2);
+					getConsolidadoTM().setValueAt(
+							entity.getUnimedida().getDescripcion(), row,
+							col + 3);
+					try {
+						antimpto = Float.parseFloat(getConsolidadoTM().getValueAt(
+								row, 9).toString());
+
+					} catch (Exception e) {
+						antimpto = 0.0F;
+					}
+
+					if (antimpto == 0.0)
+						getConsolidadoTM().setValueAt(impto, row, 9);
+
+				}
+				setSeleccionado(null);
+			}
+		};
+		txtProducto.updateCellEditor();
+		txtProducto.setData(productoDAO.findAll());
+		getConsolidadoTM().setNombre_detalle("Detalle de Productos");
+		getConsolidadoTM().setRepetidos(0);
+		getConsolidadoTM().setScrollAndTable(srlConsolidado, tblConsolidado);
+		
+		this.tblConsolidado
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.srlConsolidado.setViewportView(this.tblConsolidado);
+
+
+		this.pnlDetalle = new JPanel();
+		this.tabbedPane.addTab("Detalle", null, this.pnlDetalle, null);
+		this.pnlDetalle.setLayout(null);
+
+		this.srlDetalle = new JScrollPane();
+		this.srlDetalle.setBounds(10, 11, 786, 193);
+		this.pnlDetalle.add(this.srlDetalle);
 
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
@@ -325,10 +355,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			}
 		});
 
-		getDetalleTM().setNombre_detalle("Detalle de Productos");
-		getDetalleTM().setRepetidos(0);
-
-		TableColumnModel tc = tblDetalle.getColumnModel();
+		getConsolidadoTM().setNombre_detalle("Consolidado de Productos");
+		getConsolidadoTM().setRepetidos(0);
+		
+		TableColumnModel tc = tblConsolidado.getColumnModel();
 
 		tc.getColumn(4).setCellEditor(new FloatEditor(3));
 		tc.getColumn(4).setCellRenderer(new FloatRenderer(3));
@@ -354,7 +384,38 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		tc.getColumn(11).setCellEditor(new FloatEditor(2));
 		tc.getColumn(11).setCellRenderer(new FloatRenderer(2));
 
-		//tc.getColumn(12).setCellRenderer(new ReferenciaDOCRenderer());
+		// tc.getColumn(12).setCellRenderer(new ReferenciaDOCRenderer());
+
+		/*
+		 * Tabla de detalle
+		 */
+
+		tblDetalle = new JTable(new DSGTableModel("Documento", "Correlativo",
+				"Cód. Producto", "Producto", "Cantidad") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean evaluaEdicion(int row, int column) {
+				if (column >= 0 && column <= 3)
+					return false;
+				return getEditar();
+			}
+
+			@Override
+			public void addRow() {
+				System.out.println("Opción no disponible");
+			}
+		});
+		
+		srlDetalle.setViewportView(tblDetalle);
+		
+		getDetalleTM().setNombre_detalle("Detalle de Productos");
+		//getDetalleTM().setRepetidos(0);
+		
+		TableColumnModel tcd = tblDetalle.getColumnModel();
+
+		tcd.getColumn(4).setCellEditor(new FloatEditor(3));
+		tcd.getColumn(4).setCellRenderer(new FloatRenderer(3));
 
 		iniciar();
 	}
@@ -391,9 +452,12 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			}
 		}
 
-		/*ContabilizaSlcCompras.ContabilizaOrdenCompra(getOrdencompra()
-				.getIdordencompra());*/
-		ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(getOrdencompra().getIdordencompra(),1,"Compra");
+		/*
+		 * ContabilizaSlcCompras.ContabilizaOrdenCompra(getOrdencompra()
+		 * .getIdordencompra());
+		 */
+		ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(
+				getOrdencompra().getIdordencompra(), 1, "Compra");
 	}
 
 	@Override
@@ -403,7 +467,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		getDetalleTM().limpiar();
+		getConsolidadoTM().limpiar();
 
 		if (getOrdencompra() != null) {
 			this.txtNumero_2.setValue(getOrdencompra().getNumero());
@@ -443,7 +507,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				Producto p = d.getProducto();
 				Unimedida u = d.getUnimedida();
 
-				getDetalleTM().addRow(
+				getConsolidadoTM().addRow(
 						new Object[] { p.getIdproducto(), p.getDescripcion(),
 								u.getIdunimedida(), u.getDescripcion(),
 								d.getCantidad(), d.getPrecio_unitario(),
@@ -455,7 +519,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			// List<DetDocingreso> detDocIngresoL =
 			// detDocingresoDAO.getPorIdIngreso(Long.parseLong(getIngreso().getIddocingreso()));
 			// for(DetDocingreso ingreso : detDocIngresoL){
-			// getDetalleTM().addRow(new
+			// getConsolidadoTM().addRow(new
 			// Object[]{ingreso.getId().getIdproducto(),ingreso.getDescripcion(),ingreso.getIdmedida(),"",ingreso.getCantidad(),ingreso.getPrecio(),ingreso.getPrecio()});
 			// }
 		} else {
@@ -464,17 +528,17 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	}
 
 	private void actualiza_detalle() {
-		int row = tblDetalle.getSelectedRow();
+		int row = tblConsolidado.getSelectedRow();
 		if (row > -1) {
 
 			float pimpuesto, pdscto, cantidad, pu;
 			float vventa, impuesto, dscto, importe;
-			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
+			cantidad = Float.parseFloat(getConsolidadoTM().getValueAt(row, 4)
 					.toString());
-			pu = Float.parseFloat(getDetalleTM().getValueAt(row, 5).toString());
-			pdscto = Float.parseFloat(getDetalleTM().getValueAt(row, 7)
+			pu = Float.parseFloat(getConsolidadoTM().getValueAt(row, 5).toString());
+			pdscto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 7)
 					.toString());
-			pimpuesto = Float.parseFloat(getDetalleTM().getValueAt(row, 9)
+			pimpuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 9)
 					.toString());
 
 			vventa = cantidad * pu;
@@ -482,11 +546,11 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			impuesto = (vventa - dscto) * pimpuesto / 100.00F;
 			importe = vventa - dscto + impuesto;
 
-			getDetalleTM().setValueAt(vventa, row, 6);
-			getDetalleTM().setValueAt(dscto, row, 8);
-			getDetalleTM().setValueAt(impuesto, row, 10);
-			getDetalleTM().setValueAt(importe, row, 11);
-			// getDetalleTM().setValueAt(new ReferenciaDOC(), row, 12);
+			getConsolidadoTM().setValueAt(vventa, row, 6);
+			getConsolidadoTM().setValueAt(dscto, row, 8);
+			getConsolidadoTM().setValueAt(impuesto, row, 10);
+			getConsolidadoTM().setValueAt(importe, row, 11);
+			// getConsolidadoTM().setValueAt(new ReferenciaDOC(), row, 12);
 		}
 	}
 
@@ -513,7 +577,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtGlosa.setEditable(true);
 		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
-		getDetalleTM().setEditar(true);
+		getConsolidadoTM().setEditar(true);
 	}
 
 	@Override
@@ -526,7 +590,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtGlosa.setEditable(false);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
 				this.cntAlmacen, this.cntSucursal);
-		getDetalleTM().setEditar(false);
+		getConsolidadoTM().setEditar(false);
 	}
 
 	@Override
@@ -568,7 +632,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		getOrdencompra().setTcmoneda(Float.parseFloat(txtTCMoneda.getText()));
 		dordencompras = new ArrayList<DOrdenCompra>();
 
-		int rows = getDetalleTM().getRowCount();
+		int rows = getConsolidadoTM().getRowCount();
 
 		for (int row = 0; row < rows; row++) {
 			DOrdenCompra d = new DOrdenCompra();
@@ -576,32 +640,32 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 			String idproducto, idunimedida;
 
-			idproducto = getDetalleTM().getValueAt(row, 0).toString();
-			idunimedida = getDetalleTM().getValueAt(row, 2).toString();
+			idproducto = getConsolidadoTM().getValueAt(row, 0).toString();
+			idunimedida = getConsolidadoTM().getValueAt(row, 2).toString();
 
 			float cantidad, precio_unitario, vventa, pdescuento, descuento, pimpuesto, impuesto, importe;
 
-			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
+			cantidad = Float.parseFloat(getConsolidadoTM().getValueAt(row, 4)
 					.toString());
-			precio_unitario = Float.parseFloat(getDetalleTM()
+			precio_unitario = Float.parseFloat(getConsolidadoTM()
 					.getValueAt(row, 5).toString());
 
-			vventa = Float.parseFloat(getDetalleTM().getValueAt(row, 6)
+			vventa = Float.parseFloat(getConsolidadoTM().getValueAt(row, 6)
 					.toString());
 
-			pdescuento = Float.parseFloat(getDetalleTM().getValueAt(row, 7)
+			pdescuento = Float.parseFloat(getConsolidadoTM().getValueAt(row, 7)
 					.toString());
 
-			descuento = Float.parseFloat(getDetalleTM().getValueAt(row, 8)
+			descuento = Float.parseFloat(getConsolidadoTM().getValueAt(row, 8)
 					.toString());
 
-			pimpuesto = Float.parseFloat(getDetalleTM().getValueAt(row, 9)
+			pimpuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 9)
 					.toString());
 
-			impuesto = Float.parseFloat(getDetalleTM().getValueAt(row, 10)
+			impuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 10)
 					.toString());
 
-			importe = Float.parseFloat(getDetalleTM().getValueAt(row, 11)
+			importe = Float.parseFloat(getConsolidadoTM().getValueAt(row, 11)
 					.toString());
 
 			Producto p = productoDAO.find(idproducto);
@@ -641,6 +705,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		return true;
 	}
 
+	public DSGTableModel getConsolidadoTM() {
+		return ((DSGTableModel) tblConsolidado.getModel());
+	}
+	
 	public DSGTableModel getDetalleTM() {
 		return ((DSGTableModel) tblDetalle.getModel());
 	}

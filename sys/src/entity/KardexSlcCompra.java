@@ -15,32 +15,36 @@ import javax.persistence.*;
 @Table(name = "kardex_slc_compra")
 public class KardexSlcCompra implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "idsolicitudcompra", referencedColumnName = "idsolicitudcompra", nullable = false),
-			@JoinColumn(name = "item_slc", referencedColumnName = "item", nullable = false) })
-	private DSolicitudCompra dsolicitudcompra;
 	
 	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "idordencompra", referencedColumnName = "idordencompra"),
-			@JoinColumn(name = "item_ord", referencedColumnName = "item") })
-	private DOrdenCompra dordencompra;
+	@JoinColumn(name="idsolicitudcompra", referencedColumnName = "idsolicitudcompra")
+	private SolicitudCompra solicitudcompra;
+	
+	@Column(length = 10)
+	private String documento_referencia;
+	private long id_referencia;
+	private int item_referencia;
 
 	@ManyToOne
 	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
 	private Producto producto;
+	
 	@ManyToOne
 	@JoinColumn(name = "idunimedida", referencedColumnName = "idunimedida")
+	
 	private Unimedida unimedida;
+	
 	private int factor;
+	
 	@Column(precision = 17, scale = 6)
+	
 	private float cantidad;
-	private static final long serialVersionUID = 1L;
+	
 
 	public KardexSlcCompra() {
 		super();
@@ -86,20 +90,36 @@ public class KardexSlcCompra implements Serializable {
 		this.cantidad = cantidad;
 	}
 
-	public DSolicitudCompra getDsolicitudcompra() {
-		return dsolicitudcompra;
+	public long getId_referencia() {
+		return id_referencia;
 	}
 
-	public void setDsolicitudcompra(DSolicitudCompra dsolicitudcompra) {
-		this.dsolicitudcompra = dsolicitudcompra;
+	public void setId_referencia(long id_referencia) {
+		this.id_referencia = id_referencia;
 	}
 
-	public DOrdenCompra getDordencompra() {
-		return dordencompra;
+	public int getItem_referencia() {
+		return item_referencia;
 	}
 
-	public void setDordencompra(DOrdenCompra dordencompra) {
-		this.dordencompra = dordencompra;
+	public void setItem_referencia(int item_referencia) {
+		this.item_referencia = item_referencia;
+	}
+
+	public String getDocumento_referencia() {
+		return documento_referencia;
+	}
+
+	public void setDocumento_referencia(String documento_referencia) {
+		this.documento_referencia = documento_referencia;
+	}
+
+	public SolicitudCompra getSolicitudcompra() {
+		return solicitudcompra;
+	}
+
+	public void setSolicitudcompra(SolicitudCompra solicitudcompra) {
+		this.solicitudcompra = solicitudcompra;
 	}
 
 }
