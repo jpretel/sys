@@ -127,8 +127,9 @@ public class CentralizaAlm {
 		DocingresoDAO docingresoDAO = new DocingresoDAO();
 		Docingreso ingreso = docingresoDAO.find(idingreso);
 
-		tcambio = tcambioDAO.getFechaMoneda(ingreso.getMoneda(),
-				ingreso.getAnio(), ingreso.getMes(), ingreso.getDia()).getCompra();
+		tcambio = 2.8F;
+				//tcambioDAO.getFechaMoneda(ingreso.getMoneda(),
+				//ingreso.getAnio(), ingreso.getMes(), ingreso.getDia()).getCompra();
 		tcmoneda = 1.0F; //
 		
 		Asiento asiento = CentralizaAlmacen(ingreso.getAsiento(), idingreso,

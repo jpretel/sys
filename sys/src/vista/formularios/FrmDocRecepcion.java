@@ -28,6 +28,8 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import core.centralizacion.CentralizaAlm;
+import core.centralizacion.ContabilizaAlmacen;
 import core.centralizacion.ContabilizaComprasRecepcion;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
@@ -67,6 +69,7 @@ import vista.controles.FindButton;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import vista.contenedores.CntMoneda;
 
 public class FrmDocRecepcion extends AbstractDocForm {
@@ -100,11 +103,10 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private JTextField txtNumeroCompra;
 	private FindButton findButton;
 	private OrdenCompra ordencompra = null;
-	private CntMoneda cntMoneda;
-	private JLabel lblMoneda;
 
 	public FrmDocRecepcion() {
 		super("Nota de Ingreso");
+		lblTipoCambio.setLocation(590, 15);
 		this.cntGrupoCentralizacion = new CntGrupoCentralizacion();
 		this.cntGrupoCentralizacion.setBounds(72, 40, 192, 20);
 		pnlPrincipal.add(this.cntGrupoCentralizacion);
@@ -355,15 +357,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 				}
 			}
 		});
-
-		this.cntMoneda = new CntMoneda();
-		this.cntMoneda.setBounds(412, 12, 192, 20);
-		pnlPrincipal.add(this.cntMoneda);		
-		this.lblMoneda = new JLabel("Moneda");
-		this.lblMoneda.setBounds(356, 15, 54, 16);
-		pnlPrincipal.add(this.lblMoneda);
-		this.cntMoneda.setVisible(false);
-		this.lblMoneda.setVisible(false);
 		iniciar();
 	}
 
@@ -439,10 +432,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		}
 		ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(getIngreso()
 				.getIddocingreso(), -1, "Recepcion");
-		/*
-		 * ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
-		 * CentralizaAlm.CentralizaIngreso(getIngreso().getIddocingreso());
-		 */
+		 ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
+		 CentralizaAlm.CentralizaIngreso(getIngreso().getIddocingreso());		 
 		setIngreso(docIngresoDAO.find(getIngreso().getIddocingreso()));
 	}
 
@@ -559,7 +550,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void vista_edicion() {
-		// Verificar que no este en un proceso hacia adelante esto falta.....
+		// Verificar que no este en un proceso hacia adelante esto falta.....VTR
 		boolean band;
 		band = getEstado().equals(NUEVO);
 
@@ -585,7 +576,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			findButton.setEnabled(false);
 		}
 
-		FormValidador.CntEdicion(true, this.cntGrupoCentralizacion,
+		FormValidador.CntEdicion(true,this.cntGrupoCentralizacion,
 				this.cntMoneda, this.cntConcepto, this.cntResponsable,
 				this.cntSucursal, this.cntAlmacen);
 		getDetalleTM().setEditar(true);
@@ -603,7 +594,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		FormValidador.CntEdicion(false, this.cntGrupoCentralizacion,
 				this.cntMoneda, this.cntConcepto, this.cntResponsable,
 				this.cntSucursal, this.cntAlmacen);
-
 		getDetalleTM().setEditar(false);
 	}
 
@@ -635,6 +625,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			if (ordencompra != null)
 				getIngreso().setOrdencompra(ordencompra);
 		}
+		
 		getIngreso().setMoneda(cntMoneda.getSeleccionado());
 		getIngreso().setResponsable(this.cntResponsable.getSeleccionado());
 		getIngreso().setSucursal(this.cntSucursal.getSeleccionado());
@@ -731,7 +722,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void doVerAsiento() {
 		Asiento asiento = getIngreso().getAsiento();
-
 		FrmAsientoDoc frmAsiento = new FrmAsientoDoc();
 		frmAsiento.actualiza_objeto(asiento.getIdasiento(), "VISTA");
 		Sys.desktoppane.add(frmAsiento);
