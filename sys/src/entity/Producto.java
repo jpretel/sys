@@ -141,8 +141,8 @@ public class Producto implements Serializable {
 				+ ", descripcion=" + descripcion + ", esDescarte: "
 				+ esDescarte + ", esTerminado: " + esTerminado + ", esVenta: "
 				+ esVenta + ", subgrupo: " + subgrupo.getDescripcion()
-				+ ", marca: " + marca.getIdmarca() + ", unimedida: "
-				+ unimedida.getDescripcion();
+				+ ", marca: " + ((marca.getIdmarca()==null)?"":marca.getIdmarca()) + ", unimedida: "
+				+ ((unimedida.getDescripcion()==null)?"":unimedida.getDescripcion());
 	}
 
 	public int getEsServicio() {

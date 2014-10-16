@@ -22,9 +22,7 @@ public class TCambioPK  implements Serializable {
 	private String idmoneda;
 	private static final long serialVersionUID = 1L;
 
-	public TCambioPK() {}
-
-	
+	public TCambioPK() {}	
 
 	public int getDia() {
 		return this.dia;

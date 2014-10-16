@@ -67,7 +67,7 @@ public class ContabilizaSlcCompras {
 		kardexDAO.borrarPorIdSolicitudCompra(id);
 
 		List<KardexSlcCompra> kardex_list = new ArrayList<KardexSlcCompra>();
-
+		/*	
 		for (DOrdenCompra doc : dorden) {
 
 			if (doc.getTipo_referencia() == 'S') {
@@ -92,7 +92,7 @@ public class ContabilizaSlcCompras {
 				}
 			}
 		}
-
+		*/
 		kardexDAO.create(kardex_list);
 
 		return true;

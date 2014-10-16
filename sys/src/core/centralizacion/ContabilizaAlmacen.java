@@ -12,6 +12,7 @@ import entity.DetDocsalida;
 import entity.Docingreso;
 import entity.Docsalida;
 import entity.Kardex;
+import entity.TCambioPK;
 
 public class ContabilizaAlmacen {
 
@@ -20,7 +21,6 @@ public class ContabilizaAlmacen {
 		KardexDAO kardexdao = new KardexDAO();
 		TCambioDAO tCampoDAO = new TCambioDAO();
 		kardexdao.borrarPorIngresoSalida(id);
-
 		float tcambio = 0;
 		String idmoneda = "";
 		float importemof = 0;
@@ -28,9 +28,13 @@ public class ContabilizaAlmacen {
 		DetDocIngresoDAO detIngDAO = new DetDocIngresoDAO();
 		
 		// El tipo de Cambio debe de retornar según configuración (Revisar donde)
-		tcambio = tCampoDAO.getFechaMoneda(ingreso.getMoneda(),
-				ingreso.getAnio(), ingreso.getMes(), ingreso.getAnio())
-				.getCompra();
+		/*TCambioPK idtc = new TCambioPK();  
+		idtc.setIdmoneda(ingreso.getMoneda().getIdmoneda());
+		idtc.setAnio(ingreso.getAnio());
+		idtc.setMes(ingreso.getMes());
+		idtc.setDia(ingreso.getDia());*/
+		tcambio = 2.8F;
+				//tCampoDAO.getFechaMoneda(idtc).get(0).getCompra();					
 		
 		idmoneda = ingreso.getMoneda().getIdmoneda();
 		List<DetDocingreso> detIngL = detIngDAO.getPorIdIngreso(ingreso);
@@ -78,7 +82,10 @@ public class ContabilizaAlmacen {
 		float importemof = 0;
 		float importemex = 0;
 		DetDocSalidaDAO detSalDAO = new DetDocSalidaDAO();
-		tcambio = salida.getTcambio();
+		tcambio = (float) 2.8; 
+		//tCampoDAO.getFechaMoneda(ingreso.getMoneda(),
+		//	ingreso.getAnio(), ingreso.getMes(), ingreso.getAnio()).getCompra();
+		
 		idmoneda = salida.getMoneda().getIdmoneda();
 		List<DetDocsalida> detSal = detSalDAO.getPorIdSalida(salida);
 		List<Kardex> kardex_list = new ArrayList<Kardex>();

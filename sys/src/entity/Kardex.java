@@ -35,7 +35,7 @@ public class Kardex implements Serializable {
 	private Unimedida unimedida;
 
 	@ManyToOne
-	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda", nullable = false)
+	@JoinColumn(name = "idmoneda", referencedColumnName = "idmoneda")
 	private Moneda moneda;
 
 	@ManyToOne

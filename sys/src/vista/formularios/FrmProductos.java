@@ -542,9 +542,9 @@ public class FrmProductos extends AbstractMaestro {
 
 	@Override
 	public void llenarDesdeVista() {
-		if (productoDAO.find(txtCodigo.getText()) != null) {
+		/*if (productoDAO.find(txtCodigo.getText()) != null) {
 			bkEntidad = productoDAO.find(txtCodigo.getText()).historial();
-		}
+		}*/
 
 		String idproducto;
 		idproducto = this.txtCodigo.getText();
