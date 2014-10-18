@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 import entity.Almacen;
 import entity.Sucursal;
-
+//...
 public class AlmacenDAO extends AbstractDAO<Almacen> {
 
 	public AlmacenDAO() {
