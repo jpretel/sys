@@ -20,27 +20,10 @@ import java.awt.event.ActionEvent;
 public class ModalDetalleReferencia extends ModalInternalFrame {
 	Object[][] data;
 
-	public ModalDetalleReferencia(String[] cabeceras, Object[][] data) {
+	public ModalDetalleReferencia(final DSGTableModel model, Object[][] data) {
 		setSize(new Dimension(570, 350));
 		setPreferredSize(new Dimension(200, 200));
 		setTitle("Detalle de Referencia");
-
-		final DSGTableModel detalleTM = new DSGTableModel(cabeceras) {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean evaluaEdicion(int row, int column) {
-				if (column == 4)
-					return true;
-				return false;
-			}
-
-			@Override
-			public void addRow() {
-
-			}
-		};
 
 		this.pnlNorte = new JPanel();
 		this.pnlNorte.setPreferredSize(new Dimension(10, 40));
@@ -73,10 +56,10 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 		this.btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Actualizar cantidades
-				int rows = detalleTM.getRowCount();
+				int rows = model.getRowCount();
 				for (int i = 0; i < rows; i++) {
 					ModalDetalleReferencia.this.data[i][4] = Float
-							.parseFloat(detalleTM.getValueAt(i, 4).toString());
+							.parseFloat(model.getValueAt(i, 4).toString());
 				}
 				dispose();
 			}
@@ -88,13 +71,13 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 		this.scrlDetalle = new JScrollPane();
 		getContentPane().add(this.scrlDetalle, BorderLayout.CENTER);
 
-		this.table = new JTable(detalleTM);
+		this.table = new JTable(model);
 		this.scrlDetalle.setViewportView(this.table);
 
 		this.data = data;
 
 		for (Object[] o : this.data) {
-			detalleTM.addRow(o);
+			model.addRow(o);
 		}
 
 	}
@@ -113,5 +96,11 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 	}
 	public void setBtnAceptar(JButton btnAceptar) {
 		this.btnAceptar = btnAceptar;
+	}
+	public JTable getTable() {
+		return table;
+	}
+	public void setTable(JTable table) {
+		this.table = table;
 	}
 }

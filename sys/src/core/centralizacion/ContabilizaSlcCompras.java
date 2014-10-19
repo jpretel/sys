@@ -3,11 +3,13 @@ package core.centralizacion;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.DDOrdenCompraDAO;
 import dao.DOrdenCompraDAO;
 import dao.DSolicitudCompraDAO;
 import dao.KardexSlcCompraDAO;
 import dao.OrdenCompraDAO;
 import dao.SolicitudCompraDAO;
+import entity.DDOrdenCompra;
 import entity.DOrdenCompra;
 import entity.DSolicitudCompra;
 import entity.DSolicitudCompraPK;
@@ -35,6 +37,7 @@ public class ContabilizaSlcCompras {
 		List<KardexSlcCompra> kardex_list = new ArrayList<KardexSlcCompra>();
 
 		for (DSolicitudCompra ds : dsolicitud) {
+			
 			KardexSlcCompra kardex = new KardexSlcCompra();
 			kardex.setSolicitudcompra(solicitud);
 			kardex.setProducto(ds.getProducto());
@@ -43,7 +46,9 @@ public class ContabilizaSlcCompras {
 			kardex.setCantidad(ds.getCantidad());
 			kardex_list.add(kardex);
 		}
-
+		
+		System.out.println("Long: " + kardex_list);
+		
 		kardexDAO.create(kardex_list);
 
 		return true;
@@ -51,48 +56,39 @@ public class ContabilizaSlcCompras {
 
 	public static boolean ContabilizaOrdenCompra(long id) {
 		OrdenCompraDAO ordDAO = new OrdenCompraDAO();
-		DOrdenCompraDAO dordDAO = new DOrdenCompraDAO();
-		DSolicitudCompraDAO dslcDAO = new DSolicitudCompraDAO();
+		DDOrdenCompraDAO ddordDAO = new DDOrdenCompraDAO();
 		KardexSlcCompraDAO kardexDAO = new KardexSlcCompraDAO();
-
+		SolicitudCompraDAO slcDAO = new SolicitudCompraDAO();
+		
 		OrdenCompra orden = ordDAO.find(id);
 
 		if (orden == null) {
 			return false;
 		}
 
-		List<DOrdenCompra> dorden;
+		List<DDOrdenCompra> ddorden;
 
-		dorden = dordDAO.getPorOrdenCompra(orden);
-		kardexDAO.borrarPorIdSolicitudCompra(id);
+		ddorden = ddordDAO.getPorOrdenCompra(orden);
+		kardexDAO.borrarPorIdOrdenCompra(id);
 
 		List<KardexSlcCompra> kardex_list = new ArrayList<KardexSlcCompra>();
-		/*	
-		for (DOrdenCompra doc : dorden) {
+			
+		for (DDOrdenCompra o : ddorden) {
 
-			if (doc.getTipo_referencia() == 'S') {
-				DSolicitudCompra ds;
-
-				DSolicitudCompraPK ids = new DSolicitudCompraPK();
-
-				ids.setIdsolicitudcompra(doc.getIdreferencia());
-				ids.setItem(doc.getItemreferencia());
-
-				ds = dslcDAO.find(ids);
-
-				if (ds != null) {
-					KardexSlcCompra kardex = new KardexSlcCompra();
-					kardex.setDsolicitudcompra(ds);
-					kardex.setDordencompra(doc);
-					kardex.setProducto(doc.getProducto());
-					kardex.setUnimedida(doc.getUnimedida());
-					kardex.setFactor(-1);
-					kardex.setCantidad(doc.getCantidad());
-					kardex_list.add(kardex);
-				}
+			if (o.getTipo_referencia().equals("SLC_COMPRA")) {
+				long id_referencia = o.getId_referencia();
+				KardexSlcCompra kardex = new KardexSlcCompra();
+				SolicitudCompra slc = slcDAO.find(id_referencia);
+				kardex.setProducto(o.getProducto());
+				kardex.setCantidad(o.getCantidad());
+				kardex.setTipo_referencia("ORD_COMPRA");
+				kardex.setSolicitudcompra(slc);
+				kardex.setId_referencia(id);
+				kardex.setFactor(-1);
+				kardex_list.add(kardex);
 			}
 		}
-		*/
+		
 		kardexDAO.create(kardex_list);
 
 		return true;

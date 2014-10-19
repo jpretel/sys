@@ -32,8 +32,7 @@ public class KardexSlcCompraDAO extends AbstractDAO<KardexSlcCompra> {
 
 		Predicate condicion = cb.and(
 				cb.equal(from.get("solicitudcompra"), solicitudCompra),
-				cb.or(cb.isNull(from.get("documento_referencia")),
-						cb.notEqual(from.get("id_referencia"),
+				cb.and( cb.notEqual(from.get("id_referencia"),
 								ordenCompra.getIdordencompra())));
 
 		// q.multiselect(from,
@@ -68,9 +67,8 @@ public class KardexSlcCompraDAO extends AbstractDAO<KardexSlcCompra> {
 		CriteriaDelete<KardexSlcCompra> delete = cb
 				.createCriteriaDelete(KardexSlcCompra.class);
 		Root<KardexSlcCompra> c = delete.from(KardexSlcCompra.class);
-		delete.where(cb.equal(
-				c.get("dordencompra").get("id").get("idordencompra"),
-				idordencompra));
+		delete.where(cb.and(cb.equal(c.get("id_referencia"), idordencompra),
+				cb.equal(c.get("tipo_referencia"), "ORD_COMPRA")));
 		Query query = getEntityManager().createQuery(delete);
 		query.executeUpdate();
 		getEntityManager().getTransaction().commit();

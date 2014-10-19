@@ -26,7 +26,7 @@ public class KardexSlcCompra implements Serializable {
 	private SolicitudCompra solicitudcompra;
 	
 	@Column(length = 10)
-	private String documento_referencia;
+	private String tipo_referencia;
 	private long id_referencia;
 	private int item_referencia;
 
@@ -106,20 +106,20 @@ public class KardexSlcCompra implements Serializable {
 		this.item_referencia = item_referencia;
 	}
 
-	public String getDocumento_referencia() {
-		return documento_referencia;
-	}
-
-	public void setDocumento_referencia(String documento_referencia) {
-		this.documento_referencia = documento_referencia;
-	}
-
 	public SolicitudCompra getSolicitudcompra() {
 		return solicitudcompra;
 	}
 
 	public void setSolicitudcompra(SolicitudCompra solicitudcompra) {
 		this.solicitudcompra = solicitudcompra;
+	}
+
+	public String getTipo_referencia() {
+		return tipo_referencia;
+	}
+
+	public void setTipo_referencia(String tipo_referencia) {
+		this.tipo_referencia = tipo_referencia;
 	}
 
 }
