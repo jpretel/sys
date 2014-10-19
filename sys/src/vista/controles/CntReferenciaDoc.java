@@ -5,7 +5,6 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.JWindow;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -16,15 +15,13 @@ import vista.controles.FindButton;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.ScrollPane;
 import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class CntReferenciaDoc extends JPanel implements FocusListener{
+public class CntReferenciaDoc extends JPanel implements FocusListener {
 	/**
 	 * 
 	 */
@@ -38,6 +35,8 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 	private JScrollPane scrollPane;
 	private JTable table;
 	private String[] cabeceras;
+	private int[] anchos;
+	private boolean editar;
 	private Object[][] data;
 
 	/**
@@ -45,7 +44,7 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 	 */
 	public CntReferenciaDoc(String[] cabeceras, int[] anchos) {
 		this.cabeceras = cabeceras;
-		this.data = data;
+		this.anchos = anchos;
 		setForeground(Color.LIGHT_GRAY);
 		this.setBounds(152, 11, 180, 20);
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -90,7 +89,7 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 		gbc_btnBuscar.gridx = 3;
 		gbc_btnBuscar.gridy = 0;
 		add(btnVer, gbc_btnVer);
-		
+
 		refWindow = new JWindow((Window) Sys.mainF);
 		refWindow.setOpacity(0.95f);
 
@@ -102,39 +101,52 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		table.addFocusListener(this);
+
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int row = table.getSelectedRow();
+					if (row > -1) {
+						refWindow.setVisible(false);
+						row = table.convertRowIndexToModel(row);
+						mostrarDetalleRef(data[row]);
+					}
+				}
+			}
+		});
+
 		txtNumero.addFocusListener(this);
 		txtSerie.addFocusListener(this);
-		
+		btnBuscar.addFocusListener(this);
+		btnVer.addFocusListener(this);
 		btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if (isEnabled()) {
+				if (isEnabled() && editar) {
 					buscarReferencia();
 				}
 			}
 		});
-		
+
 		btnVer.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (isEnabled()) {
-					if (refWindow.isVisible())
-						refWindow.setVisible(false);
-					else
-						mostrarReferencias();
+
+					mostrarReferencias();
 				}
 			}
 		});
 	}
 
 	public CntReferenciaDoc() {
-		this(new String[] { "Doc.", "Correlativo", "Fecha" }, new int[] { 90,
-				200, 200 });
+		this(new String[] { "Tipo Doc.", "Correlativo", "Fecha" }, new int[] {
+				80, 120, 120 });
 		setBorder(null);
 	}
 
 	public void mostrarReferencias() {
-
+		this.data = getData();
 		DefaultTableModel model = new DefaultTableModel(data, cabeceras) {
 			private static final long serialVersionUID = 1L;
 
@@ -143,6 +155,12 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 				return false;
 			}
 		};
+		int ancho = 0;
+
+		for (int i = 0; i < table.getColumnCount(); i++) {
+			ancho += anchos[i];
+			table.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
+		}
 
 		table.setModel(model);
 
@@ -150,9 +168,19 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 		int windowY = getLocationOnScreen().y + getHeight();
 
 		refWindow.setLocation(windowX, windowY);
-		refWindow.setMinimumSize(new Dimension(getWidth(), 170));
+		refWindow.setMinimumSize(new Dimension(ancho, 170));
 		refWindow.setAutoRequestFocus(false);
 		refWindow.setVisible(true);
+	}
+
+	public Object[][] getData() {
+		System.out.println("Sobreescribir el método getData();");
+		return null;
+	}
+
+	public void mostrarDetalleRef(Object[] row) {
+		System.out
+				.println("Sobreescribir el método mostrarReferencia(Object[] row);");
 	}
 
 	@Override
@@ -170,7 +198,10 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 	public void focusLost(FocusEvent e) {
 
 		boolean band = false;
-		if ((e.getComponent() == table && (e.getOppositeComponent() == this.txtNumero || e.getOppositeComponent() == this.txtSerie))
+		if ((e.getComponent() == table && (e.getOppositeComponent() == this.txtNumero
+				|| e.getOppositeComponent() == this.txtSerie
+				|| e.getOppositeComponent() == this.btnVer || e
+				.getOppositeComponent() == this.btnBuscar))
 				|| (e.getComponent() == this && e.getOppositeComponent() == table)) {
 			band = true;
 		}
@@ -178,8 +209,20 @@ public class CntReferenciaDoc extends JPanel implements FocusListener{
 			refWindow.setVisible(false);
 		}
 	}
-	
+
 	public void buscarReferencia() {
 		System.out.println("Sobreescribir el método: buscarReferencia()");
 	}
+
+	public boolean isEditar() {
+		return editar;
+	}
+
+	public void setEditar(boolean editar) {
+		btnBuscar.setEnabled(editar);
+		txtNumero.setEditable(editar);
+		txtSerie.setEditable(editar);
+		this.editar = editar;
+	}
+
 }

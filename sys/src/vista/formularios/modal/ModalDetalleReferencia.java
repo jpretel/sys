@@ -107,4 +107,11 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 	private JButton btnCancelar;
 	private JButton btnAceptar;
 	private JLabel lblDetalleDe;
+
+	public JButton getBtnAceptar() {
+		return btnAceptar;
+	}
+	public void setBtnAceptar(JButton btnAceptar) {
+		this.btnAceptar = btnAceptar;
+	}
 }
