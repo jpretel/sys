@@ -271,9 +271,13 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 				dsolicitudcompraDAO.edit(d);
 			}
 		}
-
-		ContabilizaSlcCompras.ContabilizaSolicitud(getsolicitudcompra()
+		
+		System.out.println("Va a contaili");
+		boolean contabilizo = ContabilizaSlcCompras.ContabilizaSolicitud(getsolicitudcompra()
 				.getIdsolicitudcompra());
+		if (!contabilizo) {
+			System.out.println("No Contabilizó");
+		}
 	}
 
 	@Override

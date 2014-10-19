@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import vista.Sys;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
+import vista.formularios.modal.ModalDetalleReferencia;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.UtilMensajes;
 import vista.utilitarios.editores.FloatEditor;
@@ -30,6 +32,7 @@ import javax.swing.table.TableColumnModel;
 
 import core.centralizacion.ContabilizaComprasRecepcion;
 import dao.AlmacenDAO;
+import dao.DDOrdenCompraDAO;
 import dao.DOrdenCompraDAO;
 import dao.ImpuestoDAO;
 import dao.KardexSlcCompraDAO;
@@ -41,6 +44,8 @@ import dao.ResponsableDAO;
 import dao.SolicitudCompraDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
+import entity.DDOrdenCompra;
+import entity.DDOrdenCompraPK;
 import entity.DOrdenCompra;
 import entity.DOrdenCompraPK;
 import entity.Impuesto;
@@ -57,7 +62,6 @@ import vista.controles.CntReferenciaDoc;
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 
-import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 
@@ -70,6 +74,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	// private List<DetDocingreso> DetDocingresoL;
 	private OrdenCompraDAO ordencompraDAO = new OrdenCompraDAO();
 	private DOrdenCompraDAO dordencompraDAO = new DOrdenCompraDAO();
+	private DDOrdenCompraDAO ddordenCompraDAO = new DDOrdenCompraDAO();
+	private SolicitudCompraDAO solicitudCompraDAO = new SolicitudCompraDAO();
 	private ProductoDAO productoDAO = new ProductoDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
@@ -93,12 +99,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	private OrdenCompra ordencompra;
 	private List<DOrdenCompra> dordencompras = new ArrayList<DOrdenCompra>();
+	private List<DDOrdenCompra> ddordencompras = new ArrayList<DDOrdenCompra>();
 	private JLabel lblReferencia;
 	private CntReferenciaDoc cntReferenciaDoc;
 	private CntMoneda cntMoneda;
 	private DSGTextFieldNumber txtTCambio;
 	private DSGTextFieldNumber txtTCMoneda;
-	
+
 	private JTabbedPane tabbedPane;
 	private JPanel pnlConsolidado;
 	private JPanel pnlDetalle;
@@ -166,31 +173,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 		this.cntReferenciaDoc = new CntReferenciaDoc() {
 			private static final long serialVersionUID = 1L;
-			private SolicitudCompraDAO solicitudCompraDAO = new SolicitudCompraDAO();
 
 			@Override
 			public void buscarReferencia() {
-				String serie;
-				int numero;
-				serie = this.txtSerie.getText();
-				numero = Integer.parseInt(this.txtNumero.getText());
-				SolicitudCompra solicitudCompra = solicitudCompraDAO
-						.getPorSerieNumero(serie, numero);
-
-				if (solicitudCompra != null) {
-					List<Tuple> saldos = new KardexSlcCompraDAO()
-							.getSaldoSolicitudCompra(solicitudCompra,
-									getOrdencompra());
-					for (Tuple t : saldos) {
-						
-						Producto p = (Producto) t.get("producto");
-						float cantidad = (float) t.get("cantidad");
-						System.out.println(p);
-						System.out.println(cantidad);
-					}
-				} else {
-					UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
-				}
+				referenciarSolicitudCompra();
 			}
 		};
 		this.cntReferenciaDoc.setBounds(464, 102, 180, 20);
@@ -247,6 +233,23 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
 			}
+
+			@Override
+			public boolean isValidaEliminacion(int row) {
+				boolean band = true;
+
+				String idproducto = getValueAt(row, 0).toString();
+
+				for (DDOrdenCompra o : ddordencompras) {
+					if (o.getProducto().getIdproducto().equals(idproducto)) {
+						UtilMensajes
+								.mensaje_alterta("NO_ELIM_LINEA_REFERENCIA");
+						return false;
+					}
+				}
+
+				return band;
+			};
 		}) {
 			/**
 							 * 
@@ -293,7 +296,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 					}
 
 					setText(entity.getIdproducto());
-					getConsolidadoTM().setValueAt(entity.getIdproducto(), row, col);
+					getConsolidadoTM().setValueAt(entity.getIdproducto(), row,
+							col);
 					getConsolidadoTM().setValueAt(entity.getDescripcion(), row,
 							col + 1);
 					getConsolidadoTM().setValueAt(
@@ -303,8 +307,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 							entity.getUnimedida().getDescripcion(), row,
 							col + 3);
 					try {
-						antimpto = Float.parseFloat(getConsolidadoTM().getValueAt(
-								row, 9).toString());
+						antimpto = Float.parseFloat(getConsolidadoTM()
+								.getValueAt(row, 9).toString());
 
 					} catch (Exception e) {
 						antimpto = 0.0F;
@@ -322,11 +326,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		getConsolidadoTM().setNombre_detalle("Detalle de Productos");
 		getConsolidadoTM().setRepetidos(0);
 		getConsolidadoTM().setScrollAndTable(srlConsolidado, tblConsolidado);
-		
+
 		this.tblConsolidado
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.srlConsolidado.setViewportView(this.tblConsolidado);
-
 
 		this.pnlDetalle = new JPanel();
 		this.tabbedPane.addTab("Detalle", null, this.pnlDetalle, null);
@@ -357,7 +360,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 		getConsolidadoTM().setNombre_detalle("Consolidado de Productos");
 		getConsolidadoTM().setRepetidos(0);
-		
+
 		TableColumnModel tc = tblConsolidado.getColumnModel();
 
 		tc.getColumn(4).setCellEditor(new FloatEditor(3));
@@ -406,12 +409,12 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				System.out.println("Opción no disponible");
 			}
 		});
-		
+
 		srlDetalle.setViewportView(tblDetalle);
-		
+
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
-		//getDetalleTM().setRepetidos(0);
-		
+		// getDetalleTM().setRepetidos(0);
+
 		TableColumnModel tcd = tblDetalle.getColumnModel();
 
 		tcd.getColumn(4).setCellEditor(new FloatEditor(3));
@@ -437,8 +440,9 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	public void grabar() {
 		ordencompraDAO.crear_editar(getOrdencompra());
 
-		kardexSlcDAO.borrarPorIdOrdenCompra(ordencompra.getIdordencompra());
-
+		//kardexSlcDAO.borrarPorIdOrdenCompra(ordencompra.getIdordencompra());
+		ddordenCompraDAO.borrarPorOrdenCompra(getOrdencompra());
+		
 		for (DOrdenCompra d : dordencompraDAO.aEliminar(getOrdencompra(),
 				dordencompras)) {
 			dordencompraDAO.remove(d);
@@ -451,7 +455,9 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				dordencompraDAO.edit(d);
 			}
 		}
-
+		
+		ddordenCompraDAO.create(ddordencompras);
+		
 		/*
 		 * ContabilizaSlcCompras.ContabilizaOrdenCompra(getOrdencompra()
 		 * .getIdordencompra());
@@ -502,7 +508,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			cntAlmacen.llenar();
 
 			dordencompras = dordencompraDAO.getPorOrdenCompra(getOrdencompra());
-
+			ddordencompras = ddordenCompraDAO
+					.getPorOrdenCompra(getOrdencompra());
 			for (DOrdenCompra d : dordencompras) {
 				Producto p = d.getProducto();
 				Unimedida u = d.getUnimedida();
@@ -524,6 +531,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			// }
 		} else {
 			dordencompras = new ArrayList<DOrdenCompra>();
+			ddordencompras = new ArrayList<DDOrdenCompra>();
 		}
 	}
 
@@ -535,11 +543,24 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			float vventa, impuesto, dscto, importe;
 			cantidad = Float.parseFloat(getConsolidadoTM().getValueAt(row, 4)
 					.toString());
-			pu = Float.parseFloat(getConsolidadoTM().getValueAt(row, 5).toString());
-			pdscto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 7)
-					.toString());
-			pimpuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 9)
-					.toString());
+			try {
+				pu = Float.parseFloat(getConsolidadoTM().getValueAt(row, 5)
+						.toString());
+			} catch (Exception e) {
+				pu = 0.0F;
+			}
+			try {
+				pdscto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 7)
+						.toString());
+			} catch (Exception e) {
+				pdscto = 0.0F;
+			}
+			try {
+				pimpuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row,
+						9).toString());
+			} catch (Exception e) {
+				pimpuesto = 0.0F;
+			}
 
 			vventa = cantidad * pu;
 			dscto = vventa * pdscto / 100.00F;
@@ -647,8 +668,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 			cantidad = Float.parseFloat(getConsolidadoTM().getValueAt(row, 4)
 					.toString());
-			precio_unitario = Float.parseFloat(getConsolidadoTM()
-					.getValueAt(row, 5).toString());
+			precio_unitario = Float.parseFloat(getConsolidadoTM().getValueAt(
+					row, 5).toString());
 
 			vventa = Float.parseFloat(getConsolidadoTM().getValueAt(row, 6)
 					.toString());
@@ -688,6 +709,14 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 			dordencompras.add(d);
 		}
+		int i = 1;
+		for (DDOrdenCompra o : ddordencompras) {
+			DDOrdenCompraPK id = new DDOrdenCompraPK();
+			id.setIdordencompra(idoc);
+			id.setItem(i);
+			o.setId(id);
+			i++;
+		}
 	}
 
 	@Override
@@ -705,10 +734,155 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		return true;
 	}
 
+	private void referenciarSolicitudCompra() {
+		String serie;
+		int numero;
+		serie = this.cntReferenciaDoc.txtSerie.getText();
+		numero = Integer.parseInt(this.cntReferenciaDoc.txtNumero.getText());
+		SolicitudCompra solicitudCompra = solicitudCompraDAO.getPorSerieNumero(
+				serie, numero);
+
+		if (solicitudCompra != null) {
+			List<Tuple> saldos = new KardexSlcCompraDAO()
+					.getSaldoSolicitudCompra(solicitudCompra, getOrdencompra());
+
+			if (saldos != null && saldos.size() > 0) {
+
+				Object[][] data = new Object[saldos.size()][5];
+				int i = 0;
+				for (Tuple t : saldos) {
+
+					Producto p = (Producto) t.get("producto");
+					float cantidad = (float) t.get("cantidad");
+					data[i][0] = p.getIdproducto();
+					data[i][1] = p.getDescripcion();
+					data[i][3] = cantidad;
+					data[i][4] = cantidadProducto(p, "SLC_COMPRA",
+							solicitudCompra.getIdsolicitudcompra());
+					i++;
+				}
+
+				ModalDetalleReferencia modal = new ModalDetalleReferencia(
+						new String[] { "Cód Producto", "Producto", "U.M.",
+								"Saldo", "Cantidad" }, data);
+				modal.setModal(true);
+				Sys.desktoppane.add(modal);
+				modal.setVisible(true);
+
+				if (data != null) {
+					int rows = data.length;
+					// Borrar los referenciados a la solicitud
+					int size = ddordencompras.size();
+					for (int ii = 0; ii < size; ii++) {
+						DDOrdenCompra o = ddordencompras.get(ii);
+
+						if (o.getTipo_referencia().equals("SLC_COMPRA")
+								&& o.getId_referencia() == solicitudCompra
+										.getIdsolicitudcompra()) {
+
+							ddordencompras.remove(ii);
+							ii = 0;
+							size = ddordencompras.size();
+						}
+					}
+
+					for (int row = 0; row < rows; row++) {
+						String idproducto;
+						float cantidad;
+
+						idproducto = data[row][0].toString();
+						cantidad = Float.parseFloat(data[row][4].toString());
+
+						// Agregar los que tienen cantidad dif. de cero
+
+						// Reiniciar los productos del consolidado
+						salir: for (int iii = 0; iii < getConsolidadoTM()
+								.getRowCount(); iii++) {
+							if (getConsolidadoTM().getValueAt(iii, 0)
+									.toString().trim().equals(idproducto)) {
+								getConsolidadoTM().setValueAt(0.0F, iii, 4);
+								break salir;
+							}
+						}
+
+						if (cantidad > 0) {
+							DDOrdenCompra dd = new DDOrdenCompra();
+							Producto p = productoDAO.find(idproducto);
+							dd.setTipo_referencia("SLC_COMPRA");
+							dd.setId_referencia(solicitudCompra
+									.getIdsolicitudcompra());
+							dd.setProducto(p);
+							dd.setCantidad(cantidad);
+							ddordencompras.add(dd);
+						}
+					}
+				}
+				actualizarConsolidado();
+			}
+		} else {
+			UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
+		}
+
+	}
+
+	private void actualizarConsolidado() {
+		// A los productos que estan, agregar los referenciados
+		for (DDOrdenCompra o : ddordencompras) {
+			String idproducto = o.getProducto().getIdproducto();
+			// Reiniciar los productos del consolidado
+			salir: for (int iii = 0; iii < getConsolidadoTM().getRowCount(); iii++) {
+				if (getConsolidadoTM().getValueAt(iii, 0).toString().trim()
+						.equals(idproducto)) {
+					getConsolidadoTM().setValueAt(0.0F, iii, 4);
+					break salir;
+				}
+			}
+		}
+		for (DDOrdenCompra o : ddordencompras) {
+
+			String idproducto = o.getProducto().getIdproducto();
+			Producto producto = o.getProducto();
+			float cantidad = o.getCantidad();
+			boolean hayProducto = false;
+			// Buscar si existe actualizar cantidad, sino agregar
+			salir: for (int i = 0; i < getConsolidadoTM().getRowCount(); i++) {
+				if (idproducto.equals(getConsolidadoTM().getValueAt(i, 0)
+						.toString().trim())) {
+					float cant_ant = Float.parseFloat(getConsolidadoTM()
+							.getValueAt(i, 4).toString());
+					getConsolidadoTM().setValueAt(cant_ant + cantidad, i, 4);
+					hayProducto = true;
+					break salir;
+				}
+			}
+
+			if (!hayProducto) {
+				Object[] rowData = new Object[] { producto.getIdproducto(),
+						producto.getDescripcion(),
+						producto.getUnimedida().getIdunimedida(),
+						producto.getUnimedida().getDescripcion(), cantidad };
+				getConsolidadoTM().addRow(rowData);
+			}
+		}
+	}
+
+	private float cantidadProducto(Producto producto, String tipo_referencia,
+			long id_referencia) {
+		float cantidad = 0.0F;
+		for (DDOrdenCompra o : ddordencompras) {
+			if (o.getTipo_referencia().equals(tipo_referencia)
+					&& o.getId_referencia() == id_referencia
+					&& o.getProducto().getIdproducto()
+							.equals(producto.getIdproducto()))
+				cantidad = o.getCantidad();
+		}
+		return cantidad;
+	}
+
 	public DSGTableModel getConsolidadoTM() {
 		return ((DSGTableModel) tblConsolidado.getModel());
 	}
-	
+
 	public DSGTableModel getDetalleTM() {
 		return ((DSGTableModel) tblDetalle.getModel());
 	}

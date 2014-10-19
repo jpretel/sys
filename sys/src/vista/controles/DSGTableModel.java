@@ -140,7 +140,11 @@ public abstract class DSGTableModel extends DefaultTableModel {
 		if (columnCount <= 1) {
 			return String.class;
 		}
-		return getValueAt(0, c).getClass();
+		try {
+			return getValueAt(0, c).getClass();
+		} catch (Exception e) {
+			return String.class;
+		}
 	}
 
 	@Override
@@ -178,7 +182,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 	public void setRepetidos(int... repetidos) {
 		this.repetidos = repetidos;
 	}
-	
+
 	public void setValidaNumero(DSGVNDetalle... validadores) {
 		this.valNumeros = validadores;
 	}
@@ -268,14 +272,20 @@ public abstract class DSGTableModel extends DefaultTableModel {
 			InputEvent.CTRL_MASK);
 
 	public void remRow(int row) {
-		int seleccion = JOptionPane.showOptionDialog(null,
-				"Desea Eliminar el Registro Seleccionado",
-				"Informacion del Sistema", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null,
-				new Object[] { "Si", "No" }, "Si");
-		if (seleccion == 0) {
-			removeRow(row);
+		if (isValidaEliminacion(row)) {
+			int seleccion = JOptionPane.showOptionDialog(null,
+					"Desea Eliminar el Registro Seleccionado",
+					"Informacion del Sistema", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, new Object[] { "Si",
+							"No" }, "Si");
+			if (seleccion == 0) {
+				removeRow(row);
+			}
 		}
+	}
+
+	public boolean isValidaEliminacion(int row) {
+		return true;
 	}
 
 	public abstract void addRow();
