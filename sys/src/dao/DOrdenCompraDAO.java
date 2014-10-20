@@ -3,10 +3,13 @@ package dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import entity.DDOrdenCompra;
 import entity.DOrdenCompra;
 import entity.OrdenCompra;
 
@@ -38,6 +41,18 @@ public class DOrdenCompraDAO extends AbstractDAO<DOrdenCompra> {
 				eliminar.add(o1);
 		}
 		return eliminar;
+	}
+	
+	public void borrarPorOrdenCompra(OrdenCompra oc) {
+		getEntityManager().getTransaction().begin();
+		CriteriaDelete<DOrdenCompra> delete = cb
+				.createCriteriaDelete(DOrdenCompra.class);
+		Root<DOrdenCompra> c = delete.from(DOrdenCompra.class);
+		delete.where(cb.equal(c.get("id").get("idordencompra"),
+				oc.getIdordencompra()));
+		Query query = getEntityManager().createQuery(delete);
+		query.executeUpdate();
+		getEntityManager().getTransaction().commit();
 	}
 
 }

@@ -16,6 +16,7 @@ import entity.DSolicitudCompraPK;
 import entity.KardexSlcCompra;
 import entity.OrdenCompra;
 import entity.SolicitudCompra;
+import entity.Unimedida;
 
 public class ContabilizaSlcCompras {
 	public static boolean ContabilizaSolicitud(long id) {
@@ -57,6 +58,7 @@ public class ContabilizaSlcCompras {
 	public static boolean ContabilizaOrdenCompra(long id) {
 		OrdenCompraDAO ordDAO = new OrdenCompraDAO();
 		DDOrdenCompraDAO ddordDAO = new DDOrdenCompraDAO();
+		DOrdenCompraDAO dordDAO = new DOrdenCompraDAO();
 		KardexSlcCompraDAO kardexDAO = new KardexSlcCompraDAO();
 		SolicitudCompraDAO slcDAO = new SolicitudCompraDAO();
 		
@@ -67,8 +69,11 @@ public class ContabilizaSlcCompras {
 		}
 
 		List<DDOrdenCompra> ddorden;
-
+		List<DOrdenCompra> dorden;
+		
 		ddorden = ddordDAO.getPorOrdenCompra(orden);
+		dorden = dordDAO.getPorOrdenCompra(orden);
+		
 		kardexDAO.borrarPorIdOrdenCompra(id);
 
 		List<KardexSlcCompra> kardex_list = new ArrayList<KardexSlcCompra>();
@@ -76,10 +81,20 @@ public class ContabilizaSlcCompras {
 		for (DDOrdenCompra o : ddorden) {
 
 			if (o.getTipo_referencia().equals("SLC_COMPRA")) {
+				//Buscar unidad de medida
+				Unimedida unimedida = null;
+				for(DOrdenCompra doc : dorden) {
+					if (doc.getProducto().getIdproducto().equals(o.getProducto().getIdproducto()))
+						unimedida = doc.getUnimedida();
+				}
+				
 				long id_referencia = o.getId_referencia();
 				KardexSlcCompra kardex = new KardexSlcCompra();
 				SolicitudCompra slc = slcDAO.find(id_referencia);
 				kardex.setProducto(o.getProducto());
+				
+				kardex.setUnimedida(unimedida);
+				
 				kardex.setCantidad(o.getCantidad());
 				kardex.setTipo_referencia("ORD_COMPRA");
 				kardex.setSolicitudcompra(slc);

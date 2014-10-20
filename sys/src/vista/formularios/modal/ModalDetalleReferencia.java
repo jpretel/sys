@@ -11,16 +11,20 @@ import javax.swing.JPanel;
 
 import java.awt.Dimension;
 
+import javax.swing.JInternalFrame;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ModalDetalleReferencia extends ModalInternalFrame {
 	Object[][] data;
 
-	public ModalDetalleReferencia(final DSGTableModel model, Object[][] data) {
+	public ModalDetalleReferencia(JInternalFrame parent,
+			final DSGTableModel model, Object[][] data) {
+		super(parent);
 		setSize(new Dimension(570, 350));
 		setPreferredSize(new Dimension(200, 200));
 		setTitle("Detalle de Referencia");
@@ -58,10 +62,19 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 				// Actualizar cantidades
 				int rows = model.getRowCount();
 				for (int i = 0; i < rows; i++) {
-					ModalDetalleReferencia.this.data[i][4] = Float
-							.parseFloat(model.getValueAt(i, 4).toString());
+					float nValor = 0.0F;
+					try {
+						nValor = Float.parseFloat(model.getValueAt(i, 4)
+								.toString());
+					} catch (Exception ex) {
+						nValor = 0.0F;
+					}
+
+					ModalDetalleReferencia.this.data[i][4] = nValor;
 				}
-				dispose();
+				if (validaModelo(model)) {
+					dispose();
+				}
 			}
 		});
 
@@ -82,6 +95,10 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 
 	}
 
+	public boolean validaModelo(DSGTableModel model) {
+		return true;
+	}
+
 	private static final long serialVersionUID = 1L;
 	private JPanel pnlNorte;
 	private JPanel pnlSur;
@@ -94,12 +111,15 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 	public JButton getBtnAceptar() {
 		return btnAceptar;
 	}
+
 	public void setBtnAceptar(JButton btnAceptar) {
 		this.btnAceptar = btnAceptar;
 	}
+
 	public JTable getTable() {
 		return table;
 	}
+
 	public void setTable(JTable table) {
 		this.table = table;
 	}

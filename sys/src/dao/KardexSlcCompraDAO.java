@@ -32,17 +32,18 @@ public class KardexSlcCompraDAO extends AbstractDAO<KardexSlcCompra> {
 
 		Predicate condicion = cb.and(
 				cb.equal(from.get("solicitudcompra"), solicitudCompra),
-				cb.and( cb.notEqual(from.get("id_referencia"),
-								ordenCompra.getIdordencompra())));
+				cb.and(cb.notEqual(from.get("id_referencia"),
+						ordenCompra.getIdordencompra())));
 
 		// q.multiselect(from,
 		// p.get("id").get("idordencompra").alias("idordencompra"));
 
 		q.multiselect(
 				from.get("producto").alias("producto"),
+				from.get("unimedida").alias("unimedida"),
 				cb.sum(cb.prod(from.get("factor"), from.get("cantidad")))
 						.alias("cantidad")).where(condicion);
-		q.groupBy(from.get("producto"));
+		q.groupBy(from.get("producto"), from.get("unimedida"));
 		q.having(cb.greaterThan(
 				cb.sum(cb.prod(from.get("factor"), from.get("cantidad"))), 0));
 

@@ -4,23 +4,17 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import dao.TCambioDAO;
-import entity.TCambio;
 import vista.barras.IFormDocumento;
 import vista.barras.PanelBarraDocumento;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.Date;
 
-import vista.contenedores.CntMoneda;
 import vista.controles.DSGDatePicker;
 import vista.controles.DSGInternalFrame;
 import vista.controles.DSGTextFieldCorrelativo;
-import vista.controles.DSGTextFieldNumber;
 
 public abstract class AbstractDocForm extends DSGInternalFrame implements
 		IFormDocumento {
@@ -30,15 +24,9 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 	protected JPanel pnlPrincipal;
 	private String estado;
 	protected DSGTextFieldCorrelativo txtNumero_2;
-	protected DSGTextFieldNumber txtTipoCambio;
-	protected DSGTextFieldNumber txtTcMoneda;
-	protected JLabel lblTcMoneda;
-	protected JLabel lblTipoCambio;
 	protected DSGDatePicker txtFecha;
 	protected DSGTextFieldCorrelativo txtSerie;
-	protected CntMoneda cntMoneda;
-	private TCambioDAO tcambioDAO = null;
-	
+
 	public AbstractDocForm(String titulo) {
 		setTitle(titulo);
 		setMaximizable(true);
@@ -48,7 +36,7 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 		setResizable(true);
 		initBarra();
 		int AnchoCabecera = 850;
-		
+
 		pnlPrincipal = new JPanel();
 		pnlPrincipal.setMinimumSize(new Dimension(AnchoCabecera, 500));
 		pnlPrincipal.setPreferredSize(new Dimension(AnchoCabecera, 500));
@@ -66,77 +54,25 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 		this.txtFecha.setBounds(245, 11, 101, 22);
 		txtFecha.getEditor().setLocation(0, 8);
 		txtFecha.setDate(new Date());
-		cntMoneda = new CntMoneda();
-		this.cntMoneda.setBounds(400, 12, 181, 20);
-		
+
 		setEstado(VISTA);
 		setBounds(100, 100, 854, 465);
 
 		this.pnlPrincipal.setLayout(null);
 		this.pnlPrincipal.add(lblNumero);
-								
-										JLabel lblFecha = new JLabel("Fecha");
-										lblFecha.setBounds(206, 15, 53, 14);
-										this.pnlPrincipal.add(lblFecha);
-								JLabel lblMoneda = new JLabel("Moneda");
-								lblMoneda.setBounds(353, 15, 53, 14);
-								this.pnlPrincipal.add(lblMoneda);
-						
-								lblTipoCambio = new JLabel("T. Cambio");
-								this.lblTipoCambio.setBounds(591, 15, 53, 14);
-								this.pnlPrincipal.add(this.lblTipoCambio);
-				
-						lblTcMoneda = new JLabel("T.C. Moneda");
-						this.lblTcMoneda.setBounds(704, 15, 62, 14);
-						this.pnlPrincipal.add(this.lblTcMoneda);
-		
-				txtSerie = new DSGTextFieldCorrelativo(4);
-				this.txtSerie.setBounds(72, 12, 44, 20);
-				txtSerie.setColumns(10);
-				this.pnlPrincipal.add(this.txtSerie);
+
+		JLabel lblFecha = new JLabel("Fecha");
+		lblFecha.setBounds(206, 15, 53, 14);
+		this.pnlPrincipal.add(lblFecha);
+
+		txtSerie = new DSGTextFieldCorrelativo(4);
+		this.txtSerie.setBounds(72, 12, 44, 20);
+		txtSerie.setColumns(10);
+		this.pnlPrincipal.add(this.txtSerie);
 		this.pnlPrincipal.add(this.txtNumero_2);
 		this.pnlPrincipal.add(this.txtFecha);
-		this.pnlPrincipal.add(this.cntMoneda);
-		
-				txtTipoCambio = new DSGTextFieldNumber(4);
-				this.txtTipoCambio.setBounds(641, 12, 55, 20);
-				txtTipoCambio.setMinimumSize(new Dimension(30, 20));
-				txtTipoCambio.setPreferredSize(new Dimension(30, 20));
-				txtTipoCambio.setColumns(10);
-				this.pnlPrincipal.add(this.txtTipoCambio);
-		
-				txtTcMoneda = new DSGTextFieldNumber(4);
-				this.txtTcMoneda.setBounds(776, 12, 55, 20);
-				txtTcMoneda.setColumns(10);
-				txtTcMoneda.setText(String.valueOf(1.000));
-				this.pnlPrincipal.add(this.txtTcMoneda);
-				
-				cntMoneda.txtCodigo.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusLost(FocusEvent arg0){
-						actualizaTCambio();
-					}
-				});
-				
-				txtFecha.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusLost(FocusEvent arg0){
-						actualizaTCambio();
-					}
-				});		
 	}
-	
-	public void actualizaTCambio(){
-		final int dia = this.txtFecha.getDate().getDate();
-		final int mes = this.txtFecha.getDate().getMonth() + 1;
-		final int anio = this.txtFecha.getDate().getYear() + 1900;
-		if(cntMoneda.txtCodigo.getText().trim().length() > 0 && dia > 0 ){
-			/*TCambio tcambio = tcambioDAO.getFechaMoneda(cntMoneda.getSeleccionado(), anio, mes, dia);
-			if(tcambio != null)
-				this.txtTipoCambio.setText(String.valueOf(tcambio.getCompra()));*/		
-		}
-	}
-	
+
 	public void initBarra() {
 		int AnchoCabecera = 850;
 		barra = new PanelBarraDocumento();
@@ -230,9 +166,9 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 	public abstract void llenarDesdeVista();
 
 	public abstract boolean isValidaVista();
-	
-	public void doVerAsiento(){
-		
+
+	public void doVerAsiento() {
+
 	}
 
 	public PanelBarraDocumento getBarra() {

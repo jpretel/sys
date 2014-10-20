@@ -49,7 +49,7 @@ public class FrmListaOrdenCompra extends AbstractDocList {
 			Calendar c = GregorianCalendar.getInstance();
 			c.set(Calendar.YEAR, oc.getAnio());
 			c.set(Calendar.MONTH, oc.getMes()-1);
-			c.set(Calendar.DAY_OF_YEAR, oc.getDia());
+			c.set(Calendar.DAY_OF_MONTH, oc.getDia());
 			
 			String cnumero = StringUtils._padl(oc.getNumero(), 8, '0');
 

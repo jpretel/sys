@@ -34,7 +34,7 @@ public class OrdenCompraDAO extends AbstractDAO<OrdenCompra> {
 		CriteriaQuery<OrdenCompra> q = cb.createQuery(OrdenCompra.class);
 		Root<OrdenCompra> c = q.from(OrdenCompra.class);
 		
-		Expression<Integer> expfecha = c.get("aniomesdia");
+		Expression<Integer> expfecha = c.get("fecha");
 				
 		Predicate ps = null;
 		

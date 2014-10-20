@@ -370,7 +370,8 @@ public abstract class AbstractDocList extends DSGInternalFrame {
 				: this.txtSerie1.getText().trim();
 		if (this.txtNumero.getText().trim().length() > 0)
 			inumero = Integer.parseInt(this.txtNumero.getText().trim());
-
+		System.out.println(idesde);
+		System.out.println(dia_desde);
 		modelo_lista.limpiar();
 		for (Object[] data : getData(idesde, ihasta, serie, inumero)) {
 			modelo_lista.addRow(data);
