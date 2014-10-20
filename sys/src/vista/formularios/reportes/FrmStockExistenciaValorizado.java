@@ -51,10 +51,9 @@ public class FrmStockExistenciaValorizado extends AbstractReporte{
 	{
 		
 		Calendar calendar = Calendar.getInstance();
-		pnlFiltro.setPreferredSize(new Dimension(10, 90));
-		
+
 		this.cntAlmacen = new cntAlmacen();
-		this.cntAlmacen.setBounds(10, 23, 192, 20);
+		this.cntAlmacen.setBounds(431, 23, 192, 20);
 		pnlFiltro.add(this.cntAlmacen);
 
 		this.cntSucursal = new cntSucursal();
@@ -66,28 +65,19 @@ public class FrmStockExistenciaValorizado extends AbstractReporte{
 		pnlFiltro.add(this.lblSucursal);
 
 		this.lblAlmacen = new JLabel("Almacen");
-		this.lblAlmacen.setBounds(10, 11, 86, 14);
+		this.lblAlmacen.setBounds(430, 11, 86, 14);
 		pnlFiltro.add(this.lblAlmacen);
-		
-		this.lblDesde = new JLabel("Desde");
-		this.lblDesde.setBounds(10, 53, 46, 14);
-		pnlFiltro.add(this.lblDesde);
 
 		this.lblHasta = new JLabel("Hasta");
-		this.lblHasta.setBounds(229, 53, 46, 14);
+		this.lblHasta.setBounds(10, 11, 46, 14);
 		pnlFiltro.add(this.lblHasta);
 
-		this.dpDesde = new DSGDatePicker();
-		this.dpDesde.setBounds(49, 54, 147, 22);
-		pnlFiltro.add(this.dpDesde);
-
 		this.dpHasta = new DSGDatePicker();
-		this.dpHasta.setBounds(268, 54, 147, 22);
+		this.dpHasta.setBounds(10, 22, 147, 22);
 		pnlFiltro.add(this.dpHasta);
-		
-		setTitle("Stock de Existencia Valorizado");
+		setTitle("Saldo por Almacen");
 		cntSucursal.setData(sucursalDAO.findAll());
-		
+
 		cntAlmacen.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
@@ -96,6 +86,7 @@ public class FrmStockExistenciaValorizado extends AbstractReporte{
 						.getSeleccionado()));
 			}
 		});
+		dpHasta.setDate(calendar.getTime());
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -103,9 +94,7 @@ public class FrmStockExistenciaValorizado extends AbstractReporte{
 	private cntSucursal cntSucursal;
 	private JLabel lblSucursal;
 	private JLabel lblAlmacen;
-	private JLabel lblDesde;
 	private JLabel lblHasta;
-	private DSGDatePicker dpDesde;
 	private DSGDatePicker dpHasta;
 	
 	
@@ -122,10 +111,8 @@ public class FrmStockExistenciaValorizado extends AbstractReporte{
 		//Integer.parseInt(almacen.getId().getIdalmacen())
 		List<StockExistenciasValorizadoEnt> ListSto=null;
 		try {
-			List<Producto> prod=null;
 			
-			
-			ListSto=new StockExistenciasValorizadoDAO().ReporteStockExistenciaValorizado(1, 1);
+			ListSto=new StockExistenciasValorizadoDAO().ReporteStockExistenciaValorizado(cntSucursal.txtCodigo.getText(),cntAlmacen.txtCodigo.getText());
 			
 		/*	Object[] nombres = {"Codigo", "Descripcion", "Marca", "Costo", "Stock", "Total"};
 			DefaultTableModel dtm = new DefaultTableModel(nombres, 10);

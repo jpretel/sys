@@ -31,7 +31,7 @@ public class StockExistenciasValorizadoDAO extends AbstractDAO<StockExistenciasV
 	
 		
 	
-	public  List<StockExistenciasValorizadoEnt> ReporteStockExistenciaValorizado(int prmintsucursal,int prmintalmacen)
+	public  List<StockExistenciasValorizadoEnt> ReporteStockExistenciaValorizado(String prmstrsucursal,String prmstralmacen)
 			throws Exception
 	{
 		
@@ -42,11 +42,12 @@ public class StockExistenciasValorizadoDAO extends AbstractDAO<StockExistenciasV
 			
 			getEntityManager().getTransaction().begin();
 
-			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("reportestock");
-			query.registerStoredProcedureParameter("prmintsucursal",Integer.class,ParameterMode.IN);
-			query.registerStoredProcedureParameter("prmintalmacen",Integer.class,ParameterMode.IN);
-			query.setParameter("prmintsucursal", prmintsucursal);
-			query.setParameter("prmintalmacen", prmintalmacen);
+			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("sp_ReporteStockExisteciaValor");
+			query.registerStoredProcedureParameter("prmstridsucursal",String.class,ParameterMode.IN);
+			query.registerStoredProcedureParameter("prmstridalamcen",String.class,ParameterMode.IN);
+			query.setParameter("prmstridsucursal",prmstrsucursal);
+			query.setParameter("prmstridalamcen", prmstralmacen);
+			
 			Resul=  query.getResultList();
 			
 			//
