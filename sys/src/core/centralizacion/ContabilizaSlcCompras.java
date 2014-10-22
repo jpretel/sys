@@ -48,8 +48,6 @@ public class ContabilizaSlcCompras {
 			kardex_list.add(kardex);
 		}
 		
-		System.out.println("Long: " + kardex_list);
-		
 		kardexDAO.create(kardex_list);
 
 		return true;

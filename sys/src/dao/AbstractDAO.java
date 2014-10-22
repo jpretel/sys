@@ -22,34 +22,9 @@ public abstract class AbstractDAO<T> {
 	protected EntityManager em;
 	protected CriteriaBuilder cb;
 
-	public static EntityManagerFactory getEntityManagerFactory() {
-		Map<String, String> persistenceMap = new HashMap<String, String>();
-
-		persistenceMap.put("javax.persistence.jdbc.url",
-				Sys.cfgInicio.getURL(ConectionManager._mysql));
-		persistenceMap.put("javax.persistence.jdbc.user",
-				Sys.cfgInicio.getUsuario());
-		persistenceMap.put("javax.persistence.jdbc.password",
-				Sys.cfgInicio.getClave());
-		if (Sys.cfgInicio.getTipo_creacion() != null
-				&& !Sys.cfgInicio.getTipo_creacion().isEmpty()) {
-			if (Sys.cfgInicio.getTipo_creacion().equals("UPDATE")) {
-				persistenceMap.put("eclipselink.ddl-generation",
-						"create-or-extend-tables");
-			}
-			if (Sys.cfgInicio.getTipo_creacion().equals("DROP")) {
-				persistenceMap.put("eclipselink.ddl-generation",
-						"drop-and-create-tables");
-			}
-		}
-
-		return Persistence.createEntityManagerFactory("sys", persistenceMap);
-
-	}
-
 	public AbstractDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;
-		factory = getEntityManagerFactory();
+		factory = Sys.entityFactory;
 		em = factory.createEntityManager();
 		cb = getEntityManager().getCriteriaBuilder();
 	}

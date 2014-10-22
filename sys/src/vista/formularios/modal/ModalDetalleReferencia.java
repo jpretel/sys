@@ -21,10 +21,11 @@ import java.awt.event.ActionEvent;
 
 public class ModalDetalleReferencia extends ModalInternalFrame {
 	Object[][] data;
-
+	public DSGTableModel model;
 	public ModalDetalleReferencia(JInternalFrame parent,
-			final DSGTableModel model, Object[][] data) {
+			final DSGTableModel modelo, Object[][] data) {
 		super(parent);
+		this.model = modelo;
 		setSize(new Dimension(570, 350));
 		setPreferredSize(new Dimension(200, 200));
 		setTitle("Detalle de Referencia");
@@ -48,7 +49,7 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 		this.btnCancelar = new JButton("Cancelar");
 		this.btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ModalDetalleReferencia.this.data = null;
+				model = null;
 				dispose();
 			}
 		});
@@ -59,20 +60,7 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 		this.btnAceptar = new JButton("Aceptar");
 		this.btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Actualizar cantidades
-				int rows = model.getRowCount();
-				for (int i = 0; i < rows; i++) {
-					float nValor = 0.0F;
-					try {
-						nValor = Float.parseFloat(model.getValueAt(i, 4)
-								.toString());
-					} catch (Exception ex) {
-						nValor = 0.0F;
-					}
-
-					ModalDetalleReferencia.this.data[i][4] = nValor;
-				}
-				if (validaModelo(model)) {
+				if (validaModelo()) {
 					dispose();
 				}
 			}
@@ -87,15 +75,13 @@ public class ModalDetalleReferencia extends ModalInternalFrame {
 		this.table = new JTable(model);
 		this.scrlDetalle.setViewportView(this.table);
 
-		this.data = data;
-
-		for (Object[] o : this.data) {
+		for (Object[] o : data) {
 			model.addRow(o);
 		}
 
 	}
 
-	public boolean validaModelo(DSGTableModel model) {
+	public boolean validaModelo() {
 		return true;
 	}
 

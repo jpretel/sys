@@ -179,13 +179,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 					cntSucursal.txtCodigo.requestFocus();
 					return;
 				}
-				
+
 				if (almacen == null) {
 					UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Almacen");
 					cntAlmacen.txtCodigo.requestFocus();
 					return;
 				}
-				
+
 				serie = this.txtSerie.getText().trim();
 				try {
 					numero = Integer.parseInt(this.txtNumero.getText());
@@ -256,7 +256,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			}
 		};
 
-		this.cntReferenciaDoc.setBounds(464, 102, 180, 20);
+		this.cntReferenciaDoc.setBounds(464, 105, 180, 20);
 		pnlPrincipal.add(this.cntReferenciaDoc);
 
 		this.cntMoneda = new CntMoneda();
@@ -517,13 +517,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	public void eliminar() {
 		int opcion = UtilMensajes.mensaje_sino("DESEA_ELIMINAR_DOC");
 		if (opcion == 0) {
-			//Borrar Kardex
+			// Borrar Kardex
 			kardexSlcDAO.borrarPorIdOrdenCompra(ordencompra.getIdordencompra());
-			
-			//Borrar Detalle y Consolidado
+
+			// Borrar Detalle y Consolidado
 			ddordenCompraDAO.borrarPorOrdenCompra(ordencompra);
 			dordencompraDAO.borrarPorOrdenCompra(ordencompra);
-			//Borrar Cabecera
+			// Borrar Cabecera
 			ordencompraDAO.remove(ordencompra);
 			ordencompra = null;
 		}
@@ -796,9 +796,12 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		return true;
 	}
 
-	private void referenciarSolicitudCompra(String serie, int numero, Sucursal sucursal, Almacen almacen) {
+	private void referenciarSolicitudCompra(String serie, int numero,
+			Sucursal sucursal, Almacen almacen) {
 
-		SolicitudCompra solicitudCompra = solicitudCompraDAO.getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal, almacen);
+		SolicitudCompra solicitudCompra = solicitudCompraDAO
+				.getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal,
+						almacen);
 
 		if (solicitudCompra != null) {
 			referenciarSolicitudCompra(solicitudCompra, "EDICION");
@@ -851,24 +854,27 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public boolean validaModelo(DSGTableModel model) {
-					for (int i = 0; i < model.getRowCount(); i++) {
+				public boolean validaModelo() {
+					for (int i = 0; i < this.model.getRowCount(); i++) {
 						String producto;
-						producto = model.getValueAt(i, 1).toString();
-						
+						producto = this.model.getValueAt(i, 1).toString();
+
 						float saldo = 0.0F, cantidad = 0.0F;
 						try {
-							saldo = Float.parseFloat(model.getValueAt(i, 3).toString());
+							saldo = Float.parseFloat(this.model
+									.getValueAt(i, 3).toString());
 						} catch (Exception e) {
 							saldo = 0;
 						}
 						try {
-							cantidad = Float.parseFloat(model.getValueAt(i, 4).toString());
+							cantidad = Float.parseFloat(this.model.getValueAt(
+									i, 4).toString());
 						} catch (Exception e) {
 							cantidad = 0;
 						}
 						if (cantidad > saldo) {
-							UtilMensajes.mensaje_alterta("CANTIDAD_MENOR_SALDO", producto);
+							UtilMensajes.mensaje_alterta(
+									"CANTIDAD_MENOR_SALDO", producto);
 							return false;
 						}
 					}
@@ -894,7 +900,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			Sys.desktoppane.add(modal);
 			modal.setVisible(true);
 
-			if (data != null) {
+			if (modal.model != null) {
 				int rows = data.length;
 				// Borrar los referenciados a la solicitud
 				int size = ddordencompras.size();
@@ -915,8 +921,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 					String idproducto;
 					float cantidad;
 
-					idproducto = data[row][0].toString();
-					cantidad = Float.parseFloat(data[row][4].toString());
+					idproducto = modal.model.getValueAt(row, 0).toString();
+					try {
+						cantidad = Float.parseFloat(modal.model.getValueAt(row, 4)
+								.toString());
+					} catch (Exception e) {
+						cantidad = 0.0F;
+					}
 
 					// Agregar los que tienen cantidad dif. de cero
 

@@ -33,6 +33,10 @@ public class DRequerimiento implements Serializable {
 	@Column(precision = 17, scale = 6)
 	private float cantidad;
 
+	@ManyToOne
+	@JoinColumn(name = "idconsumidor", referencedColumnName = "idconsumidor")
+	private Consumidor consumidor;
+
 	public DRequerimiento() {
 		super();
 	}
@@ -75,6 +79,14 @@ public class DRequerimiento implements Serializable {
 
 	public void setRequerimiento(Requerimiento requerimiento) {
 		this.requerimiento = requerimiento;
+	}
+
+	public Consumidor getConsumidor() {
+		return consumidor;
+	}
+
+	public void setConsumidor(Consumidor consumidor) {
+		this.consumidor = consumidor;
 	}
 
 }

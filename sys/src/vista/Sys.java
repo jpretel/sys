@@ -1,9 +1,13 @@
 package vista;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import static vista.utilitarios.UtilMensajes.mensaje_alterta;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.JDesktopPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -39,6 +43,8 @@ public class Sys {
 	public static Moneda moneda_ex;
 	public static JDesktopPane desktoppane;
 	public static Mensajes mensajes;
+	public static EntityManagerFactory entityFactory;
+	
 	private FrmSysConfig frm = new FrmSysConfig();
 	public static MainFrame mainF;
 
@@ -105,6 +111,27 @@ public class Sys {
 				isOK = ConectionManager.isConexionOK(ConectionManager._mysql,
 						cfgInicio);
 				if (isOK) {
+					
+					Map<String, String> persistenceMap = new HashMap<String, String>();
+
+					persistenceMap.put("javax.persistence.jdbc.url",
+							Sys.cfgInicio.getURL(ConectionManager._mysql));
+					persistenceMap.put("javax.persistence.jdbc.user",
+							Sys.cfgInicio.getUsuario());
+					persistenceMap.put("javax.persistence.jdbc.password",
+							Sys.cfgInicio.getClave());
+					if (Sys.cfgInicio.getTipo_creacion() != null
+							&& !Sys.cfgInicio.getTipo_creacion().isEmpty()) {
+						if (Sys.cfgInicio.getTipo_creacion().equals("UPDATE")) {
+							persistenceMap.put("eclipselink.ddl-generation",
+									"create-or-extend-tables");
+						}
+						if (Sys.cfgInicio.getTipo_creacion().equals("DROP")) {
+							persistenceMap.put("eclipselink.ddl-generation",
+									"drop-and-create-tables");
+						}
+					}
+					entityFactory = Persistence.createEntityManagerFactory("sys", persistenceMap);
 					abrir();
 				} else {
 					mensaje_alterta("ERROR_CONFIG");

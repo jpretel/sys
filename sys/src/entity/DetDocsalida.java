@@ -40,7 +40,15 @@ public class DetDocsalida implements Serializable {
 
 	@Column(length = 15)
 	private String idconsumidor;
-
+	
+	/*
+	 * Referencia
+	 */
+	@Column(length = 10)
+	private String tipo_referencia;
+	
+	private long id_referencia;
+	
 	public DetDocsalida() {
 	}
 
@@ -106,6 +114,22 @@ public class DetDocsalida implements Serializable {
 
 	public void setProducto(Producto producto) {
 		this.producto = producto;
+	}
+
+	public String getTipo_referencia() {
+		return tipo_referencia;
+	}
+
+	public void setTipo_referencia(String tipo_referencia) {
+		this.tipo_referencia = tipo_referencia;
+	}
+
+	public long getId_referencia() {
+		return id_referencia;
+	}
+
+	public void setId_referencia(long id_referencia) {
+		this.id_referencia = id_referencia;
 	}
 
 }

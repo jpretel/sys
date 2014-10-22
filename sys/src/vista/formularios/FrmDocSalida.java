@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import vista.Sys;
 import vista.contenedores.CntConcepto;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
@@ -13,11 +14,16 @@ import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
+import vista.formularios.modal.ModalDetalleReferencia;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.StringUtils;
+import vista.utilitarios.UtilMensajes;
 import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
+import vista.utilitarios.renderers.ReferenciaDOC;
+import vista.utilitarios.renderers.ReferenciaDOCRenderer;
 
+import javax.persistence.Tuple;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -27,13 +33,16 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
 import core.centralizacion.ContabilizaAlmacen;
+import core.centralizacion.ContabilizaRequerimiento;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
 import dao.DetDocSalidaDAO;
 import dao.DocsalidaDAO;
 import dao.GrupoCentralizacionDAO;
+import dao.KardexRequerimientoDAO;
 import dao.MonedaDAO;
 import dao.ProductoDAO;
+import dao.RequerimientoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
@@ -42,10 +51,14 @@ import entity.DetDocsalida;
 import entity.DetDocsalidaPK;
 import entity.Docsalida;
 import entity.Producto;
+import entity.Requerimiento;
 import entity.Sucursal;
 import entity.Unimedida;
 import vista.contenedores.CntGrupoCentralizacion;
 import vista.contenedores.CntMoneda;
+import vista.controles.CntReferenciaDoc;
+
+import java.awt.GridBagLayout;
 
 public class FrmDocSalida extends AbstractDocForm {
 	/**
@@ -61,6 +74,8 @@ public class FrmDocSalida extends AbstractDocForm {
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 	private ProductoDAO productoDAO = new ProductoDAO();
+	private RequerimientoDAO requerimientoDAO = new RequerimientoDAO();
+
 	private CntConcepto cntConcepto;
 	private cntResponsable cntResponsable;
 	private cntSucursal cntSucursal;
@@ -76,6 +91,8 @@ public class FrmDocSalida extends AbstractDocForm {
 	private TxtProducto txtProducto;
 	private JLabel label;
 	private CntMoneda cntMoneda;
+	private JLabel label_1;
+	private CntReferenciaDoc cntReferenciaDoc;
 
 	public FrmDocSalida() {
 		super("Nota de Salida");
@@ -106,21 +123,26 @@ public class FrmDocSalida extends AbstractDocForm {
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
 				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
-				"Importe" }) {
+				"Importe", "Referencia" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean evaluaEdicion(int row, int column) {
-				if (column == 1 || column == 3)
+				if (column == 1 || column == 3 || column == 7)
 					return false;
-
+				if (column == 4) {
+					ReferenciaDOC ref = (ReferenciaDOC) getValueAt(row, 7);
+					if (ref != null) {
+						return false;
+					}
+				}
 				return getEditar();
 			}
 
 			@Override
 			public void addRow() {
 				if (validaCabecera())
-					addRow(new Object[] { "", "", "", "", 0, 0, 0 });
+					addRow(new Object[] { "", "", "", "", 0, 0, 0, null });
 				else
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
@@ -189,6 +211,8 @@ public class FrmDocSalida extends AbstractDocForm {
 
 		tc.getColumn(6).setCellEditor(new FloatEditor(2));
 		tc.getColumn(6).setCellRenderer(new FloatRenderer(2));
+
+		tc.getColumn(7).setCellRenderer(new ReferenciaDOCRenderer());
 
 		pnlPrincipal.add(scrollPaneDetalle);
 
@@ -259,7 +283,7 @@ public class FrmDocSalida extends AbstractDocForm {
 				}
 			}
 		});
-		
+
 		cntSucursal_dest = new cntSucursal();
 
 		cntSucursal_dest.setBounds(116, 102, 297, 20);
@@ -303,15 +327,246 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.lblOperacin = new JLabel("Operaci\u00F3n");
 		this.lblOperacin.setBounds(9, 45, 54, 16);
 		pnlPrincipal.add(this.lblOperacin);
-		
+
 		this.label = new JLabel("Concepto");
 		this.label.setBounds(369, 15, 54, 16);
 		pnlPrincipal.add(this.label);
-		
+
 		this.cntMoneda = new CntMoneda();
 		this.cntMoneda.setBounds(434, 12, 192, 20);
 		pnlPrincipal.add(this.cntMoneda);
+
+		this.label_1 = new JLabel("Referencia");
+		this.label_1.setBounds(12, 170, 54, 16);
+		pnlPrincipal.add(this.label_1);
+
+		this.cntReferenciaDoc = new CntReferenciaDoc() {
+			private static final long serialVersionUID = 1L;
+
+			public void buscarReferencia() {
+				String serie;
+				int numero;
+
+				serie = this.txtSerie.getText().trim();
+				try {
+					numero = Integer.parseInt(this.txtNumero.getText());
+				} catch (Exception e) {
+					numero = 0;
+				}
+				if (numero > 0 && !serie.isEmpty()) {
+					referenciarRequerimiento(serie, numero);
+					txtSerie.setText("");
+					txtNumero.setText("");
+				} else {
+					UtilMensajes.mensaje_alterta("COMPL_SERIE_NUMERO_BUSQUEDA");
+					txtSerie.requestFocus();
+				}
+			}
+
+			public Object[][] getData() {
+				return (Object[][]) null;
+			}
+
+			public void mostrarDetalleRef(Object[] row) {
+			}
+		};
+		GridBagLayout gridBagLayout = (GridBagLayout) this.cntReferenciaDoc
+				.getLayout();
+		gridBagLayout.rowWeights = new double[] { 0.0 };
+		gridBagLayout.rowHeights = new int[] { 20 };
+		gridBagLayout.columnWeights = new double[] { 1.0, 1.0, 0.0, 0.0 };
+		gridBagLayout.columnWidths = new int[] { 46, 94, 20, 20 };
+		this.cntReferenciaDoc.setBounds(76, 168, 180, 20);
+		pnlPrincipal.add(this.cntReferenciaDoc);
 		iniciar();
+	}
+
+	protected void referenciarRequerimiento(String serie, int numero) {
+		Requerimiento requerimiento = requerimientoDAO.getPorSerieNumero(serie,
+				numero);
+
+		if (requerimiento != null) {
+			referenciarRequerimiento(requerimiento, "EDICION");
+		} else {
+			UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
+		}
+	}
+
+	private void referenciarRequerimiento(Requerimiento requerimiento,
+			final String estado) {
+		List<Tuple> saldos = new KardexRequerimientoDAO()
+				.getSaldoRequerimiento(requerimiento, salida);
+
+		if (saldos != null && saldos.size() > 0) {
+
+			Object[][] data = new Object[saldos.size()][4];
+			int i = 0;
+			for (Tuple t : saldos) {
+
+				Producto p = (Producto) t.get("producto");
+				// Unimedida u = (Unimedida) t.get("unimedida");
+				float cantidad = (float) t.get("cantidad");
+				data[i][0] = p.getIdproducto();
+				data[i][1] = p.getDescripcion();
+				data[i][2] = cantidad;
+				data[i][3] = cantidadProducto(p, "REQINTERNO",
+						requerimiento.getIdrequerimiento());
+				i++;
+			}
+
+			final DSGTableModel modelo = new DSGTableModel(new String[] {
+					"Cód Producto", "Producto", "Saldo", "Cantidad" }) {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public boolean evaluaEdicion(int row, int column) {
+					if (column == 3 && !estado.equals(VISTA))
+						return true;
+					return false;
+				}
+
+				@Override
+				public void addRow() {
+				}
+			};
+
+			ModalDetalleReferencia modal = new ModalDetalleReferencia(this,
+					modelo, data) {
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public boolean validaModelo() {
+					for (int i = 0; i < this.model.getRowCount(); i++) {
+						String producto;
+						producto = this.model.getValueAt(i, 1).toString();
+
+						float saldo = 0.0F, cantidad = 0.0F;
+						try {
+							saldo = Float.parseFloat(this.model
+									.getValueAt(i, 2).toString());
+						} catch (Exception e) {
+							saldo = 0;
+						}
+						try {
+							cantidad = Float.parseFloat(this.model.getValueAt(
+									i, 3).toString());
+						} catch (Exception e) {
+							cantidad = 0;
+						}
+						if (cantidad > saldo) {
+							UtilMensajes.mensaje_alterta(
+									"CANTIDAD_MENOR_SALDO", producto);
+							return false;
+						}
+					}
+					return true;
+				}
+				
+			};
+
+			TableColumnModel tc = modal.getTable().getColumnModel();
+
+			tc.getColumn(2).setCellRenderer(new FloatRenderer(3));
+
+			tc.getColumn(3).setCellRenderer(new FloatRenderer(3));
+			tc.getColumn(3).setCellEditor(new FloatEditor(3));
+
+			modal.getBtnAceptar().setEnabled(true);
+			if (getEstado().equals(VISTA)) {
+				modal.getBtnAceptar().setEnabled(false);
+			} else {
+				if (estado.equals(VISTA))
+					modal.getBtnAceptar().setEnabled(false);
+			}
+			modal.setModal(true);
+			Sys.desktoppane.add(modal);
+			modal.setVisible(true);
+
+			if (modal.model != null) {
+				int rows = data.length;
+				// Borrar los referenciados al requerimiento
+				int size = getDetalleTM().getRowCount();
+				for (int ii = 0; ii < size; ii++) {
+					ReferenciaDOC ref = (ReferenciaDOC) getDetalleTM()
+							.getValueAt(ii, 7);
+
+					if (ref != null) {
+						if (ref.getIdreferencia() == requerimiento
+								.getIdrequerimiento()) {
+							getDetalleTM().removeRow(ii);
+							ii = 0;
+							size = getDetalleTM().getRowCount();
+						}
+					}
+				}
+
+				for (int row = 0; row < rows; row++) {
+					String idproducto;
+					float cantidad;
+
+					idproducto = modal.model.getValueAt(row, 0).toString();
+					try {
+						cantidad = Float.parseFloat(modal.model.getValueAt(row,
+								3).toString());
+					} catch (Exception e) {
+						cantidad = 0.0F;
+					}
+
+					// Agregar los que tienen cantidad dif. de cero
+
+					// Reiniciar los productos del consolidado
+					salir: for (int iii = 0; iii < getDetalleTM().getRowCount(); iii++) {
+						if (getDetalleTM().getValueAt(iii, 0).toString().trim()
+								.equals(idproducto)) {
+							getDetalleTM().setValueAt(0.0F, iii, 4);
+							break salir;
+						}
+					}
+
+					if (cantidad > 0) {
+						ReferenciaDOC ref = new ReferenciaDOC();
+						Producto p = productoDAO.find(idproducto);
+
+						ref.setIdreferencia(requerimiento.getIdrequerimiento());
+						ref.setTipo_referencia("REQINTERNO");
+
+						getDetalleTM().addRow(
+								new Object[] { idproducto, p.getDescripcion(),
+										p.getUnimedida().getIdunimedida(),
+										p.getUnimedida().getDescripcion(),
+										cantidad, 0, 0, ref });
+					}
+
+				}
+			}
+		}
+	}
+
+	private float cantidadProducto(Producto p, String string,
+			long idrequerimiento) {
+		float cantidad = 0.0F;
+		int rows = getDetalleTM().getRowCount();
+		for (int row = 0; row < rows; row++) {
+			ReferenciaDOC ref = (ReferenciaDOC) getDetalleTM().getValueAt(row,
+					7);
+			
+			String idproducto;
+			idproducto = getDetalleTM().getValueAt(row, 0).toString();
+			if (ref != null) {
+				if (ref.getIdreferencia() == idrequerimiento) {
+					
+					if (p.getIdproducto().equals(idproducto)) {
+						try {
+							cantidad = Float.parseFloat(getDetalleTM()
+									.getValueAt(row, 4).toString());
+						} catch (Exception e) {
+							cantidad = 0.0F;
+						}
+					}
+				}
+			}
+		}
+		return cantidad;
 	}
 
 	@Override
@@ -334,6 +589,8 @@ public class FrmDocSalida extends AbstractDocForm {
 		}
 
 		ContabilizaAlmacen.ContabilizarSalida(getSalida());
+		ContabilizaRequerimiento.ContabilizarDocSalida(getSalida()
+				.getIddocsalida());
 	}
 
 	@Override
@@ -361,11 +618,11 @@ public class FrmDocSalida extends AbstractDocForm {
 			this.cntGrupoCentralizacion.txtCodigo.setText(getSalida()
 					.getGrupoCentralizacion().getIdgcentralizacion());
 			this.cntGrupoCentralizacion.llenar();
-			
+
 			this.cntMoneda.txtCodigo.setText(getSalida().getMoneda()
 					.getIdmoneda());
 			this.cntMoneda.llenar();
-			
+
 			this.cntConcepto.txtCodigo.setText(getSalida().getConcepto()
 					.getIdconcepto());
 			this.cntConcepto.llenar();
@@ -374,8 +631,7 @@ public class FrmDocSalida extends AbstractDocForm {
 				cntSucursal_dest.txtCodigo.setEditable(true);
 				cntAlmacen_dest.txtCodigo.setEditable(true);
 			}
-			
-			
+
 			this.cntResponsable.txtCodigo.setText(getSalida().getResponsable()
 					.getIdresponsable());
 			this.cntResponsable.llenar();
@@ -417,13 +673,24 @@ public class FrmDocSalida extends AbstractDocForm {
 			getDetalleTM().limpiar();
 			for (DetDocsalida salida : detDocSalidaL) {
 				Producto producto = salida.getProducto();
+				String tipo_referencia;
+				ReferenciaDOC ref = null;
+				tipo_referencia = (salida.getTipo_referencia() == null) ? ""
+						: salida.getTipo_referencia();
+
+				if (!tipo_referencia.isEmpty()) {
+					ref = new ReferenciaDOC();
+					ref.setTipo_referencia(tipo_referencia);
+					ref.setIdreferencia(salida.getId_referencia());
+				}
+
 				getDetalleTM().addRow(
 						new Object[] { producto.getIdproducto(),
 								producto.getDescripcion(),
 								salida.getUnimedida().getIdunimedida(),
 								salida.getUnimedida().getDescripcion(),
 								salida.getCantidad(), salida.getPrecio(),
-								salida.getImporte() });
+								salida.getImporte(), ref });
 			}
 		}
 	}
@@ -477,6 +744,7 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.cntSucursal.txtCodigo.setEditable(true);
 		this.cntAlmacen.txtCodigo.setEditable(true);
 		this.txtGlosa.setEditable(true);
+		this.cntReferenciaDoc.setEditar(true);
 		getDetalleTM().setEditar(true);
 	}
 
@@ -494,6 +762,7 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.txtGlosa.setEditable(false);
 		this.cntSucursal_dest.txtCodigo.setEditable(false);
 		this.cntAlmacen_dest.txtCodigo.setEditable(false);
+		this.cntReferenciaDoc.setEditar(false);
 		getDetalleTM().setEditar(false);
 	}
 
@@ -540,7 +809,7 @@ public class FrmDocSalida extends AbstractDocForm {
 			DetDocsalidaPK detPK = new DetDocsalidaPK();
 			DetDocsalida det = new DetDocsalida();
 			detPK.setIdsalida(id);
-			detPK.setItem(i+1);			
+			detPK.setItem(i + 1);
 			det.setId(detPK);
 			det.setDocsalida(getSalida());
 			det.setProducto(p);
@@ -551,6 +820,14 @@ public class FrmDocSalida extends AbstractDocForm {
 					.toString()));
 			det.setImporte(Float.parseFloat(getDetalleTM().getValueAt(i, 6)
 					.toString()));
+			/*
+			 * Referencia
+			 */
+			ReferenciaDOC ref = (ReferenciaDOC) getDetalleTM().getValueAt(i, 7);
+			if (ref != null) {
+				det.setTipo_referencia(ref.getTipo_referencia());
+				det.setId_referencia(ref.getIdreferencia());
+			}
 			getDetDocsalidaL().add(det);
 		}
 	}
@@ -567,8 +844,9 @@ public class FrmDocSalida extends AbstractDocForm {
 	public boolean validaCabecera() {
 		return FormValidador.TextFieldObligatorios(
 				this.cntGrupoCentralizacion.txtCodigo,
-				this.cntMoneda.txtCodigo, this.cntConcepto.txtCodigo, this.cntResponsable.txtCodigo,
-				this.cntSucursal.txtCodigo, this.cntAlmacen.txtCodigo);
+				this.cntMoneda.txtCodigo, this.cntConcepto.txtCodigo,
+				this.cntResponsable.txtCodigo, this.cntSucursal.txtCodigo,
+				this.cntAlmacen.txtCodigo);
 	}
 
 	public boolean validarDetalle() {

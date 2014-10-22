@@ -28,7 +28,6 @@ public class KardexSlcCompra implements Serializable {
 	@Column(length = 10)
 	private String tipo_referencia;
 	private long id_referencia;
-	private int item_referencia;
 
 	@ManyToOne
 	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
@@ -96,14 +95,6 @@ public class KardexSlcCompra implements Serializable {
 
 	public void setId_referencia(long id_referencia) {
 		this.id_referencia = id_referencia;
-	}
-
-	public int getItem_referencia() {
-		return item_referencia;
-	}
-
-	public void setItem_referencia(int item_referencia) {
-		this.item_referencia = item_referencia;
 	}
 
 	public SolicitudCompra getSolicitudcompra() {

@@ -17,24 +17,30 @@ import javax.swing.ListSelectionModel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.table.TableColumnModel;
 
+import core.centralizacion.ContabilizaRequerimiento;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
+import vista.controles.celleditor.TxtConsumidor;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
 import dao.AlmacenDAO;
+import dao.ConsumidorDAO;
 import dao.DRequerimientoDAO;
+import dao.KardexRequerimientoDAO;
 import dao.ProductoDAO;
 import dao.RequerimientoDAO;
 import dao.ResponsableDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
+import entity.Consumidor;
 import entity.DRequerimiento;
 import entity.DRequerimientoPK;
+import entity.KardexRequerimiento;
 import entity.Producto;
 import entity.Requerimiento;
 import entity.Sucursal;
@@ -50,12 +56,15 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 	private RequerimientoDAO requerimientoDAO = new RequerimientoDAO();
 	private DRequerimientoDAO drequerimientoDAO = new DRequerimientoDAO();
 	private ProductoDAO productoDAO = new ProductoDAO();
+	private ConsumidorDAO consumidorDAO = new ConsumidorDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
 	private SucursalDAO sucursalDAO = new SucursalDAO();
 	private ResponsableDAO responsableDAO = new ResponsableDAO();
-	
+	private KardexRequerimientoDAO kardexReqDAO = new KardexRequerimientoDAO();
+
 	private TxtProducto txtProducto;
+	private TxtConsumidor txtConsumidor;
 	private JLabel lblResponsable;
 	private JLabel lblSucursal;
 	private JLabel lblAlmacen;
@@ -101,12 +110,12 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] {
 				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
-				"Cantidad" }) {
+				"Cantidad", "Cód. Consumidor", "Consumidor" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean evaluaEdicion(int row, int column) {
-				if (column == 1 || column == 2 || column == 3)
+				if (column == 1 || column == 2 || column == 3 || column == 6)
 					return false;
 				return getEditar();
 			}
@@ -114,7 +123,7 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 			@Override
 			public void addRow() {
 				if (validaCabecera())
-					addRow(new Object[] { "", "", "", "", 0.0 });
+					addRow(new Object[] { "", "", "", "", 0.0, "", "" });
 				else
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
@@ -131,8 +140,15 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 				if (row > -1) {
 					String idproducto = getDetalleTM().getValueAt(row, 0)
 							.toString();
-
+					String idconsumidor;
+					try {
+						idconsumidor = getDetalleTM().getValueAt(row, 5)
+								.toString();
+					} catch (Exception e) {
+						idconsumidor = "";
+					}
 					txtProducto.refresValue(idproducto);
+					txtConsumidor.refresValue(idconsumidor);
 				}
 			}
 		};
@@ -168,6 +184,30 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
+
+		txtConsumidor = new TxtConsumidor(tblDetalle, 5) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void cargaDatos(Consumidor entity) {
+				int row = tblDetalle.getSelectedRow();
+
+				if (entity == null) {
+					getDetalleTM().setValueAt("", row, 5);
+					getDetalleTM().setValueAt("", row, 6);
+
+				} else {
+
+					setText(entity.getIdconsumidor());
+					getDetalleTM().setValueAt(entity.getIdconsumidor(), row, 5);
+					getDetalleTM().setValueAt(entity.getDescripcion(), row, 6);
+				}
+				setSeleccionado(null);
+			}
+		};
+		txtConsumidor.updateCellEditor();
+		txtConsumidor.setData(consumidorDAO.findAll());
+
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
 		getDetalleTM().setRepetidos(0);
 		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
@@ -254,12 +294,11 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 
 	@Override
 	public void grabar() {
-//		kardexSlcCompraDAO.borrarPorIdSolicitudCompra(getsolicitudcompra()
-//				.getIdsolicitudcompra());
+		kardexReqDAO.borrarPorRequerimiento(getRequerimiento());
 		requerimientoDAO.crear_editar(getRequerimiento());
 
-		for (DRequerimiento d : drequerimientoDAO.aEliminar(
-				getRequerimiento(), drequerimiento)) {
+		for (DRequerimiento d : drequerimientoDAO.aEliminar(getRequerimiento(),
+				drequerimiento)) {
 			drequerimientoDAO.remove(d);
 		}
 
@@ -270,9 +309,8 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 				drequerimientoDAO.edit(d);
 			}
 		}
-
-//		ContabilizaSlcCompras.ContabilizaSolicitud(getsolicitudcompra()
-//				.getIdsolicitudcompra());
+		ContabilizaRequerimiento.ContabilizarRequerimiento(requerimiento
+				.getIdrequerimiento());
 	}
 
 	@Override
@@ -294,8 +332,7 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 			cntResponsable.llenar();
 			cntSucursal.txtCodigo
 					.setText((getRequerimiento().getSucursal() == null) ? ""
-							: getRequerimiento().getSucursal()
-									.getIdsucursal());
+							: getRequerimiento().getSucursal().getIdsucursal());
 			Sucursal s = getRequerimiento().getSucursal();
 			cntSucursal.llenar();
 			if (s == null) {
@@ -309,16 +346,22 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 									.getIdalmacen());
 			cntAlmacen.llenar();
 
-			drequerimiento = drequerimientoDAO.getPorRequerimiento(getRequerimiento());
+			drequerimiento = drequerimientoDAO
+					.getPorRequerimiento(getRequerimiento());
 
 			for (DRequerimiento d : drequerimiento) {
+				String idconsumidor = null, consumidor = null;
 				Producto p = d.getProducto();
 				Unimedida u = d.getUnimedida();
-
+				Consumidor cons = d.getConsumidor();
+				if (cons != null) {
+					idconsumidor = cons.getIdconsumidor();
+					consumidor = cons.getDescripcion();
+				}
 				getDetalleTM().addRow(
 						new Object[] { p.getIdproducto(), p.getDescripcion(),
 								u.getIdunimedida(), u.getDescripcion(),
-								d.getCantidad() });
+								d.getCantidad(), idconsumidor, consumidor });
 			}
 
 		} else {
@@ -344,8 +387,8 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
 		this.txtGlosa.setEditable(true);
-		FormValidador.CntEdicion(true, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal);
+		FormValidador.CntEdicion(true, this.cntResponsable, this.cntAlmacen,
+				this.cntSucursal);
 		getDetalleTM().setEditar(true);
 	}
 
@@ -355,8 +398,8 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
 		this.txtGlosa.setEditable(false);
-		FormValidador.CntEdicion(false, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal);
+		FormValidador.CntEdicion(false, this.cntResponsable, this.cntAlmacen,
+				this.cntSucursal);
 		getDetalleTM().setEditar(false);
 	}
 
@@ -383,8 +426,8 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 		getRequerimiento().setSerie(this.txtSerie.getText());
 		getRequerimiento().setNumero(
 				Integer.parseInt(this.txtNumero_2.getText()));
-		getRequerimiento().setResponsable(
-				this.cntResponsable.getSeleccionado());
+		getRequerimiento()
+				.setResponsable(this.cntResponsable.getSeleccionado());
 		getRequerimiento().setSucursal(cntSucursal.getSeleccionado());
 		getRequerimiento().setAlmacen(this.cntAlmacen.getSeleccionado());
 		getRequerimiento().setDia(c.get(Calendar.DAY_OF_MONTH));
@@ -404,10 +447,24 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 			DRequerimiento d = new DRequerimiento();
 			DRequerimientoPK id = new DRequerimientoPK();
 
-			String idproducto, idunimedida;
+			String idproducto, idunimedida, idconsumidor;
+			try {
+				idproducto = getDetalleTM().getValueAt(row, 0).toString();
+			} catch (Exception e) {
+				idproducto = "";
+			}
 
-			idproducto = getDetalleTM().getValueAt(row, 0).toString();
-			idunimedida = getDetalleTM().getValueAt(row, 2).toString();
+			try {
+				idunimedida = getDetalleTM().getValueAt(row, 2).toString();
+			} catch (Exception e) {
+				idunimedida = "";
+			}
+
+			try {
+				idconsumidor = getDetalleTM().getValueAt(row, 5).toString();
+			} catch (Exception e) {
+				idconsumidor = "";
+			}
 
 			float cantidad;
 
@@ -416,6 +473,7 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 
 			Producto p = productoDAO.find(idproducto);
 			Unimedida u = unimedidaDAO.find(idunimedida);
+			Consumidor cons = consumidorDAO.find(idconsumidor);
 
 			id.setIdrequerimiento(idoc);
 			id.setItem(row + 1);
@@ -424,6 +482,7 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 			d.setProducto(p);
 			d.setUnimedida(u);
 			d.setCantidad(cantidad);
+			d.setConsumidor(cons);
 
 			drequerimiento.add(d);
 		}

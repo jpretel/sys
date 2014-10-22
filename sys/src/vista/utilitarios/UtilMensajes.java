@@ -35,6 +35,13 @@ public class UtilMensajes {
 				titulo, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
+	public static int mensaje_sino(String mensaje){
+		int seleccion = JOptionPane.showOptionDialog(null, Sys.mensajes.getProperty(mensaje), titulo,
+			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Si", "No"}, "Si");
+			
+		return seleccion;			
+	}
+	
 	public static int msj_error(String mensaje){
 		int seleccion = JOptionPane.showOptionDialog(null, Sys.mensajes.getProperty(mensaje), titulo,
 			JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Si", "No"}, "Si");

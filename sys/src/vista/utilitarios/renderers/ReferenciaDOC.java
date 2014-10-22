@@ -1,25 +1,25 @@
 package vista.utilitarios.renderers;
 
 public class ReferenciaDOC {
-	private char tipo_referencia;
+	private String tipo_referencia;
 	private long idreferencia;
 	private int item_referencia;
 
 	public ReferenciaDOC() {
 	}
 
-	public ReferenciaDOC(char tipo_referencia, long idreferencia,
+	public ReferenciaDOC(String tipo_referencia, long idreferencia,
 			int item_referencia) {
 		this.tipo_referencia = tipo_referencia;
 		this.idreferencia = idreferencia;
 		this.item_referencia = item_referencia;
 	}
 
-	public char getTipo_referencia() {
+	public String getTipo_referencia() {
 		return tipo_referencia;
 	}
 
-	public void setTipo_referencia(char tipo_referencia) {
+	public void setTipo_referencia(String tipo_referencia) {
 		this.tipo_referencia = tipo_referencia;
 	}
 
