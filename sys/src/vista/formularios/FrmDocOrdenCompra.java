@@ -34,6 +34,7 @@ import javax.swing.table.TableColumnModel;
 
 import core.centralizacion.ContabilizaSlcCompras;
 import dao.AlmacenDAO;
+import dao.ClieprovDAO;
 import dao.DDOrdenCompraDAO;
 import dao.DOrdenCompraDAO;
 import dao.ImpuestoDAO;
@@ -64,6 +65,7 @@ import java.awt.Component;
 import vista.controles.CntReferenciaDoc;
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
+import vista.contenedores.CntClieprov;
 
 public class FrmDocOrdenCompra extends AbstractDocForm {
 
@@ -82,6 +84,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private ProductoImpuestoDAO pimptoDAO = new ProductoImpuestoDAO();
 	private ImpuestoDAO impuestoDAO = new ImpuestoDAO();
 	private KardexSlcCompraDAO kardexSlcDAO = new KardexSlcCompraDAO();
+	private ClieprovDAO clieprovDAO = new ClieprovDAO();
 
 	private TxtProducto txtProducto;
 	private JLabel lblResponsable;
@@ -104,6 +107,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private CntMoneda cntMoneda;
 	private DSGTextFieldNumber txtTCambio;
 	private DSGTextFieldNumber txtTCMoneda;
+	private CntClieprov cntClieprov;
+	private JLabel lblProveedor;
 
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
@@ -116,7 +121,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				Alignment.LEADING).addGap(0, 681, Short.MAX_VALUE));
 
 		this.lblResponsable = new JLabel("Responsable");
-		this.lblResponsable.setBounds(10, 106, 74, 16);
+		this.lblResponsable.setBounds(11, 121, 74, 16);
 		pnlPrincipal.add(this.lblResponsable);
 
 		this.lblSucursal = new JLabel("Sucursal");
@@ -133,7 +138,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 		this.cntResponsable = new cntResponsable();
 
-		this.cntResponsable.setBounds(72, 102, 309, 20);
+		this.cntResponsable.setBounds(72, 121, 309, 20);
 		pnlPrincipal.add(this.cntResponsable);
 
 		this.cntSucursal = new cntSucursal();
@@ -419,6 +424,15 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.tblConsolidado
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.srlConsolidado.setViewportView(this.tblConsolidado);
+		
+		this.cntClieprov = new CntClieprov();
+		this.cntClieprov.setBounds(72, 96, 309, 20);
+		this.cntClieprov.setData(clieprovDAO.findAll());
+		pnlPrincipal.add(this.cntClieprov);
+		
+		this.lblProveedor = new JLabel("Proveedor");
+		this.lblProveedor.setBounds(12, 100, 50, 16);
+		pnlPrincipal.add(this.lblProveedor);
 
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
@@ -564,6 +578,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 							: getOrdencompra().getAlmacen().getId()
 									.getIdalmacen());
 			cntAlmacen.llenar();
+			
+			cntClieprov.txtCodigo.setText((getOrdencompra().getClieprov() == null) ? ""
+					: getOrdencompra().getClieprov().getIdclieprov());
+			cntClieprov.llenar();
 
 			dordencompras = dordencompraDAO.getPorOrdenCompra(getOrdencompra());
 			ddordencompras = ddordenCompraDAO
@@ -656,7 +674,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtTCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
 		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal);
+				this.cntAlmacen, this.cntSucursal, this.cntClieprov);
 		getConsolidadoTM().setEditar(true);
 		this.cntReferenciaDoc.setEditar(true);
 	}
@@ -670,7 +688,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtTCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal);
+				this.cntAlmacen, this.cntSucursal, this.cntClieprov);
 		getConsolidadoTM().setEditar(false);
 		this.cntReferenciaDoc.setEditar(false);
 	}
@@ -702,6 +720,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		getOrdencompra().setResponsable(this.cntResponsable.getSeleccionado());
 		getOrdencompra().setSucursal(cntSucursal.getSeleccionado());
 		getOrdencompra().setAlmacen(this.cntAlmacen.getSeleccionado());
+		getOrdencompra().setClieprov(this.cntClieprov.getSeleccionado());
 		getOrdencompra().setDia(c.get(Calendar.DAY_OF_MONTH));
 		getOrdencompra().setMes(c.get(Calendar.MONTH) + 1);
 		getOrdencompra().setAnio(c.get(Calendar.YEAR));
@@ -790,7 +809,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	public boolean validaCabecera() {
 
 		if (!FormValidador.CntObligatorios(cntMoneda, cntResponsable,
-				cntSucursal, cntAlmacen))
+				cntSucursal, cntAlmacen, cntClieprov))
 			return false;
 
 		return true;

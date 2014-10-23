@@ -42,6 +42,10 @@ public class OrdenCompra implements Serializable {
 	@JoinColumn(name = "idresponsable", referencedColumnName = "idresponsable")
 	private Responsable responsable;
 	private String glosa;
+	
+	@ManyToOne
+	@JoinColumn(name = "idclieprov", referencedColumnName = "idclieprov")
+	private Clieprov clieprov;
 
 	private static final long serialVersionUID = 1L;
 
@@ -159,6 +163,14 @@ public class OrdenCompra implements Serializable {
 
 	public void setFecha(int fecha) {
 		this.fecha = fecha;
+	}
+
+	public Clieprov getClieprov() {
+		return clieprov;
+	}
+
+	public void setClieprov(Clieprov clieprov) {
+		this.clieprov = clieprov;
 	}
 
 }
