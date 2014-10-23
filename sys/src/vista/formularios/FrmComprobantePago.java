@@ -6,14 +6,18 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import java.awt.Panel;
 
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.Icon;
+import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -26,15 +30,19 @@ import java.awt.GridLayout;
 
 import javax.swing.JTextField;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JCheckBox;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 import javax.swing.UIManager;
@@ -48,32 +56,52 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.ScrollPaneConstants;
+
+//import org.eclipse.persistence.internal.oxm.record.json.JSONParser.object_return;
+
+
+
+
+
+import vista.controles.DSGDatePicker;
+import vista.controles.DSGTableModelReporte;
+import vista.utilitarios.JTableUtils;
+
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
+
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 public class FrmComprobantePago extends JInternalFrame {
 
+	private int filaseleccionada;
+	private int rowselecionada;
 	private JPanel contentPane;
-	private JTextField txtFechaDoc;
+	private DSGDatePicker txtFechaDoc;
 	private JTextField txtProveedor;
-	private JTextField txtFVence;
-	private JTextField txtFechaRecep;
-	private JTextField txtNDoc;
-	private JTextField FechaRegistro;
-	private JTextField txtFechaModificacion;
+	private DSGDatePicker txtFVence;
+	private DSGDatePicker txtFechaRecep;
 	private JTable TDDetalle;
-	private JTextField textField_7;
-	private JTextField textField_8;
+	private JTextField txtVVenta;
+	private JTextField txtNoGrav;
 	private JTextField textField_9;
-	private JTextField textField_10;
+	private JTextField txtIGV;
 	private JTextField textField_11;
 	private JTextField textField_12;
 	private JTextField textField_13;
 	JComboBox cboTipoDoc = new JComboBox();
 	JComboBox cboProvedor = new JComboBox();
 	JComboBox cboAlmacen = new JComboBox();
-	JButton btnAgregarDet = new JButton("+");
+	
+	List<Object[]> ListProvedor=new ComprobantePagoDAO().ListarProveedor();
+	
 	JInternalFrame internalFrame = new JInternalFrame("Agregar Producto de Nota de Ingreso");
 	private JTable TBNotaIngreso;
-	
+	Icon iconbusqueda = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaBuscar.png"));
 
 	/**
 	 * Launch the application.
@@ -97,17 +125,17 @@ public class FrmComprobantePago extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public FrmComprobantePago() {
+		setFrameIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/logo.png")));
 		setIconifiable(true);
 		setClosable(true);
 		setTitle("REGISTRO DE COMPROBANTE DE PAGO");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 940, 568);
+		setBounds(100, 100, 1060, 563);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(5, 35, 919, 144);
+		panel_1.setBounds(5, 35, 1029, 144);
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos del Comprobante de Pago", TitledBorder.LEFT, TitledBorder.TOP, null, null));
 		panel_1.setLayout(null);
 		
@@ -120,7 +148,19 @@ public class FrmComprobantePago extends JInternalFrame {
 //		cboTipoDoc.setModel(new DefaultComboBoxModel(new String[] {"---Selecione---"}));
 		panel_1.add(cboTipoDoc);
 		contentPane.setLayout(null);
+		internalFrame.setFrameIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/logo.png")));
+		internalFrame.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentHidden(ComponentEvent arg0) {
+				for (int i = TBNotaIngreso.getRowCount() -1; i >= 0; i--)
+					 
+			     {
+			    	 ((DefaultTableModel)TBNotaIngreso.getModel()).removeRow(i); 
+			     }
+			}
+		});
 		internalFrame.setClosable(true);
+		internalFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
 		
 		internalFrame.setBounds(0, 0, 698, 313);
@@ -137,11 +177,11 @@ public class FrmComprobantePago extends JInternalFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"N\u00B0", "....", "Fecha", "NI", "Producto", "Cantidad", "Almacen", "N\u00B0 Guia", "Ref Alma"
+				"N\u00B0", "....", "Fecha", "NI", "Producto", "Cantidad", "Almacen", "N\u00B0 Guia", "Ref Alma", "Precio", "Importe"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Boolean.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class
+				Integer.class, Boolean.class, String.class, String.class, String.class, BigDecimal.class, String.class, String.class, String.class, BigDecimal.class, BigDecimal.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -165,18 +205,38 @@ public class FrmComprobantePago extends JInternalFrame {
 		TBNotaIngreso.getColumnModel().getColumn(7).setPreferredWidth(68);
 		TBNotaIngreso.getColumnModel().getColumn(8).setResizable(false);
 		TBNotaIngreso.getColumnModel().getColumn(8).setPreferredWidth(86);
+		TBNotaIngreso.getColumnModel().getColumn(9).setResizable(false);
+		TBNotaIngreso.getColumnModel().getColumn(9).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(9).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(9).setMaxWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(10).setResizable(false);
+		TBNotaIngreso.getColumnModel().getColumn(10).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(10).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(10).setMaxWidth(0);
 		
 		JButton btnCancelarDetalle = new JButton("Cancelar");
-		btnCancelarDetalle.setBounds(583, 254, 89, 23);
+		btnCancelarDetalle.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
+		btnCancelarDetalle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 internalFrame.setVisible(false);
+				 for (int i = TBNotaIngreso.getRowCount() -1; i >= 0; i--)
+				 
+			     {
+			    	 ((DefaultTableModel)TBNotaIngreso.getModel()).removeRow(i); 
+			     }
+			}
+		});
+		btnCancelarDetalle.setBounds(580, 254, 95, 23);
 		internalFrame.getContentPane().add(btnCancelarDetalle);
 		
 		JButton btnAceptarDetalle = new JButton("Aceptar");
+		btnAceptarDetalle.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmAgregar.png")));
 		btnAceptarDetalle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				btnAceptarDetalleActionPerformed(arg0);
 			}
 		});
-		btnAceptarDetalle.setBounds(493, 254, 89, 23);
+		btnAceptarDetalle.setBounds(486, 254, 93, 23);
 		internalFrame.getContentPane().add(btnAceptarDetalle);
 		internalFrame.setVisible(false);
 		contentPane.add(panel_1);
@@ -185,10 +245,10 @@ public class FrmComprobantePago extends JInternalFrame {
 		lblFechaDeDocumento.setBounds(350, 24, 106, 14);
 		panel_1.add(lblFechaDeDocumento);
 		
-		txtFechaDoc = new JTextField();
+		txtFechaDoc = new DSGDatePicker();
 		txtFechaDoc.setBounds(455, 21, 106, 20);
 		panel_1.add(txtFechaDoc);
-		txtFechaDoc.setColumns(10);
+		//txtFechaDoc.setColumns(10);
 		
 		JLabel lblMoneda = new JLabel("Moneda");
 		lblMoneda.setBounds(61, 49, 64, 14);
@@ -216,10 +276,22 @@ public class FrmComprobantePago extends JInternalFrame {
 		lblFVencimiento.setBounds(53, 114, 72, 14);
 		panel_1.add(lblFVencimiento);
 		
-		txtFVence = new JTextField();
+		txtFVence = new DSGDatePicker();;
 		txtFVence.setBounds(123, 114, 86, 20);
 		panel_1.add(txtFVence);
-		txtFVence.setColumns(10);
+		//txtFVence.setColumns(10);
+		
+		cboProvedor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for (Object[] objects : ListProvedor) {
+					if(objects[1].toString().equalsIgnoreCase(cboProvedor.getSelectedItem().toString()))
+					{
+						txtProveedor.setText(objects[2].toString());
+					}
+				}
+				
+			}
+		});
 		
 		
 		cboProvedor.setBounds(222, 74, 339, 20);
@@ -229,10 +301,10 @@ public class FrmComprobantePago extends JInternalFrame {
 		lblFechaRecepcion.setBounds(354, 49, 102, 14);
 		panel_1.add(lblFechaRecepcion);
 		
-		txtFechaRecep = new JTextField();
+		txtFechaRecep = new DSGDatePicker();
 		txtFechaRecep.setBounds(455, 46, 106, 20);
 		panel_1.add(txtFechaRecep);
-		txtFechaRecep.setColumns(10);
+	//	txtFechaRecep.setColumns(10);
 		
 		
 		cboAlmacen.setBounds(418, 111, 143, 20);
@@ -242,54 +314,23 @@ public class FrmComprobantePago extends JInternalFrame {
 		lblAlmacen.setBounds(362, 114, 58, 14);
 		panel_1.add(lblAlmacen);
 		
-		JLabel lblNDoc = new JLabel("N\u00B0 Doc");
-		lblNDoc.setBounds(587, 24, 64, 14);
-		panel_1.add(lblNDoc);
-		
-		txtNDoc = new JTextField();
-		txtNDoc.setBounds(643, 21, 102, 20);
-		panel_1.add(txtNDoc);
-		txtNDoc.setColumns(10);
-		
-		JButton btnBuscar = new JButton("Grabar");
-		btnBuscar.setBounds(745, 21, 26, 20);
-		panel_1.add(btnBuscar);
-		
-		JLabel lblFechaRegistro = new JLabel("Fecha Registro");
-		lblFechaRegistro.setBounds(643, 49, 128, 14);
-		panel_1.add(lblFechaRegistro);
-		
-		FechaRegistro = new JTextField();
-		FechaRegistro.setBounds(643, 71, 128, 20);
-		panel_1.add(FechaRegistro);
-		FechaRegistro.setColumns(10);
-		
-		JLabel lblFechaModificacion = new JLabel("Fecha Modificacion");
-		lblFechaModificacion.setBounds(643, 96, 128, 14);
-		panel_1.add(lblFechaModificacion);
-		
-		txtFechaModificacion = new JTextField();
-		txtFechaModificacion.setBounds(643, 111, 128, 20);
-		panel_1.add(txtFechaModificacion);
-		txtFechaModificacion.setColumns(10);
-		
 		JLabel lblVVenta = new JLabel("V. Venta");
 		lblVVenta.setBounds(59, 429, 55, 14);
 		contentPane.add(lblVVenta);
 		
-		textField_7 = new JTextField();
-		textField_7.setBounds(113, 426, 86, 20);
-		contentPane.add(textField_7);
-		textField_7.setColumns(10);
+		txtVVenta = new JTextField();
+		txtVVenta.setBounds(113, 426, 86, 20);
+		contentPane.add(txtVVenta);
+		txtVVenta.setColumns(10);
 		
 		JLabel lblVVNo = new JLabel("V. V. No Grav");
 		lblVVNo.setBounds(209, 429, 79, 14);
 		contentPane.add(lblVVNo);
 		
-		textField_8 = new JTextField();
-		textField_8.setBounds(281, 426, 86, 20);
-		contentPane.add(textField_8);
-		textField_8.setColumns(10);
+		txtNoGrav = new JTextField();
+		txtNoGrav.setBounds(281, 426, 86, 20);
+		contentPane.add(txtNoGrav);
+		txtNoGrav.setColumns(10);
 		
 		JCheckBox chckbxRenta = new JCheckBox("Renta");
 		chckbxRenta.setBounds(385, 425, 65, 23);
@@ -301,29 +342,29 @@ public class FrmComprobantePago extends JInternalFrame {
 		textField_9.setColumns(10);
 		
 		JLabel lblIgv = new JLabel("IGV");
-		lblIgv.setBounds(528, 429, 28, 14);
+		lblIgv.setBounds(555, 429, 28, 14);
 		contentPane.add(lblIgv);
 		
-		textField_10 = new JTextField();
-		textField_10.setBounds(550, 426, 55, 20);
-		contentPane.add(textField_10);
-		textField_10.setColumns(10);
+		txtIGV = new JTextField();
+		txtIGV.setBounds(593, 426, 69, 20);
+		contentPane.add(txtIGV);
+		txtIGV.setColumns(10);
 		
 		JLabel lblPercep = new JLabel("Percep");
-		lblPercep.setBounds(622, 429, 55, 14);
+		lblPercep.setBounds(688, 429, 46, 14);
 		contentPane.add(lblPercep);
 		
 		textField_11 = new JTextField();
-		textField_11.setBounds(674, 426, 86, 20);
+		textField_11.setBounds(744, 426, 96, 20);
 		contentPane.add(textField_11);
 		textField_11.setColumns(10);
 		
 		JLabel lblTotal = new JLabel("TOTAL");
-		lblTotal.setBounds(770, 429, 46, 14);
+		lblTotal.setBounds(858, 429, 46, 14);
 		contentPane.add(lblTotal);
 		
 		textField_12 = new JTextField();
-		textField_12.setBounds(816, 426, 98, 20);
+		textField_12.setBounds(914, 426, 120, 20);
 		contentPane.add(textField_12);
 		textField_12.setColumns(10);
 		
@@ -341,44 +382,37 @@ public class FrmComprobantePago extends JInternalFrame {
 		contentPane.add(label);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setBounds(825, 482, 89, 23);
+		btnSalir.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/SalirFrm1.png")));
+		btnSalir.setBounds(945, 482, 89, 23);
 		contentPane.add(btnSalir);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(737, 482, 89, 23);
+		btnCancelar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
+		btnCancelar.setBounds(850, 482, 95, 23);
 		contentPane.add(btnCancelar);
 		
 		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(649, 482, 89, 23);
+		btnGuardar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmGuardar.png")));
+		btnGuardar.setBounds(755, 482, 96, 23);
 		contentPane.add(btnGuardar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(561, 482, 89, 23);
+		btnEliminar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmEliminar.png")));
+		btnEliminar.setBounds(667, 482, 89, 23);
 		contentPane.add(btnEliminar);
 		
 		JButton btnEditar = new JButton("Editar");
-		btnEditar.setBounds(473, 482, 89, 23);
+		btnEditar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmEditar.png")));
+		btnEditar.setBounds(579, 482, 89, 23);
 		contentPane.add(btnEditar);
 		
 		JButton btnNuevo = new JButton("Nuevo");
-		btnNuevo.setBounds(385, 482, 89, 23);
+		btnNuevo.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmNuevo.png")));
+		btnNuevo.setBounds(491, 482, 89, 23);
 		contentPane.add(btnNuevo);
 		
-		
-		btnAgregarDet.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				btnAgregarDetActionPerformed(arg0);
-			}
-		});
-		
-		
-		btnAgregarDet.setHorizontalAlignment(SwingConstants.TRAILING);
-		btnAgregarDet.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		btnAgregarDet.setBounds(5, 178, 41, 14);
-		contentPane.add(btnAgregarDet);
-		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(5, 190, 919, 228);
+		scrollPane.setBounds(5, 190, 1029, 228);
 		contentPane.add(scrollPane);
 		
 		TDDetalle = new JTable();
@@ -388,14 +422,41 @@ public class FrmComprobantePago extends JInternalFrame {
 				TDDetallemouseClicked(arg0);
 			}
 		});
+		TDDetalle.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				
+								if(arg0.getKeyCode()==39){
+									MathContext mc = new MathContext(10);
+									BigDecimal dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 2).toString());
+									BigDecimal dat2 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 7).toString());
+									TDDetalle.getModel().setValueAt((dat1.multiply(dat2).round(mc)), TDDetalle.getSelectedRow(), 8);
+									CalcularTotales();
+									System.out.println("key "+arg0.getKeyCode());
+									
+										
+									
+							
+			}
+			};
+		});
+		
 		TDDetalle.setCellSelectionEnabled(true);
+		
+		
 		scrollPane.setViewportView(TDDetalle);
 		TDDetalle.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		TDDetalle.setColumnSelectionAllowed(true);
 		
+		
+		
+		//-------------------------
+		//scrollPane.setRowHeaderView(JTableUtils.buildRowHeader(TDDetalle,TDDetalle.getModel()));
+		
+		
 		Panel panel = new Panel();
 		panel.setBackground(Color.BLUE);
-		panel.setBounds(5, 5, 919, 24);
+		panel.setBounds(5, 5, 1029, 24);
 		panel.setLayout(null);
 		
 		JLabel lblComprobanteDePago = new JLabel("COMPROBANTE DE PAGO");
@@ -409,161 +470,324 @@ public class FrmComprobantePago extends JInternalFrame {
 		LlenarCombox();
 		CrearTabla();
 	}
-
-	public void btnAgregarDetActionPerformed(ActionEvent evt)
+	
+	public void CalcularTotales()
+	{
+		try{
+		BigDecimal vventa= new BigDecimal("0.0");
+		BigDecimal dat1= new BigDecimal("0.0");
+		BigDecimal dat2= new BigDecimal("0.0");
+		BigDecimal subtotal= new BigDecimal("0.0");
+		BigDecimal IGV= new BigDecimal("0.18");
+		
+		int n=TDDetalle.getRowCount();
+		for(int i=0;i<n;i++){
+			 dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(i, 2).toString());
+			 dat2 = new BigDecimal(TDDetalle.getModel().getValueAt(i, 6).toString());
+			 subtotal= dat1.multiply(dat2);
+			
+			 vventa=vventa.add(subtotal);
+			
+		}	
+		this.txtVVenta.setText(vventa.toString());
+		this.txtIGV.setText(vventa.multiply(IGV).toString());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	public void btnAgregarDetActionPerformed(MouseEvent evt)
 	{
 		
+		try{
 		int i=TDDetalle.getRowCount();
-		Object datos[]={i+1
-				,0.0,
+		Object datos[]={i+1,false
+				,0,
 				"",
-				new JButton("..."),
+				new JLabel("", iconbusqueda, JLabel.CENTER),
 				"",
-				0.0,
-				0.0,
-				0.0,
-				0.0,
+				.00,
+				.00,
+				.00,
+				.00,
 				false,false,
-				0.0,new JButton("..")};
+				0.0,new JButton(iconbusqueda)};
 		
 		 ((DefaultTableModel)TDDetalle.getModel()).addRow(datos);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
+	
+	public void btnQuitarDetActionPerformed(MouseEvent evt)
+	{
+		try{
+		int j=TDDetalle.getRowCount();
+		for(int t=0;t<j;t++)
+		{
+			boolean estado=(boolean)TDDetalle.getModel().getValueAt(t, 1);
+			if(estado){
+				 
+				 ((DefaultTableModel)TDDetalle.getModel()).removeRow(t);
+				 
+				 j--;
+				 t=0;
+			}
+		/*	else
+			{
+				int d=(j>t?t+1:t);
+				int n=(int)TDDetalle.getModel().getValueAt(t, 0);
+				System.out.println(n);
+				TDDetalle.getModel().setValueAt(n+1, d, 0);}	
+		*/}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 	public void TDDetallemouseClicked(MouseEvent evt)
 	{
-		int columna = TDDetalle.columnAtPoint(evt.getPoint());
-		System.out.println(columna);
-		 if (TDDetalle.getModel().getColumnClass(columna).equals(JButton.class)) {
-			 if(columna==12){
+		try{
+		int columna =TDDetalle.columnAtPoint(evt.getPoint());
+	     rowselecionada = TDDetalle.rowAtPoint(evt.getPoint());
+		filaseleccionada = TDDetalle.rowAtPoint(evt.getPoint());
+		 System.out.println(columna);
+		// if (TDDetalle.getModel().getColumnClass(columna).equals(JButton.class)) {
+			
+			 if(columna==13){
 			 //if(TDDetalle.getModel().getColumnName(arg0))
 				 internalFrame.setBounds(contentPane.getWidth()/6, contentPane.getHeight()/4, 698, 313);
 			     internalFrame.setVisible(true);
 			     LlenarTBNotaIngreso();
 			 
-			 }
+		//	 }
 		 }
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
+	
+	public void TDDetallemousePresd(MouseEvent evt)
+	{
+       
+	}
 	public void btnAceptarDetalleActionPerformed(ActionEvent evt)
 	{
+	try{
 		int i=TBNotaIngreso.getRowCount();
-		int j=TDDetalle.getRowCount()+1;
+		int j=TDDetalle.getRowCount();
+		int n=0;
 		for(int t=0;t<i;t++)
 		{
 			boolean estado=(boolean)TBNotaIngreso.getModel().getValueAt(t, 1);
 			if(estado){
-				Object datos[]={j+t
+				Object datos[]={j+n,false
 						,TBNotaIngreso.getModel().getValueAt(t, 5),
 						TBNotaIngreso.getModel().getValueAt(t, 4),
-						new JButton("..."),
+						new JLabel(iconbusqueda),
 						"",
-						0.0,
-						0.0,
-						0.0,
-						0.0,
+						0,
+						TBNotaIngreso.getModel().getValueAt(t, 9),
+						TBNotaIngreso.getModel().getValueAt(t, 10),
+						0,
 						false,false,
-						0.0,new JButton("..")};
+						0,new JButton(iconbusqueda)};
 				
 				 ((DefaultTableModel)TDDetalle.getModel()).addRow(datos);
+				 n++;
 			}
 		}
+		CalcularTotales();
+		internalFrame.setVisible(false);
+		((DefaultTableModel)TDDetalle.getModel()).removeRow(filaseleccionada);
+		filaseleccionada=-1;
+	} catch (Exception e) {
+		// TODO: handle exception
+	}
 	}
 	
 	public void LlenarTBNotaIngreso()
 	{
-		List<Object[]> listNotaIngreso=new ComprobantePagoDAO().ListarNotaIngreso(1);
-		int i=0;
-		for (Object[] objects : listNotaIngreso) {
-			Object datos[]={i+1
-					,false,
-					objects[2],
-					objects[3],
-					objects[4],
-					objects[5],
-					objects[6],
-					objects[7],
-					objects[8],
-					};
-			
-			 ((DefaultTableModel)TDDetalle.getModel()).addRow(datos);
+		try {
+			List<Object[]> listNotaIngreso=new ComprobantePagoDAO().ListarNotaIngreso(1);
+			int i=1;
+			if(listNotaIngreso.size()>0){
+			for (Object[] objects : listNotaIngreso) {
+				BigDecimal dat1=new BigDecimal(objects[3].toString());
+				BigDecimal dat2=new BigDecimal(objects[7].toString());
+				BigDecimal dat3=new BigDecimal(objects[8].toString());
+				Object datos[]={i
+						,false,
+						(objects[0]!=null?objects[0].toString():""),
+						objects[1].toString(),
+						objects[2].toString(),
+						dat1,
+						objects[4].toString(),
+						objects[5].toString(),
+						objects[6].toString(),
+						dat2,
+						dat3
+						};
+				
+				 ((DefaultTableModel)TBNotaIngreso.getModel()).addRow(datos);
+				 i++;
+			}
+			}
+		} catch (Exception e) {
+			System.out.println("Formulario");
+			e.printStackTrace();
 		}
+		
 	}
 	
 	public  void LlenarCombox()
 	{
-		List<Object[]> listTipoDoc=new ComprobantePagoDAO().ListarTipoDoc();
-		
-		for (Object[] objects : listTipoDoc) {
-			cboTipoDoc.addItem(objects[1]);
+		try {
+			List<Object[]> listTipoDoc=new ComprobantePagoDAO().ListarTipoDoc();
+			cboTipoDoc.addItem("Selecione Documento");
+			for (Object[] objects : listTipoDoc) {
+				cboTipoDoc.addItem(objects[1]);
+			}
+			
+			
+			cboProvedor.addItem("Selecione Proveedor");
+			for (Object[] objects : ListProvedor) {
+				cboProvedor.addItem(objects[1]);
+			}
+			
+			String prmstrsucursal="001";
+			List<Object[]> ListAlmacen=new ComprobantePagoDAO().ListarAlmacen(prmstrsucursal);
+			cboAlmacen.addItem("Selecione Almacen");
+			for (Object[] objects : ListAlmacen) {
+				cboAlmacen.addItem(objects[0]);
+			}
+		} catch (Exception e) {
+			System.out.println("Formulario");
+			e.printStackTrace();
 		}
 		
-		List<Object[]> ListProvedor=new ComprobantePagoDAO().ListarProveedor();
-		
-		for (Object[] objects : ListProvedor) {
-			cboProvedor.addItem(objects[0]);
-		}
-		
-		String prmstrsucursal="001";
-		List<Object[]> ListAlmacen=new ComprobantePagoDAO().ListarAlmacen(prmstrsucursal);
-		
-		for (Object[] objects : ListAlmacen) {
-			cboAlmacen.addItem(objects[0]);
-		}
 		
 	}
 
-	public void CrearTabla()
+	public void CrearTabla() 
 	{
+		try {
+			
+		
 		
 		this.TDDetalle.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"N\u00B0", "Cantidad", "Producto", "..", "U. Medida", "V. Venta", "P. Unitario", "Importe", "Costo Prov.", "Percepcion", "Exon IGV", "Nota Ingreso", "..."
+				"", "", "Cantidad", "Producto", "..", "U. Medida", "V. Venta", "P. Unitario", "Importe", "Costo Prov.", "Percepcion", "Exon IGV", "Nota Ingreso", "..."
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Float.class, Object.class, JButton.class, Object.class, Float.class, Float.class, Float.class, Float.class, Boolean.class, Boolean.class, Object.class, JButton.class
+				Object.class, Boolean.class, BigDecimal.class, Object.class, JLabel.class, Object.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, Boolean.class, Boolean.class, Object.class, JButton.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 		});
 		TDDetalle.getColumnModel().getColumn(0).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(0).setPreferredWidth(24);
+		TDDetalle.getColumnModel().getColumn(0).setPreferredWidth(16);
 		TDDetalle.getColumnModel().getColumn(1).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(1).setPreferredWidth(61);
-		TDDetalle.getColumnModel().getColumn(2).setPreferredWidth(289);
-		TDDetalle.getColumnModel().getColumn(3).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(3).setPreferredWidth(25);
+		TDDetalle.getColumnModel().getColumn(1).setPreferredWidth(16);
+		TDDetalle.getColumnModel().getColumn(2).setResizable(false);
+		TDDetalle.getColumnModel().getColumn(2).setPreferredWidth(61);
+		TDDetalle.getColumnModel().getColumn(3).setPreferredWidth(289);
 		TDDetalle.getColumnModel().getColumn(4).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(4).setPreferredWidth(61);
+		TDDetalle.getColumnModel().getColumn(4).setPreferredWidth(25);
 		TDDetalle.getColumnModel().getColumn(5).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(5).setPreferredWidth(64);
+		TDDetalle.getColumnModel().getColumn(5).setPreferredWidth(61);
 		TDDetalle.getColumnModel().getColumn(6).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(6).setPreferredWidth(67);
+		TDDetalle.getColumnModel().getColumn(6).setPreferredWidth(64);
 		TDDetalle.getColumnModel().getColumn(7).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(7).setPreferredWidth(69);
+		TDDetalle.getColumnModel().getColumn(7).setPreferredWidth(67);
 		TDDetalle.getColumnModel().getColumn(8).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(8).setPreferredWidth(76);
+		TDDetalle.getColumnModel().getColumn(8).setPreferredWidth(69);
 		TDDetalle.getColumnModel().getColumn(9).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(9).setPreferredWidth(77);
+		TDDetalle.getColumnModel().getColumn(9).setPreferredWidth(76);
 		TDDetalle.getColumnModel().getColumn(10).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(10).setPreferredWidth(64);
+		TDDetalle.getColumnModel().getColumn(10).setPreferredWidth(77);
 		TDDetalle.getColumnModel().getColumn(11).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(11).setPreferredWidth(78);
+		TDDetalle.getColumnModel().getColumn(11).setPreferredWidth(64);
 		TDDetalle.getColumnModel().getColumn(12).setResizable(false);
-		TDDetalle.getColumnModel().getColumn(12).setPreferredWidth(24);
+		TDDetalle.getColumnModel().getColumn(12).setPreferredWidth(78);
+		TDDetalle.getColumnModel().getColumn(13).setResizable(false);
+		TDDetalle.getColumnModel().getColumn(13).setPreferredWidth(24);
+		TDDetalle.setShowVerticalLines(false);
+		
+		Border headeBorder=UIManager.getBorder("TableHeader.cellBorder");
+		
+		Icon redIcon = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaQuitar1.png"));
+		Icon redIcon2 = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaAgregar1.png"));
+		
+		
+		JLabel blueLabel = new JLabel("", redIcon, JLabel.CENTER);
+	 //   blueLabel.setBorder(headeBorder);
+	    
+	    JLabel blueLabel1 = new JLabel("", redIcon2, JLabel.CENTER);
+	 //   blueLabel1.setBorder(headeBorder);
+	    //TDDetalle TableColumnModel columnModel =  TDDetalle . getColumnModel();
+		TDDetalle.getTableHeader().addMouseListener(new MouseAdapter() {
+			   @Override
+			      public void mouseClicked(MouseEvent mouseEvent) {
+			        int index = TDDetalle.columnAtPoint(mouseEvent.getPoint());
+			        
+			        System.out.println("entro");
+			        if (index == 0) {
+			        	btnAgregarDetActionPerformed(mouseEvent);
+			        }
+			        if (index == 1) {
+			        	btnQuitarDetActionPerformed(mouseEvent);
+			        }
+			       // TDDetallemouseClicked(mouseEvent);
+			      };
+		});
+		TableColumnModel columnModel =  TDDetalle . getColumnModel();
+		TableColumn colum=columnModel.getColumn(0);
+		TableColumn colum1=columnModel.getColumn(1);
+		TableCellRenderer renderer = new JComponentTableCellRenderer();
+		colum.setHeaderRenderer(renderer);
+		colum.setHeaderValue(blueLabel1);
+		colum1.setHeaderRenderer(renderer);
+		colum1.setHeaderValue(blueLabel);
+		
+		
+		
 		
 		TDDetalle.setDefaultRenderer(JButton.class, new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable jtable, Object objeto, boolean estaSeleccionado, boolean tieneElFoco, int fila, int columna) {
-                 return (Component) objeto;
+            	return (Component) objeto;
+            }
+        });
+		
+		TDDetalle.setDefaultRenderer(JLabel.class, new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable jtable, Object objeto, boolean estaSeleccionado, boolean tieneElFoco, int fila, int columna) {
+            	return (Component) objeto;
             }
         });
 		
 		
 		
+		//TableCellRenderer render =new JComponentTableCellRenderer();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	
 	}
+	
 }
+
+class JComponentTableCellRenderer implements TableCellRenderer {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+	      boolean hasFocus, int row, int column) {
+		
+		  
+	    return (JComponent) value;
+	  }
+	}
 

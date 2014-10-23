@@ -73,7 +73,8 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			Resul=  query.getResultList();
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			System.out.println("Datos");
+			e.printStackTrace();
 		}
 		
 		return Resul;
