@@ -3,6 +3,7 @@ package vista.formularios;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -43,6 +44,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.swing.UIManager;
@@ -65,6 +67,13 @@ import javax.swing.ScrollPaneConstants;
 
 
 
+
+
+
+
+
+import vista.Sys;
+import vista.barras.PanelBarraMaestro;
 import vista.controles.DSGDatePicker;
 import vista.controles.DSGTableModelReporte;
 import vista.utilitarios.JTableUtils;
@@ -76,6 +85,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
 public class FrmComprobantePago extends JInternalFrame {
 
 	private int filaseleccionada;
@@ -90,17 +101,19 @@ public class FrmComprobantePago extends JInternalFrame {
 	private JTextField txtNoGrav;
 	private JTextField textField_9;
 	private JTextField txtIGV;
-	private JTextField textField_11;
-	private JTextField textField_12;
+	private JTextField txtPercep;
+	private JTextField txtTotal;
 	private JTextField textField_13;
 	JComboBox cboTipoDoc = new JComboBox();
 	JComboBox cboProvedor = new JComboBox();
 	JComboBox cboAlmacen = new JComboBox();
+	JLabel lblDireccion = new JLabel("Direccion");
 	
 	List<Object[]> ListProvedor=new ComprobantePagoDAO().ListarProveedor();
-	
+	List<Object[]> ListAlmacen=null;
 	JInternalFrame internalFrame = new JInternalFrame("Agregar Producto de Nota de Ingreso");
 	private JTable TBNotaIngreso;
+	BigDecimal IGV=new BigDecimal("1.18");
 	Icon iconbusqueda = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaBuscar.png"));
 
 	/**
@@ -112,7 +125,8 @@ public class FrmComprobantePago extends JInternalFrame {
 				try {
 					FrmComprobantePago frame = new FrmComprobantePago();
 					frame.setVisible(true);
-					
+					frame.setLocation(5, 5);
+					//168-563
 				} catch (Exception e) {
 					e.printStackTrace();
 					//---------------------------------
@@ -125,11 +139,12 @@ public class FrmComprobantePago extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public FrmComprobantePago() {
+		setMaximizable(true);
 		setFrameIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/logo.png")));
 		setIconifiable(true);
 		setClosable(true);
 		setTitle("REGISTRO DE COMPROBANTE DE PAGO");
-		setBounds(100, 100, 1060, 563);
+		setBounds(100, 100, 1068, 563);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -214,7 +229,8 @@ public class FrmComprobantePago extends JInternalFrame {
 		TBNotaIngreso.getColumnModel().getColumn(10).setMinWidth(0);
 		TBNotaIngreso.getColumnModel().getColumn(10).setMaxWidth(0);
 		
-		JButton btnCancelarDetalle = new JButton("Cancelar");
+		JButton btnCancelarDetalle = new JButton("");
+		btnCancelarDetalle.setToolTipText("Cancelar");
 		btnCancelarDetalle.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
 		btnCancelarDetalle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -226,17 +242,18 @@ public class FrmComprobantePago extends JInternalFrame {
 			     }
 			}
 		});
-		btnCancelarDetalle.setBounds(580, 254, 95, 23);
+		btnCancelarDetalle.setBounds(620, 254, 50, 28);
 		internalFrame.getContentPane().add(btnCancelarDetalle);
 		
-		JButton btnAceptarDetalle = new JButton("Aceptar");
+		JButton btnAceptarDetalle = new JButton("");
+		btnAceptarDetalle.setToolTipText("Agregar");
 		btnAceptarDetalle.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmAgregar.png")));
 		btnAceptarDetalle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				btnAceptarDetalleActionPerformed(arg0);
 			}
 		});
-		btnAceptarDetalle.setBounds(486, 254, 93, 23);
+		btnAceptarDetalle.setBounds(570, 254, 50, 28);
 		internalFrame.getContentPane().add(btnAceptarDetalle);
 		internalFrame.setVisible(false);
 		contentPane.add(panel_1);
@@ -268,7 +285,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		panel_1.add(txtProveedor);
 		txtProveedor.setColumns(10);
 		
-		JLabel lblDireccion = new JLabel("Direccion");
+		
 		lblDireccion.setBounds(315, 96, 246, 14);
 		panel_1.add(lblDireccion);
 		
@@ -287,6 +304,8 @@ public class FrmComprobantePago extends JInternalFrame {
 					if(objects[1].toString().equalsIgnoreCase(cboProvedor.getSelectedItem().toString()))
 					{
 						txtProveedor.setText(objects[2].toString());
+						lblDireccion.setText(objects[3].toString());
+						
 					}
 				}
 				
@@ -319,6 +338,8 @@ public class FrmComprobantePago extends JInternalFrame {
 		contentPane.add(lblVVenta);
 		
 		txtVVenta = new JTextField();
+		txtVVenta.setText("0.0");
+		txtVVenta.setEnabled(false);
 		txtVVenta.setBounds(113, 426, 86, 20);
 		contentPane.add(txtVVenta);
 		txtVVenta.setColumns(10);
@@ -328,6 +349,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		contentPane.add(lblVVNo);
 		
 		txtNoGrav = new JTextField();
+		txtNoGrav.setText("0.0");
 		txtNoGrav.setBounds(281, 426, 86, 20);
 		contentPane.add(txtNoGrav);
 		txtNoGrav.setColumns(10);
@@ -337,6 +359,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		contentPane.add(chckbxRenta);
 		
 		textField_9 = new JTextField();
+		textField_9.setText("0.0");
 		textField_9.setBounds(456, 426, 62, 20);
 		contentPane.add(textField_9);
 		textField_9.setColumns(10);
@@ -346,6 +369,8 @@ public class FrmComprobantePago extends JInternalFrame {
 		contentPane.add(lblIgv);
 		
 		txtIGV = new JTextField();
+		txtIGV.setText("0.0");
+		txtIGV.setEnabled(false);
 		txtIGV.setBounds(593, 426, 69, 20);
 		contentPane.add(txtIGV);
 		txtIGV.setColumns(10);
@@ -354,25 +379,30 @@ public class FrmComprobantePago extends JInternalFrame {
 		lblPercep.setBounds(688, 429, 46, 14);
 		contentPane.add(lblPercep);
 		
-		textField_11 = new JTextField();
-		textField_11.setBounds(744, 426, 96, 20);
-		contentPane.add(textField_11);
-		textField_11.setColumns(10);
+		txtPercep = new JTextField();
+		txtPercep.setText("0.0");
+		txtPercep.setEnabled(false);
+		txtPercep.setBounds(744, 426, 96, 20);
+		contentPane.add(txtPercep);
+		txtPercep.setColumns(10);
 		
 		JLabel lblTotal = new JLabel("TOTAL");
 		lblTotal.setBounds(858, 429, 46, 14);
 		contentPane.add(lblTotal);
 		
-		textField_12 = new JTextField();
-		textField_12.setBounds(914, 426, 120, 20);
-		contentPane.add(textField_12);
-		textField_12.setColumns(10);
+		txtTotal = new JTextField();
+		txtTotal.setText("0.0");
+		txtTotal.setEnabled(false);
+		txtTotal.setBounds(914, 426, 120, 20);
+		contentPane.add(txtTotal);
+		txtTotal.setColumns(10);
 		
 		JCheckBox chckbxTieneDetraccion = new JCheckBox("Tiene Detraccion");
 		chckbxTieneDetraccion.setBounds(5, 456, 134, 23);
 		contentPane.add(chckbxTieneDetraccion);
 		
 		textField_13 = new JTextField();
+		textField_13.setEnabled(false);
 		textField_13.setBounds(140, 459, 46, 20);
 		contentPane.add(textField_13);
 		textField_13.setColumns(10);
@@ -381,34 +411,58 @@ public class FrmComprobantePago extends JInternalFrame {
 		label.setBounds(196, 462, 21, 14);
 		contentPane.add(label);
 		
-		JButton btnSalir = new JButton("Salir");
-		btnSalir.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/SalirFrm1.png")));
-		btnSalir.setBounds(945, 482, 89, 23);
+		JButton btnSalir = new JButton("");
+		btnSalir.setToolTipText("Salir");
+		btnSalir.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/salir.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		//btnSalir.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/SalirFrm1.png")));
+		btnSalir.setBounds(984, 482, 50, 28);
 		contentPane.add(btnSalir);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
-		btnCancelar.setBounds(850, 482, 95, 23);
+		JButton btnCancelar = new JButton("");
+		btnCancelar.setToolTipText("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/cancelar.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+//		btnCancelar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
+		btnCancelar.setBounds(934, 482, 50, 28);
 		contentPane.add(btnCancelar);
 		
-		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmGuardar.png")));
-		btnGuardar.setBounds(755, 482, 96, 23);
+		JButton btnGuardar = new JButton("");
+		btnGuardar.setToolTipText("Guardar");
+		btnGuardar.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/grabar.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		//btnGuardar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmGuardar.png")));
+		btnGuardar.setBounds(884, 482, 50, 28);
 		contentPane.add(btnGuardar);
 		
-		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmEliminar.png")));
-		btnEliminar.setBounds(667, 482, 89, 23);
+		JButton btnEliminar = new JButton("");
+		btnEliminar.setToolTipText("Eliminar");
+		btnEliminar.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/eliminar.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		//btnEliminar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmEliminar.png")));
+		btnEliminar.setBounds(834, 482, 50, 28);
 		contentPane.add(btnEliminar);
 		
-		JButton btnEditar = new JButton("Editar");
-		btnEditar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmEditar.png")));
-		btnEditar.setBounds(579, 482, 89, 23);
+		JButton btnEditar = new JButton("");
+		btnEditar.setToolTipText("Editar");
+		btnEditar.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/editar.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		//btnEditar.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmEditar.png")));
+		btnEditar.setBounds(784, 482, 50, 28);
 		contentPane.add(btnEditar);
 		
-		JButton btnNuevo = new JButton("Nuevo");
-		btnNuevo.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmNuevo.png")));
-		btnNuevo.setBounds(491, 482, 89, 23);
+		JButton btnNuevo = new JButton("");
+		btnNuevo.setToolTipText("Nuevo");
+		btnNuevo.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/nuevo.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		//btnNuevo.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmNuevo.png")));
+		btnNuevo.setBounds(734, 482, 50, 28);
 		contentPane.add(btnNuevo);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -416,6 +470,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		contentPane.add(scrollPane);
 		
 		TDDetalle = new JTable();
+		
 		TDDetalle.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -426,19 +481,35 @@ public class FrmComprobantePago extends JInternalFrame {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				
-								if(arg0.getKeyCode()==39){
-									MathContext mc = new MathContext(10);
-									BigDecimal dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 2).toString());
-									BigDecimal dat2 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 7).toString());
-									TDDetalle.getModel().setValueAt((dat1.multiply(dat2).round(mc)), TDDetalle.getSelectedRow(), 8);
-									CalcularTotales();
-									System.out.println("key "+arg0.getKeyCode());
-									
-										
-									
-							
-			}
+								
 			};
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if(arg0.getKeyCode()==10){
+					
+					
+					BigDecimal dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 2).toString());
+					BigDecimal dat2 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 6).toString());
+					BigDecimal dat3 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 7).toString());
+					BigDecimal IGV2=new BigDecimal("0.18");
+					
+					
+					if(TDDetalle.getSelectedColumn()==6)
+					{
+						TDDetalle.getModel().setValueAt((dat2.multiply(IGV2).add(dat2).setScale(2,  BigDecimal.ROUND_UNNECESSARY)), TDDetalle.getSelectedRow(), 7);
+						dat3 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 7).toString());
+					}else if(TDDetalle.getSelectedColumn()==7)
+					{
+						dat3 = new BigDecimal(TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 7).toString());
+						TDDetalle.getModel().setValueAt((dat3.divide(IGV,2, RoundingMode.HALF_UP)), TDDetalle.getSelectedRow(), 6);
+					}
+					
+					TDDetalle.getModel().setValueAt((dat1.multiply(dat3).setScale(2,  BigDecimal.ROUND_UNNECESSARY)), TDDetalle.getSelectedRow(), 8);
+					
+					CalcularTotales();
+					System.out.println("key "+arg0.getKeyCode());
+				}
+			}
 		});
 		
 		TDDetalle.setCellSelectionEnabled(true);
@@ -478,21 +549,39 @@ public class FrmComprobantePago extends JInternalFrame {
 		BigDecimal dat1= new BigDecimal("0.0");
 		BigDecimal dat2= new BigDecimal("0.0");
 		BigDecimal subtotal= new BigDecimal("0.0");
-		BigDecimal IGV= new BigDecimal("0.18");
+		BigDecimal total=new BigDecimal("0.0");
+		BigDecimal percep=new BigDecimal(txtPercep.getText().toString());
+		BigDecimal nograv=new BigDecimal(txtNoGrav.getText().toString());
+		BigDecimal IGV1= new BigDecimal("0.18");
 		
 		int n=TDDetalle.getRowCount();
+		BigDecimal IGVD=new BigDecimal("0.0");
 		for(int i=0;i<n;i++){
 			 dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(i, 2).toString());
 			 dat2 = new BigDecimal(TDDetalle.getModel().getValueAt(i, 6).toString());
 			 subtotal= dat1.multiply(dat2);
+			 vventa=vventa.add(subtotal).setScale(2,  BigDecimal.ROUND_UNNECESSARY);
+			 
+			 boolean estado=(boolean)TDDetalle.getModel().getValueAt(i, 11);
+			 if(!estado)
+			 {
+				 BigDecimal puni=new BigDecimal(TDDetalle.getModel().getValueAt(i, 7).toString());
+				 
+				 IGVD=IGVD.add(puni.multiply(IGV1)).setScale(2,  BigDecimal.ROUND_HALF_UP);
+			 }
 			
-			 vventa=vventa.add(subtotal);
-			
-		}	
+		}
+		
+		
 		this.txtVVenta.setText(vventa.toString());
-		this.txtIGV.setText(vventa.multiply(IGV).toString());
+//		BigDecimal IGVD=vventa.multiply(IGV).setScale(2,  BigDecimal.ROUND_HALF_UP);
+		total=total.add(vventa).add(IGVD).add(percep).add(nograv);//.setScale(2,  BigDecimal.ROUND_UNNECESSARY);
+		this.txtIGV.setText(IGVD.toString());
+		System.out.println(total);
+		this.txtTotal.setText(total.toString());
+		
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	public void btnAgregarDetActionPerformed(MouseEvent evt)
@@ -560,9 +649,41 @@ public class FrmComprobantePago extends JInternalFrame {
 			     LlenarTBNotaIngreso();
 			 
 		//	 }
+			    
 		 }
+			 if(columna==10)
+		     {
+		    	 BigDecimal dat1= new BigDecimal("0.0");
+		 		BigDecimal dat2= new BigDecimal("0.2");
+		 		BigDecimal percep= new BigDecimal("0.0");
+		 		//BigDecimal IGV= new BigDecimal("0.18");
+		 		
+		 		int n=TDDetalle.getRowCount();
+		 		for(int i=0;i<n;i++){
+		 			boolean estado=(boolean)TDDetalle.getModel().getValueAt(i, 10);
+		 			if(estado){
+		 			 dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(i, 8).toString());
+		 			 percep=percep.add(dat1.multiply(dat2)).setScale(2,  BigDecimal.ROUND_UNNECESSARY);
+		 			}
+		 		}
+		 		
+		 		this.txtPercep.setText(percep.toString());
+		 		CalcularTotales();
+		     }
+			 if(columna==11)
+			 {
+				 boolean estado=(boolean)TDDetalle.getModel().getValueAt(rowselecionada, 11);
+				 BigDecimal puni=new BigDecimal(TDDetalle.getModel().getValueAt(rowselecionada, 7).toString());
+				 System.out.println("Fila : "+rowselecionada+" - "+estado);
+				 if(estado){
+				 TDDetalle.getModel().setValueAt(puni,rowselecionada, 6);
+				 }else{
+					 TDDetalle.getModel().setValueAt(puni.divide(IGV,2, RoundingMode.HALF_UP),rowselecionada, 6);
+				 }
+			 	CalcularTotales();
+			 }
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	}
 	
@@ -581,13 +702,15 @@ public class FrmComprobantePago extends JInternalFrame {
 		{
 			boolean estado=(boolean)TBNotaIngreso.getModel().getValueAt(t, 1);
 			if(estado){
+				BigDecimal dat1=new BigDecimal(TBNotaIngreso.getModel().getValueAt(t, 9).toString());
+				
 				Object datos[]={j+n,false
 						,TBNotaIngreso.getModel().getValueAt(t, 5),
 						TBNotaIngreso.getModel().getValueAt(t, 4),
 						new JLabel(iconbusqueda),
 						"",
-						0,
-						TBNotaIngreso.getModel().getValueAt(t, 9),
+						dat1.divide(IGV, 2, RoundingMode.HALF_UP),
+						dat1,
 						TBNotaIngreso.getModel().getValueAt(t, 10),
 						0,
 						false,false,
@@ -602,14 +725,23 @@ public class FrmComprobantePago extends JInternalFrame {
 		((DefaultTableModel)TDDetalle.getModel()).removeRow(filaseleccionada);
 		filaseleccionada=-1;
 	} catch (Exception e) {
-		// TODO: handle exception
+		e.printStackTrace();
 	}
 	}
 	
 	public void LlenarTBNotaIngreso()
 	{
 		try {
-			List<Object[]> listNotaIngreso=new ComprobantePagoDAO().ListarNotaIngreso(1);
+			String prmstridalmacen="000";
+			for (Object[] objects : ListAlmacen) {
+				if(objects[0].toString().equalsIgnoreCase(cboAlmacen.getSelectedItem().toString()))
+				{
+					prmstridalmacen=objects[1].toString();
+					
+					
+				}
+			}
+			List<Object[]> listNotaIngreso=new ComprobantePagoDAO().ListarNotaIngreso(txtProveedor.getText().toString(),prmstridalmacen);
 			int i=1;
 			if(listNotaIngreso.size()>0){
 			for (Object[] objects : listNotaIngreso) {
@@ -656,7 +788,8 @@ public class FrmComprobantePago extends JInternalFrame {
 			}
 			
 			String prmstrsucursal="001";
-			List<Object[]> ListAlmacen=new ComprobantePagoDAO().ListarAlmacen(prmstrsucursal);
+			
+			ListAlmacen=new ComprobantePagoDAO().ListarAlmacen(prmstrsucursal);
 			cboAlmacen.addItem("Selecione Almacen");
 			for (Object[] objects : ListAlmacen) {
 				cboAlmacen.addItem(objects[0]);
@@ -725,9 +858,11 @@ public class FrmComprobantePago extends JInternalFrame {
 		
 		
 		JLabel blueLabel = new JLabel("", redIcon, JLabel.CENTER);
+		blueLabel.setToolTipText("Eliminar Item Selecionada");
 	 //   blueLabel.setBorder(headeBorder);
 	    
 	    JLabel blueLabel1 = new JLabel("", redIcon2, JLabel.CENTER);
+	    blueLabel1.setToolTipText("Agregar Item");
 	 //   blueLabel1.setBorder(headeBorder);
 	    //TDDetalle TableColumnModel columnModel =  TDDetalle . getColumnModel();
 		TDDetalle.getTableHeader().addMouseListener(new MouseAdapter() {

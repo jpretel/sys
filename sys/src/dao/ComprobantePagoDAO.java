@@ -61,15 +61,19 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 		return Resul;
 	}
 	
-	public List<Object[]> ListarNotaIngreso(int prmintsucursal)
+	
+	
+	public List<Object[]> ListarNotaIngreso(String prmstridclieprov,String prmstridalmacen)
 	{
 		List<Object[]> Resul=null;
 		try {
 			getEntityManager().getTransaction().begin();
 
 			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("sp_ListarNotaIngreso");
-			/*query.registerStoredProcedureParameter("prmstrsucursal",String.class,ParameterMode.IN);
-			query.setParameter("prmstrsucursal",prmintsucursal);*/
+			query.registerStoredProcedureParameter("prmstridclieprov",String.class,ParameterMode.IN);
+			query.registerStoredProcedureParameter("prmstridalmacen",String.class,ParameterMode.IN);//prmstridalmacen
+			query.setParameter("prmstridclieprov",prmstridclieprov);
+			query.setParameter("prmstridalmacen",prmstridalmacen);
 			Resul=  query.getResultList();
 			
 		} catch (Exception e) {
