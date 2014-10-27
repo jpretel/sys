@@ -76,6 +76,28 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			query.setParameter("prmstridalmacen",prmstridalmacen);
 			Resul=  query.getResultList();
 			
+			
+		} catch (Exception e) {
+			System.out.println("Datos");
+			e.printStackTrace();
+		}
+		
+		return Resul;
+	}
+	
+	public int InsertComprobantePago(String prmxml)
+	{
+		int Resul=0;
+		try {
+			getEntityManager().getTransaction().begin();
+
+			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("sp_InsertComprobantePago");
+			query.registerStoredProcedureParameter("prmxml",String.class,ParameterMode.IN);
+			query.setParameter("prmxml",prmxml);
+			query.executeUpdate();
+			getEntityManager().getTransaction().commit();
+			
+			
 		} catch (Exception e) {
 			System.out.println("Datos");
 			e.printStackTrace();
