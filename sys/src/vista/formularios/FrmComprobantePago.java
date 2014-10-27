@@ -241,29 +241,29 @@ public class FrmComprobantePago extends JInternalFrame {
 		TBNotaIngreso.getColumnModel().getColumn(8).setResizable(false);
 		TBNotaIngreso.getColumnModel().getColumn(8).setPreferredWidth(86);
 		TBNotaIngreso.getColumnModel().getColumn(9).setResizable(false);
-		//TBNotaIngreso.getColumnModel().getColumn(9).setPreferredWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(9).setMinWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(9).setMaxWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(9).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(9).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(9).setMaxWidth(0);
 		TBNotaIngreso.getColumnModel().getColumn(10).setResizable(false);
-		//TBNotaIngreso.getColumnModel().getColumn(10).setPreferredWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(10).setMinWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(10).setMaxWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(10).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(10).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(10).setMaxWidth(0);
 		TBNotaIngreso.getColumnModel().getColumn(11).setResizable(false);
-		//TBNotaIngreso.getColumnModel().getColumn(11).setPreferredWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(11).setMinWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(11).setMaxWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(11).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(11).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(11).setMaxWidth(0);
 		TBNotaIngreso.getColumnModel().getColumn(12).setResizable(false);
-		//TBNotaIngreso.getColumnModel().getColumn(12).setPreferredWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(12).setMinWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(12).setMaxWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(12).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(12).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(12).setMaxWidth(0);
 		TBNotaIngreso.getColumnModel().getColumn(13).setResizable(false);
-		//TBNotaIngreso.getColumnModel().getColumn(13).setPreferredWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(13).setMinWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(13).setMaxWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(13).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(13).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(13).setMaxWidth(0);
 		TBNotaIngreso.getColumnModel().getColumn(14).setResizable(false);
-		//TBNotaIngreso.getColumnModel().getColumn(14).setPreferredWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(14).setMinWidth(0);
-		//TBNotaIngreso.getColumnModel().getColumn(14).setMaxWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(14).setPreferredWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(14).setMinWidth(0);
+		TBNotaIngreso.getColumnModel().getColumn(14).setMaxWidth(0);
 		
 		JButton btnCancelarDetalle = new JButton("");
 		btnCancelarDetalle.setToolTipText("Cancelar");
@@ -370,17 +370,13 @@ public class FrmComprobantePago extends JInternalFrame {
 		panel_1.add(lblAlmacen);
 		
 		JLabel lblNDocumento = new JLabel("N\u00B0 Documento");
-		lblNDocumento.setBounds(699, 11, 94, 14);
+		lblNDocumento.setBounds(577, 24, 94, 14);
 		panel_1.add(lblNDocumento);
 		
 		txtNDocumento = new JTextField();
-		txtNDocumento.setBounds(699, 24, 118, 20);
+		txtNDocumento.setBounds(577, 37, 118, 20);
 		panel_1.add(txtNDocumento);
 		txtNDocumento.setColumns(10);
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(829, 20, 89, 23);
-		panel_1.add(btnNewButton);
 		
 		JLabel lblVVenta = new JLabel("V. Venta");
 		lblVVenta.setBounds(59, 429, 55, 14);
@@ -947,13 +943,11 @@ public class FrmComprobantePago extends JInternalFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"", "", "Cantidad", "Producto", "..", "U. Medida", "V. Venta", "P. Unitario", "Importe", "Costo Prov.", "Percepcion", "Exon IGV", "Nota Ingreso", "...",
-				"IdDcomprobante","idProducto","idDNotaIngreso","IdOrdenCompra"
+				"", "", "Cantidad", "Producto", "..", "U. Medida", "V. Venta", "P. Unitario", "Importe", "Costo Prov.", "Percepcion", "Exon IGV", "Nota Ingreso", "...", "IdDcomprobante", "idProducto", "idDNotaIngreso", "IdOrdenCompra"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Boolean.class, BigDecimal.class, Object.class, JLabel.class, Object.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, Boolean.class, Boolean.class, Object.class, JButton.class,
-				Object.class,Object.class,Object.class,Object.class
+				Object.class, Boolean.class, BigDecimal.class, Object.class, JLabel.class, Object.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, Boolean.class, Boolean.class, Object.class, JButton.class, Object.class, Object.class, Object.class, Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -987,8 +981,20 @@ public class FrmComprobantePago extends JInternalFrame {
 		TDDetalle.getColumnModel().getColumn(13).setResizable(false);
 		TDDetalle.getColumnModel().getColumn(13).setPreferredWidth(24);
 		TDDetalle.getColumnModel().getColumn(14).setResizable(false);
+		TDDetalle.getColumnModel().getColumn(14).setPreferredWidth(0);
+		TDDetalle.getColumnModel().getColumn(14).setMinWidth(0);
+		TDDetalle.getColumnModel().getColumn(14).setMaxWidth(0);
 		TDDetalle.getColumnModel().getColumn(15).setResizable(false);
+		TDDetalle.getColumnModel().getColumn(15).setPreferredWidth(0);
+		TDDetalle.getColumnModel().getColumn(15).setMinWidth(0);
+		TDDetalle.getColumnModel().getColumn(15).setMaxWidth(0);
 		TDDetalle.getColumnModel().getColumn(16).setResizable(false);
+		TDDetalle.getColumnModel().getColumn(16).setPreferredWidth(0);
+		TDDetalle.getColumnModel().getColumn(16).setMinWidth(0);
+		TDDetalle.getColumnModel().getColumn(16).setMaxWidth(0);
+		TDDetalle.getColumnModel().getColumn(17).setPreferredWidth(0);
+		TDDetalle.getColumnModel().getColumn(17).setMinWidth(0);
+		TDDetalle.getColumnModel().getColumn(17).setMaxWidth(0);
 		TDDetalle.setShowVerticalLines(false);
 		
 		Border headeBorder=UIManager.getBorder("TableHeader.cellBorder");
@@ -1005,6 +1011,7 @@ public class FrmComprobantePago extends JInternalFrame {
 	    blueLabel1.setToolTipText("Agregar Item");
 	 //   blueLabel1.setBorder(headeBorder);
 	    //TDDetalle TableColumnModel columnModel =  TDDetalle . getColumnModel();
+	    
 		TDDetalle.getTableHeader().addMouseListener(new MouseAdapter() {
 			   @Override
 			      public void mouseClicked(MouseEvent mouseEvent) {
