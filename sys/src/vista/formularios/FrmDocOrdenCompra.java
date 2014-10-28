@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import vista.Sys;
+import vista.combobox.ComboBox;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
@@ -35,6 +36,7 @@ import javax.swing.table.TableColumnModel;
 import core.centralizacion.ContabilizaSlcCompras;
 import dao.AlmacenDAO;
 import dao.ClieprovDAO;
+import dao.CotizacionCompraDAO;
 import dao.DDOrdenCompraDAO;
 import dao.DOrdenCompraDAO;
 import dao.ImpuestoDAO;
@@ -48,6 +50,7 @@ import dao.SolicitudCompraDAO;
 import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.Almacen;
+import entity.CotizacionCompra;
 import entity.DDOrdenCompra;
 import entity.DDOrdenCompraPK;
 import entity.DOrdenCompra;
@@ -67,6 +70,8 @@ import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 import vista.contenedores.CntClieprov;
 
+import javax.swing.JComboBox;
+
 public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	/**
@@ -78,6 +83,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private DOrdenCompraDAO dordencompraDAO = new DOrdenCompraDAO();
 	private DDOrdenCompraDAO ddordenCompraDAO = new DDOrdenCompraDAO();
 	private SolicitudCompraDAO solicitudCompraDAO = new SolicitudCompraDAO();
+	private CotizacionCompraDAO cotizacionCompraDAO = new CotizacionCompraDAO();
 	private ProductoDAO productoDAO = new ProductoDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
@@ -109,10 +115,11 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private DSGTextFieldNumber txtTCMoneda;
 	private CntClieprov cntClieprov;
 	private JLabel lblProveedor;
-
+	private ComboBox cboTipoDoc;
+	private List<String[]> optionList = new ArrayList<String[]>();
+	
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
-
 		setEstado(VISTA);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
@@ -167,7 +174,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.scrlGlosa.setViewportView(this.txtGlosa);
 
 		this.lblReferencia = new JLabel("Referencia");
-		this.lblReferencia.setBounds(400, 107, 74, 16);
+		this.lblReferencia.setBounds(581, 107, 60, 16);
 		pnlPrincipal.add(this.lblReferencia);
 
 		this.cntReferenciaDoc = new CntReferenciaDoc() {
@@ -199,7 +206,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				}
 
 				if (numero > 0 && !serie.isEmpty()) {
-					referenciarSolicitudCompra(serie, numero, sucursal, almacen);
+					String tipo = cboTipoDoc.getSelectedItem().toString();
+					referenciarSolicitudCotizacionCompra(serie, numero, sucursal, almacen,tipo);					
 					txtSerie.setText("");
 					txtNumero.setText("");
 				} else {
@@ -261,7 +269,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			}
 		};
 
-		this.cntReferenciaDoc.setBounds(464, 105, 180, 20);
+		this.cntReferenciaDoc.setBounds(651, 103, 180, 20);
 		pnlPrincipal.add(this.cntReferenciaDoc);
 
 		this.cntMoneda = new CntMoneda();
@@ -433,6 +441,19 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.lblProveedor = new JLabel("Proveedor");
 		this.lblProveedor.setBounds(12, 100, 50, 16);
 		pnlPrincipal.add(this.lblProveedor);
+		
+		JLabel lblTipoDoc = new JLabel("Tipo Doc.");
+		lblTipoDoc.setBounds(391, 106, 51, 16);
+		pnlPrincipal.add(lblTipoDoc);
+		
+		optionList.add(new String[]{"S","Solicitud de Compra"});
+		optionList.add(new String[]{"C","Cotizacion de Compra"});
+		cboTipoDoc = new vista.combobox.ComboBox(optionList,1); 
+		
+		cboTipoDoc.setBounds(446, 106, 125, 20);
+		pnlPrincipal.add(cboTipoDoc);		
+		
+		cboTipoDoc.setSelectedIndex(0);
 
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
@@ -815,18 +836,28 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		return true;
 	}
 
-	private void referenciarSolicitudCompra(String serie, int numero,
-			Sucursal sucursal, Almacen almacen) {
-
-		SolicitudCompra solicitudCompra = solicitudCompraDAO
-				.getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal,
-						almacen);
-
-		if (solicitudCompra != null) {
-			referenciarSolicitudCompra(solicitudCompra, "EDICION");
-		} else {
-			UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
+	private void referenciarSolicitudCotizacionCompra(String serie, int numero,
+			Sucursal sucursal, Almacen almacen,String tipo) {
+		if(tipo.equals('S')){
+			SolicitudCompra solicitudCompra = solicitudCompraDAO
+					.getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal,
+							almacen);
+	
+			if (solicitudCompra != null) {
+				referenciarSolicitudCompra(solicitudCompra, "EDICION");
+			}
+			else {
+				UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
+			}
+		}else{
+			CotizacionCompra cotizacionCompra = cotizacionCompraDAO.
+					getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal, almacen);
+			
+			if (cotizacionCompra != null){
+				
+			}
 		}
+			
 	}
 
 	private void referenciarSolicitudCompra(SolicitudCompra solicitudCompra,

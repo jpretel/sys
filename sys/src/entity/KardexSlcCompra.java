@@ -22,8 +22,12 @@ public class KardexSlcCompra implements Serializable {
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name="idsolicitudcompra", referencedColumnName = "idsolicitudcompra")
+	@JoinColumn(name="idsolicitudcompra", referencedColumnName = "idsolicitudcompra",nullable = true)
 	private SolicitudCompra solicitudcompra;
+	
+	@ManyToOne
+	@JoinColumn(name="idcotizacioncompra",referencedColumnName = "idcotizacioncompra",nullable = true)
+	private CotizacionCompra cotizacioncompra;
 	
 	@Column(length = 10)
 	private String tipo_referencia;
@@ -107,6 +111,14 @@ public class KardexSlcCompra implements Serializable {
 
 	public String getTipo_referencia() {
 		return tipo_referencia;
+	}
+	
+	public CotizacionCompra getCotizacioncompra() {
+		return cotizacioncompra;
+	}
+
+	public void setCotizacioncompra(CotizacionCompra cotizacioncompra) {
+		this.cotizacioncompra = cotizacioncompra;
 	}
 
 	public void setTipo_referencia(String tipo_referencia) {

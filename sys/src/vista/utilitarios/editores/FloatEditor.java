@@ -1,6 +1,7 @@
 package vista.utilitarios.editores;
 
 import java.awt.Component;
+import java.awt.event.FocusEvent;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 

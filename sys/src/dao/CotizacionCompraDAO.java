@@ -7,7 +7,10 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import entity.Almacen;
 import entity.CotizacionCompra;
+import entity.SolicitudCompra;
+import entity.Sucursal;
 
 public class CotizacionCompraDAO extends AbstractDAO<CotizacionCompra> {
 
@@ -82,5 +85,24 @@ public class CotizacionCompraDAO extends AbstractDAO<CotizacionCompra> {
 		q.select(c).where(ps);
 
 		return getEntityManager().createQuery(q).getSingleResult();
+	}
+	
+	
+	public CotizacionCompra getPorSerieNumeroSucursalAlmacen(String serie,
+			int numero, Sucursal sucursal, Almacen almacen) {
+		CriteriaQuery<CotizacionCompra> q = cb
+				.createQuery(CotizacionCompra.class);
+		Root<CotizacionCompra> from = q.from(CotizacionCompra.class);
+		Predicate ps = cb.and(cb.equal(from.get("sucursal"), sucursal),
+				cb.equal(from.get("almacen"), almacen),
+				cb.equal(from.get("serie"), serie),
+				cb.equal(from.get("numero"), numero));
+
+		q.select(from).where(ps);
+		try {
+			return getEntityManager().createQuery(q).getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

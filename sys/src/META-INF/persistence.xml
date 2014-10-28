@@ -9,19 +9,25 @@
 		<class>entity.Asiento</class>
 		<class>entity.CfgCentralizaAlm</class>
 		<class>entity.CfgCentralizaAlmPK</class>
-		<class>entity.CierrePeriodo</class>
 		<class>entity.Clieprov</class>
 		<class>entity.Concepto</class>
 		<class>entity.Consumidor</class>
 		<class>entity.ConversionUM</class>
 		<class>entity.ConversionUMPK</class>
+		<class>entity.CotizacionCompra</class>
 		<class>entity.Cuenta</class>
 		<class>entity.DAsiento</class>
 		<class>entity.DAsientoPK</class>
+		<class>entity.DCotizacionCompra</class>
+		<class>entity.DCotizacionCompraPK</class>
+		<class>entity.DDOrdenCompra</class>
+		<class>entity.DDOrdenCompraPK</class>
 		<class>entity.DOrdenCompra</class>
 		<class>entity.DOrdenCompraPK</class>
 		<class>entity.DOrdenServicio</class>
 		<class>entity.DOrdenServicioPK</class>
+		<class>entity.DRequerimiento</class>
+		<class>entity.DRequerimientoPK</class>
 		<class>entity.DSolicitudCompra</class>
 		<class>entity.DSolicitudCompraPK</class>
 		<class>entity.DetDocingreso</class>
@@ -47,11 +53,11 @@
 		<class>entity.GuardarUsuarioPK</class>
 		<class>entity.Impuesto</class>
 		<class>entity.Kardex</class>
+		<class>entity.KardexCompraRecepcion</class>
+		<class>entity.KardexRequerimiento</class>
 		<class>entity.KardexSlcCompra</class>
 		<class>entity.Log</class>
 		<class>entity.Marca</class>
-		<class>entity.Menu</class>
-		<class>entity.Modulo</class>
 		<class>entity.Moneda</class>
 		<class>entity.OrdenCompra</class>
 		<class>entity.OrdenServicio</class>
@@ -63,8 +69,8 @@
 		<class>entity.ProductoStockMinimo</class>
 		<class>entity.ProductoStockMinimoPK</class>
 		<class>entity.PtoEmision</class>
+		<class>entity.Requerimiento</class>
 		<class>entity.Responsable</class>
-		<class>entity.Ruc</class>
 		<class>entity.SolicitudCompra</class>
 		<class>entity.Subdiario</class>
 		<class>entity.Subequipo</class>
@@ -97,8 +103,8 @@
 			<property name="eclipselink.jdbc.batch-writing" value="JDBC" />
 			<property name="eclipselink.jdbc.batch-writing.sizeg" value="1000" />
 			<!-- <property name="eclipselink.logging.level" value="FINEST" /> -->
-
-			<!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> -->
+			<!-- -->
+			<property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>  
 		</properties>
 	</persistence-unit>
 

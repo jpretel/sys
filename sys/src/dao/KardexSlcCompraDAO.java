@@ -62,6 +62,19 @@ public class KardexSlcCompraDAO extends AbstractDAO<KardexSlcCompra> {
 		query.executeUpdate();
 		getEntityManager().getTransaction().commit();
 	}
+	
+	public void borrarPorIdCotizacionCompra(long idcotizacioncompra) {
+		getEntityManager().getTransaction().begin();
+		CriteriaDelete<KardexSlcCompra> delete = cb
+				.createCriteriaDelete(KardexSlcCompra.class);
+		Root<KardexSlcCompra> c = delete.from(KardexSlcCompra.class);
+		delete.where(cb.equal(
+				c.get("cotizacioncompra").get("idcotizacioncompra"),
+				idcotizacioncompra));
+		Query query = getEntityManager().createQuery(delete);
+		query.executeUpdate();
+		getEntityManager().getTransaction().commit();
+	}
 
 	public void borrarPorIdOrdenCompra(long idordencompra) {
 		getEntityManager().getTransaction().begin();

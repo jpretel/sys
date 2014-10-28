@@ -3,12 +3,16 @@ package core.centralizacion;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.CotizacionCompraDAO;
+import dao.DCotizacionCompraDAO;
 import dao.DDOrdenCompraDAO;
 import dao.DOrdenCompraDAO;
 import dao.DSolicitudCompraDAO;
 import dao.KardexSlcCompraDAO;
 import dao.OrdenCompraDAO;
 import dao.SolicitudCompraDAO;
+import entity.CotizacionCompra;
+import entity.DCotizacionCompra;
 import entity.DDOrdenCompra;
 import entity.DOrdenCompra;
 import entity.DSolicitudCompra;
@@ -26,7 +30,7 @@ public class ContabilizaSlcCompras {
 
 		SolicitudCompra solicitud = slcDAO.find(id);
 
-		if (solicitud == null) {
+		if (solicitud == null) {			
 			return false;
 		}
 
@@ -50,6 +54,34 @@ public class ContabilizaSlcCompras {
 		
 		kardexDAO.create(kardex_list);
 
+		return true;
+	}
+	
+	public static boolean ContabilizaCotizacion(long id){
+		CotizacionCompraDAO ctzaDAO = new CotizacionCompraDAO();
+		DCotizacionCompraDAO dctzaDAO = new DCotizacionCompraDAO();
+		KardexSlcCompraDAO kardexDAO = new KardexSlcCompraDAO();
+		
+		CotizacionCompra cotizacion = ctzaDAO.find(id);
+		
+		if(cotizacion == null){
+			return false;
+		}
+		List<DCotizacionCompra> dcotizacion = dctzaDAO.getPorCotizacionCompra(cotizacion);
+		kardexDAO.borrarPorIdCotizacionCompra(id);
+
+		List<KardexSlcCompra> kardex_list = new ArrayList<KardexSlcCompra>();
+		for (DCotizacionCompra ds : dcotizacion) {			
+			KardexSlcCompra kardex = new KardexSlcCompra();
+			kardex.setCotizacioncompra(cotizacion);
+			kardex.setProducto(ds.getProducto());
+			kardex.setUnimedida(ds.getUnimedida());
+			kardex.setFactor(1);
+			kardex.setCantidad(ds.getCantidad());
+			kardex_list.add(kardex);		
+		}
+		
+		kardexDAO.create(kardex_list);
 		return true;
 	}
 

@@ -27,9 +27,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
+import core.centralizacion.ContabilizaSlcCompras;
 import dao.AlmacenDAO;
 import dao.ClieprovDAO;
-
 import dao.DCotizacionCompraDAO;
 import dao.ImpuestoDAO;
 //import dao.KardexSlcCompraDAO;
@@ -365,13 +365,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 				dcotizacioncompraDAO.edit(d);
 			}
 		}
-
-
-//		ContabilizaSlcCompras.ContabilizaOrdenCompra(getCotizacioncompra()
-//				.getIdordencompra());
-
-		// ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(
-		// getCotizacioncompra().getIdordencompra(), 1, "Compra");
+		ContabilizaSlcCompras.ContabilizaCotizacion(getCotizacioncompra().getIdcotizacioncompra());
 	}
 
 	@Override

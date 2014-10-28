@@ -23,7 +23,6 @@ public class SolicitudCompraDAO extends AbstractDAO<SolicitudCompra> {
 		CriteriaQuery<SolicitudCompra> q = cb
 				.createQuery(SolicitudCompra.class);
 		Root<SolicitudCompra> from = q.from(SolicitudCompra.class);
-
 		Predicate ps = cb.and(cb.equal(from.get("sucursal"), sucursal),
 				cb.equal(from.get("almacen"), almacen),
 				cb.equal(from.get("serie"), serie),
