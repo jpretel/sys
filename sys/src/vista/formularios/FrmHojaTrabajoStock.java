@@ -180,7 +180,10 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 		java.util.List<Object[]> listHojaTrabajoc=new HojaTrabajoStockDAO().ListarHojaTrabajo(prmgrupo,prmmarca);
 		int i=1;
 		for (Object[] objects : listHojaTrabajoc) {
-			model.addRow(new Object[]{i,objects[1],objects[2],objects[3],objects[4],objects[5],"0",false});
+			model.addRow(new Object[]{i,objects[1],(objects[2]!=null?objects[2]:"0.0"),
+					(objects[3]!=null?objects[3]:"0.0"),
+					(objects[4]!=null?objects[4]:"0.0"),
+					(objects[5]!=null?objects[5]:"0.0"),"0.0",false});
 			i++;
 		}
 		

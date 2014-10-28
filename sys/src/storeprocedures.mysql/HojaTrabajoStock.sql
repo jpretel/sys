@@ -9,12 +9,11 @@ IN prmstrmarca varchar(3))
 BEGIN
 select P.IDPRODUCTO, P.Descripcion ,sum(PSM.REPOSICION) as stock, sum(PSM.CANTIDAD) as stockminimo,
 "" as backorder,sum(DR.CANTIDAD) as requerimiento
-from producto P INNER JOIN productostockminimo PSM ON P.IDPRODUCTO=PSM.IDPRODUCTO
-INNER JOIN drequerimiento DR ON P.IDPRODUCTO = DR.idproducto
+from producto P left JOIN productostockminimo PSM ON P.IDPRODUCTO=PSM.IDPRODUCTO
+left JOIN drequerimiento DR ON P.IDPRODUCTO = DR.idproducto
 where P.idgrupo like CONCAT('%',prmsrtgrupo,'%') and P.MARCA_IDMARCA like CONCAT('%',prmstrmarca,'%')
 group by P.IDPRODUCTO, P.Descripcion ;
 END
-
 
 
 
