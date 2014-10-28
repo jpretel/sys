@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.List;
 
+import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -32,11 +33,20 @@ import javax.swing.JButton;
 import dao.HojaTrabajoStockDAO;
 import vista.barras.PanelBarraMaestro;
 
+import javax.swing.border.TitledBorder;
+import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class FrmHojaTrabajoStock extends JInternalFrame{
 	private JPanel contentPane;
 	private JTable TBHojaTrabajo;
 	private JButton btnCancelar;
 	private JButton btnGenerar;
+	JComboBox cboGrupo = new JComboBox();
+	JComboBox cboMarca = new JComboBox();
+	java.util.List<Object[]> listGrupo=new HojaTrabajoStockDAO().ListarGrupo();
+	java.util.List<Object[]> listMarca=new HojaTrabajoStockDAO().ListarGrupo();
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -64,10 +74,11 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		//GroupLayout layout= new GroupLayout(this);
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 891, 372);
+		scrollPane.setBounds(10, 89, 891, 294);
 		contentPane.add(scrollPane);
 		
 		TBHojaTrabajo = new JTable();
@@ -75,72 +86,25 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 			new Object[][] {
 			},
 			new String[] {
-				"", "", "Producto", "...", "Stock", "Stock Minimo", "Back Order", "Reque Por Atender", "Comprar", "Selecion"
+				"N\u00B0", "Producto", "Stock", "Stock Minimo", "Back Order", "Reque Por Atender", "Comprar", "Selecion"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Boolean.class, Object.class, JButton.class, Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 		});
 		TBHojaTrabajo.getColumnModel().getColumn(0).setResizable(false);
-		TBHojaTrabajo.getColumnModel().getColumn(0).setPreferredWidth(21);
-		TBHojaTrabajo.getColumnModel().getColumn(1).setResizable(false);
-		TBHojaTrabajo.getColumnModel().getColumn(1).setPreferredWidth(22);
-		TBHojaTrabajo.getColumnModel().getColumn(2).setPreferredWidth(305);
-		TBHojaTrabajo.getColumnModel().getColumn(3).setPreferredWidth(20);
-		TBHojaTrabajo.getColumnModel().getColumn(7).setPreferredWidth(114);
-		TBHojaTrabajo.getColumnModel().getColumn(8).setPreferredWidth(78);
-		TBHojaTrabajo.getColumnModel().getColumn(9).setResizable(false);
+		TBHojaTrabajo.getColumnModel().getColumn(0).setPreferredWidth(29);
+		TBHojaTrabajo.getColumnModel().getColumn(1).setPreferredWidth(305);
+		TBHojaTrabajo.getColumnModel().getColumn(5).setPreferredWidth(114);
+		TBHojaTrabajo.getColumnModel().getColumn(6).setPreferredWidth(78);
+		TBHojaTrabajo.getColumnModel().getColumn(7).setResizable(false);
 		scrollPane.setViewportView(TBHojaTrabajo);
-		//-----TableColumnModel columnModel =  TBHojaTrabajo . getColumnModel();
-		Border headeBorder=UIManager.getBorder("TableHeader.cellBorder");
-		Icon redIcon = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaQuitar1.png"));
-		Icon redIcon2 = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaAgregar1.png"));
-		JLabel blueLabel = new JLabel("", redIcon, JLabel.CENTER);
-		blueLabel.setToolTipText("Eliminar Item Selecionada");
-		JLabel blueLabel1 = new JLabel("", redIcon2, JLabel.CENTER);
-	    blueLabel1.setToolTipText("Agregar Item");
-	    TableColumnModel columnModel =  TBHojaTrabajo . getColumnModel();
-		TableColumn colum=columnModel.getColumn(0);
-		TableColumn colum1=columnModel.getColumn(1);
-		TableCellRenderer renderer = new JComponentTableCellRenderer();
-		colum.setHeaderRenderer(renderer);
-		colum.setHeaderValue(blueLabel1);
-		colum1.setHeaderRenderer(renderer);
-		colum1.setHeaderValue(blueLabel);
 		
-		TBHojaTrabajo.setDefaultRenderer(JButton.class, new TableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable jtable, Object objeto, boolean estaSeleccionado, boolean tieneElFoco, int fila, int columna) {
-            	return (Component) objeto;
-            }
-        });
 		
-		TBHojaTrabajo.setDefaultRenderer(JLabel.class, new TableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable jtable, Object objeto, boolean estaSeleccionado, boolean tieneElFoco, int fila, int columna) {
-            	return (Component) objeto;
-            }
-        });
-		
-		TBHojaTrabajo.getTableHeader().addMouseListener(new MouseAdapter() {
-			   @Override
-			      public void mouseClicked(MouseEvent mouseEvent) {
-			        int index = TBHojaTrabajo.columnAtPoint(mouseEvent.getPoint());
-			        
-			        System.out.println("entro");
-			        if (index == 0) {
-			        	btnAgregarHojaActionPerformed(mouseEvent);
-			        }
-			        if (index == 1) {
-			        	btnQuitarHojaActionPerformed(mouseEvent);
-			        }
-			       // TDDetallemouseClicked(mouseEvent);
-			      };
-		});
 		
 		JButton btnSalir = new JButton("");
 		btnSalir.setToolTipText("Salir");
@@ -168,41 +132,107 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 		btnGenerar.setBounds(748, 394, 50, 28);
 		contentPane.add(btnGenerar);
 		
-		llenarHojaTrabajo();
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Filtros de Busqueda", TitledBorder.LEFT, TitledBorder.TOP, null, null));
+		panel.setBounds(10, 11, 891, 67);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblGrupo = new JLabel("Grupo :");
+		lblGrupo.setBounds(10, 29, 66, 14);
+		panel.add(lblGrupo);
+		
+		
+		cboGrupo.setBounds(86, 26, 174, 20);
+		panel.add(cboGrupo);
+		
+		JLabel lblMarca = new JLabel("Marca :");
+		lblMarca.setBounds(289, 29, 60, 14);
+		panel.add(lblMarca);
+		
+		
+		cboMarca.setBounds(359, 26, 174, 20);
+		panel.add(cboMarca);
+		
+		JButton btnBuscar = new JButton("");
+		btnBuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LimpiarTB();
+				llenarHojaTrabajo(recuperarIdGrupo(),recuperarIdMarca());
+			}
+		});
+		btnBuscar.setBounds(543, 20, 50, 28);
+		btnBuscar.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/consultar.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		panel.add(btnBuscar);
+		
+		llenarHojaTrabajo("","");
+		LlenarCombox();
 	}
 	
-	public void btnAgregarHojaActionPerformed(MouseEvent evt){
-		DefaultTableModel model=(DefaultTableModel)TBHojaTrabajo.getModel();
-		model.addRow(new Object[]{"",false,"",new JButton("..."),"0","0","0","0","0",false});
-	}
-	public void btnQuitarHojaActionPerformed(MouseEvent evt)
-	{
-		int j=TBHojaTrabajo.getRowCount();
-		for(int t=0;t<j;t++)
-		{
-			boolean estado=(boolean)TBHojaTrabajo.getModel().getValueAt(t, 1);
-			if(estado){
-				 
-				 ((DefaultTableModel)TBHojaTrabajo.getModel()).removeRow(t);
-				 
-				 j--;
-				 t=0;
-		}	
-	}
-	}
 	
-	public void llenarHojaTrabajo()
+	
+	public void llenarHojaTrabajo(String prmgrupo,String prmmarca)
 	{
 		
 		DefaultTableModel model=(DefaultTableModel)TBHojaTrabajo.getModel();
-		java.util.List<Object[]> listHojaTrabajoc=new HojaTrabajoStockDAO().ListarHojaTrabajo();
-		
+		java.util.List<Object[]> listHojaTrabajoc=new HojaTrabajoStockDAO().ListarHojaTrabajo(prmgrupo,prmmarca);
+		int i=1;
 		for (Object[] objects : listHojaTrabajoc) {
-			model.addRow(new Object[]{"",false,objects[1],new JButton("..."),objects[2],objects[3],objects[4],objects[5],"0",false});	
+			model.addRow(new Object[]{i,objects[1],objects[2],objects[3],objects[4],objects[5],"0",false});
+			i++;
 		}
 		
 	}
 	
+	public void LlenarCombox()
+	{
+		
+		cboGrupo.addItem("Selecione Grupo");
+		for (Object[] objects : listGrupo) {
+			cboGrupo.addItem(objects[2]);
+		}
+		
+		
+		cboMarca.addItem("Selecione Marca");
+		for (Object[] objects : listMarca) {
+			cboMarca.addItem(objects[1]);
+		}
+	}
+	
+	public String recuperarIdGrupo()
+	{
+		String codigo="";
+		for (Object[] objects : listGrupo) {
+			if(objects[1].toString().equalsIgnoreCase(cboGrupo.getSelectedItem().toString()))
+			{
+				codigo=objects[0].toString();
+			}
+		}
+		return codigo;
+	}
+	
+	public String recuperarIdMarca()
+	{
+		String codigo="";
+		for (Object[] objects : listMarca) {
+			if(objects[1].toString().equalsIgnoreCase(cboMarca.getSelectedItem().toString()))
+			{
+				codigo=objects[0].toString();
+			}
+		}
+		return codigo;
+	}
+	
+	public void LimpiarTB()
+	{
+		for (int i = TBHojaTrabajo.getRowCount() -1; i >= 0; i--)
+			 
+	     {
+	    	 ((DefaultTableModel)TBHojaTrabajo.getModel()).removeRow(i); 
+	     }
+	}
 }
 
 class JComponentTableCellRendere implements TableCellRenderer {
