@@ -183,7 +183,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			@Override
 			public void buscarReferencia() {
 				String serie;
-				int numero;
+				int numero;				
 				Sucursal sucursal = cntSucursal.getSeleccionado();
 				Almacen almacen = cntAlmacen.getSeleccionado();
 				if (sucursal == null) {
@@ -206,7 +206,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				}
 
 				if (numero > 0 && !serie.isEmpty()) {
-					String tipo = cboTipoDoc.getSelectedItem().toString();
+					String tipo = optionList.get(cboTipoDoc.getSelectedIndex())[0].toString();
 					referenciarSolicitudCotizacionCompra(serie, numero, sucursal, almacen,tipo);					
 					txtSerie.setText("");
 					txtNumero.setText("");
@@ -264,7 +264,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			public void mostrarDetalleRef(Object[] row) {
 				if (String.valueOf(row[3]).equals("SLC_COMPRA")) {
 					SolicitudCompra slc = (SolicitudCompra) row[4];
-					referenciarSolicitudCompra(slc, getEstado());
+					referenciarSolicitudCotizacionCompra(slc, getEstado());
 				}
 			}
 		};
@@ -838,13 +838,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	private void referenciarSolicitudCotizacionCompra(String serie, int numero,
 			Sucursal sucursal, Almacen almacen,String tipo) {
-		if(tipo.equals('S')){
+	
+		if(tipo.trim().equals("S")){
 			SolicitudCompra solicitudCompra = solicitudCompraDAO
 					.getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal,
-							almacen);
-	
+							almacen);	
 			if (solicitudCompra != null) {
-				referenciarSolicitudCompra(solicitudCompra, "EDICION");
+				referenciarSolicitudCotizacionCompra(solicitudCompra, "EDICION");
 			}
 			else {
 				UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
@@ -854,23 +854,33 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 					getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal, almacen);
 			
 			if (cotizacionCompra != null){
-				
+				referenciarSolicitudCotizacionCompra(cotizacionCompra, "EDICION");
+			}else{
+				UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
 			}
+				
 		}
 			
 	}
 
-	private void referenciarSolicitudCompra(SolicitudCompra solicitudCompra,
+	private void referenciarSolicitudCotizacionCompra(Object objeto,
 			final String estado) {
+		SolicitudCompra slccompra = new SolicitudCompra();
+		CotizacionCompra ctzcompra = new CotizacionCompra();
+		
+		if(objeto instanceof SolicitudCompra){
+			slccompra = (SolicitudCompra)objeto;			
+		}else{
+			ctzcompra = (CotizacionCompra)objeto;			
+		}			
+		
 		List<Tuple> saldos = new KardexSlcCompraDAO().getSaldoSolicitudCompra(
-				solicitudCompra, getOrdencompra());
+				objeto, getOrdencompra());
 
 		if (saldos != null && saldos.size() > 0) {
-
 			Object[][] data = new Object[saldos.size()][5];
 			int i = 0;
 			for (Tuple t : saldos) {
-
 				Producto p = (Producto) t.get("producto");
 				Unimedida u = (Unimedida) t.get("unimedida");
 				float cantidad = (float) t.get("cantidad");
@@ -878,8 +888,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				data[i][1] = p.getDescripcion();
 				data[i][2] = u.getDescripcion();
 				data[i][3] = cantidad;
-				data[i][4] = cantidadProducto(p, "SLC_COMPRA",
-						solicitudCompra.getIdsolicitudcompra());
+				if(objeto instanceof SolicitudCompra){
+					data[i][4] = cantidadProducto(p, "SLC_COMPRA",
+							slccompra.getIdsolicitudcompra());
+				}else{
+					data[i][4] = cantidadProducto(p, "SLC_COMPRA",
+							ctzcompra.getIdcotizacioncompra());
+				}					
 				i++;
 			}
 
@@ -949,22 +964,25 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			modal.setModal(true);
 			Sys.desktoppane.add(modal);
 			modal.setVisible(true);
-
+			//Estas lineas despues que acepto o cancel en la ventana modal
 			if (modal.model != null) {
 				int rows = data.length;
 				// Borrar los referenciados a la solicitud
 				int size = ddordencompras.size();
 				for (int ii = 0; ii < size; ii++) {
-					DDOrdenCompra o = ddordencompras.get(ii);
-
+					/*DDOrdenCompra o = ddordencompras.get(ii);
 					if (o.getTipo_referencia().equals("SLC_COMPRA")
-							&& o.getId_referencia() == solicitudCompra
+							&& o.getId_referencia() == slccompra
 									.getIdsolicitudcompra()) {
-
 						ddordencompras.remove(ii);
 						ii = 0;
 						size = ddordencompras.size();
-					}
+					}else{					
+						
+					}*/
+					ddordencompras.remove(ii);
+					ii = 0;
+					size = ddordencompras.size();
 				}
 
 				for (int row = 0; row < rows; row++) {
@@ -995,8 +1013,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 						DDOrdenCompra dd = new DDOrdenCompra();
 						Producto p = productoDAO.find(idproducto);
 						dd.setTipo_referencia("SLC_COMPRA");
-						dd.setId_referencia(solicitudCompra
-								.getIdsolicitudcompra());
+						dd.setId_referencia(slccompra.getIdsolicitudcompra());
 						dd.setProducto(p);
 						dd.setCantidad(cantidad);
 						ddordencompras.add(dd);
