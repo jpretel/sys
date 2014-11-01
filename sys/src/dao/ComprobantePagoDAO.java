@@ -22,7 +22,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			Resul=  query.getResultList();
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			throw e;
 		}
 		
 		return Resul;
@@ -38,7 +38,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			Resul=  query.getResultList();
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			throw e;
 		}
 		
 		return Resul;
@@ -56,7 +56,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			Resul=  query.getResultList();
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			throw e;
 		}
 		
 		return Resul;
@@ -72,7 +72,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			Resul=  query.getResultList();
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			throw e;
 		}
 		
 		return Resul;
@@ -93,8 +93,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			
 			
 		} catch (Exception e) {
-			System.out.println("Datos");
-			e.printStackTrace();
+			throw e;
 		}
 		
 		return Resul;
@@ -114,8 +113,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			
 			
 		} catch (Exception e) {
-			System.out.println("Datos");
-			e.printStackTrace();
+			throw e;
 		}
 		
 		return Resul;
@@ -136,7 +134,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 		} catch(NoResultException ex) {
 	        return null;
 	    }catch (Exception e) {
-			e.printStackTrace();
+	    	throw e;
 		}
 		
 		return comprobantepago;
@@ -155,8 +153,7 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			
 			
 		} catch (Exception e) {
-			System.out.println("Datos");
-			e.printStackTrace();
+			throw e;
 		}
 		
 		return Resul;
