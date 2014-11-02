@@ -31,10 +31,13 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.JButton;
 
 import dao.HojaTrabajoStockDAO;
+import vista.Sys;
 import vista.barras.PanelBarraMaestro;
+import vista.formularios.listas.AbstractDocForm;
 
 import javax.swing.border.TitledBorder;
 import javax.swing.JComboBox;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -65,6 +68,7 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 	
 	public FrmHojaTrabajoStock()
 	{
+		
 		setMaximizable(true);
 		setFrameIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/logo.png")));
 		setIconifiable(true);
@@ -86,11 +90,11 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 			new Object[][] {
 			},
 			new String[] {
-				"N\u00B0", "Producto", "Stock", "Stock Minimo", "Back Order", "Reque Por Atender", "Comprar", "Selecion"
+				"N\u00B0", "Producto", "Stock", "Stock Minimo", "Back Order", "Reque Por Atender", "Comprar", "Selecion", "Codigo", "CodigoMedida", "Medida"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class
+				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class, Object.class, Object.class, Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -102,6 +106,12 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 		TBHojaTrabajo.getColumnModel().getColumn(5).setPreferredWidth(114);
 		TBHojaTrabajo.getColumnModel().getColumn(6).setPreferredWidth(78);
 		TBHojaTrabajo.getColumnModel().getColumn(7).setResizable(false);
+		TBHojaTrabajo.getColumnModel().getColumn(8).setMinWidth(0);
+		TBHojaTrabajo.getColumnModel().getColumn(8).setMaxWidth(0);
+		TBHojaTrabajo.getColumnModel().getColumn(9).setMinWidth(0);
+		TBHojaTrabajo.getColumnModel().getColumn(9).setMaxWidth(0);
+		TBHojaTrabajo.getColumnModel().getColumn(10).setMinWidth(0);
+		TBHojaTrabajo.getColumnModel().getColumn(10).setMaxWidth(0);
 		scrollPane.setViewportView(TBHojaTrabajo);
 		
 		
@@ -125,6 +135,33 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 		contentPane.add(btnCancelar);
 		//actualizar
 		btnGenerar = new JButton("");
+		btnGenerar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 FrmDocSolicitudCompra frmd=new FrmDocSolicitudCompra();
+				 AbstractDocForm frmab= frmd;
+				 frmab.setVisible(true);
+				 Sys.desktoppane.add(frmab);
+				 frmab.DoNuevo();
+				 DefaultTableModel model=(DefaultTableModel)frmd.tblDetalle.getModel();
+				 
+				 for(int i=0;i<TBHojaTrabajo.getModel().getRowCount();i++)
+				 {
+					 boolean estado=(boolean)TBHojaTrabajo.getModel().getValueAt(i, 7); 
+					 if(estado){
+					 model.addRow(new Object[]{
+							 TBHojaTrabajo.getModel().getValueAt(i, 8).toString(),
+							 TBHojaTrabajo.getModel().getValueAt(i, 1).toString(),
+							 TBHojaTrabajo.getModel().getValueAt(i, 9).toString(),
+							 TBHojaTrabajo.getModel().getValueAt(i, 10).toString(),
+							 TBHojaTrabajo.getModel().getValueAt(i, 6).toString()
+							 });
+					 }
+				 }
+				 
+				
+					
+			}
+		});
 		btnGenerar.setToolTipText("Generar");
 		btnGenerar.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
 				.getResource("/main/resources/iconos/actualizar.png")).getImage()
@@ -183,7 +220,8 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 			model.addRow(new Object[]{i,objects[1],(objects[2]!=null?objects[2]:"0.0"),
 					(objects[3]!=null?objects[3]:"0.0"),
 					(objects[4]!=null?objects[4]:"0.0"),
-					(objects[5]!=null?objects[5]:"0.0"),"0.0",false});
+					(objects[5]!=null?objects[5]:"0.0"),"0.0",false,
+					objects[0],objects[6],objects[7]});
 			i++;
 		}
 		

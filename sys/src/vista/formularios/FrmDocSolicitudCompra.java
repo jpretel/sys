@@ -67,7 +67,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 	private cntAlmacen cntAlmacen;
 	private JScrollPane scrlGlosa;
 	private JTextArea txtGlosa;
-	private JTable tblDetalle;
+	public JTable tblDetalle;
 
 	private SolicitudCompra solicitudcompra;
 	private List<DSolicitudCompra> dsolicitudcompras = new ArrayList<DSolicitudCompra>();
