@@ -1,5 +1,5 @@
 package vista.formularios;
-
+//...............................
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.List;
@@ -49,7 +49,7 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 	JComboBox cboGrupo = new JComboBox();
 	JComboBox cboMarca = new JComboBox();
 	java.util.List<Object[]> listGrupo=new HojaTrabajoStockDAO().ListarGrupo();
-	java.util.List<Object[]> listMarca=new HojaTrabajoStockDAO().ListarGrupo();
+	java.util.List<Object[]> listMarca=new HojaTrabajoStockDAO().ListarMarca();
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

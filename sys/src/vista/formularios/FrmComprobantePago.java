@@ -1,5 +1,5 @@
 package vista.formularios;
-
+//.....................
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -53,6 +53,7 @@ import java.util.List;
 import javax.swing.UIManager;
 
 import dao.ComprobantePagoDAO;
+import dao.HojaTrabajoStockDAO;
 
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
@@ -65,6 +66,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ScrollPaneConstants;
 
 //import org.eclipse.persistence.internal.oxm.record.json.JSONParser.object_return;
+
 
 
 
@@ -99,6 +101,7 @@ import org.apache.poi.ss.formula.functions.Replace;
 
 
 
+
 import com.jhlabs.image.ErodeFilter;
 
 import java.awt.event.ComponentAdapter;
@@ -121,7 +124,6 @@ public class FrmComprobantePago extends JInternalFrame {
 	private DSGDatePicker txtFechaDoc;
 	private JTextField txtProveedor;
 	private DSGDatePicker txtFVence;
-	private DSGDatePicker txtFechaRecep;
 	private JTable TDDetalle;
 	private JTextField txtVVenta;
 	private JTextField txtNoGrav;
@@ -146,11 +148,17 @@ public class FrmComprobantePago extends JInternalFrame {
 	List<Object[]> ListAlmacen=null;
 	List<Object[]> listTipoDoc=null;
 	List<Object[]> listMoneda=null;
+	JComboBox cboGrupo = new JComboBox();
+	JComboBox cboMarca = new JComboBox();
+	java.util.List<Object[]> listGrupo=new HojaTrabajoStockDAO().ListarGrupo();
+	java.util.List<Object[]> listMarca=new HojaTrabajoStockDAO().ListarMarca();
 	JInternalFrame internalFrame = new JInternalFrame("Agregar Producto de Nota de Ingreso");
+	JInternalFrame iframeproducto = new JInternalFrame("Buscar Producto");
 	private JTable TBNotaIngreso;
 	BigDecimal IGV=new BigDecimal("1.18");
 	Icon iconbusqueda = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaBuscar.png"));
 	private JTextField txtNDocumento;
+	private JTable tbproducto;
 
 	/**
 	 * Launch the application.
@@ -212,6 +220,82 @@ public class FrmComprobantePago extends JInternalFrame {
 			     }
 			}
 		});
+		iframeproducto.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		
+		iframeproducto.setClosable(true);
+		iframeproducto.setBounds(0, 281, 536, 253);
+		contentPane.add(iframeproducto);
+		iframeproducto.getContentPane().setLayout(null);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 40, 500, 155);
+		iframeproducto.getContentPane().add(scrollPane_2);
+		
+		tbproducto = new JTable();
+		tbproducto.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"N\u00B0", "Codigo", "Descripcion", "Medida"
+			}
+		));
+		tbproducto.getColumnModel().getColumn(0).setResizable(false);
+		tbproducto.getColumnModel().getColumn(0).setPreferredWidth(26);
+		tbproducto.getColumnModel().getColumn(1).setPreferredWidth(133);
+		tbproducto.getColumnModel().getColumn(2).setPreferredWidth(291);
+		scrollPane_2.setViewportView(tbproducto);
+		
+		JButton btnagregarproducto = new JButton("");
+		btnagregarproducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AgregaProducto();
+			}
+		});
+		btnagregarproducto.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmAgregar.png")));
+		btnagregarproducto.setToolTipText("Agregar");
+		btnagregarproducto.setBounds(410, 196, 50, 28);
+		iframeproducto.getContentPane().add(btnagregarproducto);
+		
+		JButton btncancelarproducto = new JButton("");
+		btncancelarproducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				iframeproducto.setVisible(false);
+			}
+		});
+		btncancelarproducto.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
+		btncancelarproducto.setToolTipText("Cancelar");
+		btncancelarproducto.setBounds(460, 196, 50, 28);
+		iframeproducto.getContentPane().add(btncancelarproducto);
+		
+		JLabel lblGrupo = new JLabel("Grupo :");
+		lblGrupo.setBounds(10, 15, 46, 14);
+		iframeproducto.getContentPane().add(lblGrupo);
+		
+		
+		cboGrupo.setBounds(52, 12, 134, 20);
+		iframeproducto.getContentPane().add(cboGrupo);
+		
+		JLabel lblMarca = new JLabel("Marca :");
+		lblMarca.setBounds(200, 15, 46, 14);
+		iframeproducto.getContentPane().add(lblMarca);
+		
+		
+		cboMarca.setBounds(256, 9, 147, 20);
+		iframeproducto.getContentPane().add(cboMarca);
+		
+		JButton btnbuscarproducto = new JButton("");
+		btnbuscarproducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ListarProductos(obtenerGrupo(),obetenerMarca());
+			}
+		});
+		btnbuscarproducto.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/consultar.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		btnbuscarproducto.setBounds(410, 8, 50, 28);
+		iframeproducto.getContentPane().add(btnbuscarproducto);
+		iframeproducto.setVisible(false);
 		internalFrame.setClosable(true);
 		internalFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
@@ -368,14 +452,6 @@ public class FrmComprobantePago extends JInternalFrame {
 		
 		cboProvedor.setBounds(222, 74, 339, 20);
 		panel_1.add(cboProvedor);
-		
-		JLabel lblFechaRecepcion = new JLabel("Fecha Recepcion");
-		lblFechaRecepcion.setBounds(354, 49, 102, 14);
-		panel_1.add(lblFechaRecepcion);
-		
-		txtFechaRecep = new DSGDatePicker();
-		txtFechaRecep.setBounds(455, 46, 106, 20);
-		panel_1.add(txtFechaRecep);
 	//	txtFechaRecep.setColumns(10);
 		
 		
@@ -664,6 +740,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		contentPane.add(panel);
 		
 		LlenarCombox();
+		LlenarComboxproducto();
 		CrearTabla();
 		activarcontrol(false);
 		activarbuton(true, false, false, false, false);
@@ -706,9 +783,10 @@ public class FrmComprobantePago extends JInternalFrame {
 			Object datos[]={n,false
 					,objects[1].toString(),
 					objects[18].toString(),
-					new JLabel(iconbusqueda),
+					new JButton(iconbusqueda),
 					"",
-					dat1.divide(IGV, 2, RoundingMode.HALF_UP),
+					Integer.parseInt(objects[7].toString())==1?dat1:dat1.divide(IGV, 2, RoundingMode.HALF_UP)
+					,
 					dat1,
 					objects[4].toString(),
 					0,
@@ -846,6 +924,30 @@ public class FrmComprobantePago extends JInternalFrame {
 		}
 		return result;
 	}
+	
+	public String obtenerGrupo()
+	{
+		String codigo="";
+		for (Object[] objects : listGrupo) {
+			if(objects[1].toString().equalsIgnoreCase(cboGrupo.getSelectedItem().toString()))
+			{
+				codigo=objects[0].toString();
+			}
+		}
+		return codigo;
+	}
+	
+	public String obetenerMarca()
+	{
+		String codigo="";
+		for (Object[] objects : listMarca) {
+			if(objects[1].toString().equalsIgnoreCase(cboMarca.getSelectedItem().toString()))
+			{
+				codigo=objects[0].toString();
+			}
+		}
+		return codigo;
+	}
 	//-----------------------------------------------
 	
 	public void CalcularTotales()
@@ -900,7 +1002,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		Object datos[]={i+1,false
 				,0,
 				"",
-				new JLabel("", iconbusqueda, JLabel.CENTER),
+				new JButton(iconbusqueda),
 				"",
 				.00,
 				.00,
@@ -966,6 +1068,15 @@ public class FrmComprobantePago extends JInternalFrame {
 		filaseleccionada = TDDetalle.rowAtPoint(evt.getPoint());
 		 System.out.println(columna);
 		// if (TDDetalle.getModel().getColumnClass(columna).equals(JButton.class)) {
+		 if(columna==4){
+			 //if(TDDetalle.getModel().getColumnName(arg0))
+				 iframeproducto.setBounds(contentPane.getWidth()/4, contentPane.getHeight()/4, 536, 253);
+				 iframeproducto.setVisible(true);
+			     //LlenarTBNotaIngreso();
+			 
+		//	 }
+			    
+		      }
 			
 			 if(columna==13){
 			 //if(TDDetalle.getModel().getColumnName(arg0))
@@ -975,7 +1086,7 @@ public class FrmComprobantePago extends JInternalFrame {
 			 
 		//	 }
 			    
-		 }
+		      }
 			 if(columna==10)
 		     {
 		    	 BigDecimal dat1= new BigDecimal("0.0");
@@ -1040,7 +1151,7 @@ public class FrmComprobantePago extends JInternalFrame {
 				Object datos[]={j+n,false
 						,TBNotaIngreso.getModel().getValueAt(t, 5),
 						TBNotaIngreso.getModel().getValueAt(t, 4),
-						new JLabel(iconbusqueda),
+						new JButton(iconbusqueda),
 						"",
 						dat1.divide(IGV, 2, RoundingMode.HALF_UP),
 						dat1,
@@ -1252,7 +1363,7 @@ public class FrmComprobantePago extends JInternalFrame {
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Boolean.class, BigDecimal.class, Object.class, JLabel.class, Object.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, Boolean.class, Boolean.class, Object.class, JButton.class, Object.class, Object.class, Object.class, Object.class, Object.class
+				Object.class, Boolean.class, BigDecimal.class, Object.class, JButton.class, Object.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, Boolean.class, Boolean.class, Object.class, JButton.class, Object.class, Object.class, Object.class, Object.class, Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -1295,10 +1406,8 @@ public class FrmComprobantePago extends JInternalFrame {
 		TDDetalle.getColumnModel().getColumn(17).setPreferredWidth(94);
 		TDDetalle.getColumnModel().getColumn(17).setMinWidth(0);
 		TDDetalle.getColumnModel().getColumn(17).setMaxWidth(0);
-		//TDDetalle.getColumnModel().getColumn(18).setMinWidth(0);
-		//TDDetalle.getColumnModel().getColumn(18).setMaxWidth(0);
-		//TDDetalle.getColumnModel().getColumn(17).setMinWidth(0);
-		//TDDetalle.getColumnModel().getColumn(17).setMaxWidth(0);
+		TDDetalle.getColumnModel().getColumn(18).setMinWidth(0);
+		TDDetalle.getColumnModel().getColumn(18).setMaxWidth(0);
 		TDDetalle.setShowVerticalLines(false);
 		
 		Border headeBorder=UIManager.getBorder("TableHeader.cellBorder");
@@ -1491,6 +1600,60 @@ public class FrmComprobantePago extends JInternalFrame {
                 "Comprobante Pago - Validacion",
                 JOptionPane.WARNING_MESSAGE);
 	}
+	
+	//-------------------Buscar producto-----------------------
+	public void LlenarComboxproducto()
+	{
+		
+		cboGrupo.addItem("Selecione Grupo");
+		for (Object[] objects : listGrupo) {
+			cboGrupo.addItem(objects[2]);
+		}
+		
+		
+		cboMarca.addItem("Selecione Marca");
+		for (Object[] objects : listMarca) {
+			cboMarca.addItem(objects[1]);
+		}
+	}
+	
+	public void ListarProductos(String prmstrgrupo,String prmstrmarca)
+	{
+		
+		try {
+			DefaultTableModel model=(DefaultTableModel)tbproducto.getModel();
+			 for (int i = tbproducto.getRowCount() -1; i >= 0; i--)
+			 {
+				 model.removeRow(i);
+		     }
+			List<Object[]>lisproduto=new ComprobantePagoDAO().ListarProducto(prmstrgrupo, prmstrmarca);
+			int i=1;
+			 for (Object[] objects : lisproduto) {
+				 model.addRow(new Object[]{
+						 i,
+						 objects[0],
+						 objects[1],
+						 objects[2]
+						 });
+				 i++;
+			}
+		} catch (Exception e) {
+			Error(e.toString());
+		}
+	}
+	
+	public void AgregaProducto()
+	{
+		int f=TDDetalle.getSelectedRow();
+		int fi=tbproducto.getSelectedRow();
+		
+		TDDetalle.getModel().setValueAt(tbproducto.getModel().getValueAt(fi, 2), f, 3);
+		TDDetalle.getModel().setValueAt(tbproducto.getModel().getValueAt(fi, 3), f, 5);
+		TDDetalle.getModel().setValueAt(tbproducto.getModel().getValueAt(fi, 1), f, 15);
+		
+		iframeproducto.setVisible(false);
+	}
+	
 	
 }
 

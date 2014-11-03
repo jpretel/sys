@@ -1,5 +1,5 @@
 package dao;
-
+//...........................
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -158,5 +158,26 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 		
 		return Resul;
 	}
+	
+	public List<Object[]> ListarProducto(String prmsrtgrupo,String prmstrmarca)
+	{
+		List<Object[]> Resul=null;
+		try {
+			getEntityManager().getTransaction().begin();
+
+			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("sp_ListarProductoxGrupoxMarca");
+			query.registerStoredProcedureParameter("prmsrtgrupo",String.class,ParameterMode.IN);
+			query.registerStoredProcedureParameter("prmstrmarca",String.class,ParameterMode.IN);
+			query.setParameter("prmsrtgrupo",prmsrtgrupo);
+			query.setParameter("prmstrmarca",prmstrmarca);
+			Resul=  query.getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return Resul;
+	}
+	
 	
 }
