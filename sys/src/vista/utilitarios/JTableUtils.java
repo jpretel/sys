@@ -7,18 +7,21 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -34,7 +37,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
+import vista.controles.ArrayListTransferHandler;
 import vista.controles.DSGTableModel;
 import vista.controles.DSGTableModelReporte;
 
@@ -92,6 +97,34 @@ public class JTableUtils {
 
 		final JList<String> rowHeader = new JList<String>(lm);
 		rowHeader.setOpaque(false);
+		rowHeader.setDragEnabled(true);
+		rowHeader.setTransferHandler(new ArrayListTransferHandler() {
+			@Override
+			public int getSourceActions(JComponent c) {
+				return MOVE;
+			}
+
+			@Override
+			protected Transferable createTransferable(JComponent source) {
+
+				// System.out.println(table.getSelectedRow());
+				TableModel model = table.getModel();
+				int row, cols = table.getColumnCount();
+				row = table.getSelectedRow();
+
+				Object[] values = new Object[cols];
+				if (values == null || values.length == 0) {
+					return null;
+				}
+
+				ArrayList<Object> alist = new ArrayList<Object>();
+				for (int i = 0; i < values.length; i++) {
+					alist.add(model.getValueAt(row, i));
+				}
+
+				return new ArrayListTransferable(alist);
+			}
+		});
 		rowHeader.setFixedCellWidth(30);
 
 		MouseInputAdapter mouseAdapter = new MouseInputAdapter() {
@@ -107,10 +140,10 @@ public class JTableUtils {
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				int previ = getLocationToIndex(new Point(e.getX(), e.getY() - 3));
-				if (model.getEditar()) {
-					if (previ == table.getRowCount()) {
-						model.addRow();
-					}
+
+				if (previ > -1 && previ < table.getRowCount()) {
+					table.getSelectionModel()
+							.setSelectionInterval(previ, previ);
 				}
 
 				if (previ > -1 && previ < table.getRowCount()) {
@@ -121,6 +154,8 @@ public class JTableUtils {
 				}
 
 			}
+			
+			
 
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
