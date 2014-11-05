@@ -42,7 +42,7 @@ public class ControladorOpciones {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public JDesktopPane getDesktopPane() {
 		return desktopPane;
 	}

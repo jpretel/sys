@@ -41,7 +41,7 @@ public class FrmSysConfig extends JFrame {
 	 */
 	public FrmSysConfig() {
 		setAlwaysOnTop(true);
-		setMinimumSize(new Dimension(370, 200));
+		setMinimumSize(new Dimension(350, 240));
 		getContentPane().setMinimumSize(new Dimension(600, 600));
 		setResizable(false);
 		setTitle("Configuraci\u00F3n Inicial");
