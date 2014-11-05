@@ -25,8 +25,8 @@ public class SysFormulario implements Serializable {
 	private String imagen;
 	
 	@Column(length=75)
-	private String opcion;
-
+	private String opcion; 
+	
 	public SysFormulario() {
 	}
 

@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.Dimension;
 
+import vista.combobox.ComboBox;
+
 public class FrmSysConfig extends JFrame {
 
 	/**
@@ -31,40 +33,42 @@ public class FrmSysConfig extends JFrame {
 	private SysCfgInicio cfgInicio;
 
 	private List<ChangeListener> listenerList = new ArrayList<ChangeListener>();
-
+	private JLabel lblBaseDeDatos_1;
+	private ComboBox comboBox;
+	private List<String[]> optionList = new ArrayList<String[]>();
 	/**
 	 * Create the frame.
 	 */
 	public FrmSysConfig() {
 		setAlwaysOnTop(true);
-		setMinimumSize(new Dimension(350, 200));
+		setMinimumSize(new Dimension(370, 200));
 		getContentPane().setMinimumSize(new Dimension(600, 600));
 		setResizable(false);
 		setTitle("Configuraci\u00F3n Inicial");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JLabel lblServidor = new JLabel("Servidor");
-		lblServidor.setBounds(22, 14, 46, 14);
+		lblServidor.setBounds(24, 58, 46, 14);
 
 		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setBounds(22, 39, 46, 14);
+		lblUsuario.setBounds(24, 83, 46, 14);
 
 		JLabel lblClave = new JLabel("Clave");
-		lblClave.setBounds(22, 68, 46, 14);
+		lblClave.setBounds(24, 112, 46, 14);
 
 		txtServidor = new JTextField();
-		txtServidor.setBounds(107, 11, 225, 20);
+		txtServidor.setBounds(109, 55, 225, 20);
 		txtServidor.setColumns(10);
 
 		txtUsuario = new JTextField();
-		txtUsuario.setBounds(107, 36, 149, 20);
+		txtUsuario.setBounds(109, 80, 149, 20);
 		txtUsuario.setColumns(10);
 
 		txtClave = new JPasswordField();
-		txtClave.setBounds(107, 65, 149, 20);
+		txtClave.setBounds(109, 109, 149, 20);
 
 		JButton btnAceptar = new JButton("Agregar");
-		btnAceptar.setBounds(50, 124, 94, 23);
+		btnAceptar.setBounds(52, 168, 94, 23);
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isValido()) {
@@ -79,10 +83,10 @@ public class FrmSysConfig extends JFrame {
 		});
 
 		JLabel lblBaseDeDatos = new JLabel("Base de Datos");
-		lblBaseDeDatos.setBounds(22, 89, 80, 24);
+		lblBaseDeDatos.setBounds(24, 133, 80, 24);
 
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(222, 124, 94, 23);
+		btnCancelar.setBounds(224, 168, 94, 23);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				cerrar();
@@ -90,7 +94,7 @@ public class FrmSysConfig extends JFrame {
 		});
 
 		txtBD = new JTextField();
-		txtBD.setBounds(106, 91, 106, 20);
+		txtBD.setBounds(108, 135, 106, 20);
 		txtBD.setColumns(10);
 		getContentPane().setLayout(null);
 		getContentPane().add(lblServidor);
@@ -103,10 +107,25 @@ public class FrmSysConfig extends JFrame {
 		getContentPane().add(lblClave);
 		getContentPane().add(txtClave);
 		getContentPane().add(txtUsuario);
+		
+		this.lblBaseDeDatos_1 = new JLabel("Gestor de BD");
+		this.lblBaseDeDatos_1.setBounds(24, 30, 80, 14);
+		getContentPane().add(this.lblBaseDeDatos_1);
+		
+		optionList.add(new String[]{"SQLSERVER","SQL Server 2008"});
+		optionList.add(new String[]{"MYSQL","MYSQL"});
+		comboBox = new ComboBox(optionList,1); 
+		
+		this.comboBox.setBounds(109, 27, 132, 20);
+		getContentPane().add(this.comboBox);
 		//getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblServidor, txtServidor, lblUsuario, txtUsuario, lblClave, txtClave, lblBaseDeDatos, txtBD, btnAceptar, btnCancelar}));
 	}
 
 	private boolean isCamposValidos() {
+		
+		if (comboBox.getSelectedIndex()==-1) {
+			return false;
+		}
 		if (txtServidor.getText().trim().isEmpty()) {
 			return false;
 		}
@@ -127,13 +146,16 @@ public class FrmSysConfig extends JFrame {
 		}
 		
 		setCfgInicio(new SysCfgInicio());
-
+		
+		String gestor = optionList.get(comboBox.getSelectedIndex())[0].toString();
+		
+		getCfgInicio().setGestor(gestor);
 		getCfgInicio().setServidor(txtServidor.getText().trim());
 		getCfgInicio().setUsuario(txtUsuario.getText().trim());
 		getCfgInicio().setClave(new String(txtClave.getPassword()));
 		getCfgInicio().setBase_datos(txtBD.getText().trim());
 		
-		if (!ConectionManager.isConexionOK(ConectionManager._mysql, cfgInicio)) {
+		if (!ConectionManager.isConexionOK(cfgInicio)) {
 			return false;
 		}
 

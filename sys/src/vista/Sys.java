@@ -44,7 +44,7 @@ public class Sys {
 	public static JDesktopPane desktoppane;
 	public static Mensajes mensajes;
 	public static EntityManagerFactory entityFactory;
-	
+
 	private FrmSysConfig frm = new FrmSysConfig();
 	public static MainFrame mainF;
 
@@ -103,19 +103,25 @@ public class Sys {
 				cfgInicio.setBase_datos(datos[1]);
 				cfgInicio.setUsuario(datos[2]);
 				cfgInicio.setClave(datos[3]);
+				cfgInicio.setGestor(datos[4]);
 
-				if (this.opcion.equals("UPDATE")){
+				if (this.opcion.equals("UPDATE")) {
 					cfgInicio.setTipo_creacion("UPDATE");
 				}
-
-				isOK = ConectionManager.isConexionOK(ConectionManager._mysql,
-						cfgInicio);
+				
+				isOK = ConectionManager.isConexionOK(cfgInicio);
+				
 				if (isOK) {
-					
-					Map<String, String> persistenceMap = new HashMap<String, String>();
 
+					Map<String, String> persistenceMap = new HashMap<String, String>();
+					
 					persistenceMap.put("javax.persistence.jdbc.url",
-							Sys.cfgInicio.getURL(ConectionManager._mysql));
+							Sys.cfgInicio.getURL());
+					
+					persistenceMap.put("javax.persistence.jdbc.driver",
+							Sys.cfgInicio.getDriver());
+					
+
 					persistenceMap.put("javax.persistence.jdbc.user",
 							Sys.cfgInicio.getUsuario());
 					persistenceMap.put("javax.persistence.jdbc.password",
@@ -131,7 +137,11 @@ public class Sys {
 									"drop-and-create-tables");
 						}
 					}
-					entityFactory = Persistence.createEntityManagerFactory("sys", persistenceMap);
+
+					
+
+					entityFactory = Persistence.createEntityManagerFactory(
+							"sys", persistenceMap);
 					abrir();
 				} else {
 					mensaje_alterta("ERROR_CONFIG");
@@ -162,9 +172,9 @@ public class Sys {
 		frm.dispose();
 
 		EmpresaDAO empresaDAO = new EmpresaDAO();
-		
+
 		MonedaDAO monedaDAO = new MonedaDAO();
-		
+
 		GrupoUsuario grpAdmin = new GrupoUsuarioDAO().find("ADM");
 
 		if (grpAdmin == null) {
@@ -197,20 +207,19 @@ public class Sys {
 		}
 
 		Sys.empresa = empresa;
-		
-		
-		//Monedas
+
+		// Monedas
 		Moneda mof = monedaDAO.getPorTipo(0);
-		
+
 		Moneda mex = monedaDAO.getPorTipo(1);
-		
+
 		Sys.moneda_of = mof;
 		Sys.moneda_ex = mex;
-		
+
 		if (mof == null) {
 			System.out.println("No hay moneda oficial");
 		}
-		
+
 		if (mex == null) {
 			System.out.println("No hay moneda extranjera");
 		}

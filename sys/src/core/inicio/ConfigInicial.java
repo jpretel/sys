@@ -36,6 +36,7 @@ public class ConfigInicial {
 			String baseDatos = prop.getProperty("BaseDatos", "");
 			String clave = prop.getProperty("Clave", "");
 			String usuario = prop.getProperty("Usuario", "");
+			String gestor = prop.getProperty("SGBD", "");
 
 			if (servidor.equals("") || baseDatos.equals("")
 					|| usuario.equals("")) {
@@ -50,7 +51,7 @@ public class ConfigInicial {
 				}
 				usuario = decrypt(usuario);
 				clave = decrypt(clave);
-				return new String[] {servidor, baseDatos, usuario, clave};
+				return new String[] {servidor, baseDatos, usuario, clave, gestor};
 			}
 
 		} catch (IOException ex) {
@@ -75,6 +76,7 @@ public class ConfigInicial {
 			prop.setProperty("BaseDatos", "bd");
 			prop.setProperty("Usuario", usuario);
 			prop.setProperty("Clave", clave);
+			prop.setProperty("SGBD", clave);
 			prop.store(output, null);
 
 		} catch (IOException io) {
@@ -103,6 +105,7 @@ public class ConfigInicial {
 			prop.setProperty("BaseDatos", cfgInicio.getBase_datos());
 			prop.setProperty("Usuario", encrypt(cfgInicio.getUsuario()));
 			prop.setProperty("Clave", encrypt(cfgInicio.getClave()));
+			prop.setProperty("SGBD", cfgInicio.getGestor());
 			prop.store(output, null);
 
 		} catch (IOException io) {

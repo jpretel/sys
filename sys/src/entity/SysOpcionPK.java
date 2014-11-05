@@ -13,13 +13,10 @@ public class SysOpcionPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column
 	private String idmodulo;
 
-	@Column
 	private String idtitulo;
 
-	@Column
 	private String idgrupo;
 
 	@Column(nullable=false, length=15)

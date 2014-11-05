@@ -50,6 +50,10 @@ public class Requerimiento implements Serializable {
 	@JoinColumn(name = "idresponsable", referencedColumnName = "idresponsable")
 	private Responsable responsable;
 
+	@ManyToOne
+	@JoinColumn(name = "idflujo", referencedColumnName = "idflujo")
+	private Flujo flujo;
+
 	public Requerimiento() {
 		super();
 	}
@@ -140,6 +144,14 @@ public class Requerimiento implements Serializable {
 
 	public void setGlosa(String glosa) {
 		this.glosa = glosa;
+	}
+
+	public Flujo getFlujo() {
+		return flujo;
+	}
+
+	public void setFlujo(Flujo flujo) {
+		this.flujo = flujo;
 	}
 
 }

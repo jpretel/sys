@@ -1,6 +1,7 @@
 package core.inicio;
 
 public class SysCfgInicio {
+	private String gestor;
 	private String servidor;
 	private String base_datos;
 	private String usuario;
@@ -39,9 +40,35 @@ public class SysCfgInicio {
 		this.clave = clave;
 	}
 
-	public String getURL(int code_manager) {
-		if (code_manager == ConectionManager._mysql)
+//	public String getURL(int code_manager) {
+//		if (code_manager == ConectionManager._mysql)
+//			return "jdbc:mysql://" + getServidor() + "/" + getBase_datos();
+//		if (code_manager == ConectionManager._sqlserver)
+//			return "jdbc:sqlserver://" + getServidor() + "/" + getBase_datos();
+//		return null;
+//	}
+	
+//	public String getURL(String code_manager) {
+//		if (code_manager.equals(ConectionManager.MYSQL))
+//			return "jdbc:mysql://" + getServidor() + "/" + getBase_datos();
+//		if (code_manager.equals(ConectionManager.SQLSERVER))
+//			return "jdbc:sqlserver://" + getServidor() + ";databaseName=" + getBase_datos();
+//		return null;
+//	}
+	
+	public String getURL() {
+		if (gestor.equals(ConectionManager.MYSQL))
 			return "jdbc:mysql://" + getServidor() + "/" + getBase_datos();
+		if (gestor.equals(ConectionManager.SQLSERVER))
+			return "jdbc:sqlserver://" + getServidor() + ";databaseName=" + getBase_datos();
+		return null;
+	}
+	
+	public String getDriver() {
+		if (gestor.equals(ConectionManager.MYSQL))
+			return "com.mysql.jdbc.Driver";
+		if (gestor.equals(ConectionManager.SQLSERVER))
+			return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 		return null;
 	}
 
@@ -57,6 +84,14 @@ public class SysCfgInicio {
 
 	public void setTipo_creacion(String tipo_creacion) {
 		this.tipo_creacion = tipo_creacion;
+	}
+
+	public String getGestor() {
+		return gestor;
+	}
+
+	public void setGestor(String gestor) {
+		this.gestor = gestor;
 	}
 
 }
