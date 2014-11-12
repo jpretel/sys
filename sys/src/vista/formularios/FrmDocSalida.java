@@ -89,7 +89,7 @@ public class FrmDocSalida extends AbstractDocForm {
 	private JScrollPane scrlGlosa;
 	private JLabel lblOperacin;
 	private TxtProducto txtProducto;
-	private JLabel label;
+	private JLabel lblMoneda;
 	private CntMoneda cntMoneda;
 	private JLabel label_1;
 	private CntReferenciaDoc cntReferenciaDoc;
@@ -121,17 +121,17 @@ public class FrmDocSalida extends AbstractDocForm {
 		textArea.setBounds(540, 5, 0, 16);
 		pnlPrincipal.add(textArea);
 
-		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
-				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
-				"Importe", "Referencia" }) {
+		tblDetalle = new JTable(new DSGTableModel(new String[] {
+				"Cód. Producto", "Producto", "Cód. Medida", "Medida",
+				"Cantidad", "Referencia" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean evaluaEdicion(int row, int column) {
-				if (column == 1 || column == 3 || column == 7)
+				if (column == 1 || column == 3 || column == 5)
 					return false;
 				if (column == 4) {
-					ReferenciaDOC ref = (ReferenciaDOC) getValueAt(row, 7);
+					ReferenciaDOC ref = (ReferenciaDOC) getValueAt(row, 5);
 					if (ref != null) {
 						return false;
 					}
@@ -142,7 +142,7 @@ public class FrmDocSalida extends AbstractDocForm {
 			@Override
 			public void addRow() {
 				if (validaCabecera())
-					addRow(new Object[] { "", "", "", "", 0, 0, 0, null });
+					addRow(new Object[] { "", "", "", "", 0, null });
 				else
 					JOptionPane.showMessageDialog(null,
 							"Faltan datos en la cabecera");
@@ -158,7 +158,6 @@ public class FrmDocSalida extends AbstractDocForm {
 							.toString();
 
 					txtProducto.refresValue(idproducto);
-					actualiza_detalle();
 				}
 			}
 		};
@@ -197,7 +196,7 @@ public class FrmDocSalida extends AbstractDocForm {
 		txtProducto.updateCellEditor();
 
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
-		getDetalleTM().setObligatorios(0, 1, 4, 5, 6);
+		getDetalleTM().setObligatorios(0, 1, 4);
 		getDetalleTM().setRepetidos(0);
 		getDetalleTM().setScrollAndTable(scrollPaneDetalle, tblDetalle);
 
@@ -206,13 +205,7 @@ public class FrmDocSalida extends AbstractDocForm {
 		tc.getColumn(4).setCellEditor(new FloatEditor(3));
 		tc.getColumn(4).setCellRenderer(new FloatRenderer(3));
 
-		tc.getColumn(5).setCellEditor(new FloatEditor(2));
-		tc.getColumn(5).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(6).setCellEditor(new FloatEditor(2));
-		tc.getColumn(6).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(7).setCellRenderer(new ReferenciaDOCRenderer());
+		tc.getColumn(5).setCellRenderer(new ReferenciaDOCRenderer());
 
 		pnlPrincipal.add(scrollPaneDetalle);
 
@@ -328,9 +321,9 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.lblOperacin.setBounds(9, 45, 54, 16);
 		pnlPrincipal.add(this.lblOperacin);
 
-		this.label = new JLabel("Concepto");
-		this.label.setBounds(369, 15, 54, 16);
-		pnlPrincipal.add(this.label);
+		this.lblMoneda = new JLabel("Moneda");
+		this.lblMoneda.setBounds(369, 15, 54, 16);
+		pnlPrincipal.add(this.lblMoneda);
 
 		this.cntMoneda = new CntMoneda();
 		this.cntMoneda.setBounds(434, 12, 192, 20);
@@ -461,7 +454,7 @@ public class FrmDocSalida extends AbstractDocForm {
 					}
 					return true;
 				}
-				
+
 			};
 
 			TableColumnModel tc = modal.getTable().getColumnModel();
@@ -549,12 +542,12 @@ public class FrmDocSalida extends AbstractDocForm {
 		for (int row = 0; row < rows; row++) {
 			ReferenciaDOC ref = (ReferenciaDOC) getDetalleTM().getValueAt(row,
 					7);
-			
+
 			String idproducto;
 			idproducto = getDetalleTM().getValueAt(row, 0).toString();
 			if (ref != null) {
 				if (ref.getIdreferencia() == idrequerimiento) {
-					
+
 					if (p.getIdproducto().equals(idproducto)) {
 						try {
 							cantidad = Float.parseFloat(getDetalleTM()
@@ -689,8 +682,7 @@ public class FrmDocSalida extends AbstractDocForm {
 								producto.getDescripcion(),
 								salida.getUnimedida().getIdunimedida(),
 								salida.getUnimedida().getDescripcion(),
-								salida.getCantidad(), salida.getPrecio(),
-								salida.getImporte(), ref });
+								salida.getCantidad(), ref });
 			}
 		}
 	}
@@ -698,22 +690,6 @@ public class FrmDocSalida extends AbstractDocForm {
 	public void CalculaImporte(float cantidad, float precio) {
 		float xImporte = cantidad * precio;
 		getDetalleTM().setValueAt(xImporte, tblDetalle.getSelectedRow(), 6);
-	}
-
-	private void actualiza_detalle() {
-		int row = tblDetalle.getSelectedRow();
-		if (row > -1) {
-			float cantidad, precio, importe;
-
-			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
-					.toString());
-			precio = Float.parseFloat(getDetalleTM().getValueAt(row, 5)
-					.toString());
-
-			importe = cantidad * precio;
-
-			getDetalleTM().setValueAt(importe, row, 6);
-		}
 	}
 
 	@Override
@@ -770,11 +746,15 @@ public class FrmDocSalida extends AbstractDocForm {
 	public void init() {
 
 	}
-
-	@SuppressWarnings({ "deprecation" })
+	
 	@Override
 	public void llenarDesdeVista() {
 		Long id = getSalida().getIddocsalida();
+		
+		Calendar cal = Calendar.getInstance();
+		
+		cal.setTime(this.txtFecha.getDate());
+		
 		getSalida().setIddocsalida(id);
 		getSalida().setGrupoCentralizacion(
 				cntGrupoCentralizacion.getSeleccionado());
@@ -785,13 +765,13 @@ public class FrmDocSalida extends AbstractDocForm {
 		getSalida().setResponsable(this.cntResponsable.getSeleccionado());
 		getSalida().setSucursal(this.cntSucursal.getSeleccionado());
 		getSalida().setAlmacen(this.cntAlmacen.getSeleccionado());
-		getSalida().setDia(this.txtFecha.getDate().getDate());
-		getSalida().setMes(this.txtFecha.getDate().getMonth() + 1);
-		getSalida().setAnio(this.txtFecha.getDate().getYear() + 1900);
-		getSalida().setAniomesdia(
-				((this.txtFecha.getDate().getYear() + 1900) * 10000)
-						+ ((this.txtFecha.getDate().getMonth() + 1) * 100)
-						+ this.txtFecha.getDate().getDate());
+		getSalida().setDia(cal.get(Calendar.DAY_OF_MONTH));
+		getSalida().setMes(cal.get(Calendar.MONTH) + 1);
+		getSalida().setAnio(cal.get(Calendar.YEAR));
+		getSalida().setFecha(
+				((cal.get(Calendar.DAY_OF_MONTH)) * 10000)
+						+ ((cal.get(Calendar.MONTH) + 1) * 100)
+						+ Calendar.YEAR);
 		getSalida().setGlosa(txtGlosa.getText());
 		getSalida().setSucursal_dest(cntSucursal_dest.getSeleccionado());
 		getSalida().setAlmacen_dest(cntAlmacen_dest.getSeleccionado());
@@ -816,14 +796,10 @@ public class FrmDocSalida extends AbstractDocForm {
 			det.setUnimedida(u);
 			det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i, 4)
 					.toString())));
-			det.setPrecio(Float.parseFloat(getDetalleTM().getValueAt(i, 5)
-					.toString()));
-			det.setImporte(Float.parseFloat(getDetalleTM().getValueAt(i, 6)
-					.toString()));
 			/*
 			 * Referencia
 			 */
-			ReferenciaDOC ref = (ReferenciaDOC) getDetalleTM().getValueAt(i, 7);
+			ReferenciaDOC ref = (ReferenciaDOC) getDetalleTM().getValueAt(i, 5);
 			if (ref != null) {
 				det.setTipo_referencia(ref.getTipo_referencia());
 				det.setId_referencia(ref.getIdreferencia());
@@ -835,18 +811,16 @@ public class FrmDocSalida extends AbstractDocForm {
 	@Override
 	public boolean isValidaVista() {
 		boolean band = validaCabecera();
-		if (!band) {
+		if (band) {
 			band = validarDetalle();
 		}
 		return band;
 	}
 
 	public boolean validaCabecera() {
-		return FormValidador.TextFieldObligatorios(
-				this.cntGrupoCentralizacion.txtCodigo,
-				this.cntMoneda.txtCodigo, this.cntConcepto.txtCodigo,
-				this.cntResponsable.txtCodigo, this.cntSucursal.txtCodigo,
-				this.cntAlmacen.txtCodigo);
+
+		return FormValidador.CntObligatorios(cntGrupoCentralizacion, cntMoneda,
+				cntConcepto, cntResponsable, cntSucursal, cntAlmacen);
 	}
 
 	public boolean validarDetalle() {

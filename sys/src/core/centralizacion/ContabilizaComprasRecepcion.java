@@ -11,7 +11,8 @@ import entity.KardexCompraRecepcion;
 import entity.OrdenCompra;
 
 public class ContabilizaComprasRecepcion {
-	public static boolean ContabilizaComprasRecepcion(long id,int factor,String tabla){
+	public static boolean ContabilizarComprasRecepcion(long id,int factor,String tabla){
+		System.out.println("asdas");
 		OrdenCompraDAO ordenCompraDAO = new OrdenCompraDAO();
 		DocingresoDAO docingresoDAO = new DocingresoDAO();
 		DOrdenCompraDAO dordenCompraDAO = new DOrdenCompraDAO();
@@ -24,7 +25,7 @@ public class ContabilizaComprasRecepcion {
 		if(tabla == "Compra"){			
 			ordenCompra = ordenCompraDAO.find(id);
 			for(DOrdenCompra dordenCompra : dordenCompraDAO.getPorOrdenCompra(ordenCompra)){
-				kardexCompraRecepcion.setDordencompra(dordenCompra);
+				kardexCompraRecepcion.setIdordencompra(dordenCompra.getId().getIdordencompra());
 				kardexCompraRecepcion.setFactor(factor);
 				kardexCompraRecepcion.setCantidad(dordenCompra.getCantidad());
 				kardexCompraRecepcion.setProducto(dordenCompra.getProducto());
@@ -33,12 +34,12 @@ public class ContabilizaComprasRecepcion {
 		}else{
 			docingreso = docingresoDAO.find(id);
 			for(DetDocingreso detdocingreso: detdocingresoDAO.getPorIdIngreso(docingreso)){
-				kardexCompraRecepcion.setDordencompra(detdocingreso.getDordencompra());
+				kardexCompraRecepcion.setIdordencompra(detdocingreso.getIdreferencia());
 				kardexCompraRecepcion.setCantidad(detdocingreso.getCantidad());
 				kardexCompraRecepcion.setFactor(factor);
 				kardexCompraRecepcion.setProducto(detdocingreso.getProducto());
 				kardexCompraRecepcion.setUnimedida(detdocingreso.getUnimedida());
-				kardexCompraRecepcion.setDetdocingreso(detdocingreso);
+				kardexCompraRecepcion.setIddocingreso(detdocingreso.getId().getIdingreso());
 			}
 		}
 		kardexCompraRecepcion.setIdreferencia(id);

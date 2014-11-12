@@ -15,7 +15,7 @@ import entity.KardexRequerimiento;
 import entity.Requerimiento;
 
 public class ContabilizaRequerimiento {
-	
+
 	public static boolean ContabilizarRequerimiento(long id) {
 		RequerimientoDAO requerimientoDAO = new RequerimientoDAO();
 		DRequerimientoDAO drequerimientoDAO = new DRequerimientoDAO();
@@ -35,7 +35,7 @@ public class ContabilizaRequerimiento {
 		List<KardexRequerimiento> kardex_list = new ArrayList<KardexRequerimiento>();
 
 		for (DRequerimiento ds : drequerimiento) {
-			
+
 			KardexRequerimiento kardex = new KardexRequerimiento();
 			kardex.setRequerimiento(requerimiento);
 			kardex.setProducto(ds.getProducto());
@@ -44,12 +44,12 @@ public class ContabilizaRequerimiento {
 			kardex.setCantidad(ds.getCantidad());
 			kardex_list.add(kardex);
 		}
-		
+
 		kardexDAO.create(kardex_list);
 
 		return true;
 	}
-	
+
 	public static boolean ContabilizarDocSalida(long id) {
 		DocsalidaDAO salidaDAO = new DocsalidaDAO();
 		DetDocSalidaDAO dsalidaDAO = new DetDocSalidaDAO();
@@ -69,21 +69,23 @@ public class ContabilizaRequerimiento {
 		List<KardexRequerimiento> kardex_list = new ArrayList<KardexRequerimiento>();
 
 		for (DetDocsalida ds : dsalida) {
-			if (ds.getTipo_referencia().equals("REQINTERNO")) {
-				Requerimiento requerimiento = requerimientoDAO.find(ds.getId_referencia());
-				
-				KardexRequerimiento kardex = new KardexRequerimiento();
-				kardex.setRequerimiento(requerimiento);
-				kardex.setProducto(ds.getProducto());
-				kardex.setUnimedida(ds.getUnimedida());
-				kardex.setTipo_referencia(ds.getTipo_referencia());
-				kardex.setId_referencia(salida.getIddocsalida());
-				kardex.setFactor(-1);
-				kardex.setCantidad(ds.getCantidad());
-				kardex_list.add(kardex);
-			}
+			if (ds.getTipo_referencia() != null)
+				if (ds.getTipo_referencia().equals("REQINTERNO")) {
+					Requerimiento requerimiento = requerimientoDAO.find(ds
+							.getId_referencia());
+
+					KardexRequerimiento kardex = new KardexRequerimiento();
+					kardex.setRequerimiento(requerimiento);
+					kardex.setProducto(ds.getProducto());
+					kardex.setUnimedida(ds.getUnimedida());
+					kardex.setTipo_referencia(ds.getTipo_referencia());
+					kardex.setId_referencia(salida.getIddocsalida());
+					kardex.setFactor(-1);
+					kardex.setCantidad(ds.getCantidad());
+					kardex_list.add(kardex);
+				}
 		}
-		
+
 		kardexDAO.create(kardex_list);
 
 		return true;

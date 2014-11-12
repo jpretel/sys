@@ -18,20 +18,15 @@ public class KardexCompraRecepcion implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "idordencompra", referencedColumnName = "idordencompra", nullable = false),
-			@JoinColumn(name = "item_compra", referencedColumnName = "item", nullable = false) })
-	private DOrdenCompra dordencompra;
 	
-	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name = "iddocingreso",referencedColumnName = "iddocingreso"),
-		@JoinColumn(name = "item_recepcion",referencedColumnName = "item")
-	})
-	private DetDocingreso detdocingreso;
-
+	private long idordencompra;
+	
+	private int item_compra;
+	
+	private long iddocingreso;
+	
+	private int item_recepcion;
+	
 	@ManyToOne
 	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
 	private Producto producto;
@@ -91,27 +86,43 @@ public class KardexCompraRecepcion implements Serializable {
 		this.cantidad = cantidad;
 	}
 
-	public DOrdenCompra getDordencompra() {
-		return dordencompra;
-	}
-
-	public void setDordencompra(DOrdenCompra dordencompra) {
-		this.dordencompra = dordencompra;
-	}
-
-	public DetDocingreso getDetdocingreso() {
-		return detdocingreso;
-	}
-
-	public void setDetdocingreso(DetDocingreso detdocingreso) {
-		this.detdocingreso = detdocingreso;
-	}
-
 	public long getIdreferencia() {
 		return idreferencia;
 	}
 
 	public void setIdreferencia(long idreferencia) {
 		this.idreferencia = idreferencia;
+	}
+
+	public long getIdordencompra() {
+		return idordencompra;
+	}
+
+	public void setIdordencompra(long idordencompra) {
+		this.idordencompra = idordencompra;
+	}
+
+	public int getItem_compra() {
+		return item_compra;
+	}
+
+	public void setItem_compra(int item_compra) {
+		this.item_compra = item_compra;
+	}
+
+	public long getIddocingreso() {
+		return iddocingreso;
+	}
+
+	public void setIddocingreso(long iddocingreso) {
+		this.iddocingreso = iddocingreso;
+	}
+
+	public int getItem_recepcion() {
+		return item_recepcion;
+	}
+
+	public void setItem_recepcion(int item_recepcion) {
+		this.item_recepcion = item_recepcion;
 	}
 }

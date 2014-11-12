@@ -18,28 +18,23 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.table.TableColumnModel;
 
 import core.centralizacion.ContabilizaSlcCompras;
-import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
-import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
 import vista.utilitarios.FormValidador;
 import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
-import dao.AlmacenDAO;
 import dao.DSolicitudCompraDAO;
 import dao.KardexSlcCompraDAO;
 import dao.ProductoDAO;
 import dao.ResponsableDAO;
 import dao.SolicitudCompraDAO;
-import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.DSolicitudCompra;
 import entity.DSolicitudCompraPK;
 import entity.Producto;
 import entity.SolicitudCompra;
-import entity.Sucursal;
 import entity.Unimedida;
 
 public class FrmDocSolicitudCompra extends AbstractDocForm {
@@ -53,18 +48,13 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 	private DSolicitudCompraDAO dsolicitudcompraDAO = new DSolicitudCompraDAO();
 	private ProductoDAO productoDAO = new ProductoDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
-	private AlmacenDAO almacenDAO = new AlmacenDAO();
 	private KardexSlcCompraDAO kardexSlcCompraDAO = new KardexSlcCompraDAO();
 
 	private TxtProducto txtProducto;
 	private JLabel lblResponsable;
-	private JLabel lblSucursal;
-	private JLabel lblAlmacen;
 	private JLabel lblGlosa;
 	private JScrollPane scrollPaneDetalle;
 	private cntResponsable cntResponsable;
-	private cntSucursal cntSucursal;
-	private cntAlmacen cntAlmacen;
 	private JScrollPane scrlGlosa;
 	private JTextArea txtGlosa;
 	public JTable tblDetalle;
@@ -86,19 +76,13 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 				Alignment.LEADING).addGap(0, 681, Short.MAX_VALUE));
 
 		this.lblResponsable = new JLabel("Responsable");
-		this.lblResponsable.setBounds(10, 106, 74, 16);
-
-		this.lblSucursal = new JLabel("Sucursal");
-		this.lblSucursal.setBounds(10, 43, 51, 16);
-
-		this.lblAlmacen = new JLabel("Almacen");
-		this.lblAlmacen.setBounds(10, 70, 50, 16);
+		this.lblResponsable.setBounds(10, 47, 74, 16);
 
 		this.lblGlosa = new JLabel("Glosa");
-		this.lblGlosa.setBounds(399, 43, 32, 16);
+		this.lblGlosa.setBounds(398, 14, 32, 16);
 
 		this.scrollPaneDetalle = new JScrollPane((Component) null);
-		this.scrollPaneDetalle.setBounds(10, 133, 824, 243);
+		this.scrollPaneDetalle.setBounds(10, 74, 824, 302);
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] {
 				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
@@ -177,32 +161,14 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		this.scrollPaneDetalle.setViewportView(this.tblDetalle);
 
 		this.cntResponsable = new cntResponsable();
-		this.cntResponsable.setBounds(72, 102, 309, 20);
-
-		this.cntSucursal = new cntSucursal();
-		this.cntSucursal.setBounds(72, 43, 309, 20);
-
-		this.cntAlmacen = new cntAlmacen();
-		this.cntAlmacen.setBounds(72, 70, 309, 20);
-		cntAlmacen.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				super.focusGained(e);
-				cntAlmacen.setData(almacenDAO.getPorSucursal(cntSucursal
-						.getSeleccionado()));
-			}
-		});
+		this.cntResponsable.setBounds(72, 43, 309, 20);
 
 		this.scrlGlosa = new JScrollPane();
-		this.scrlGlosa.setBounds(436, 43, 395, 79);
+		this.scrlGlosa.setBounds(433, 12, 395, 51);
 
 		this.txtGlosa = new JTextArea();
 		this.scrlGlosa.setViewportView(this.txtGlosa);
 		pnlPrincipal.setLayout(null);
-		pnlPrincipal.add(this.lblSucursal);
-		pnlPrincipal.add(this.cntSucursal);
-		pnlPrincipal.add(this.lblAlmacen);
-		pnlPrincipal.add(this.cntAlmacen);
 		pnlPrincipal.add(this.lblResponsable);
 		pnlPrincipal.add(this.cntResponsable);
 		pnlPrincipal.add(this.lblGlosa);
@@ -272,7 +238,6 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 			}
 		}
 		
-		System.out.println("Va a contaili");
 		boolean contabilizo = ContabilizaSlcCompras.ContabilizaSolicitud(getsolicitudcompra()
 				.getIdsolicitudcompra());
 		if (!contabilizo) {
@@ -297,22 +262,6 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 					.getResponsable() == null) ? "" : getsolicitudcompra()
 					.getResponsable().getIdresponsable());
 			cntResponsable.llenar();
-			cntSucursal.txtCodigo
-					.setText((getsolicitudcompra().getSucursal() == null) ? ""
-							: getsolicitudcompra().getSucursal()
-									.getIdsucursal());
-			Sucursal s = getsolicitudcompra().getSucursal();
-			cntSucursal.llenar();
-			if (s == null) {
-				cntAlmacen.setData(null);
-			} else {
-				cntAlmacen.setData(almacenDAO.getPorSucursal(s));
-			}
-			cntAlmacen.txtCodigo
-					.setText((getsolicitudcompra().getAlmacen() == null) ? ""
-							: getsolicitudcompra().getAlmacen().getId()
-									.getIdalmacen());
-			cntAlmacen.llenar();
 
 			dsolicitudcompras = dsolicitudcompraDAO
 					.getPorSolicitudCompra(getsolicitudcompra());
@@ -340,7 +289,6 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_tablas() {
-		cntSucursal.setData(new SucursalDAO().findAll());
 		cntResponsable.setData(new ResponsableDAO().findAll());
 	}
 
@@ -350,8 +298,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
 		this.txtGlosa.setEditable(true);
-		FormValidador.CntEdicion(true, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal);
+		FormValidador.CntEdicion(true, this.cntResponsable);
 		getDetalleTM().setEditar(true);
 	}
 
@@ -361,8 +308,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
 		this.txtGlosa.setEditable(false);
-		FormValidador.CntEdicion(false, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal);
+		FormValidador.CntEdicion(false, this.cntResponsable);
 		getDetalleTM().setEditar(false);
 	}
 
@@ -391,8 +337,6 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 				Integer.parseInt(this.txtNumero_2.getText()));
 		getsolicitudcompra().setResponsable(
 				this.cntResponsable.getSeleccionado());
-		getsolicitudcompra().setSucursal(cntSucursal.getSeleccionado());
-		getsolicitudcompra().setAlmacen(this.cntAlmacen.getSeleccionado());
 		getsolicitudcompra().setDia(c.get(Calendar.DAY_OF_MONTH));
 		getsolicitudcompra().setMes(c.get(Calendar.MONTH) + 1);
 		getsolicitudcompra().setAnio(c.get(Calendar.YEAR));
@@ -443,8 +387,7 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 	public boolean validaCabecera() {
 
-		return FormValidador.TextFieldObligatorios(cntResponsable.txtCodigo,
-				cntSucursal.txtCodigo, cntAlmacen.txtCodigo);
+		return FormValidador.CntObligatorios(cntResponsable);
 	}
 
 	public DSGTableModel getDetalleTM() {

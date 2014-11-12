@@ -22,8 +22,8 @@ public class FrmListaOrdenCompra extends AbstractDocList {
 		cboDocumento.setVisible(false);
 		lblDocumento.setVisible(false);
 		cabeceras = new String[] { "Fecha", "Serie", "Numero", "Responsable",
-				"Sucursal", "Almacen" };
-		tblDocumentos = new DSGTableList(5) {
+				"Razón Social" };
+		tblDocumentos = new DSGTableList(4) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -48,15 +48,18 @@ public class FrmListaOrdenCompra extends AbstractDocList {
 		for (OrdenCompra oc : lista) {
 			Calendar c = GregorianCalendar.getInstance();
 			c.set(Calendar.YEAR, oc.getAnio());
-			c.set(Calendar.MONTH, oc.getMes()-1);
+			c.set(Calendar.MONTH, oc.getMes() - 1);
 			c.set(Calendar.DAY_OF_MONTH, oc.getDia());
-			
+
 			String cnumero = StringUtils._padl(oc.getNumero(), 8, '0');
 
-			data[i] = new Object[] { c.getTime(), oc.getSerie(), cnumero,
+			data[i] = new Object[] {
+					c.getTime(),
+					oc.getSerie(),
+					cnumero,
 					oc.getResponsable().getNombre(),
-					oc.getSucursal().getDescripcion(),
-					oc.getAlmacen().getDescripcion(), oc.getIdordencompra() };
+					(oc.getClieprov() == null ? "" : oc.getClieprov()
+							.getRazonSocial()), oc.getIdordencompra() };
 			i++;
 		}
 		return data;
