@@ -8,4 +8,5 @@ public interface IFormDocumento {
 	public void DoGrabar();
 	public void cancelar();
 	public void doVerAsiento();
+	public void doSalir();
 }

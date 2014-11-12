@@ -18,14 +18,11 @@ public class SolicitudCompraDAO extends AbstractDAO<SolicitudCompra> {
 		// TODO Auto-generated constructor stub
 	}
 
-	public SolicitudCompra getPorSerieNumeroSucursalAlmacen(String serie,
-			int numero, Sucursal sucursal, Almacen almacen) {
+	public SolicitudCompra getPorSerieNumero(String serie, int numero) {
 		CriteriaQuery<SolicitudCompra> q = cb
 				.createQuery(SolicitudCompra.class);
 		Root<SolicitudCompra> from = q.from(SolicitudCompra.class);
-		Predicate ps = cb.and(cb.equal(from.get("sucursal"), sucursal),
-				cb.equal(from.get("almacen"), almacen),
-				cb.equal(from.get("serie"), serie),
+		Predicate ps = cb.and(cb.equal(from.get("serie"), serie),
 				cb.equal(from.get("numero"), numero));
 
 		q.select(from).where(ps);

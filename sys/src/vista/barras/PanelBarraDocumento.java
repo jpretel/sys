@@ -190,7 +190,7 @@ public class PanelBarraDocumento extends JPanel {
 		btnSalir = new JButton("");
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// getFormMaestro().salir();
+				getFormMaestro().doSalir();
 			}
 		});
 		btnSalir.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class

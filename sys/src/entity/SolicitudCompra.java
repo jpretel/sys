@@ -24,14 +24,6 @@ public class SolicitudCompra implements Serializable {
 	private int fecha;
 
 	@ManyToOne
-	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal")
-	private Sucursal sucursal;
-	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false, nullable = false),
-			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen") })
-	private Almacen almacen;
-	@ManyToOne
 	@JoinColumn(name = "idresponsable", referencedColumnName = "idresponsable")
 	private Responsable responsable;
 	private String glosa;
@@ -80,22 +72,6 @@ public class SolicitudCompra implements Serializable {
 
 	public void setAnio(int anio) {
 		this.anio = anio;
-	}
-
-	public Sucursal getSucursal() {
-		return sucursal;
-	}
-
-	public void setSucursal(Sucursal sucursal) {
-		this.sucursal = sucursal;
-	}
-
-	public Almacen getAlmacen() {
-		return almacen;
-	}
-
-	public void setAlmacen(Almacen almacen) {
-		this.almacen = almacen;
 	}
 
 	public Responsable getResponsable() {

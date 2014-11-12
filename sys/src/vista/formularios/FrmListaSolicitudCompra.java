@@ -23,8 +23,8 @@ public class FrmListaSolicitudCompra extends AbstractDocList{
 		cboDocumento.setVisible(false);
 		lblDocumento.setVisible(false);
 		cabeceras = new String[] { "Fecha", "Serie", "Numero", "Responsable",
-				"Sucursal", "Almacen" };
-		tblDocumentos = new DSGTableList(5) {
+				"Glosa" };
+		tblDocumentos = new DSGTableList() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -57,8 +57,7 @@ public class FrmListaSolicitudCompra extends AbstractDocList{
 
 			data[i] = new Object[] { c.getTime(), oc.getSerie(), cnumero,
 					oc.getResponsable().getNombre(),
-					oc.getSucursal().getDescripcion(),
-					oc.getAlmacen().getDescripcion(), oc.getIdsolicitudcompra() };
+					oc.getGlosa(), oc.getIdsolicitudcompra() };
 			i++;
 		}
 		return data;
