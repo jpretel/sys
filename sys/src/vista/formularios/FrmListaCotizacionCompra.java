@@ -18,12 +18,13 @@ public class FrmListaCotizacionCompra extends AbstractDocList {
 	private List<CotizacionCompra> lista = new ArrayList<CotizacionCompra>();
 
 	public FrmListaCotizacionCompra() {
-		super("Cotización de Compra", "vista.formularios.FrmDocCotizacionCompra");
+		super("Cotización de Compra",
+				"vista.formularios.FrmDocCotizacionCompra");
 		cboDocumento.setVisible(false);
 		lblDocumento.setVisible(false);
 		cabeceras = new String[] { "Fecha", "Serie", "Numero", "Responsable",
-				"Sucursal", "Almacen" };
-		tblDocumentos = new DSGTableList(5) {
+				"Glosa" };
+		tblDocumentos = new DSGTableList() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -54,9 +55,7 @@ public class FrmListaCotizacionCompra extends AbstractDocList {
 			String cnumero = StringUtils._padl(oc.getNumero(), 8, '0');
 
 			data[i] = new Object[] { c.getTime(), oc.getSerie(), cnumero,
-					oc.getResponsable().getNombre(),
-					oc.getSucursal().getDescripcion(),
-					oc.getAlmacen().getDescripcion(),
+					oc.getResponsable().getNombre(), oc.getGlosa(),
 					oc.getIdcotizacioncompra() };
 			i++;
 		}

@@ -30,14 +30,7 @@ public class CotizacionCompra implements Serializable {
 	private float tcambio;
 	@Column(precision = 10, scale = 4)
 	private float tcmoneda;
-	@ManyToOne
-	@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal")
-	private Sucursal sucursal;
-	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false, nullable = false),
-			@JoinColumn(name = "idalmacen", referencedColumnName = "idalmacen") })
-	private Almacen almacen;
+	
 	@ManyToOne
 	@JoinColumn(name = "idresponsable", referencedColumnName = "idresponsable")
 	private Responsable responsable;
@@ -115,22 +108,6 @@ public class CotizacionCompra implements Serializable {
 
 	public void setTcmoneda(float tcmoneda) {
 		this.tcmoneda = tcmoneda;
-	}
-
-	public Sucursal getSucursal() {
-		return sucursal;
-	}
-
-	public void setSucursal(Sucursal sucursal) {
-		this.sucursal = sucursal;
-	}
-
-	public Almacen getAlmacen() {
-		return almacen;
-	}
-
-	public void setAlmacen(Almacen almacen) {
-		this.almacen = almacen;
 	}
 
 	public Responsable getResponsable() {

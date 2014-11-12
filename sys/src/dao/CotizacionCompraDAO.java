@@ -75,27 +75,12 @@ public class CotizacionCompraDAO extends AbstractDAO<CotizacionCompra> {
 		return getEntityManager().createQuery(q).getResultList();
 	}
 
-	public CotizacionCompra getPorSerieNumero(String serie, String numero) {
-		CriteriaQuery<CotizacionCompra> q = cb
-				.createQuery(CotizacionCompra.class);
-		Root<CotizacionCompra> c = q.from(CotizacionCompra.class);
-		Predicate ps = null;
-		ps = cb.equal(c.get("serie"), serie);
-		ps = cb.and(ps, cb.equal(c.get("numero"), numero));
-		q.select(c).where(ps);
-
-		return getEntityManager().createQuery(q).getSingleResult();
-	}
-	
-	
-	public CotizacionCompra getPorSerieNumeroSucursalAlmacen(String serie,
-			int numero, Sucursal sucursal, Almacen almacen) {
+	public CotizacionCompra getPorSerieNumero(String serie,
+			int numero) {
 		CriteriaQuery<CotizacionCompra> q = cb
 				.createQuery(CotizacionCompra.class);
 		Root<CotizacionCompra> from = q.from(CotizacionCompra.class);
-		Predicate ps = cb.and(cb.equal(from.get("sucursal"), sucursal),
-				cb.equal(from.get("almacen"), almacen),
-				cb.equal(from.get("serie"), serie),
+		Predicate ps = cb.and(cb.equal(from.get("serie"), serie),
 				cb.equal(from.get("numero"), numero));
 
 		q.select(from).where(ps);

@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
-import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
@@ -28,7 +26,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
 import core.centralizacion.ContabilizaSlcCompras;
-import dao.AlmacenDAO;
 import dao.ClieprovDAO;
 import dao.DCotizacionCompraDAO;
 import dao.ImpuestoDAO;
@@ -38,7 +35,6 @@ import dao.CotizacionCompraDAO;
 import dao.ProductoDAO;
 import dao.ProductoImpuestoDAO;
 import dao.ResponsableDAO;
-import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.DCotizacionCompra;
 import entity.DCotizacionCompraPK;
@@ -46,12 +42,10 @@ import entity.Impuesto;
 import entity.CotizacionCompra;
 import entity.Producto;
 import entity.ProductoImpuesto;
-import entity.Sucursal;
 import entity.Unimedida;
 
 import java.awt.Component;
 
-import vista.controles.CntReferenciaDoc;
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 import vista.contenedores.CntClieprov;
@@ -67,20 +61,15 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	
 	private ProductoDAO productoDAO = new ProductoDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
-	private AlmacenDAO almacenDAO = new AlmacenDAO();
 	private ProductoImpuestoDAO pimptoDAO = new ProductoImpuestoDAO();
 	private ImpuestoDAO impuestoDAO = new ImpuestoDAO();
 	private ClieprovDAO clieprovDAO = new ClieprovDAO();
 
 	private TxtProducto txtProducto;
 	private JLabel lblResponsable;
-	private JLabel lblSucursal;
-	private JLabel lblAlmacen;
 	private JLabel lblGlosa;
 	private JScrollPane srlConsolidado;
 	private cntResponsable cntResponsable;
-	private cntSucursal cntSucursal;
-	private cntAlmacen cntAlmacen;
 	private JScrollPane scrlGlosa;
 	private JTextArea txtGlosa;
 	private JTable tblConsolidado;
@@ -105,16 +94,8 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 				Alignment.LEADING).addGap(0, 681, Short.MAX_VALUE));
 
 		this.lblResponsable = new JLabel("Responsable");
-		this.lblResponsable.setBounds(11, 121, 74, 16);
+		this.lblResponsable.setBounds(10, 74, 74, 16);
 		pnlPrincipal.add(this.lblResponsable);
-
-		this.lblSucursal = new JLabel("Sucursal");
-		this.lblSucursal.setBounds(10, 43, 51, 16);
-		pnlPrincipal.add(this.lblSucursal);
-
-		this.lblAlmacen = new JLabel("Almacen");
-		this.lblAlmacen.setBounds(10, 70, 50, 16);
-		pnlPrincipal.add(this.lblAlmacen);
 
 		this.lblGlosa = new JLabel("Glosa");
 		this.lblGlosa.setBounds(399, 43, 32, 16);
@@ -122,26 +103,8 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 		this.cntResponsable = new cntResponsable();
 
-		this.cntResponsable.setBounds(72, 121, 309, 20);
+		this.cntResponsable.setBounds(72, 74, 309, 20);
 		pnlPrincipal.add(this.cntResponsable);
-
-		this.cntSucursal = new cntSucursal();
-
-		this.cntSucursal.setBounds(72, 43, 309, 20);
-		pnlPrincipal.add(this.cntSucursal);
-
-		this.cntAlmacen = new cntAlmacen();
-		cntAlmacen.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				super.focusGained(e);
-				cntAlmacen.setData(almacenDAO.getPorSucursal(cntSucursal
-						.getSeleccionado()));
-			}
-		});
-
-		this.cntAlmacen.setBounds(72, 70, 309, 20);
-		pnlPrincipal.add(this.cntAlmacen);
 
 		this.scrlGlosa = new JScrollPane();
 		this.scrlGlosa.setBounds(436, 43, 395, 52);
@@ -184,7 +147,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		});
 
 		this.srlConsolidado = new JScrollPane((Component) null);
-		this.srlConsolidado.setBounds(10, 148, 821, 236);
+		this.srlConsolidado.setBounds(10, 105, 821, 279);
 		pnlPrincipal.add(this.srlConsolidado);
 		tblConsolidado = new JTable(new DSGTableModel(new String[] {
 				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
@@ -288,12 +251,12 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.srlConsolidado.setViewportView(this.tblConsolidado);
 		
 		this.cntClieprov = new CntClieprov();
-		this.cntClieprov.setBounds(72, 96, 309, 20);
+		this.cntClieprov.setBounds(72, 43, 309, 20);
 		this.cntClieprov.setData(clieprovDAO.findAll());
 		pnlPrincipal.add(this.cntClieprov);
 		
 		this.lblProveedor = new JLabel("Proveedor");
-		this.lblProveedor.setBounds(12, 100, 50, 16);
+		this.lblProveedor.setBounds(11, 43, 50, 16);
 		pnlPrincipal.add(this.lblProveedor);
 
 		txtProducto.updateCellEditor();
@@ -403,21 +366,6 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 							: getCotizacioncompra().getResponsable()
 									.getIdresponsable());
 			cntResponsable.llenar();
-			cntSucursal.txtCodigo
-					.setText((getCotizacioncompra().getSucursal() == null) ? ""
-							: getCotizacioncompra().getSucursal().getIdsucursal());
-			Sucursal s = getCotizacioncompra().getSucursal();
-			cntSucursal.llenar();
-			if (s == null) {
-				cntAlmacen.setData(null);
-			} else {
-				cntAlmacen.setData(almacenDAO.getPorSucursal(s));
-			}
-			cntAlmacen.txtCodigo
-					.setText((getCotizacioncompra().getAlmacen() == null) ? ""
-							: getCotizacioncompra().getAlmacen().getId()
-									.getIdalmacen());
-			cntAlmacen.llenar();
 			
 			cntClieprov.txtCodigo.setText((getCotizacioncompra().getClieprov() == null) ? ""
 					: getCotizacioncompra().getClieprov().getIdclieprov());
@@ -498,7 +446,6 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	@Override
 	public void llenar_tablas() {
 		cntMoneda.setData(new MonedaDAO().findAll());
-		cntSucursal.setData(new SucursalDAO().findAll());
 		cntResponsable.setData(new ResponsableDAO().findAll());
 	}
 
@@ -511,7 +458,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.txtTCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
 		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal, this.cntClieprov);
+				this.cntClieprov);
 		getConsolidadoTM().setEditar(true);
 	}
 
@@ -524,7 +471,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.txtTCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal, this.cntClieprov);
+				 this.cntClieprov);
 		getConsolidadoTM().setEditar(false);
 	}
 
@@ -553,8 +500,6 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 				.setNumero(Integer.parseInt(this.txtNumero_2.getText()));
 		getCotizacioncompra().setMoneda(cntMoneda.getSeleccionado());
 		getCotizacioncompra().setResponsable(this.cntResponsable.getSeleccionado());
-		getCotizacioncompra().setSucursal(cntSucursal.getSeleccionado());
-		getCotizacioncompra().setAlmacen(this.cntAlmacen.getSeleccionado());
 		getCotizacioncompra().setClieprov(this.cntClieprov.getSeleccionado());
 		getCotizacioncompra().setDia(c.get(Calendar.DAY_OF_MONTH));
 		getCotizacioncompra().setMes(c.get(Calendar.MONTH) + 1);
@@ -635,7 +580,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	public boolean validaCabecera() {
 
 		if (!FormValidador.CntObligatorios(cntMoneda, cntResponsable,
-				cntSucursal, cntAlmacen, cntClieprov))
+				cntClieprov))
 			return false;
 
 		return true;
