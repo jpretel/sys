@@ -15,6 +15,7 @@ import java.util.Date;
 import vista.controles.DSGDatePicker;
 import vista.controles.DSGInternalFrame;
 import vista.controles.DSGTextFieldCorrelativo;
+import vista.utilitarios.UtilMensajes;
 
 public abstract class AbstractDocForm extends DSGInternalFrame implements
 		IFormDocumento {
@@ -169,6 +170,15 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 
 	public void doVerAsiento() {
 
+	}
+	
+	public void doSalir(){
+		
+		int seleccion = UtilMensajes.mensaje_sino("CERRAR_DOCUMENTO");
+		if (seleccion == 0) {
+			this.dispose();
+		}
+		
 	}
 
 	public PanelBarraDocumento getBarra() {

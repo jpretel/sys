@@ -13,7 +13,6 @@ import java.awt.FlowLayout;
 
 import org.jdesktop.swingx.JXDatePicker;
 
-import entity.SysOpcion;
 import vista.contenedores.CntSubdiario;
 import vista.controles.DSGDatePicker;
 import vista.controles.DSGInternalFrame;
@@ -303,6 +302,10 @@ public abstract class AbstractAsientoForm extends DSGInternalFrame implements
 	@Override
 	public void doVerAsiento() {
 		System.out.println("opcion no disponible");
+	}
+	
+	public void doSalir() {
+		this.dispose();
 	}
 
 	public abstract void llenarDesdeVista();
