@@ -40,7 +40,6 @@ import dao.UnimedidaDAO;
 import entity.Consumidor;
 import entity.DRequerimiento;
 import entity.DRequerimientoPK;
-import entity.KardexRequerimiento;
 import entity.Producto;
 import entity.Requerimiento;
 import entity.Sucursal;
@@ -325,7 +324,17 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 		if (getRequerimiento() != null) {
 			this.txtNumero_2.setValue(getRequerimiento().getNumero());
 			this.txtSerie.setText(getRequerimiento().getSerie());
-
+			
+			Calendar cal = Calendar.getInstance();
+			
+			cal.set(Calendar.YEAR, getRequerimiento().getAnio());
+			
+			cal.set(Calendar.MONTH, getRequerimiento().getMes() - 1);
+			
+			cal.set(Calendar.DAY_OF_MONTH, getRequerimiento().getDia());
+			
+			txtFecha.setDate(cal.getTime());
+			
 			cntResponsable.txtCodigo.setText((getRequerimiento()
 					.getResponsable() == null) ? "" : getRequerimiento()
 					.getResponsable().getIdresponsable());
@@ -421,6 +430,7 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 	public void llenarDesdeVista() {
 		Calendar c = Calendar.getInstance();
 		c.setTime(txtFecha.getDate());
+		
 		Long idoc = getRequerimiento().getIdrequerimiento();
 		// getIngreso().setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
 		getRequerimiento().setSerie(this.txtSerie.getText());
