@@ -9,10 +9,10 @@ public class CntClieprov extends AbstractCntBuscar<Clieprov> {
 	private static final long serialVersionUID = 1L;
 
 	public CntClieprov() {
-		super(new String[] { "Código", "Razón Social", "RUC" }, new int[] { 200,
-				350, 200 });
+		super(new String[] { "Código", "Razón Social", "RUC" }, new int[] { 130,
+				250, 90 });
 		GridBagLayout gridBagLayout = (GridBagLayout) getLayout();
-		gridBagLayout.columnWidths = new int[]{104, 0, 0};
+		gridBagLayout.columnWidths = new int[]{92, 0, 0};
 	}
 
 	@Override

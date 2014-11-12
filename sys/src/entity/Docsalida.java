@@ -62,15 +62,7 @@ public class Docsalida implements Serializable {
 	private int dia;
 
 	@Column
-	private int aniomesdia;
-
-	public int getAniomesdia() {
-		return aniomesdia;
-	}
-
-	public void setAniomesdia(int aniomesdia) {
-		this.aniomesdia = aniomesdia;
-	}
+	private int fecha;
 
 	@Column(nullable = false, precision = 10, scale = 2)
 	private float tcambio;
@@ -243,6 +235,14 @@ public class Docsalida implements Serializable {
 
 	public void setSucursal_dest(Sucursal sucursal_dest) {
 		this.sucursal_dest = sucursal_dest;
+	}
+
+	public int getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(int fecha) {
+		this.fecha = fecha;
 	}
 
 }

@@ -12,7 +12,7 @@ public abstract class TxtProducto extends JXTableTextField<Producto> {
 	private static final long serialVersionUID = 1L;
 
 	public TxtProducto(JTable tabla, int ubicacion) {
-		super(new String[] { "Producto", "Descripción", "UM"}, new int[] { 50, 130, 40},
+		super(new String[] { "Producto", "Descripción", "UM"}, new int[] { 50, 290, 40},
 				tabla, ubicacion);
 	}
 

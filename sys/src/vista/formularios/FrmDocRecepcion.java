@@ -20,6 +20,7 @@ import vista.utilitarios.StringUtils;
 import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
 
+import javax.persistence.Tuple;
 import javax.swing.JLabel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.JOptionPane;
@@ -33,7 +34,6 @@ import core.centralizacion.ContabilizaAlmacen;
 import core.centralizacion.ContabilizaComprasRecepcion;
 import dao.AlmacenDAO;
 import dao.ConceptoDAO;
-import dao.DOrdenCompraDAO;
 import dao.DetDocIngresoDAO;
 import dao.DocingresoDAO;
 import dao.GrupoCentralizacionDAO;
@@ -46,11 +46,9 @@ import dao.SucursalDAO;
 import dao.UnimedidaDAO;
 import entity.Almacen;
 import entity.Asiento;
-import entity.DOrdenCompra;
 import entity.DetDocingreso;
 import entity.DetDocingresoPK;
 import entity.Docingreso;
-import entity.KardexCompraRecepcion;
 import entity.OrdenCompra;
 import entity.Producto;
 import entity.Sucursal;
@@ -96,7 +94,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private JLabel lblOperacin;
 	private JScrollPane scrlGlosa;
 	private OrdenCompraDAO ordencompraDAO = new OrdenCompraDAO();
-	private DOrdenCompraDAO dordencompraDAO = new DOrdenCompraDAO();
+
 	private TxtProducto txtProducto;
 	private JLabel lblNewLabel;
 	private JTextField txtSerieCompra;
@@ -147,8 +145,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		pnlPrincipal.add(textArea);
 
 		tblDetalle = new JTable(new DSGTableModel(new String[] { "IdProducto",
-				"Producto", "IdMedida", "Medida", "Cantidad", "Precio",
-				"Importe", "OC" }) {
+				"Producto", "IdMedida", "Medida", "Cantidad", "OC" }) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -178,7 +175,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 							.toString();
 
 					txtProducto.refresValue(idproducto);
-					actualiza_detalle();
 				}
 			}
 		};
@@ -227,14 +223,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		tc.getColumn(4).setCellEditor(new FloatEditor(3));
 		tc.getColumn(4).setCellRenderer(new FloatRenderer(3));
 
-		tc.getColumn(5).setCellEditor(new FloatEditor(2));
-		tc.getColumn(5).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(6).setCellEditor(new FloatEditor(2));
-		tc.getColumn(6).setCellRenderer(new FloatRenderer(2));
-		tc.getColumn(7).setWidth(0);
-		tc.getColumn(7).setMinWidth(0);
-		tc.getColumn(7).setMaxWidth(0);
+		tc.getColumn(5).setWidth(0);
+		tc.getColumn(5).setMinWidth(0);
+		tc.getColumn(5).setMaxWidth(0);
 
 		pnlPrincipal.add(scrollPaneDetalle);
 
@@ -366,6 +357,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	}
 
 	public void llenarDetalleRecepcion() {
+		System.out.println("Referencia");
 		String serie = this.txtSerieCompra.getText();
 		String numero = this.txtNumeroCompra.getText();
 		int nFilas = getDetalleTM().getRowCount();
@@ -383,37 +375,30 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			if (serie.trim().length() > 0 && numero.trim().length() > 0) {
 				ordencompra = ordencompraDAO.getPorSerieNumero(serie, numero);
 				KardexCompraRecepcionDAO kardexCompraRecepcionDAO = new KardexCompraRecepcionDAO();
-				List<DOrdenCompra> lDOrdenCompras = dordencompraDAO
-						.getPorOrdenCompra(ordencompra);
-				for (DOrdenCompra dordencompra : lDOrdenCompras) {
-					float sum_cantidad = 0;
-					for (KardexCompraRecepcion kardexCompraRecepcion : kardexCompraRecepcionDAO
-							.getPorDOrdenCompra(dordencompra)) {
-						sum_cantidad = sum_cantidad
-								+ (kardexCompraRecepcion.getCantidad() * kardexCompraRecepcion
-										.getFactor());
+
+				List<Tuple> list = kardexCompraRecepcionDAO
+						.getSaldoOrdenCompra(ordencompra, ingreso);
+
+				if (list == null || list.size() == 0) {
+					JOptionPane
+							.showMessageDialog(null,
+									"Esta Orden de compra fue recepcionado en su totalidad");
+					this.txtSerieCompra.setText("");
+					this.txtNumeroCompra.setText("");
+				} else {
+
+					for (Tuple t : list) {
+						Producto p = (Producto) t.get("producto");
+						float cantidad = (float) t.get("cantidad");
+						getDetalleTM().addRow(
+								new Object[] { p.getIdproducto(),
+										p.getDescripcion(),
+										p.getUnimedida().getIdunimedida(),
+										p.getUnimedida().getDescripcion(),
+										cantidad,
+										ordencompra.getIdordencompra() });
 					}
-					if (sum_cantidad == 0) {
-						JOptionPane
-								.showMessageDialog(null,
-										"Esta Orden de compra fue recepcionado en su totalidad");
-						this.txtSerieCompra.setText("");
-						this.txtNumeroCompra.setText("");
-					} else {
-						getDetalleTM()
-								.addRow(new Object[] {
-										dordencompra.getProducto()
-												.getIdproducto(),
-										dordencompra.getProducto()
-												.getDescripcion(),
-										dordencompra.getUnimedida()
-												.getIdunimedida(),
-										dordencompra.getUnimedida()
-												.getDescripcion(),
-										sum_cantidad,
-										dordencompra.getPrecio_unitario(),
-										dordencompra.getImporte(), dordencompra });
-					}
+
 				}
 			}
 		}
@@ -445,7 +430,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		for (DetDocingreso det : getDetDocingresoL()) {
 			detDocingresoDAO.crear_editar(det);
 		}
-		ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(getIngreso()
+		ContabilizaComprasRecepcion.ContabilizarComprasRecepcion(getIngreso()
 				.getIddocingreso(), -1, "Recepcion");
 		ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
 		CentralizaAlm.CentralizaIngreso(getIngreso().getIddocingreso());
@@ -493,11 +478,14 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			this.cntConcepto.llenar();
 
 			if (this.cntConcepto.getSeleccionado().getSolcitaCompra() == 1) {
-				txtSerieCompra
-						.setText(getIngreso().getOrdencompra().getSerie());
-				String xnumero = StringUtils._padl(getIngreso()
-						.getOrdencompra().getNumero(), 8, '0');
-				txtNumeroCompra.setText(xnumero);
+
+				if (getIngreso().getOrdencompra() != null) {
+					txtSerieCompra.setText(getIngreso().getOrdencompra()
+							.getSerie());
+					String xnumero = StringUtils._padl(getIngreso()
+							.getOrdencompra().getNumero(), 8, '0');
+					txtNumeroCompra.setText(xnumero);
+				}
 			}
 			this.cntResponsable.txtCodigo.setText((getIngreso()
 					.getResponsable() == null) ? "" : getIngreso()
@@ -529,12 +517,12 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			for (DetDocingreso ingreso : detDocIngresoL) {
 				Unimedida unimedida = ingreso.getUnimedida();
 				Producto p = ingreso.getProducto();
-				getDetalleTM()
-						.addRow(new Object[] { p.getIdproducto(),
-								p.getDescripcion(), unimedida.getIdunimedida(),
+				getDetalleTM().addRow(
+						new Object[] { p.getIdproducto(), p.getDescripcion(),
+								unimedida.getIdunimedida(),
 								unimedida.getDescripcion(),
-								ingreso.getCantidad(), ingreso.getPrecio(),
-								ingreso.getPrecio(), ingreso.getDordencompra() });
+								ingreso.getCantidad(),
+								ingreso.getIdreferencia() });
 			}
 		}
 	}
@@ -660,12 +648,9 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			det.setUnimedida(unimedida);
 			det.setCantidad(Float.parseFloat((getDetalleTM().getValueAt(i, 4)
 					.toString())));
-			det.setPrecio(Float.parseFloat(getDetalleTM().getValueAt(i, 5)
-					.toString()));
-			det.setImporte(Float.parseFloat(getDetalleTM().getValueAt(i, 6)
-					.toString()));
 			det.setProducto(producto);
-			det.setDordencompra((DOrdenCompra) (getDetalleTM().getValueAt(i, 7)));
+			det.setIdreferencia(Long.valueOf(getDetalleTM().getValueAt(i, 5)
+					.toString()));
 			DetDocingresoL.add(det);
 		}
 	}
@@ -677,20 +662,6 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			band = validarDetalle();
 		}
 		return band;
-	}
-
-	private void actualiza_detalle() {
-		int row = tblDetalle.getSelectedRow();
-		if (row > -1) {
-			float cantidad, precio, importe;
-
-			cantidad = Float.parseFloat(getDetalleTM().getValueAt(row, 4)
-					.toString());
-			precio = Float.parseFloat(getDetalleTM().getValueAt(row, 5)
-					.toString());
-			importe = cantidad * precio;
-			getDetalleTM().setValueAt(importe, row, 6);
-		}
 	}
 
 	public boolean validaCabecera() {
