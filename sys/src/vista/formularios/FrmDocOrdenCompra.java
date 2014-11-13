@@ -8,10 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import vista.Sys;
-import vista.combobox.ComboBox;
-import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
-import vista.contenedores.cntSucursal;
 import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
 import vista.formularios.listas.AbstractDocForm;
@@ -34,9 +31,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
 import core.centralizacion.ContabilizaSlcCompras;
-import dao.AlmacenDAO;
 import dao.ClieprovDAO;
-import dao.CotizacionCompraDAO;
 import dao.DDOrdenCompraDAO;
 import dao.DOrdenCompraDAO;
 import dao.ImpuestoDAO;
@@ -47,10 +42,7 @@ import dao.ProductoDAO;
 import dao.ProductoImpuestoDAO;
 import dao.ResponsableDAO;
 import dao.SolicitudCompraDAO;
-import dao.SucursalDAO;
 import dao.UnimedidaDAO;
-import entity.Almacen;
-import entity.CotizacionCompra;
 import entity.DDOrdenCompra;
 import entity.DDOrdenCompraPK;
 import entity.DOrdenCompra;
@@ -60,7 +52,6 @@ import entity.OrdenCompra;
 import entity.Producto;
 import entity.ProductoImpuesto;
 import entity.SolicitudCompra;
-import entity.Sucursal;
 import entity.Unimedida;
 
 import java.awt.Component;
@@ -70,23 +61,15 @@ import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 import vista.contenedores.CntClieprov;
 
-import javax.swing.JComboBox;
-
 public class FrmDocOrdenCompra extends AbstractDocForm {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	// private List<DetDocingreso> DetDocingresoL;
 	private OrdenCompraDAO ordencompraDAO = new OrdenCompraDAO();
 	private DOrdenCompraDAO dordencompraDAO = new DOrdenCompraDAO();
 	private DDOrdenCompraDAO ddordenCompraDAO = new DDOrdenCompraDAO();
 	private SolicitudCompraDAO solicitudCompraDAO = new SolicitudCompraDAO();
-	private CotizacionCompraDAO cotizacionCompraDAO = new CotizacionCompraDAO();
 	private ProductoDAO productoDAO = new ProductoDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
-	private AlmacenDAO almacenDAO = new AlmacenDAO();
 	private ProductoImpuestoDAO pimptoDAO = new ProductoImpuestoDAO();
 	private ImpuestoDAO impuestoDAO = new ImpuestoDAO();
 	private KardexSlcCompraDAO kardexSlcDAO = new KardexSlcCompraDAO();
@@ -94,13 +77,9 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	private TxtProducto txtProducto;
 	private JLabel lblResponsable;
-	private JLabel lblSucursal;
-	private JLabel lblAlmacen;
 	private JLabel lblGlosa;
 	private JScrollPane srlConsolidado;
 	private cntResponsable cntResponsable;
-	private cntSucursal cntSucursal;
-	private cntAlmacen cntAlmacen;
 	private JScrollPane scrlGlosa;
 	private JTextArea txtGlosa;
 	private JTable tblConsolidado;
@@ -115,11 +94,14 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private DSGTextFieldNumber txtTCMoneda;
 	private CntClieprov cntClieprov;
 	private JLabel lblProveedor;
-	private ComboBox cboTipoDoc;
-	private List<String[]> optionList = new ArrayList<String[]>();
-	
+	private JLabel lblMoneda;
+	private JLabel lblTCambio;
+	private JLabel lblTCMoneda;
+
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
+		txtFecha.setBounds(245, 11, 89, 22);
+
 		setEstado(VISTA);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(
@@ -128,16 +110,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				Alignment.LEADING).addGap(0, 681, Short.MAX_VALUE));
 
 		this.lblResponsable = new JLabel("Responsable");
-		this.lblResponsable.setBounds(11, 121, 74, 16);
+		this.lblResponsable.setBounds(10, 75, 74, 16);
 		pnlPrincipal.add(this.lblResponsable);
-
-		this.lblSucursal = new JLabel("Sucursal");
-		this.lblSucursal.setBounds(10, 43, 51, 16);
-		pnlPrincipal.add(this.lblSucursal);
-
-		this.lblAlmacen = new JLabel("Almacen");
-		this.lblAlmacen.setBounds(10, 70, 50, 16);
-		pnlPrincipal.add(this.lblAlmacen);
 
 		this.lblGlosa = new JLabel("Glosa");
 		this.lblGlosa.setBounds(399, 43, 32, 16);
@@ -145,26 +119,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 		this.cntResponsable = new cntResponsable();
 
-		this.cntResponsable.setBounds(72, 121, 309, 20);
+		this.cntResponsable.setBounds(71, 75, 309, 20);
 		pnlPrincipal.add(this.cntResponsable);
-
-		this.cntSucursal = new cntSucursal();
-
-		this.cntSucursal.setBounds(72, 43, 309, 20);
-		pnlPrincipal.add(this.cntSucursal);
-
-		this.cntAlmacen = new cntAlmacen();
-		cntAlmacen.txtCodigo.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				super.focusGained(e);
-				cntAlmacen.setData(almacenDAO.getPorSucursal(cntSucursal
-						.getSeleccionado()));
-			}
-		});
-
-		this.cntAlmacen.setBounds(72, 70, 309, 20);
-		pnlPrincipal.add(this.cntAlmacen);
 
 		this.scrlGlosa = new JScrollPane();
 		this.scrlGlosa.setBounds(436, 43, 395, 52);
@@ -174,7 +130,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.scrlGlosa.setViewportView(this.txtGlosa);
 
 		this.lblReferencia = new JLabel("Referencia");
-		this.lblReferencia.setBounds(581, 107, 60, 16);
+		this.lblReferencia.setBounds(10, 104, 74, 16);
 		pnlPrincipal.add(this.lblReferencia);
 
 		this.cntReferenciaDoc = new CntReferenciaDoc() {
@@ -183,20 +139,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			@Override
 			public void buscarReferencia() {
 				String serie;
-				int numero;				
-				Sucursal sucursal = cntSucursal.getSeleccionado();
-				Almacen almacen = cntAlmacen.getSeleccionado();
-				if (sucursal == null) {
-					UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Sucursal");
-					cntSucursal.txtCodigo.requestFocus();
-					return;
-				}
-
-				if (almacen == null) {
-					UtilMensajes.mensaje_alterta("DATO_REQUERIDO", "Almacen");
-					cntAlmacen.txtCodigo.requestFocus();
-					return;
-				}
+				int numero;
 
 				serie = this.txtSerie.getText().trim();
 				try {
@@ -206,8 +149,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				}
 
 				if (numero > 0 && !serie.isEmpty()) {
-					String tipo = optionList.get(cboTipoDoc.getSelectedIndex())[0].toString();
-					referenciarSolicitudCotizacionCompra(serie, numero, sucursal, almacen,tipo);					
+					referenciarSolicitudCompra(serie, numero);
 					txtSerie.setText("");
 					txtNumero.setText("");
 				} else {
@@ -264,16 +206,16 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			public void mostrarDetalleRef(Object[] row) {
 				if (String.valueOf(row[3]).equals("SLC_COMPRA")) {
 					SolicitudCompra slc = (SolicitudCompra) row[4];
-					referenciarSolicitudCotizacionCompra(slc, getEstado());
+					referenciarSolicitudCompra(slc, getEstado());
 				}
 			}
 		};
 
-		this.cntReferenciaDoc.setBounds(651, 103, 180, 20);
+		this.cntReferenciaDoc.setBounds(74, 102, 180, 20);
 		pnlPrincipal.add(this.cntReferenciaDoc);
 
 		this.cntMoneda = new CntMoneda();
-		this.cntMoneda.setBounds(379, 12, 192, 20);
+		this.cntMoneda.setBounds(388, 12, 139, 20);
 		pnlPrincipal.add(this.cntMoneda);
 
 		this.txtTCambio = new DSGTextFieldNumber(4);
@@ -281,7 +223,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		pnlPrincipal.add(this.txtTCambio);
 
 		this.txtTCMoneda = new DSGTextFieldNumber(4);
-		this.txtTCMoneda.setBounds(699, 12, 74, 20);
+		this.txtTCMoneda.setBounds(757, 12, 74, 20);
 		pnlPrincipal.add(this.txtTCMoneda);
 		this.txtTCMoneda.setValue(1);
 
@@ -432,28 +374,27 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.tblConsolidado
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.srlConsolidado.setViewportView(this.tblConsolidado);
-		
+
 		this.cntClieprov = new CntClieprov();
-		this.cntClieprov.setBounds(72, 96, 309, 20);
+		this.cntClieprov.setBounds(71, 43, 309, 20);
 		this.cntClieprov.setData(clieprovDAO.findAll());
 		pnlPrincipal.add(this.cntClieprov);
-		
+
 		this.lblProveedor = new JLabel("Proveedor");
-		this.lblProveedor.setBounds(12, 100, 50, 16);
+		this.lblProveedor.setBounds(11, 47, 50, 16);
 		pnlPrincipal.add(this.lblProveedor);
 		
-		JLabel lblTipoDoc = new JLabel("Tipo Doc.");
-		lblTipoDoc.setBounds(391, 106, 51, 16);
-		pnlPrincipal.add(lblTipoDoc);
+		this.lblMoneda = new JLabel("Moneda");
+		this.lblMoneda.setBounds(344, 14, 52, 16);
+		pnlPrincipal.add(this.lblMoneda);
 		
-		optionList.add(new String[]{"S","Solicitud de Compra"});
-		optionList.add(new String[]{"C","Cotizacion de Compra"});
-		cboTipoDoc = new vista.combobox.ComboBox(optionList,1); 
+		this.lblTCambio = new JLabel("T. Cambio");
+		this.lblTCambio.setBounds(537, 15, 52, 16);
+		pnlPrincipal.add(this.lblTCambio);
 		
-		cboTipoDoc.setBounds(446, 106, 125, 20);
-		pnlPrincipal.add(cboTipoDoc);		
-		
-		cboTipoDoc.setSelectedIndex(0);
+		this.lblTCMoneda = new JLabel("T. C. Moneda");
+		this.lblTCMoneda.setBounds(678, 15, 74, 16);
+		pnlPrincipal.add(this.lblTCMoneda);
 
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
@@ -584,24 +525,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 							: getOrdencompra().getResponsable()
 									.getIdresponsable());
 			cntResponsable.llenar();
-			cntSucursal.txtCodigo
-					.setText((getOrdencompra().getSucursal() == null) ? ""
-							: getOrdencompra().getSucursal().getIdsucursal());
-			Sucursal s = getOrdencompra().getSucursal();
-			cntSucursal.llenar();
-			if (s == null) {
-				cntAlmacen.setData(null);
-			} else {
-				cntAlmacen.setData(almacenDAO.getPorSucursal(s));
-			}
-			cntAlmacen.txtCodigo
-					.setText((getOrdencompra().getAlmacen() == null) ? ""
-							: getOrdencompra().getAlmacen().getId()
-									.getIdalmacen());
-			cntAlmacen.llenar();
-			
-			cntClieprov.txtCodigo.setText((getOrdencompra().getClieprov() == null) ? ""
-					: getOrdencompra().getClieprov().getIdclieprov());
+
+			cntClieprov.txtCodigo
+					.setText((getOrdencompra().getClieprov() == null) ? ""
+							: getOrdencompra().getClieprov().getIdclieprov());
 			cntClieprov.llenar();
 
 			dordencompras = dordencompraDAO.getPorOrdenCompra(getOrdencompra());
@@ -682,7 +609,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	@Override
 	public void llenar_tablas() {
 		cntMoneda.setData(new MonedaDAO().findAll());
-		cntSucursal.setData(new SucursalDAO().findAll());
 		cntResponsable.setData(new ResponsableDAO().findAll());
 	}
 
@@ -695,7 +621,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtTCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
 		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal, this.cntClieprov);
+				this.cntClieprov);
 		getConsolidadoTM().setEditar(true);
 		this.cntReferenciaDoc.setEditar(true);
 	}
@@ -709,7 +635,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.txtTCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
-				this.cntAlmacen, this.cntSucursal, this.cntClieprov);
+				this.cntClieprov);
 		getConsolidadoTM().setEditar(false);
 		this.cntReferenciaDoc.setEditar(false);
 	}
@@ -739,8 +665,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				.setNumero(Integer.parseInt(this.txtNumero_2.getText()));
 		getOrdencompra().setMoneda(cntMoneda.getSeleccionado());
 		getOrdencompra().setResponsable(this.cntResponsable.getSeleccionado());
-		getOrdencompra().setSucursal(cntSucursal.getSeleccionado());
-		getOrdencompra().setAlmacen(this.cntAlmacen.getSeleccionado());
 		getOrdencompra().setClieprov(this.cntClieprov.getSeleccionado());
 		getOrdencompra().setDia(c.get(Calendar.DAY_OF_MONTH));
 		getOrdencompra().setMes(c.get(Calendar.MONTH) + 1);
@@ -830,57 +754,35 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	public boolean validaCabecera() {
 
 		if (!FormValidador.CntObligatorios(cntMoneda, cntResponsable,
-				cntSucursal, cntAlmacen, cntClieprov))
+				cntClieprov))
 			return false;
 
 		return true;
 	}
 
-	private void referenciarSolicitudCotizacionCompra(String serie, int numero,
-			Sucursal sucursal, Almacen almacen,String tipo) {
-	
-		if(tipo.trim().equals("S")){
-			SolicitudCompra solicitudCompra = solicitudCompraDAO
-					.getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal,
-							almacen);	
-			if (solicitudCompra != null) {
-				referenciarSolicitudCotizacionCompra(solicitudCompra, "EDICION");
-			}
-			else {
-				UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
-			}
-		}else{
-			CotizacionCompra cotizacionCompra = cotizacionCompraDAO.
-					getPorSerieNumeroSucursalAlmacen(serie, numero, sucursal, almacen);
-			
-			if (cotizacionCompra != null){
-				referenciarSolicitudCotizacionCompra(cotizacionCompra, "EDICION");
-			}else{
-				UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
-			}
-				
+	private void referenciarSolicitudCompra(String serie, int numero) {
+
+		SolicitudCompra solicitudCompra = solicitudCompraDAO.getPorSerieNumero(
+				serie, numero);
+
+		if (solicitudCompra != null) {
+			referenciarSolicitudCompra(solicitudCompra, "EDICION");
+		} else {
+			UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
 		}
-			
 	}
 
-	private void referenciarSolicitudCotizacionCompra(Object objeto,
+	private void referenciarSolicitudCompra(SolicitudCompra solicitudCompra,
 			final String estado) {
-		SolicitudCompra slccompra = new SolicitudCompra();
-		CotizacionCompra ctzcompra = new CotizacionCompra();
-		
-		if(objeto instanceof SolicitudCompra){
-			slccompra = (SolicitudCompra)objeto;			
-		}else{
-			ctzcompra = (CotizacionCompra)objeto;			
-		}			
-		
 		List<Tuple> saldos = new KardexSlcCompraDAO().getSaldoSolicitudCompra(
-				objeto, getOrdencompra());
+				solicitudCompra, getOrdencompra());
 
 		if (saldos != null && saldos.size() > 0) {
+
 			Object[][] data = new Object[saldos.size()][5];
 			int i = 0;
 			for (Tuple t : saldos) {
+
 				Producto p = (Producto) t.get("producto");
 				Unimedida u = (Unimedida) t.get("unimedida");
 				float cantidad = (float) t.get("cantidad");
@@ -888,13 +790,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				data[i][1] = p.getDescripcion();
 				data[i][2] = u.getDescripcion();
 				data[i][3] = cantidad;
-				if(objeto instanceof SolicitudCompra){
-					data[i][4] = cantidadProducto(p, "SLC_COMPRA",
-							slccompra.getIdsolicitudcompra());
-				}else{
-					data[i][4] = cantidadProducto(p, "SLC_COMPRA",
-							ctzcompra.getIdcotizacioncompra());
-				}					
+				data[i][4] = cantidadProducto(p, "SLC_COMPRA",
+						solicitudCompra.getIdsolicitudcompra());
 				i++;
 			}
 
@@ -964,25 +861,22 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			modal.setModal(true);
 			Sys.desktoppane.add(modal);
 			modal.setVisible(true);
-			//Estas lineas despues que acepto o cancel en la ventana modal
+
 			if (modal.model != null) {
 				int rows = data.length;
 				// Borrar los referenciados a la solicitud
 				int size = ddordencompras.size();
 				for (int ii = 0; ii < size; ii++) {
-					/*DDOrdenCompra o = ddordencompras.get(ii);
+					DDOrdenCompra o = ddordencompras.get(ii);
+
 					if (o.getTipo_referencia().equals("SLC_COMPRA")
-							&& o.getId_referencia() == slccompra
+							&& o.getId_referencia() == solicitudCompra
 									.getIdsolicitudcompra()) {
+
 						ddordencompras.remove(ii);
 						ii = 0;
 						size = ddordencompras.size();
-					}else{					
-						
-					}*/
-					ddordencompras.remove(ii);
-					ii = 0;
-					size = ddordencompras.size();
+					}
 				}
 
 				for (int row = 0; row < rows; row++) {
@@ -991,8 +885,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 					idproducto = modal.model.getValueAt(row, 0).toString();
 					try {
-						cantidad = Float.parseFloat(modal.model.getValueAt(row, 4)
-								.toString());
+						cantidad = Float.parseFloat(modal.model.getValueAt(row,
+								4).toString());
 					} catch (Exception e) {
 						cantidad = 0.0F;
 					}
@@ -1013,7 +907,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 						DDOrdenCompra dd = new DDOrdenCompra();
 						Producto p = productoDAO.find(idproducto);
 						dd.setTipo_referencia("SLC_COMPRA");
-						dd.setId_referencia(slccompra.getIdsolicitudcompra());
+						dd.setId_referencia(solicitudCompra
+								.getIdsolicitudcompra());
 						dd.setProducto(p);
 						dd.setCantidad(cantidad);
 						ddordencompras.add(dd);
