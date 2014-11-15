@@ -1,11 +1,15 @@
 package vista.barras;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JPopupMenu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Component;
 import java.awt.FlowLayout;
 
 public class PanelBarraDocumento extends JPanel {
@@ -21,6 +25,9 @@ public class PanelBarraDocumento extends JPanel {
 	private JButton btnEliminar;
 	private JButton btnSalir;
 	private JButton btnVerAsiento;
+	private JButton btnPrevio;
+	private JButton btnExportar;
+	private JButton btnImprimir;
 	private JButton btnCancelar;
 	private IFormDocumento formMaestro;
 	private static final int _ancho = 18;
@@ -75,7 +82,7 @@ public class PanelBarraDocumento extends JPanel {
 	}
 
 	/*
-	 * Adicionales: A: Ver Asiento
+	 * Adicionales: A: Ver Asiento E: Exportar Documento
 	 */
 	public PanelBarraDocumento(char... adicionales) {
 
@@ -170,10 +177,53 @@ public class PanelBarraDocumento extends JPanel {
 						.getResource("/main/resources/iconos/verasiento.png"))
 				.getImage().getScaledInstance(_ancho, _alto,
 						java.awt.Image.SCALE_DEFAULT)));
+
+		btnExportar = new JButton("");
+		btnExportar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Component c = (Component) arg0.getSource();
+				getMenu().show(btnExportar, 0, c.getHeight());
+			}
+		});
+		btnExportar
+				.setIcon(new ImageIcon(
+						new ImageIcon(
+								PanelBarraDocumento.class
+										.getResource("/main/resources/iconos/export_document.png"))
+								.getImage().getScaledInstance(_ancho, _alto,
+										java.awt.Image.SCALE_DEFAULT)));
+
+		btnPrevio = new JButton("");
+		btnPrevio.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
+				.getResource("/main/resources/iconos/vistaprevia.png"))
+				.getImage().getScaledInstance(_ancho, _alto,
+						java.awt.Image.SCALE_DEFAULT)));
+		btnPrevio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				getFormMaestro().doPrevio();
+			}
+		});
+		
+		btnImprimir = new JButton("");
+		btnImprimir.setIcon(new ImageIcon(new ImageIcon(PanelBarraDocumento.class
+				.getResource("/main/resources/iconos/printer.png"))
+				.getImage().getScaledInstance(_ancho, _alto,
+						java.awt.Image.SCALE_DEFAULT)));
+		btnImprimir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				getFormMaestro().doImprimir();
+			}
+		});
 		if (adicionales != null) {
 			salir: for (char tipo : adicionales) {
 				if (tipo == 'A') {
 					add(btnVerAsiento);
+					break salir;
+				}
+				if (tipo == 'E') {
+					add(btnImprimir);
+					add(btnPrevio);
+					add(btnExportar);
 					break salir;
 				}
 			}
@@ -198,8 +248,23 @@ public class PanelBarraDocumento extends JPanel {
 				.getScaledInstance(_ancho, _alto, java.awt.Image.SCALE_DEFAULT)));
 		btnSalir.setToolTipText("Salir");
 		add(btnSalir);
+		llenarToolTipText();
 	}
-
+	
+	private void llenarToolTipText() {
+		btnNuevo.setToolTipText("Nuevo");
+		btnEditar.setToolTipText("Editar");
+		btnAnular.setToolTipText("Anular");
+		btnGrabar.setToolTipText("Grabar");
+		btnEliminar.setToolTipText("Eliminar");
+		btnSalir.setToolTipText("Salir");
+		btnVerAsiento.setToolTipText("Ver Asiento");
+		btnPrevio.setToolTipText("Vista Previa");
+		btnExportar.setToolTipText("Exportar");
+		btnImprimir.setToolTipText("Imprimir");
+		btnCancelar.setToolTipText("Cancelar");
+	}
+	
 	public IFormDocumento getFormMaestro() {
 		return formMaestro;
 	}
@@ -222,6 +287,9 @@ public class PanelBarraDocumento extends JPanel {
 		getBtnGrabar().setEnabled(!band);
 		getBtnEliminar().setEnabled(band);
 		getBtnNuevo().setEnabled(band);
+		getBtnExportar().setEnabled(band);
+		getBtnPrevio().setEnabled(band);
+		getBtnImprimir().setEnabled(band);
 		getBtnVerAsiento().setEnabled(band);
 	}
 
@@ -239,5 +307,100 @@ public class PanelBarraDocumento extends JPanel {
 
 	public void setBtnCancelar(JButton btnCancelar) {
 		this.btnCancelar = btnCancelar;
+	}
+
+	public JButton getBtnExportar() {
+		return btnExportar;
+	}
+
+	public void setBtnExportar(JButton btnExportar) {
+		this.btnExportar = btnExportar;
+	}
+
+	public JPopupMenu getMenu() {
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem mExcel = new JMenuItem("MS Excel");
+		mExcel.setIcon(getIconResized("/main/resources/iconos/export_excel.png"));
+		popupMenu.add(mExcel);
+
+		JMenuItem mWord = new JMenuItem("MS Word");
+		mWord.setIcon(getIconResized("/main/resources/iconos/export_word.png"));
+		popupMenu.add(mWord);
+
+		JMenuItem mPDF = new JMenuItem("PDF");
+		mPDF.setIcon(getIconResized("/main/resources/iconos/export_pdf.png"));
+		popupMenu.add(mPDF);
+
+		JMenuItem mOdt = new JMenuItem("ODT");
+		mOdt.setIcon(getIconResized("/main/resources/iconos/export_odt.png"));
+		popupMenu.add(mOdt);
+
+		JMenuItem mOds = new JMenuItem("ODS");
+		mOds.setIcon(getIconResized("/main/resources/iconos/export_ods.png"));
+		popupMenu.add(mOds);
+
+		mExcel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				formMaestro.doExportaExcel();
+			}
+		});
+
+		mWord.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				formMaestro.doExportaWord();
+			}
+		});
+
+		mPDF.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				formMaestro.doExportaPDF();
+			}
+		});
+
+		mOdt.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				formMaestro.doExportaOdt();
+			}
+		});
+
+		mOds.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				formMaestro.doExportaOds();
+			}
+		});
+
+		return popupMenu;
+	}
+
+	private static Icon getIconResized(String path) {
+		return new ImageIcon(new ImageIcon(
+				PanelBarraDocumento.class.getResource(path)).getImage()
+				.getScaledInstance(25, 25, java.awt.Image.SCALE_DEFAULT));
+	}
+
+	public JButton getBtnPrevio() {
+		return btnPrevio;
+	}
+
+	public void setBtnPrevio(JButton btnPrevio) {
+		this.btnPrevio = btnPrevio;
+	}
+
+	public JButton getBtnImprimir() {
+		return btnImprimir;
+	}
+
+	public void setBtnImprimir(JButton btnImprimir) {
+		this.btnImprimir = btnImprimir;
 	}
 }

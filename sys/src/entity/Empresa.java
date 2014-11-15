@@ -21,6 +21,12 @@ public class Empresa implements Serializable {
 	
 	@Column(length = 200)
 	private String direccion;
+	
+	@Column(length = 250)
+	private String ruta_reportes;
+	
+	@Column(length = 250)
+	private String ruta_exportar;
 
 	private static final long serialVersionUID = 1L;
 
@@ -58,6 +64,22 @@ public class Empresa implements Serializable {
 
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
+	}
+
+	public String getRuta_reportes() {
+		return ruta_reportes;
+	}
+
+	public void setRuta_reportes(String ruta_reportes) {
+		this.ruta_reportes = ruta_reportes;
+	}
+
+	public String getRuta_exportar() {
+		return ruta_exportar;
+	}
+
+	public void setRuta_exportar(String ruta_exportar) {
+		this.ruta_exportar = ruta_exportar;
 	}
 
 }

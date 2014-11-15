@@ -175,7 +175,7 @@ public abstract class AbstractAsientoForm extends DSGInternalFrame implements
 		txtHaberEx = new DSGTextFieldNumber(2);
 		this.txtHaberEx.setBounds(619, 356, 114, 20);
 		txtHaberEx.setColumns(10);
-		
+
 		this.pnlPrincipal.setLayout(null);
 		this.pnlPrincipal.setLayout(null);
 		this.pnlPrincipal.setLayout(null);
@@ -298,12 +298,12 @@ public abstract class AbstractAsientoForm extends DSGInternalFrame implements
 		vista_noedicion();
 		llenar_datos();
 	}
-	
+
 	@Override
 	public void doVerAsiento() {
 		System.out.println("opcion no disponible");
 	}
-	
+
 	public void doSalir() {
 		this.dispose();
 	}
@@ -567,4 +567,32 @@ public abstract class AbstractAsientoForm extends DSGInternalFrame implements
 	public void setScrollPane(JScrollPane scrollPane) {
 		this.scrollPane = scrollPane;
 	}
+
+	public void doExportaExcel() {
+
+	};
+
+	public void doExportaPDF() {
+
+	};
+
+	public void doExportaOdt() {
+
+	};
+
+	public void doExportaOds() {
+
+	};
+	
+	public void doExportaWord() {
+
+	};
+	
+	public void doPrevio(){
+		
+	};
+	
+	public void doImprimir(){
+		
+	};
 }

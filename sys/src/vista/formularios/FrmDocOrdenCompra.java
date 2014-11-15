@@ -5,9 +5,12 @@ import java.awt.event.FocusEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import vista.Sys;
+import vista.barras.PanelBarraDocumento;
 import vista.contenedores.cntResponsable;
 import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
@@ -30,6 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
+import net.sf.jasperreports.engine.JRDataSource;
 import core.centralizacion.ContabilizaSlcCompras;
 import dao.ClieprovDAO;
 import dao.DDOrdenCompraDAO;
@@ -54,7 +58,10 @@ import entity.ProductoImpuesto;
 import entity.SolicitudCompra;
 import entity.Unimedida;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import vista.controles.CntReferenciaDoc;
 import vista.contenedores.CntMoneda;
@@ -959,7 +966,6 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 					Impuesto i = impuestoDAO.find(pi.getId().getIdimpuesto());
 					impto += i.getTasa();
 				}
-				System.out.println(impto);
 				Object[] rowData = new Object[] { producto.getIdproducto(),
 						producto.getDescripcion(),
 						producto.getUnimedida().getIdunimedida(),
@@ -998,4 +1004,44 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	public void setOrdencompra(OrdenCompra ordencompra) {
 		this.ordencompra = ordencompra;
 	}
+	
+	@Override
+	public void initBarra() {
+		int AnchoCabecera = 850;
+		barra = new PanelBarraDocumento('E');
+		barra.setMinimumSize(new Dimension(AnchoCabecera, 40));
+		barra.setPreferredSize(new Dimension(AnchoCabecera, 40));
+		barra.setBounds(0, 0, AnchoCabecera, 42);
+		barra.setFormMaestro(this);
+		FlowLayout flowLayout = (FlowLayout) barra.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		getContentPane().add(barra, BorderLayout.NORTH);
+	}
+	
+	@Override
+	protected String getNombreArchivo() {
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		return "OC " + this.txtSerie.getText() + "-" + this.txtNumero_2.getText() + "_" + format.format(c.getTime()) ;
+	}
+	
+	@Override
+	protected String getNombreReporte() {
+		return "OrdenCompra";
+	}
+	
+	@Override
+	protected Map<String, Object> getParamsReport() {
+		Map<String, Object> map= new HashMap<String, Object>();
+		map.put("empresa", Sys.empresa);
+		map.put("ordencompra", ordencompra);
+		return map;
+	}
+	
+	@Override
+	protected JRDataSource getDataSourceReport() {
+		List<DOrdenCompra> doc = dordencompraDAO.getPorOrdenCompra(ordencompra);
+		return new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(doc);
+	}
+	
 }

@@ -9,4 +9,11 @@ public interface IFormDocumento {
 	public void cancelar();
 	public void doVerAsiento();
 	public void doSalir();
+	public void doPrevio();
+	public void doImprimir();
+	public void doExportaWord();
+	public void doExportaExcel();
+	public void doExportaPDF();
+	public void doExportaOdt();
+	public void doExportaOds();
 }

@@ -2,8 +2,10 @@ package vista.formularios;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import vista.Sys;
@@ -32,6 +34,15 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.xml.JRSectionFactory.DetailSectionFactory;
 import core.centralizacion.ContabilizaAlmacen;
 import core.centralizacion.ContabilizaRequerimiento;
 import dao.AlmacenDAO;
@@ -746,15 +757,15 @@ public class FrmDocSalida extends AbstractDocForm {
 	public void init() {
 
 	}
-	
+
 	@Override
 	public void llenarDesdeVista() {
 		Long id = getSalida().getIddocsalida();
-		
+
 		Calendar cal = Calendar.getInstance();
-		
+
 		cal.setTime(this.txtFecha.getDate());
-		
+
 		getSalida().setIddocsalida(id);
 		getSalida().setGrupoCentralizacion(
 				cntGrupoCentralizacion.getSeleccionado());
@@ -768,10 +779,11 @@ public class FrmDocSalida extends AbstractDocForm {
 		getSalida().setDia(cal.get(Calendar.DAY_OF_MONTH));
 		getSalida().setMes(cal.get(Calendar.MONTH) + 1);
 		getSalida().setAnio(cal.get(Calendar.YEAR));
-		getSalida().setFecha(
-				((cal.get(Calendar.DAY_OF_MONTH)) * 10000)
-						+ ((cal.get(Calendar.MONTH) + 1) * 100)
-						+ Calendar.YEAR);
+		getSalida()
+				.setFecha(
+						((cal.get(Calendar.DAY_OF_MONTH)) * 10000)
+								+ ((cal.get(Calendar.MONTH) + 1) * 100)
+								+ Calendar.YEAR);
 		getSalida().setGlosa(txtGlosa.getText());
 		getSalida().setSucursal_dest(cntSucursal_dest.getSeleccionado());
 		getSalida().setAlmacen_dest(cntAlmacen_dest.getSeleccionado());
@@ -854,5 +866,37 @@ public class FrmDocSalida extends AbstractDocForm {
 
 		getBarra().enVista();
 		vista_noedicion();
+	}
+
+	@Override
+	public void doSalir() {
+		// JRBeanCollectionDataSource beanCollectionDataSource=new
+		// JRBeanCollectionDataSource(listOfUser);
+		try {
+			String ruta = "D:\\JaspersoftWorkspace\\ReportesSys\\reportes\\prueba.jasper";
+			
+			
+			List<DetDocsalida> ds = detDocsalidaDAO.getPorIdSalida(salida);
+			
+			
+			JRBeanCollectionDataSource beanCollectionDataSource=new JRBeanCollectionDataSource(ds);  
+			
+			System.out.println(beanCollectionDataSource.getRecordCount());
+			JasperPrint jasperPrint=JasperFillManager.fillReport(ruta, new HashMap(),beanCollectionDataSource);
+			
+			 JasperReport jasperReport=(JasperReport)JRLoader.loadObjectFromFile(ruta);
+			 //JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, new HashMap());
+			 //impresion de reporte
+			 // TRUE: muestra la ventana de dialogo "preferencias de impresion"
+			 JasperPrintManager.printReport(jasperPrint, true);
+			 
+//			JasperPrint jasperPrint = JasperFillManager.fillReport(
+//					ruta, new HashMap<Object, Object>());
+//			JasperExportManager
+//					.exportReportToPdfFile(jasperPrint, "D:\\JaspersoftWorkspace\\ReportesSys\\reportes\\ppp.pdf");
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
