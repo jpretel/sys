@@ -219,7 +219,7 @@ public abstract class JXTextFieldEntityAC<T> extends JXTextField implements
 				return false;
 			}
 		};
-
+		
 		table.setModel(model);
 
 		for (int i = 0; i < table.getColumnCount(); i++) {
