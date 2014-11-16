@@ -48,7 +48,7 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 	protected JTextField txtNumero;
 	protected PanelBarraDocumento barra;
 	protected JPanel pnlPrincipal;
-	private String estado;
+	protected String estado;
 	protected DSGTextFieldCorrelativo txtNumero_2;
 	protected DSGDatePicker txtFecha;
 	protected DSGTextFieldCorrelativo txtSerie;

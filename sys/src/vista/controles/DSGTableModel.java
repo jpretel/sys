@@ -221,7 +221,7 @@ public abstract class DSGTableModel extends DefaultTableModel {
 
 							addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
-									if (getEditar())
+									if (getEditar() && isValidaAgregar())
 										addRow();
 								}
 							});
@@ -281,6 +281,11 @@ public abstract class DSGTableModel extends DefaultTableModel {
 				removeRow(row);
 			}
 		}
+	}
+	
+	
+	public boolean isValidaAgregar() {
+		return true;
 	}
 
 	public boolean isValidaEliminacion(int row) {
