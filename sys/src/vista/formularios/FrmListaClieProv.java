@@ -12,7 +12,7 @@ public class FrmListaClieProv extends AbstractMaestroLista {
 	private List<Clieprov> clieprovL = cdao.findAll();
 	private Clieprov clieprov;
 	public FrmListaClieProv() {
-		super();
+		super("Lista de Clientes");
 		String columnas[] = {"Codigo", "RUC", "Razon Social", "Direccion"};
 		super.inicia_Lista(columnas, obj);
 		llenar_lista();

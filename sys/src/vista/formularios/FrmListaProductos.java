@@ -15,7 +15,7 @@ public class FrmListaProductos extends AbstractMaestroLista {
 	private List<Producto> prodList = pdao.findAll();
 	private Producto producto;
 	public FrmListaProductos() {
-		super();
+		super("Lista de Productos");
 		String columnas[] = { "Codigo", "Producto", "Grupo de Producto",
 				"Subgrupo de Producto" };
 		super.inicia_Lista(columnas, obj);

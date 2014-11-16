@@ -26,11 +26,10 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 
 	protected JPanel pnlContenido;
 
-	public AbstractMaestroLista() {
-		super("");
+	public AbstractMaestroLista(String titulo) {
+		super(titulo);
 		barraLista = new PanelBarraMaestroLista();
 		setEstado(VISTA);
-		setTitle("Lista");
 		setMaximizable(true);
 		setIconifiable(true);
 		setClosable(true);
@@ -40,12 +39,14 @@ public abstract class AbstractMaestroLista extends AbstractMaestro {
 		FlowLayout flowLayout = (FlowLayout) barraLista.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(barraLista, BorderLayout.NORTH);
-		scrollPane = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(530, 250));
 		pnlContenido = new JPanel();
 		getContentPane().add(pnlContenido, BorderLayout.CENTER);
 		setBounds(100, 100, 555, 325);
-		pnlContenido.add(scrollPane);
+		this.pnlContenido.setLayout(new BorderLayout(0, 0));
+		scrollPane = new JScrollPane();
+		scrollPane.setPreferredSize(new Dimension(530, 250));
+		//pnlContenido.add(scrollPane);
+		pnlContenido.add(scrollPane, BorderLayout.CENTER);
 	}
 
 	public void inicia_Lista(String columnas[], Object[] obj) {

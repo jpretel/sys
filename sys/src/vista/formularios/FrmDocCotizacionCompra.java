@@ -58,7 +58,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	private static final long serialVersionUID = 1L;
 	private CotizacionCompraDAO cotizacioncompraDAO = new CotizacionCompraDAO();
 	private DCotizacionCompraDAO dcotizacioncompraDAO = new DCotizacionCompraDAO();
-	
+
 	private ProductoDAO productoDAO = new ProductoDAO();
 	private UnimedidaDAO unimedidaDAO = new UnimedidaDAO();
 	private ProductoImpuestoDAO pimptoDAO = new ProductoImpuestoDAO();
@@ -76,7 +76,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 	private CotizacionCompra cotizacioncompra;
 	private List<DCotizacionCompra> dcotizacioncompras = new ArrayList<DCotizacionCompra>();
-	
+
 	private CntMoneda cntMoneda;
 	private DSGTextFieldNumber txtTCambio;
 	private DSGTextFieldNumber txtTCMoneda;
@@ -112,7 +112,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 		this.txtGlosa = new JTextArea();
 		this.scrlGlosa.setViewportView(this.txtGlosa);
-		
+
 		this.cntMoneda = new CntMoneda();
 		this.cntMoneda.setBounds(379, 12, 192, 20);
 		pnlPrincipal.add(this.cntMoneda);
@@ -160,7 +160,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 				if (column == 1 || column == 2 || column == 3 || column == 6
 						|| column == 8 || column == 10 || column == 11)
 					return false;
-				
+
 				return getEditar();
 			}
 
@@ -249,12 +249,12 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.tblConsolidado
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.srlConsolidado.setViewportView(this.tblConsolidado);
-		
+
 		this.cntClieprov = new CntClieprov();
 		this.cntClieprov.setBounds(72, 43, 309, 20);
 		this.cntClieprov.setData(clieprovDAO.findAll());
 		pnlPrincipal.add(this.cntClieprov);
-		
+
 		this.lblProveedor = new JLabel("Proveedor");
 		this.lblProveedor.setBounds(11, 43, 50, 16);
 		pnlPrincipal.add(this.lblProveedor);
@@ -272,26 +272,10 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		tc.getColumn(4).setCellEditor(new FloatEditor(3));
 		tc.getColumn(4).setCellRenderer(new FloatRenderer(3));
 
-		tc.getColumn(5).setCellEditor(new FloatEditor(2));
-		tc.getColumn(5).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(6).setCellEditor(new FloatEditor(2));
-		tc.getColumn(6).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(7).setCellEditor(new FloatEditor(2));
-		tc.getColumn(7).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(8).setCellEditor(new FloatEditor(2));
-		tc.getColumn(8).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(9).setCellEditor(new FloatEditor(2));
-		tc.getColumn(9).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(10).setCellEditor(new FloatEditor(2));
-		tc.getColumn(10).setCellRenderer(new FloatRenderer(2));
-
-		tc.getColumn(11).setCellEditor(new FloatEditor(2));
-		tc.getColumn(11).setCellRenderer(new FloatRenderer(2));
+		for (int i : new int[] { 5, 6, 7, 8, 9, 10, 11 }) {
+			tc.getColumn(i).setCellEditor(new FloatEditor(2));
+			tc.getColumn(i).setCellRenderer(new FloatRenderer(2));
+		}
 
 		iniciar();
 	}
@@ -300,6 +284,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	public void nuevo() {
 		setOrdencompra(new CotizacionCompra());
 		getCotizacioncompra().setIdcotizacioncompra(System.nanoTime());
+		cotizacioncompra.setTcmoneda(1F);
 		txtSerie.requestFocus();
 	}
 
@@ -313,11 +298,10 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	public void grabar() {
 		cotizacioncompraDAO.crear_editar(getCotizacioncompra());
 
-		//kardexSlcDAO.borrarPorIdOrdenCompra(ordencompra.getIdordencompra());
+		// kardexSlcDAO.borrarPorIdOrdenCompra(ordencompra.getIdordencompra());
 
-		
-		for (DCotizacionCompra d : dcotizacioncompraDAO.aEliminar(getCotizacioncompra(),
-				dcotizacioncompras)) {
+		for (DCotizacionCompra d : dcotizacioncompraDAO.aEliminar(
+				getCotizacioncompra(), dcotizacioncompras)) {
 			dcotizacioncompraDAO.remove(d);
 		}
 
@@ -328,19 +312,15 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 				dcotizacioncompraDAO.edit(d);
 			}
 		}
-		ContabilizaSlcCompras.ContabilizaCotizacion(getCotizacioncompra().getIdcotizacioncompra());
+		ContabilizaSlcCompras.ContabilizaCotizacion(getCotizacioncompra()
+				.getIdcotizacioncompra());
 	}
 
 	@Override
 	public void eliminar() {
 		int opcion = UtilMensajes.mensaje_sino("DESEA_ELIMINAR_DOC");
 		if (opcion == 0) {
-			// Borrar Kardex
-			//kardexSlcDAO.borrarPorIdOrdenCompra(ordencompra.getIdordencompra());
-
-			// Borrar Detalle y Consolidado
-			//ddcotizacioncompraDAOborrarPorOrdenCompra(ordencompra);
-			// Borrar Cabecera
+			dcotizacioncompraDAO.borrarPorCotizacionCompra(cotizacioncompra);
 			cotizacioncompraDAO.remove(cotizacioncompra);
 			cotizacioncompra = null;
 		}
@@ -348,7 +328,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		getConsolidadoTM().limpiar();
+		limpiarVista();
 
 		if (getCotizacioncompra() != null) {
 			this.txtNumero_2.setValue(getCotizacioncompra().getNumero());
@@ -361,18 +341,20 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 					.setText((getCotizacioncompra().getMoneda() == null) ? ""
 							: getCotizacioncompra().getMoneda().getIdmoneda());
 			cntMoneda.llenar();
-			cntResponsable.txtCodigo
-					.setText((getCotizacioncompra().getResponsable() == null) ? ""
-							: getCotizacioncompra().getResponsable()
-									.getIdresponsable());
+			cntResponsable.txtCodigo.setText((getCotizacioncompra()
+					.getResponsable() == null) ? "" : getCotizacioncompra()
+					.getResponsable().getIdresponsable());
 			cntResponsable.llenar();
-			
-			cntClieprov.txtCodigo.setText((getCotizacioncompra().getClieprov() == null) ? ""
-					: getCotizacioncompra().getClieprov().getIdclieprov());
+
+			cntClieprov.txtCodigo
+					.setText((getCotizacioncompra().getClieprov() == null) ? ""
+							: getCotizacioncompra().getClieprov()
+									.getIdclieprov());
 			cntClieprov.llenar();
 
-			dcotizacioncompras = dcotizacioncompraDAO.getPorCotizacionCompra(getCotizacioncompra());
-			
+			dcotizacioncompras = dcotizacioncompraDAO
+					.getPorCotizacionCompra(getCotizacioncompra());
+
 			for (DCotizacionCompra d : dcotizacioncompras) {
 				Producto p = d.getProducto();
 				Unimedida u = d.getUnimedida();
@@ -385,13 +367,6 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 								d.getDescuento(), d.getPimpuesto(),
 								d.getImpuesto(), d.getImporte() });
 			}
-
-			// List<DetDocingreso> detDocIngresoL =
-			// detDocingresoDAO.getPorIdIngreso(Long.parseLong(getIngreso().getIddocingreso()));
-			// for(DetDocingreso ingreso : detDocIngresoL){
-			// getConsolidadoTM().addRow(new
-			// Object[]{ingreso.getId().getIdproducto(),ingreso.getDescripcion(),ingreso.getIdmedida(),"",ingreso.getCantidad(),ingreso.getPrecio(),ingreso.getPrecio()});
-			// }
 		} else {
 			dcotizacioncompras = new ArrayList<DCotizacionCompra>();
 		}
@@ -471,7 +446,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.txtTCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
-				 this.cntClieprov);
+				this.cntClieprov);
 		getConsolidadoTM().setEditar(false);
 	}
 
@@ -496,10 +471,11 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		Long idoc = getCotizacioncompra().getIdcotizacioncompra();
 		// getIngreso().setGrupoCentralizacion(cntGrupoCentralizacion.getSeleccionado());
 		getCotizacioncompra().setSerie(this.txtSerie.getText());
-		getCotizacioncompra()
-				.setNumero(Integer.parseInt(this.txtNumero_2.getText()));
+		getCotizacioncompra().setNumero(
+				Integer.parseInt(this.txtNumero_2.getText()));
 		getCotizacioncompra().setMoneda(cntMoneda.getSeleccionado());
-		getCotizacioncompra().setResponsable(this.cntResponsable.getSeleccionado());
+		getCotizacioncompra().setResponsable(
+				this.cntResponsable.getSeleccionado());
 		getCotizacioncompra().setClieprov(this.cntClieprov.getSeleccionado());
 		getCotizacioncompra().setDia(c.get(Calendar.DAY_OF_MONTH));
 		getCotizacioncompra().setMes(c.get(Calendar.MONTH) + 1);
@@ -509,8 +485,10 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 						+ ((c.get(Calendar.MONTH) + 1) * 100)
 						+ c.get(Calendar.DAY_OF_MONTH));
 		getCotizacioncompra().setGlosa(txtGlosa.getText());
-		getCotizacioncompra().setTcambio(Float.parseFloat(txtTCambio.getText()));
-		getCotizacioncompra().setTcmoneda(Float.parseFloat(txtTCMoneda.getText()));
+		getCotizacioncompra()
+				.setTcambio(Float.parseFloat(txtTCambio.getText()));
+		getCotizacioncompra().setTcmoneda(
+				Float.parseFloat(txtTCMoneda.getText()));
 		dcotizacioncompras = new ArrayList<DCotizacionCompra>();
 
 		int rows = getConsolidadoTM().getRowCount();
@@ -585,7 +563,24 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 		return true;
 	}
-	
+
+	@Override
+	protected void limpiarVista() {
+		this.txtNumero_2.setValue("");
+		this.txtSerie.setText("");
+		this.txtTCambio.setValue(0);
+		this.txtTCMoneda.setValue(1);
+		cntMoneda.txtCodigo.setText("");
+		cntMoneda.llenar();
+		cntResponsable.txtCodigo.setText("");
+		cntResponsable.llenar();
+
+		cntClieprov.txtCodigo.setText("");
+		cntClieprov.llenar();
+		
+		getConsolidadoTM().limpiar();
+	};
+
 	public DSGTableModel getConsolidadoTM() {
 		return ((DSGTableModel) tblConsolidado.getModel());
 	}

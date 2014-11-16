@@ -1,5 +1,6 @@
 package vista;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.awt.Dimension;
 
 import vista.combobox.ComboBox;
+import vista.formularios.FrmLogin;
 
 public class FrmSysConfig extends JFrame {
 
@@ -43,9 +45,12 @@ public class FrmSysConfig extends JFrame {
 		setAlwaysOnTop(true);
 		setMinimumSize(new Dimension(350, 240));
 		getContentPane().setMinimumSize(new Dimension(600, 600));
+		
+		setIconImage(new ImageIcon(
+				FrmLogin.class.getResource("/main/resources/iconos/logo.png")).getImage());
+		
 		setResizable(false);
 		setTitle("Configuraci\u00F3n Inicial");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JLabel lblServidor = new JLabel("Servidor");
 		lblServidor.setBounds(24, 58, 46, 14);
@@ -112,7 +117,7 @@ public class FrmSysConfig extends JFrame {
 		this.lblBaseDeDatos_1.setBounds(24, 30, 80, 14);
 		getContentPane().add(this.lblBaseDeDatos_1);
 		
-		optionList.add(new String[]{"SQLSERVER","SQL Server 2008"});
+		optionList.add(new String[]{"SQLSERVER","SQL Server"});
 		optionList.add(new String[]{"MYSQL","MYSQL"});
 		comboBox = new ComboBox(optionList,1); 
 		

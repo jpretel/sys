@@ -252,8 +252,8 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		getDetalleTM().limpiar();
-
+		limpiarVista();
+		
 		if (getsolicitudcompra() != null) {
 			this.txtNumero_2.setValue(getsolicitudcompra().getNumero());
 			this.txtSerie.setText(getsolicitudcompra().getSerie());
@@ -389,7 +389,17 @@ public class FrmDocSolicitudCompra extends AbstractDocForm {
 
 		return FormValidador.CntObligatorios(cntResponsable);
 	}
+	
+	@Override
+	protected void limpiarVista() {
+		this.txtNumero_2.setValue(0);
+		this.txtSerie.setText("");
 
+		cntResponsable.setText("");
+		cntResponsable.llenar();
+		getDetalleTM().limpiar();
+	}
+	
 	public DSGTableModel getDetalleTM() {
 		return ((DSGTableModel) tblDetalle.getModel());
 	}

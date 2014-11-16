@@ -17,7 +17,10 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
@@ -47,6 +50,8 @@ import entity.SysTitulo;
 import core.entity.OpcionMenu;
 import core.entity.TituloMenu;
 import vista.utilitarios.MenuController;
+
+import javax.swing.JButton;
 
 public class MainFrame extends JRibbonFrame {
 	static JDesktopPane desktopPane;
@@ -78,6 +83,23 @@ public class MainFrame extends JRibbonFrame {
 		tlbPie.setRollover(true);
 		tlbPie.setFloatable(false);
 		getContentPane().add(tlbPie, BorderLayout.SOUTH);
+
+		this.btnVentanas = new JButton("Ventanas Activas");
+		this.btnVentanas.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JPopupMenu menu = getMenuVentanas();
+				menu.show(btnVentanas, 0, 0);
+				menu.show(btnVentanas, 0, - menu.getHeight());
+			}
+		});
+		tlbPie.add(this.btnVentanas);
+
+		this.separator = new JSeparator();
+		this.separator.setPreferredSize(new Dimension(20, 2));
+		this.separator.setMinimumSize(new Dimension(50, 0));
+		this.separator.setMaximumSize(new Dimension(50, 32767));
+		tlbPie.add(this.separator);
 
 		JLabel label = new JLabel(Sys.usuario.getIdusuario());
 		tlbPie.add(label);
@@ -121,17 +143,18 @@ public class MainFrame extends JRibbonFrame {
 			if (i == 0) {
 				moduloIncial = m;
 			}
-			
+
 			String url = null;
-			if(m.getImagen() == null || m.getImagen().toString().trim().length() < 1){
+			if (m.getImagen() == null
+					|| m.getImagen().toString().trim().length() < 1) {
 				url = "/main/resources/salir.png";
-			}else{
+			} else {
 				url = "/main/resources/" + m.getImagen().toString().trim();
 			}
-			
+
 			RibbonApplicationMenuEntrySecondary secondary = new RibbonApplicationMenuEntrySecondary(
-					getResizableIconFromResource16x16(url),
-					m.getDescripcion(), new ActionListener() {
+					getResizableIconFromResource16x16(url), m.getDescripcion(),
+					new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							CreaRibbonMenu(MenuController
@@ -163,17 +186,18 @@ public class MainFrame extends JRibbonFrame {
 				"Configuración Inicial", null, CommandButtonKind.POPUP_ONLY);
 
 		RibbonApplicationMenuEntrySecondary[] configs = new RibbonApplicationMenuEntrySecondary[5];
-		
+
 		configs[0] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
 				"Empresa", cOpciones.returnAction("FrmEmpresa"),
 				CommandButtonKind.ACTION_ONLY);
-		
+
 		configs[1] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
-				"Gestion de Formularios", cOpciones.returnAction("FrmSysFormulario"),
+				"Gestion de Formularios",
+				cOpciones.returnAction("FrmSysFormulario"),
 				CommandButtonKind.ACTION_ONLY);
-		
+
 		configs[2] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
 				"Gestion de Modulos", cOpciones.returnAction("FrmSysModulo"),
@@ -183,13 +207,12 @@ public class MainFrame extends JRibbonFrame {
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
 				"Gestion de Opciones", cOpciones.returnAction("FrmSysGrupo"),
 				CommandButtonKind.ACTION_ONLY);
-	
+
 		configs[4] = new RibbonApplicationMenuEntrySecondary(
 				getResizableIconFromResource16x16("/main/resources/salir.png"),
-				"Privilegios por Usuario", cOpciones.returnAction("FrmPrivilegiosUsuario"),
+				"Privilegios por Usuario",
+				cOpciones.returnAction("FrmPrivilegiosUsuario"),
 				CommandButtonKind.ACTION_ONLY);
-		
-		
 
 		config_popup.addSecondaryMenuGroup("Configuración Inicial", configs);
 
@@ -352,19 +375,23 @@ public class MainFrame extends JRibbonFrame {
 					bandas_aux.add(band);
 
 					for (SysOpcion opcion : grupo.getSysOpcions()) {
-						
-						//SysFormulario formulario = opcion.getSysFormulario();
-						
-						SysFormulario formulario = formularioDAO.find(opcion.getId().getIdformulario());
-						
+
+						// SysFormulario formulario = opcion.getSysFormulario();
+
+						SysFormulario formulario = formularioDAO.find(opcion
+								.getId().getIdformulario());
+
 						String url = null;
-						if(formulario.getImagen() == null || formulario.getImagen().toString().trim().length()<1){
+						if (formulario.getImagen() == null
+								|| formulario.getImagen().toString().trim()
+										.length() < 1) {
 							url = "/main/resources/iconos/nuevo.png";
-						}else{
-							url = "/main/resources/iconos/" + formulario.getImagen().toString().trim();
+						} else {
+							url = "/main/resources/iconos/"
+									+ formulario.getImagen().toString().trim();
 						}
-						
-						//formulario.setImagen("/main/resources/iconos/nuevo.png");
+
+						// formulario.setImagen("/main/resources/iconos/nuevo.png");
 
 						JCommandButton button = new JCommandButton(
 								formulario.getDescripcion(),
@@ -378,8 +405,8 @@ public class MainFrame extends JRibbonFrame {
 							band.addCommandButton(button, LOW);
 						}
 
-						button.addActionListener(cOpciones.returnAction(formulario
-								.getOpcion()));
+						button.addActionListener(cOpciones
+								.returnAction(formulario.getOpcion()));
 					}
 
 					band.setResizePolicies((List) Arrays.asList(
@@ -404,8 +431,42 @@ public class MainFrame extends JRibbonFrame {
 		}
 	}
 
+	public JPopupMenu getMenuVentanas() {
+		JPopupMenu popupMenu = new JPopupMenu();
+
+		JInternalFrame[] ventanas = Sys.desktoppane.getAllFrames();
+		boolean hayVentanas = false;
+		if (ventanas != null) {
+			for (final JInternalFrame v : ventanas) {
+				JMenuItem mForm = new JMenuItem(v.getTitle());
+				popupMenu.add(mForm);
+				hayVentanas = true;
+				mForm.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						try {
+							v.moveToFront();
+						} catch (Exception e) {
+						}
+					}
+				});
+			}
+
+			if (hayVentanas)
+				return popupMenu;
+		}
+
+		JMenuItem mForm = new JMenuItem("No hay Ventanas Abiertas");
+		popupMenu.add(mForm);
+		
+		return popupMenu;
+
+	}
+
 	/** Serial version unique id. */
 	private static final long serialVersionUID = 1L;
+	private JButton btnVentanas;
+	private JSeparator separator;
 
 	public static ResizableIcon getResizableIconFromResource(String resource) {
 		return ImageWrapperResizableIcon.getIcon(

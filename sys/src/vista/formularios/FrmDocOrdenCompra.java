@@ -390,15 +390,15 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.lblProveedor = new JLabel("Proveedor");
 		this.lblProveedor.setBounds(11, 47, 50, 16);
 		pnlPrincipal.add(this.lblProveedor);
-		
+
 		this.lblMoneda = new JLabel("Moneda");
 		this.lblMoneda.setBounds(344, 14, 52, 16);
 		pnlPrincipal.add(this.lblMoneda);
-		
+
 		this.lblTCambio = new JLabel("T. Cambio");
 		this.lblTCambio.setBounds(537, 15, 52, 16);
 		pnlPrincipal.add(this.lblTCambio);
-		
+
 		this.lblTCMoneda = new JLabel("T. C. Moneda");
 		this.lblTCMoneda.setBounds(678, 15, 74, 16);
 		pnlPrincipal.add(this.lblTCMoneda);
@@ -442,8 +442,9 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	@Override
 	public void nuevo() {
-		setOrdencompra(new OrdenCompra());
-		getOrdencompra().setIdordencompra(System.nanoTime());
+		ordencompra = new OrdenCompra();
+		ordencompra.setIdordencompra(System.nanoTime());
+		ordencompra.setTcmoneda(1F);
 		txtSerie.requestFocus();
 	}
 
@@ -514,15 +515,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		getConsolidadoTM().limpiar();
+		limpiarVista();
 
 		if (getOrdencompra() != null) {
-			this.txtNumero_2.setValue(getOrdencompra().getNumero());
-			this.txtSerie.setText(getOrdencompra().getSerie());
-			this.txtTCambio.setValue(getOrdencompra().getTcambio());
-			this.txtTCMoneda.setValue(getOrdencompra().getTcmoneda());
-			// this.cntGrupoCentralizacion.txtCodigo.setText(getOrdencompra().getGrupoCentralizacion().getIdgcentralizacion());
-			// this.cntGrupoCentralizacion.txtDescripcion.setText(getOrdencompra().getGrupoCentralizacion().getDescripcion());
+			txtNumero_2.setValue(getOrdencompra().getNumero());
+			txtSerie.setText(getOrdencompra().getSerie());
+			txtTCambio.setValue(getOrdencompra().getTcambio());
+			txtTCMoneda.setValue(getOrdencompra().getTcmoneda());
 			cntMoneda.txtCodigo
 					.setText((getOrdencompra().getMoneda() == null) ? ""
 							: getOrdencompra().getMoneda().getIdmoneda());
@@ -993,6 +992,22 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		return cantidad;
 	}
 
+	@Override
+	protected void limpiarVista() {
+		txtNumero_2.setValue(0);
+		txtSerie.setText("");
+		txtTCambio.setValue(0);
+		txtTCMoneda.setValue(0);
+		cntMoneda.llenar();
+		cntResponsable.txtCodigo.setText("");
+		cntResponsable.llenar();
+
+		cntClieprov.setText("");
+		cntClieprov.llenar();
+
+		getConsolidadoTM().limpiar();
+	}
+
 	public DSGTableModel getConsolidadoTM() {
 		return ((DSGTableModel) tblConsolidado.getModel());
 	}
@@ -1004,7 +1019,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	public void setOrdencompra(OrdenCompra ordencompra) {
 		this.ordencompra = ordencompra;
 	}
-	
+
 	@Override
 	public void initBarra() {
 		int AnchoCabecera = 850;
@@ -1017,31 +1032,32 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(barra, BorderLayout.NORTH);
 	}
-	
+
 	@Override
 	protected String getNombreArchivo() {
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		return "OC " + this.txtSerie.getText() + "-" + this.txtNumero_2.getText() + "_" + format.format(c.getTime()) ;
+		return "OC " + this.txtSerie.getText() + "-"
+				+ this.txtNumero_2.getText() + "_" + format.format(c.getTime());
 	}
-	
+
 	@Override
 	protected String getNombreReporte() {
 		return "OrdenCompra";
 	}
-	
+
 	@Override
 	protected Map<String, Object> getParamsReport() {
-		Map<String, Object> map= new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("empresa", Sys.empresa);
 		map.put("ordencompra", ordencompra);
 		return map;
 	}
-	
+
 	@Override
 	protected JRDataSource getDataSourceReport() {
 		List<DOrdenCompra> doc = dordencompraDAO.getPorOrdenCompra(ordencompra);
-		return new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(doc);
+		return new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(
+				doc);
 	}
-	
 }

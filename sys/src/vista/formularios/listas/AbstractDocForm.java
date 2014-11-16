@@ -180,13 +180,15 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 	}
 
 	public void DoEliminar() {
-		eliminar();
-		setEstado(VISTA);
-		getBarra().enVista();
-		vista_noedicion();
-		llenar_tablas();
-		llenar_lista();
-		llenar_datos();
+		int opcion = UtilMensajes.mensaje_sino("DESEA_ELIMINAR_DOC");
+		if (opcion == 0) {
+			eliminar();
+			setEstado(VISTA);
+			getBarra().enVista();
+			vista_noedicion();
+			actualiza_objeto(null);
+			llenar_datos();
+		}
 	}
 
 	public abstract void llenarDesdeVista();
@@ -392,7 +394,9 @@ public abstract class AbstractDocForm extends DSGInternalFrame implements
 						"Sobreescribir el metodo getNombreReporte(); - Nombre del Archivo jasperreport sin compilar <.jasper> (SinExtension - Puede usar carpetas '\\')");
 		return "Documento";
 	}
-
+	
+	protected abstract void limpiarVista();
+	
 	private String getExportar() {
 		return Sys.empresa.getRuta_exportar() + "\\" + getNombreArchivo();
 	}

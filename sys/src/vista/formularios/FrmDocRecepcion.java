@@ -444,7 +444,8 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		if (getIngreso() != null && !getEstado().equals("NUEVO")) {
+		limpiarVista();
+		if (getIngreso() != null) {
 
 			Sucursal sucursal;
 			Almacen almacen;
@@ -477,16 +478,17 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 			this.cntConcepto.llenar();
 
-			if (this.cntConcepto.getSeleccionado().getSolcitaCompra() == 1) {
+			if (getIngreso().getConcepto() != null)
+				if (this.cntConcepto.getSeleccionado().getSolcitaCompra() == 1) {
 
-				if (getIngreso().getOrdencompra() != null) {
-					txtSerieCompra.setText(getIngreso().getOrdencompra()
-							.getSerie());
-					String xnumero = StringUtils._padl(getIngreso()
-							.getOrdencompra().getNumero(), 8, '0');
-					txtNumeroCompra.setText(xnumero);
+					if (getIngreso().getOrdencompra() != null) {
+						txtSerieCompra.setText(getIngreso().getOrdencompra()
+								.getSerie());
+						String xnumero = StringUtils._padl(getIngreso()
+								.getOrdencompra().getNumero(), 8, '0');
+						txtNumeroCompra.setText(xnumero);
+					}
 				}
-			}
 			this.cntResponsable.txtCodigo.setText((getIngreso()
 					.getResponsable() == null) ? "" : getIngreso()
 					.getResponsable().getIdresponsable());
@@ -513,7 +515,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			this.txtFecha.setDate(calendar.getTime());
 			List<DetDocingreso> detDocIngresoL = detDocingresoDAO
 					.getPorIdIngreso(getIngreso());
-			getDetalleTM().limpiar();
+
 			for (DetDocingreso ingreso : detDocIngresoL) {
 				Unimedida unimedida = ingreso.getUnimedida();
 				Producto p = ingreso.getProducto();
@@ -675,6 +677,42 @@ public class FrmDocRecepcion extends AbstractDocForm {
 
 	public boolean validarDetalle() {
 		return getDetalleTM().esValido();
+	}
+
+	@Override
+	protected void limpiarVista() {
+		this.txtNumero_2.setText("");
+		this.txtSerie.setText("");
+
+		this.cntGrupoCentralizacion.setText("");
+		this.cntGrupoCentralizacion.llenar();
+
+		this.cntMoneda.setText("");
+
+		this.cntMoneda.llenar();
+
+		this.cntConcepto.txtCodigo.setText("");
+
+		this.cntConcepto.llenar();
+
+		txtSerieCompra.setText("");
+		txtNumeroCompra.setText("");
+
+		this.cntResponsable.txtCodigo.setText("");
+
+		this.cntResponsable.llenar();
+
+		this.cntSucursal.txtCodigo.setText("");
+		this.cntSucursal.llenar();
+		cntAlmacen.setData(null);
+		this.cntAlmacen.txtCodigo.setText("");
+		this.cntAlmacen.llenar();
+
+		this.txtGlosa.setText("");
+
+		this.txtFecha.setDate(Calendar.getInstance().getTime());
+
+		getDetalleTM().limpiar();
 	}
 
 	public DSGTableModel getDetalleTM() {

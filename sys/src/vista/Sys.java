@@ -137,9 +137,6 @@ public class Sys {
 									"drop-and-create-tables");
 						}
 					}
-
-					
-
 					entityFactory = Persistence.createEntityManagerFactory(
 							"sys", persistenceMap);
 					abrir();
@@ -151,7 +148,6 @@ public class Sys {
 							iniciar();
 						}
 					});
-
 					frm.setVisible(true);
 				}
 			}
@@ -163,14 +159,14 @@ public class Sys {
 					iniciar();
 				}
 			});
-
 			frm.setVisible(true);
 		}
 	}
 
 	public void abrir() {
-		frm.dispose();
-
+		
+		frm.setVisible(false);
+		
 		EmpresaDAO empresaDAO = new EmpresaDAO();
 
 		MonedaDAO monedaDAO = new MonedaDAO();

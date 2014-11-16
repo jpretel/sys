@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import vista.Sys;
 import vista.contenedores.cntAlmacen;
 import vista.contenedores.cntResponsable;
 import vista.contenedores.cntSucursal;
@@ -42,6 +43,7 @@ import entity.Sucursal;
 import entity.Unimedida;
 
 import java.awt.Component;
+
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 
@@ -220,11 +222,11 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 		this.cntMoneda.setBounds(389, 12, 192, 20);
 		pnlPrincipal.add(this.cntMoneda);
 
-		this.txtTCambio = new DSGTextFieldNumber(0);
+		this.txtTCambio = new DSGTextFieldNumber(4);
 		this.txtTCambio.setBounds(603, 12, 65, 20);
 		pnlPrincipal.add(this.txtTCambio);
 
-		this.txtTCMoneda = new DSGTextFieldNumber(0);
+		this.txtTCMoneda = new DSGTextFieldNumber(4);
 		this.txtTCMoneda.setBounds(704, 12, 65, 20);
 		pnlPrincipal.add(this.txtTCMoneda);
 
@@ -243,7 +245,8 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 				}
 			}
 		});
-
+		
+		
 		getDetalleTM().setNombre_detalle("Detalle de Productos");
 		getDetalleTM().setRepetidos(0);
 
@@ -299,14 +302,14 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		getDetalleTM().limpiar();
-
+		limpiarVista();
+		
 		if (getOrdenservicio() != null) {
-			this.txtNumero_2.setValue(getOrdenservicio().getNumero());
-			this.txtSerie.setText(getOrdenservicio().getSerie());
-			this.txtTCambio.setValue(getOrdenservicio().getTcambio());
-			this.txtTCMoneda.setValue(getOrdenservicio().getTcmoneda());
-			this.txtGlosa.setText(getOrdenservicio().getGlosa());
+			txtNumero_2.setValue(getOrdenservicio().getNumero());
+			txtSerie.setText(getOrdenservicio().getSerie());
+			txtTCambio.setValue(getOrdenservicio().getTcambio());
+			txtTCMoneda.setValue(getOrdenservicio().getTcmoneda());
+			txtGlosa.setText(getOrdenservicio().getGlosa());
 			cntMoneda.txtCodigo
 					.setText((getOrdenservicio().getMoneda() == null) ? ""
 							: getOrdenservicio().getMoneda().getIdmoneda());
@@ -501,7 +504,30 @@ public class FrmDocOrdenServicio extends AbstractDocForm {
 
 		return true;
 	}
-
+	
+	@Override
+	protected void limpiarVista() {
+		txtNumero_2.setValue(0);
+		txtSerie.setText("");
+		txtTCambio.setValue(0);
+		txtTCMoneda.setValue(1);
+		txtGlosa.setText("");
+		cntMoneda.txtCodigo
+				.setText("");
+		cntMoneda.llenar();
+		cntResponsable.setText("");
+		cntResponsable.llenar();
+		cntSucursal
+				.setText("");
+		cntSucursal.llenar();
+		cntAlmacen.setData(null);
+		
+		cntAlmacen.setText("");
+		cntAlmacen.llenar();
+		
+		getDetalleTM().limpiar();
+	}
+	
 	public DSGTableModel getDetalleTM() {
 		return ((DSGTableModel) tblDetalle.getModel());
 	}

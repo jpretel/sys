@@ -319,7 +319,7 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		getDetalleTM().limpiar();
+		limpiarVista();
 
 		if (getRequerimiento() != null) {
 			this.txtNumero_2.setValue(getRequerimiento().getNumero());
@@ -509,7 +509,26 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 		return FormValidador.TextFieldObligatorios(cntResponsable.txtCodigo,
 				cntSucursal.txtCodigo, cntAlmacen.txtCodigo);
 	}
+	
+	
+	@Override
+	protected void limpiarVista() {
+		txtFecha.setDate(Calendar.getInstance().getTime());
+		
+		cntResponsable.txtCodigo.setText("");
+		cntResponsable.llenar();
+		cntSucursal.txtCodigo
+				.setText("");
+		cntSucursal.llenar();
+		cntAlmacen.setData(null);
+		
+		cntAlmacen.txtCodigo
+				.setText("");
+		cntAlmacen.llenar();
 
+		getDetalleTM().limpiar();
+	}
+	
 	public DSGTableModel getDetalleTM() {
 		return ((DSGTableModel) tblDetalle.getModel());
 	}

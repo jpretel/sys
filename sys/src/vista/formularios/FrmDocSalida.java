@@ -604,7 +604,7 @@ public class FrmDocSalida extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-
+		limpiarVista();
 		if (getSalida() instanceof Docsalida && !getEstado().equals("NUEVO")) {
 			String numero = StringUtils._padl(getSalida().getNumero(), 8, '0');
 
@@ -837,6 +837,46 @@ public class FrmDocSalida extends AbstractDocForm {
 
 	public boolean validarDetalle() {
 		return getDetalleTM().esValido();
+	}
+	
+	
+	@Override
+	protected void limpiarVista() {
+		this.txtNumero_2.setText("");
+		this.txtSerie.setText("");
+		this.cntGrupoCentralizacion.txtCodigo.setText("");
+		this.cntGrupoCentralizacion.llenar();
+
+		this.cntMoneda.txtCodigo.setText("");
+		this.cntMoneda.llenar();
+
+		this.cntConcepto.txtCodigo.setText("");
+		this.cntConcepto.llenar();
+		
+		this.cntResponsable.txtCodigo.setText("");
+		this.cntResponsable.llenar();
+		
+		this.cntSucursal.txtCodigo.setText("");
+		this.cntSucursal.llenar();
+		
+		this.cntAlmacen.setData(null);
+		this.cntAlmacen.setText("");
+		this.cntAlmacen.llenar();
+
+		this.cntSucursal_dest.setText("");
+		this.cntSucursal_dest.llenar();
+		this.cntAlmacen_dest.setData(null);
+		
+		this.cntAlmacen_dest.setText("");
+		this.cntAlmacen_dest.llenar();
+
+		this.txtGlosa.setText("");
+		
+		this.txtFecha.setDate(Calendar.getInstance().getTime());
+		
+		
+		getDetalleTM().limpiar();
+	
 	}
 
 	public DSGTableModel getDetalleTM() {

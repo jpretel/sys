@@ -325,11 +325,11 @@ public class FrmDocSolicitudCotizacion extends AbstractDocForm {
 
 	@Override
 	public void llenar_datos() {
-		getDetalleTM().limpiar();
-
+		limpiarVista();
+		
 		if (solicitud != null) {
-			this.txtNumero_2.setValue(solicitud.getNumero());
-			this.txtSerie.setText(solicitud.getSerie());
+			txtNumero_2.setValue(solicitud.getNumero());
+			txtSerie.setText(solicitud.getSerie());
 			cntClieprov.setText((solicitud.getClieprov() == null) ? ""
 					: solicitud.getClieprov().getIdclieprov());
 			cntClieprov.llenar();
@@ -626,7 +626,23 @@ public class FrmDocSolicitudCotizacion extends AbstractDocForm {
 			return false;
 		return true;
 	}
+	
+	@Override
+	protected void limpiarVista() {
+		txtNumero_2.setValue(0);
+		txtSerie.setText("");
+		cntClieprov.setText("");
+		cntClieprov.llenar();
+		txtGlosa.setText("");
 
+		txtSerieRef.setText("");
+		txtNumeroRef.setValue("");
+
+		txtFecha.setDate(Calendar.getInstance().getTime());
+
+		getDetalleTM().limpiar();
+	}
+	
 	public DSGTableModel getDetalleTM() {
 		return ((DSGTableModel) tblDetalle.getModel());
 	}
