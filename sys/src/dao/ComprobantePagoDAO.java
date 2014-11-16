@@ -106,8 +106,8 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 			getEntityManager().getTransaction().begin();
 
 			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("sp_InsertComprobantePago");
-			query.registerStoredProcedureParameter("prmxml",String.class,ParameterMode.IN);
-			query.setParameter("prmxml",prmxml);
+			query.registerStoredProcedureParameter("prmstrCadXML",String.class,ParameterMode.IN);
+			query.setParameter("prmstrCadXML",prmxml);
 			query.executeUpdate();
 			getEntityManager().getTransaction().commit();
 			
