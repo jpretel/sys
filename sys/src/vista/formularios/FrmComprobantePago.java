@@ -790,7 +790,8 @@ public class FrmComprobantePago extends JInternalFrame {
 					dat1,
 					objects[4].toString(),
 					0,
-					(Integer.parseInt(objects[6].toString())==1?true:false),(Integer.parseInt(objects[7].toString())==1?true:false),
+					(Integer.parseInt(objects[6].toString())==1?true:false),
+					(Integer.parseInt(objects[7].toString())==1?true:false),
 					objects[19].toString(),new JButton(iconbusqueda),
 					objects[0].toString(),objects[9].toString(),
 					objects[12].toString(),
@@ -1100,6 +1101,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		 			if(estado){
 		 			 dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(i, 8).toString());
 		 			 percep=percep.add(dat1.multiply(dat2)).setScale(2,  RoundingMode.HALF_DOWN);
+		 			 TDDetalle.getModel().setValueAt("2", TDDetalle.getSelectedRow(), 18);
 		 			}
 		 		}
 		 		
@@ -1116,6 +1118,7 @@ public class FrmComprobantePago extends JInternalFrame {
 				 }else{
 					 TDDetalle.getModel().setValueAt(puni.divide(IGV,2, RoundingMode.HALF_UP),rowselecionada, 6);
 				 }
+				 TDDetalle.getModel().setValueAt("2", TDDetalle.getSelectedRow(), 18);
 			 	CalcularTotales();
 			 }
 			 if(TDDetalle.getSelectedColumn()==4 && TDDetalle.getModel().getValueAt(TDDetalle.getSelectedRow(), 18).toString().equalsIgnoreCase("0"))
@@ -1249,62 +1252,65 @@ public class FrmComprobantePago extends JInternalFrame {
 		String cfecha=txtFechaDoc.getEditor().getText();
 		String cfechavence=txtFVence.getEditor().getText();
 		String prmxmlcabecera="<root>";
-		prmxmlcabecera+="<Comprobante> "
-				+ "<IdComprobante>"+prmintcomprobante+"</IdComprobante>"
-				+ "<NSerie>0</NSerie> "
-				+ "<NDocumento>"+txtNDocumento.getText()+"</NDocumento> "
-				+ "<TipoDocumento>"+obtenertipodocumento()+"</TipoDocumento> "
-				+ "<Fecha>"+cfecha.substring(6, 10)+"-"+cfecha.substring(3, 5)+"-"+cfecha.substring(0, 2)+"</Fecha> "
-				+ "<FechaVence>"+cfechavence.substring(6, 10)+"-"+cfechavence.substring(3, 5)+"-"+cfechavence.substring(0, 2)+"</FechaVence> "
-				+ "<Moneda>"+obtenerMoneda()+"</Moneda>"
-				+ "<DetraccionPorcentaje>"+txtDetraccion.getText()+"</DetraccionPorcentaje> "
-				+ "<IGV>"+txtIGV.getText()+"</IGV> "
-				+ "<TotalPercepcion>"+txtPercep.getText()+"</TotalPercepcion> "
-				+ "<TotalNoGravado>"+txtNoGrav.getText()+"</TotalNoGravado> "
-				+ "<TotalRenta>"+txtRenta.getText()+"</TotalRenta> "
-				+ "<TotalDescuento>0.0</TotalDescuento> "
-				+ "<Total>"+txtTotal.getText()+"</Total> "
-				+ "<TipoCompra>0.0</TipoCompra> "
-				+ "<OrdenCompra>0</OrdenCompra>"
-				+ "<Proveedor>"+obtenerprovedor()+"</Proveedor>"
-				+ "<Contabilidad>0</Contabilidad>"
-				+ "<Almacen>"+obtenerAlmacen()+"</Almacen> <Accion>"+prmintestado+"</Accion> ";
+		prmxmlcabecera+="<Comprobante "
+				+ "IdComprobante='"+prmintcomprobante+"' "
+				+ "NSerie='0' "
+				+ "NDocumento='"+txtNDocumento.getText()+"' "
+				+ "TipoDocumento='"+obtenertipodocumento()+"' "
+				+ "Fecha='"+cfecha.substring(6, 10)+"-"+cfecha.substring(3, 5)+"-"+cfecha.substring(0, 2)+"' "
+				+ "FechaVence='"+cfechavence.substring(6, 10)+"-"+cfechavence.substring(3, 5)+"-"+cfechavence.substring(0, 2)+"' "
+				+ "Moneda='"+obtenerMoneda()+"' "
+				+ "DetraccionPorcentaje='"+txtDetraccion.getText()+"' "
+				+ "IGV='"+txtIGV.getText()+"' "
+				+ "TotalPercepcion='"+txtPercep.getText()+"' "
+				+ "TotalNoGravado='"+txtNoGrav.getText()+"' "
+				+ "TotalRenta='"+txtRenta.getText()+"' "
+				+ "TotalDescuento='0.0' "
+				+ "Total='"+txtTotal.getText()+"' "
+				+ "TipoCompra='0.0' "
+				+ "OrdenCompra='0' "
+				+ "Proveedor='"+obtenerprovedor()+"' "
+				+ "Contabilidad='0' "
+				+ "Almacen='"+obtenerAlmacen()+"' Accion='"+prmintestado+"'>";
 		
 		String prmxmldetalle="";
 		int n=TDDetalle.getRowCount();
 		for(int i=0;i<n;i++){
 			 //dat1 = new BigDecimal(TDDetalle.getModel().getValueAt(i, 2).toString());
-		prmxmldetalle+="<Dcomprobante> "
-				+ "<Dcomprobante>"+TDDetalle.getModel().getValueAt(i, 14).toString()+"</Dcomprobante> "
-				+ "<Cantidad>"+TDDetalle.getModel().getValueAt(i, 2).toString()+"</Cantidad> "
-				+ "<Vventa>"+TDDetalle.getModel().getValueAt(i, 6).toString()+"</Vventa> "
-				+ "<PUnitario>"+TDDetalle.getModel().getValueAt(i, 7).toString()+"</PUnitario> "
-				+ "<ImporteCosto>"+TDDetalle.getModel().getValueAt(i, 8).toString()+"</ImporteCosto> "
-				+ "<CostoProveedor>"+TDDetalle.getModel().getValueAt(i, 9).toString()+"</CostoProveedor> "
-				+ "<Percepcion>"+(TDDetalle.getModel().getValueAt(i, 10).toString().equalsIgnoreCase("false")? 0 : 1)+"</Percepcion> "
-				+ "<ExoneradoIGV>"+(TDDetalle.getModel().getValueAt(i, 11).toString().equalsIgnoreCase("false")? 0 : 1)+"</ExoneradoIGV> "
-				+ "<Gasto>0.0</Gasto> "
-				+ "<Producto>"+TDDetalle.getModel().getValueAt(i, 15).toString()+"</Producto> "
-				+ "<conNC>0</conNC> "
-				+ "<ComprobantePago>0</ComprobantePago>"
-				+ "<DetalleNotaIngreso>"+TDDetalle.getModel().getValueAt(i, 16).toString()+"</DetalleNotaIngreso> "
-				+ "<OrdenCompra>"+TDDetalle.getModel().getValueAt(i, 17).toString()+"</OrdenCompra> <Accion>"+TDDetalle.getModel().getValueAt(i, 18).toString()+"</Accion> </Dcomprobante>";
+		prmxmldetalle+="<Dcomprobante "
+				+ "Dcomprobante='"+TDDetalle.getModel().getValueAt(i, 14).toString()+"' "
+				+ "Cantidad='"+TDDetalle.getModel().getValueAt(i, 2).toString()+"' "
+				+ "Vventa='"+TDDetalle.getModel().getValueAt(i, 6).toString()+"' "
+				+ "PUnitario='"+TDDetalle.getModel().getValueAt(i, 7).toString()+"' "
+				+ "ImporteCosto='"+TDDetalle.getModel().getValueAt(i, 8).toString()+"' "
+				+ "CostoProveedor='"+TDDetalle.getModel().getValueAt(i, 9).toString()+"' "
+				+ "Percepcion='"+(TDDetalle.getModel().getValueAt(i, 10).toString().equalsIgnoreCase("false")? 0 : 1)+"' "
+				+ "ExoneradoIGV='"+(TDDetalle.getModel().getValueAt(i, 11).toString().equalsIgnoreCase("false")? 0 : 1)+"' "
+				+ "Gasto='0.0' "
+				+ "Producto='"+TDDetalle.getModel().getValueAt(i, 15).toString()+"' "
+				+ "conNC='0' "
+				+ "ComprobantePago='0' "
+				+ "DetalleNotaIngreso='"+TDDetalle.getModel().getValueAt(i, 16).toString()+"' "
+				+ "OrdenCompra='"+TDDetalle.getModel().getValueAt(i, 17).toString()+"' Accion='"+TDDetalle.getModel().getValueAt(i, 18).toString()+"' />";
 		}
 		
 		
 		prmxmlcabecera+=prmxmldetalle+"</Comprobante></root>";
+		prmxmlcabecera.replace((char)39, (char)34);
+		
 		int i=new ComprobantePagoDAO().InsertComprobantePago(prmxmlcabecera);
-		System.out.println(i);
+		System.out.println(i+" - "+prmxmlcabecera);
 			
 			JOptionPane.showMessageDialog(this,
                     "Guardado Correctamente",
                     "Comprobante Pago",
                     JOptionPane.INFORMATION_MESSAGE);
 			LimpiarControl();
+			activarcontrol(false);
 			activarbuton(true, false, false, false, false);
 		
 			}
-		//System.out.println(prmxmlcabecera.replace((char)39, (char)34));
+		
 		} catch (Exception e) {
 			Error(e.toString());
 			e.printStackTrace();
@@ -1495,7 +1501,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		}
 		if(txtNDocumento.getText().trim().length()<4 && estado==true)
 		{
-			MessageValidacion("Debe Ingresar N° de Documento");
+			MessageValidacion("Debe Ingresar NÂ° de Documento");
 			estado=false;
 		}
 		if(cboProvedor.getSelectedIndex()==0 && estado==true)
