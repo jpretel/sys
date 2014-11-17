@@ -19,7 +19,7 @@ public class ConectionManager {
 			return verificaMySql(cfgInicio);
 		}
 		if (cfgInicio.getGestor().equals(SQLSERVER)) {
-			return true;//verificaSQL(cfgInicio);
+			return verificaSQL(cfgInicio);
 		}
 
 		return verificaMySql(cfgInicio);
