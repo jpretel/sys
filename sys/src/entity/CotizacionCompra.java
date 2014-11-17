@@ -39,6 +39,11 @@ public class CotizacionCompra implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "idclieprov", referencedColumnName = "idclieprov")
 	private Clieprov clieprov;
+	
+	
+	@ManyToOne
+	@JoinColumn(name="idsolicitudcotizacion", referencedColumnName = "idsolicitudcotizacion")
+	private SolicitudCotizacion solicitud;
 
 	private static final long serialVersionUID = 1L;
 
@@ -148,6 +153,14 @@ public class CotizacionCompra implements Serializable {
 
 	public void setIdcotizacioncompra(Long idcotizacioncompra) {
 		this.idcotizacioncompra = idcotizacioncompra;
+	}
+
+	public SolicitudCotizacion getSolicitud() {
+		return solicitud;
+	}
+
+	public void setSolicitud(SolicitudCotizacion solicitud) {
+		this.solicitud = solicitud;
 	}
 
 }

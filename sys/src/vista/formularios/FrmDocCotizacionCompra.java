@@ -2,6 +2,8 @@ package vista.formularios;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,6 +30,7 @@ import javax.swing.table.TableColumnModel;
 import core.centralizacion.ContabilizaSlcCompras;
 import dao.ClieprovDAO;
 import dao.DCotizacionCompraDAO;
+import dao.DSolicitudCotizacionDAO;
 import dao.ImpuestoDAO;
 //import dao.KardexSlcCompraDAO;
 import dao.MonedaDAO;
@@ -35,13 +38,16 @@ import dao.CotizacionCompraDAO;
 import dao.ProductoDAO;
 import dao.ProductoImpuestoDAO;
 import dao.ResponsableDAO;
+import dao.SolicitudCotizacionDAO;
 import dao.UnimedidaDAO;
 import entity.DCotizacionCompra;
 import entity.DCotizacionCompraPK;
+import entity.DSolicitudCotizacion;
 import entity.Impuesto;
 import entity.CotizacionCompra;
 import entity.Producto;
 import entity.ProductoImpuesto;
+import entity.SolicitudCotizacion;
 import entity.Unimedida;
 
 import java.awt.Component;
@@ -49,6 +55,8 @@ import java.awt.Component;
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 import vista.contenedores.CntClieprov;
+import vista.controles.FindButton;
+import vista.controles.DSGTextFieldCorrelativo;
 
 public class FrmDocCotizacionCompra extends AbstractDocForm {
 
@@ -64,6 +72,8 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	private ProductoImpuestoDAO pimptoDAO = new ProductoImpuestoDAO();
 	private ImpuestoDAO impuestoDAO = new ImpuestoDAO();
 	private ClieprovDAO clieprovDAO = new ClieprovDAO();
+	private SolicitudCotizacionDAO sCotizacionDAO = new SolicitudCotizacionDAO();
+	private DSolicitudCotizacionDAO sDCotizacionDAO = new DSolicitudCotizacionDAO();
 
 	private TxtProducto txtProducto;
 	private JLabel lblResponsable;
@@ -79,12 +89,18 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 	private CntMoneda cntMoneda;
 	private DSGTextFieldNumber txtTCambio;
-	private DSGTextFieldNumber txtTCMoneda;
 	private CntClieprov cntClieprov;
 	private JLabel lblProveedor;
+	private FindButton btnFindCot;
+	private DSGTextFieldCorrelativo txtNumeroSol;
+	private DSGTextFieldCorrelativo txtSerieSol;
+	private JLabel lblSolicitudDeCotizacin;
+	private JLabel lblMoneda;
+	private JLabel lblTCambio;
 
 	public FrmDocCotizacionCompra() {
 		super("Cotizacion de Compra");
+		txtFecha.setBounds(245, 11, 89, 22);
 
 		setEstado(VISTA);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
@@ -114,17 +130,12 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.scrlGlosa.setViewportView(this.txtGlosa);
 
 		this.cntMoneda = new CntMoneda();
-		this.cntMoneda.setBounds(379, 12, 192, 20);
+		this.cntMoneda.setBounds(387, 12, 153, 20);
 		pnlPrincipal.add(this.cntMoneda);
 
 		this.txtTCambio = new DSGTextFieldNumber(4);
-		this.txtTCambio.setBounds(594, 12, 74, 20);
+		this.txtTCambio.setBounds(605, 12, 63, 20);
 		pnlPrincipal.add(this.txtTCambio);
-
-		this.txtTCMoneda = new DSGTextFieldNumber(4);
-		this.txtTCMoneda.setBounds(699, 12, 74, 20);
-		pnlPrincipal.add(this.txtTCMoneda);
-		this.txtTCMoneda.setValue(1);
 
 		/*
 		 * Tabla de Consolidado
@@ -147,7 +158,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		});
 
 		this.srlConsolidado = new JScrollPane((Component) null);
-		this.srlConsolidado.setBounds(10, 105, 821, 279);
+		this.srlConsolidado.setBounds(10, 134, 821, 250);
 		pnlPrincipal.add(this.srlConsolidado);
 		tblConsolidado = new JTable(new DSGTableModel(new String[] {
 				"Cód. Producto", "Producto", "Cod. Medida", "Medida",
@@ -259,6 +270,41 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.lblProveedor.setBounds(11, 43, 50, 16);
 		pnlPrincipal.add(this.lblProveedor);
 
+		this.btnFindCot = new FindButton();
+		this.btnFindCot.setBounds(250, 103, 20, 20);
+		this.btnFindCot.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (btnFindCot.isEnabled())
+					llenarDetalle();
+			}
+		});
+
+		pnlPrincipal.add(this.btnFindCot);
+
+		this.txtNumeroSol = new DSGTextFieldCorrelativo(8);
+		this.txtNumeroSol.setColumns(10);
+		this.txtNumeroSol.setBounds(168, 103, 80, 20);
+		pnlPrincipal.add(this.txtNumeroSol);
+
+		this.txtSerieSol = new DSGTextFieldCorrelativo(4);
+		this.txtSerieSol.setColumns(10);
+		this.txtSerieSol.setBounds(124, 103, 44, 20);
+		pnlPrincipal.add(this.txtSerieSol);
+
+		this.lblSolicitudDeCotizacin = new JLabel(
+				"Solicitud de Cotizaci\u00F3n");
+		this.lblSolicitudDeCotizacin.setBounds(10, 104, 123, 16);
+		pnlPrincipal.add(this.lblSolicitudDeCotizacin);
+		
+		this.lblMoneda = new JLabel("Moneda");
+		this.lblMoneda.setBounds(344, 15, 50, 16);
+		pnlPrincipal.add(this.lblMoneda);
+		
+		this.lblTCambio = new JLabel("T. Cambio");
+		this.lblTCambio.setBounds(550, 15, 50, 16);
+		pnlPrincipal.add(this.lblTCambio);
+
 		txtProducto.updateCellEditor();
 		txtProducto.setData(productoDAO.findAll());
 		getConsolidadoTM().setNombre_detalle("Detalle de Productos");
@@ -278,6 +324,56 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		}
 
 		iniciar();
+	}
+
+	protected void llenarDetalle() {
+		String serie = this.txtSerieSol.getText();
+		int numero;
+		try {
+			numero = Integer.valueOf(this.txtNumeroSol.getText());
+		} catch (Exception e) {
+			numero = 0;
+		}
+		int nFilas = getConsolidadoTM().getRowCount();
+		int opc = -1;
+		if (nFilas > 0) {
+			opc = JOptionPane
+					.showConfirmDialog(
+							null,
+							"Se borrara el detalle actual y cargara el detalle de la solicitud",
+							"¿Desea Continuar?", JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE);
+			cotizacioncompra.setSolicitud(null);
+		}
+		if (opc == -1 || opc == 0) {
+			getConsolidadoTM().limpiar();
+			if (serie.trim().length() > 0 && numero > 0) {
+
+				SolicitudCotizacion sCotizacion = sCotizacionDAO
+						.getPorSerieNumero(serie, numero);
+				List<DSolicitudCotizacion> ds = new ArrayList<DSolicitudCotizacion>();
+				if (sCotizacion != null) {
+					ds = sDCotizacionDAO.getPorSolicitud(sCotizacion);
+
+					// Llenar proveedor
+					cntClieprov.setText(sCotizacion.getClieprov()
+							.getIdclieprov());
+					cntClieprov.llenar();
+					cotizacioncompra.setSolicitud(sCotizacion);
+					for (DSolicitudCotizacion s : ds) {
+						Producto p = s.getProducto();
+						Unimedida u = s.getUnimedida();
+						getConsolidadoTM().addRow(
+								new Object[] { p.getIdproducto(),
+										p.getDescripcion(), u.getIdunimedida(),
+										u.getDescripcion(), s.getCantidad() });
+
+					}
+				} else {
+					UtilMensajes.mensaje_alterta("DOC_NO_ENCONTRADO");
+				}
+			}
+		}
 	}
 
 	@Override
@@ -334,7 +430,6 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 			this.txtNumero_2.setValue(getCotizacioncompra().getNumero());
 			this.txtSerie.setText(getCotizacioncompra().getSerie());
 			this.txtTCambio.setValue(getCotizacioncompra().getTcambio());
-			this.txtTCMoneda.setValue(getCotizacioncompra().getTcmoneda());
 			// this.cntGrupoCentralizacion.txtCodigo.setText(getCotizacioncompra().getGrupoCentralizacion().getIdgcentralizacion());
 			// this.cntGrupoCentralizacion.txtDescripcion.setText(getCotizacioncompra().getGrupoCentralizacion().getDescripcion());
 			cntMoneda.txtCodigo
@@ -351,6 +446,12 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 							: getCotizacioncompra().getClieprov()
 									.getIdclieprov());
 			cntClieprov.llenar();
+
+			if (cotizacioncompra.getSolicitud() != null) {
+				txtSerieSol.setText(cotizacioncompra.getSolicitud().getSerie());
+				txtNumeroSol.setValue(cotizacioncompra.getSolicitud()
+						.getNumero());
+			}
 
 			dcotizacioncompras = dcotizacioncompraDAO
 					.getPorCotizacionCompra(getCotizacioncompra());
@@ -426,12 +527,10 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 	@Override
 	public void vista_edicion() {
-		this.txtSerie.setEditable(true);
-		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
-		this.txtTCMoneda.setEditable(true);
-		this.txtTCambio.setEditable(true);
 		this.txtGlosa.setEditable(true);
+		FormValidador.TextFieldsEdicion(true, txtSerie, txtNumero_2,
+				txtTCambio, txtSerieSol, txtNumeroSol);
 		FormValidador.CntEdicion(true, this.cntMoneda, this.cntResponsable,
 				this.cntClieprov);
 		getConsolidadoTM().setEditar(true);
@@ -439,12 +538,10 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 	@Override
 	public void vista_noedicion() {
-		this.txtSerie.setEditable(false);
-		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
-		this.txtTCMoneda.setEditable(false);
-		this.txtTCambio.setEditable(false);
 		this.txtGlosa.setEditable(false);
+		FormValidador.TextFieldsEdicion(false, txtSerie, txtNumero_2,
+				txtTCambio, txtSerieSol, txtNumeroSol);
 		FormValidador.CntEdicion(false, this.cntMoneda, this.cntResponsable,
 				this.cntClieprov);
 		getConsolidadoTM().setEditar(false);
@@ -487,8 +584,6 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		getCotizacioncompra().setGlosa(txtGlosa.getText());
 		getCotizacioncompra()
 				.setTcambio(Float.parseFloat(txtTCambio.getText()));
-		getCotizacioncompra().setTcmoneda(
-				Float.parseFloat(txtTCMoneda.getText()));
 		dcotizacioncompras = new ArrayList<DCotizacionCompra>();
 
 		int rows = getConsolidadoTM().getRowCount();
@@ -569,7 +664,8 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.txtNumero_2.setValue("");
 		this.txtSerie.setText("");
 		this.txtTCambio.setValue(0);
-		this.txtTCMoneda.setValue(1);
+		txtSerieSol.setText("");
+		txtNumeroSol.setText("");
 		cntMoneda.txtCodigo.setText("");
 		cntMoneda.llenar();
 		cntResponsable.txtCodigo.setText("");
@@ -577,7 +673,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 
 		cntClieprov.txtCodigo.setText("");
 		cntClieprov.llenar();
-		
+
 		getConsolidadoTM().limpiar();
 	};
 

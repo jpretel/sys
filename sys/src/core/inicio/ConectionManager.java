@@ -39,21 +39,21 @@ public class ConectionManager {
 		} catch (ClassNotFoundException ex) {
 			JOptionPane.showMessageDialog(frame,
 					"No se encontró driver para MYSQL");
-			isExito = false;
+			return false;
 		} catch (SQLException ex) {
 			JOptionPane.showMessageDialog(frame,
 					"Error al conectar con el servidor");
 			JOptionPane.showMessageDialog(frame, ex.getMessage());
-			isExito = false;
+			return false;
 		}
 
 		try {
 			conexion.close();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame,
-					"Error al conectar con el servidor");
+					"Error al desconectar con el servidor");
 			JOptionPane.showMessageDialog(frame, ex.getMessage());
-			isExito = false;
+			return false;
 		}
 		return isExito;
 	}
@@ -69,19 +69,19 @@ public class ConectionManager {
 		} catch (ClassNotFoundException ex) {
 			JOptionPane.showMessageDialog(frame,
 					"No se encontró driver para MYSQL");
-			isExito = false;
+			return false;
 		} catch (SQLException ex) {
 			JOptionPane.showMessageDialog(frame,
 					"Error al conectar con el servidor");
 			JOptionPane.showMessageDialog(frame, ex.getMessage());
-			isExito = false;
+			return false;
 		}
 
 		try {
 			conexion.close();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(frame,
-					"Error al conectar con el servidor");
+					"Error al desconectar con el servidor");
 			JOptionPane.showMessageDialog(frame, ex.getMessage());
 			isExito = false;
 		}

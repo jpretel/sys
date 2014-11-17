@@ -81,6 +81,7 @@ public class FrmSysConfig extends JFrame {
 					for (ChangeListener listener : listenerList) {
 						listener.stateChanged(ce);
 					}
+					
 				} else {
 					System.out.println("Roche");
 				}
