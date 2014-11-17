@@ -109,7 +109,7 @@ public class Sys {
 					cfgInicio.setTipo_creacion("UPDATE");
 				}
 				
-				isOK = ConectionManager.isConexionOK(cfgInicio);
+				isOK = ConectionManager.isConexionOK(cfgInicio, null);
 				
 				if (isOK) {
 

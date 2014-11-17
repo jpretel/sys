@@ -117,8 +117,8 @@ public class FrmSysConfig extends JFrame {
 		this.lblBaseDeDatos_1.setBounds(24, 30, 80, 14);
 		getContentPane().add(this.lblBaseDeDatos_1);
 		
-		optionList.add(new String[]{"SQLSERVER","SQL Server"});
-		optionList.add(new String[]{"MYSQL","MYSQL"});
+		optionList.add(new String[]{ConectionManager.SQLSERVER,"SQL Server"});
+		optionList.add(new String[]{ConectionManager.MYSQL,"MYSQL"});
 		comboBox = new ComboBox(optionList,1); 
 		
 		this.comboBox.setBounds(109, 27, 132, 20);
@@ -138,7 +138,6 @@ public class FrmSysConfig extends JFrame {
 			return false;
 		}
 		
-	
 		if (txtUsuario.getText().trim().isEmpty()) {
 			return false;
 		}
@@ -160,7 +159,7 @@ public class FrmSysConfig extends JFrame {
 		getCfgInicio().setClave(new String(txtClave.getPassword()));
 		getCfgInicio().setBase_datos(txtBD.getText().trim());
 		
-		if (!ConectionManager.isConexionOK(cfgInicio)) {
+		if (!ConectionManager.isConexionOK(cfgInicio, this)) {
 			return false;
 		}
 

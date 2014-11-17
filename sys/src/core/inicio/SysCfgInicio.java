@@ -39,22 +39,6 @@ public class SysCfgInicio {
 	public void setClave(String clave) {
 		this.clave = clave;
 	}
-
-//	public String getURL(int code_manager) {
-//		if (code_manager == ConectionManager._mysql)
-//			return "jdbc:mysql://" + getServidor() + "/" + getBase_datos();
-//		if (code_manager == ConectionManager._sqlserver)
-//			return "jdbc:sqlserver://" + getServidor() + "/" + getBase_datos();
-//		return null;
-//	}
-	
-//	public String getURL(String code_manager) {
-//		if (code_manager.equals(ConectionManager.MYSQL))
-//			return "jdbc:mysql://" + getServidor() + "/" + getBase_datos();
-//		if (code_manager.equals(ConectionManager.SQLSERVER))
-//			return "jdbc:sqlserver://" + getServidor() + ";databaseName=" + getBase_datos();
-//		return null;
-//	}
 	
 	public String getURL() {
 		if (gestor.equals(ConectionManager.MYSQL))
@@ -71,13 +55,7 @@ public class SysCfgInicio {
 			return "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 		return null;
 	}
-
-	@Override
-	public String toString() {
-		return getServidor() + " - " + getBase_datos() + "| Usr:"
-				+ getUsuario() + ", Pass: " + getClave();
-	}
-
+	
 	public String getTipo_creacion() {
 		return tipo_creacion;
 	}

@@ -4,44 +4,31 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class ConectionManager {
 
-	public static int _mysql = 1;
-	public static int _sqlserver = 2;
-
-	public static int _postgres = 3;
-	
 	public static String MYSQL = "MYSQL";
 	public static String SQLSERVER = "SQLSERVER";
-	
-	public static boolean isConexionOK(SysCfgInicio cfgInicio) {
+	public static String POSTGRES = "POSTGRES";
+
+	public static boolean isConexionOK(SysCfgInicio cfgInicio, JFrame frame) {
+
 		if (cfgInicio.getGestor().equals(MYSQL)) {
-			return verificaMySql(cfgInicio);
+			return verificaMySql(cfgInicio, frame);
 		}
 		if (cfgInicio.getGestor().equals(SQLSERVER)) {
-			return verificaSQL(cfgInicio);
+			return verificaSQL(cfgInicio, frame);
+		}
+		if (cfgInicio.getGestor().equals(POSTGRES)) {
+			return verificaPostgres(cfgInicio, frame);
 		}
 
-		return verificaMySql(cfgInicio);
-	}
-	
-	
-	public static boolean isConexionOK(int db_manager, SysCfgInicio cfgInicio) {
-		if (db_manager == _mysql) {
-			return verificaMySql(cfgInicio);
-		}
-		if (db_manager == _sqlserver) {
-			//return verificaSQL(cfgInicio);
-			return true;
-		}
-		if (db_manager == _postgres) {
-			return verificaPostgres(cfgInicio);
-		}
-
-		return verificaMySql(cfgInicio);
+		return verificaMySql(cfgInicio, frame);
 	}
 
-	private static boolean verificaMySql(SysCfgInicio cfgInicio) {
+	private static boolean verificaMySql(SysCfgInicio cfgInicio, JFrame frame) {
 		Connection conexion = null;
 		boolean isExito = false;
 		try {
@@ -50,20 +37,28 @@ public class ConectionManager {
 					cfgInicio.getUsuario(), cfgInicio.getClave());
 			isExito = true;
 		} catch (ClassNotFoundException ex) {
+			JOptionPane.showMessageDialog(frame,
+					"No se encontró driver para MYSQL");
 			isExito = false;
 		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(frame,
+					"Error al conectar con el servidor");
+			JOptionPane.showMessageDialog(frame, ex.getMessage());
 			isExito = false;
 		}
 
 		try {
 			conexion.close();
-		} catch (Exception e) {
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(frame,
+					"Error al conectar con el servidor");
+			JOptionPane.showMessageDialog(frame, ex.getMessage());
 			isExito = false;
 		}
 		return isExito;
 	}
-	
-	private static boolean verificaSQL(SysCfgInicio cfgInicio) {
+
+	private static boolean verificaSQL(SysCfgInicio cfgInicio, JFrame frame) {
 		Connection conexion = null;
 		boolean isExito = false;
 		try {
@@ -72,20 +67,28 @@ public class ConectionManager {
 					cfgInicio.getUsuario(), cfgInicio.getClave());
 			isExito = true;
 		} catch (ClassNotFoundException ex) {
+			JOptionPane.showMessageDialog(frame,
+					"No se encontró driver para MYSQL");
 			isExito = false;
 		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(frame,
+					"Error al conectar con el servidor");
+			JOptionPane.showMessageDialog(frame, ex.getMessage());
 			isExito = false;
 		}
 
 		try {
 			conexion.close();
-		} catch (Exception e) {
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(frame,
+					"Error al conectar con el servidor");
+			JOptionPane.showMessageDialog(frame, ex.getMessage());
 			isExito = false;
 		}
 		return isExito;
 	}
 
-	private static boolean verificaPostgres(SysCfgInicio cfgInicio) {
+	private static boolean verificaPostgres(SysCfgInicio cfgInicio, JFrame frame) {
 		return false;
 	}
 }
