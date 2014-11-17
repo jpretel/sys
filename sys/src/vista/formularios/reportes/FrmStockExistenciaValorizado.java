@@ -42,14 +42,13 @@ import entity.StockExistenciasValorizadoEnt;
 import dao.StockExistenciasValorizadoDAO;
 import vista.controles.DSGDatePicker;
 
-public class FrmStockExistenciaValorizado extends AbstractReporte{
+public class FrmStockExistenciaValorizado extends AbstractReporte {
 
 	private SucursalDAO sucursalDAO = new SucursalDAO();
 	private AlmacenDAO almacenDAO = new AlmacenDAO();
-	
-	public FrmStockExistenciaValorizado()
-	{
-		
+
+	public FrmStockExistenciaValorizado() {
+
 		Calendar calendar = Calendar.getInstance();
 
 		this.cntAlmacen = new cntAlmacen();
@@ -96,60 +95,59 @@ public class FrmStockExistenciaValorizado extends AbstractReporte{
 	private JLabel lblAlmacen;
 	private JLabel lblHasta;
 	private DSGDatePicker dpHasta;
-	
-	
-	
+
 	@Override
-	public Object[][] getData()  {
-		//StockExistenciasValorizadoDAO dao=new StockExistenciasValorizadoDAO();
+	public Object[][] getData() {
+		// StockExistenciasValorizadoDAO dao=new
+		// StockExistenciasValorizadoDAO();
 		Sucursal sucursal;
 		Almacen almacen;
-		
-	    sucursal = cntSucursal.getSeleccionado();
-		almacen = cntAlmacen.getSeleccionado();
-		//Integer.parseInt(sucursal.getIdsucursal())
-		//Integer.parseInt(almacen.getId().getIdalmacen())
-		List<StockExistenciasValorizadoEnt> ListSto=null;
-		try {
-			
-			ListSto=new StockExistenciasValorizadoDAO().ReporteStockExistenciaValorizado(cntSucursal.txtCodigo.getText(),cntAlmacen.txtCodigo.getText());
-			
-		/*	Object[] nombres = {"Codigo", "Descripcion", "Marca", "Costo", "Stock", "Total"};
-			DefaultTableModel dtm = new DefaultTableModel(nombres, 10);
-			tblDatos = new JTable(dtm);
-		*/	
-			this.tblDatos.setModel(new javax.swing.table.DefaultTableModel(new Object [][] {},
-		            new String [] {
-		            		 "Codigo", "Descripcion", "Marca", "Costo", "Stock", "Total"
-		            }
-		        ));
-		
-			
-			for (StockExistenciasValorizadoEnt s : ListSto) {
-				Object datos[]={
-						s.getCodigo(),s.getDescripcion(),s.getMarca(),
-						s.getCosto(),s.getStock(),(s.getCosto().multiply(s.getStock()))
-				};
-				 ((DefaultTableModel)tblDatos.getModel()).addRow(datos);
-			}
-			
-			 //
 
+		sucursal = cntSucursal.getSeleccionado();
+		almacen = cntAlmacen.getSeleccionado();
+		// Integer.parseInt(sucursal.getIdsucursal())
+		// Integer.parseInt(almacen.getId().getIdalmacen())
+		List<StockExistenciasValorizadoEnt> ListSto = null;
+		try {
+
+			ListSto = new StockExistenciasValorizadoDAO()
+					.ReporteStockExistenciaValorizado(
+							cntSucursal.txtCodigo.getText(),
+							cntAlmacen.txtCodigo.getText());
+
+			/*
+			 * Object[] nombres = {"Codigo", "Descripcion", "Marca", "Costo",
+			 * "Stock", "Total"}; DefaultTableModel dtm = new
+			 * DefaultTableModel(nombres, 10); tblDatos = new JTable(dtm);
+			 */
+			this.tblDatos.setModel(new javax.swing.table.DefaultTableModel(
+					new Object[][] {}, new String[] { "Codigo", "Descripcion",
+							"Marca", "Costo", "Stock", "Total" }));
+
+			for (StockExistenciasValorizadoEnt s : ListSto) {
+				Object datos[] = { s.getCodigo(), s.getDescripcion(),
+						s.getMarca(), s.getCosto(), s.getStock(),
+						(s.getCosto().multiply(s.getStock())) };
+				((DefaultTableModel) tblDatos.getModel()).addRow(datos);
+			}
+
+			//
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
-		
+
 		//
-		
-	    return null;
+
+		return null;
 	}
 
 	@Override
 	public String[] getCabeceras() {
-		return new String[] { "Codigo", "Descripcion", "Marca", "Costo", "Stock", "Total" };
-		
+		return new String[] { "Codigo", "Descripcion", "Marca", "Costo",
+				"Stock", "Total" };
+
 	}
 
 	@Override

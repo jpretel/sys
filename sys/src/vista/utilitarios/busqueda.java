@@ -20,7 +20,11 @@ public class busqueda extends modalInternalFrame {
 	private static final long serialVersionUID = 1L;
 	private JTextField textField;
 	private Object obj;
-
+	
+	public busqueda(int i) {
+		// TODO Auto-generated constructor stub
+	}
+	
 	public Object getObj() {
 		return obj;
 	}
