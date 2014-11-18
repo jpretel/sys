@@ -136,7 +136,7 @@ public class FrmComprobantePago extends JInternalFrame {
 	JComboBox cboProvedor = new JComboBox();
 	JComboBox cboAlmacen = new JComboBox();
 	JComboBox cboMoneda = new JComboBox();
-	JLabel lblDireccion = new JLabel("Direccion");
+	
 	JButton btnSalir = new JButton("");
 	JButton btnCancelar = new JButton("");
 	JButton btnGuardar = new JButton("");
@@ -159,6 +159,7 @@ public class FrmComprobantePago extends JInternalFrame {
 	Icon iconbusqueda = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaBuscar.png"));
 	private JTextField txtNDocumento;
 	private JTable tbproducto;
+	private JTextField txtNSerie;
 
 	/**
 	 * Launch the application.
@@ -423,8 +424,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		txtProveedor.setColumns(10);
 		
 		
-		lblDireccion.setBounds(315, 96, 246, 14);
-		panel_1.add(lblDireccion);
+		
 		
 		JLabel lblFVencimiento = new JLabel("F. Vence");
 		lblFVencimiento.setBounds(53, 114, 72, 14);
@@ -441,7 +441,7 @@ public class FrmComprobantePago extends JInternalFrame {
 					if(objects[1].toString().equalsIgnoreCase(cboProvedor.getSelectedItem().toString()))
 					{
 						txtProveedor.setText(objects[2].toString());
-						lblDireccion.setText(objects[3].toString());
+						
 						
 					}
 				}
@@ -482,6 +482,15 @@ public class FrmComprobantePago extends JInternalFrame {
 				.getResource("/main/resources/iconos/consultar.png")).getImage()
 				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
 		panel_1.add(btnbuscar);
+		
+		JLabel lblNSerie = new JLabel("N\u00B0 Serie");
+		lblNSerie.setBounds(577, 74, 46, 14);
+		panel_1.add(lblNSerie);
+		
+		txtNSerie = new JTextField();
+		txtNSerie.setBounds(577, 93, 118, 20);
+		panel_1.add(txtNSerie);
+		txtNSerie.setColumns(10);
 		
 		JLabel lblVVenta = new JLabel("V. Venta");
 		lblVVenta.setBounds(59, 429, 55, 14);
@@ -769,6 +778,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		txtNoGrav.setText(comprobantepago[10].toString());
 		txtRenta.setText(comprobantepago[11].toString());
 		txtTotal.setText(comprobantepago[13].toString());
+		txtNSerie.setText(comprobantepago[1].toString());
 		devuleveprovedor(comprobantepago[16].toString());
 		devuelvetipodocumento(comprobantepago[3].toString());
 		devuelveAlamcen(comprobantepago[19].toString());
@@ -825,7 +835,7 @@ public class FrmComprobantePago extends JInternalFrame {
 			{
 				cboProvedor.setSelectedIndex(i);
 				txtProveedor.setText(objects[2].toString());
-				lblDireccion.setText(objects[3].toString());
+				
 				
 			}
 			i++;
@@ -1254,7 +1264,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		String prmxmlcabecera="<root>";
 		prmxmlcabecera+="<Comprobante "
 				+ "IdComprobante='"+prmintcomprobante+"' "
-				+ "NSerie='0' "
+				+ "NSerie='"+txtNSerie.getText()+"' "
 				+ "NDocumento='"+txtNDocumento.getText()+"' "
 				+ "TipoDocumento='"+obtenertipodocumento()+"' "
 				+ "Fecha='"+cfecha.substring(6, 10)+"-"+cfecha.substring(3, 5)+"-"+cfecha.substring(0, 2)+"' "
@@ -1554,6 +1564,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		txtFVence.setEnabled(estado);
 		txtNoGrav.setEnabled(estado);
 		txtRenta.setEnabled(estado);
+		txtNSerie.setEnabled(estado);
 		TDDetalle.setEnabled(estado);
 		
 		
@@ -1581,7 +1592,8 @@ public class FrmComprobantePago extends JInternalFrame {
 		txtFVence.getEditor().setText("");
 		txtNoGrav.setText("0.0");
 		txtRenta.setText("0.0");
-		lblDireccion.setText("");
+		txtNSerie.setText("");
+		
 		 for (int i = TDDetalle.getRowCount() -1; i >= 0; i--)
 			 
 	     {
@@ -1659,8 +1671,6 @@ public class FrmComprobantePago extends JInternalFrame {
 		
 		iframeproducto.setVisible(false);
 	}
-	
-	
 }
 
 class JComponentTableCellRenderer implements TableCellRenderer {
