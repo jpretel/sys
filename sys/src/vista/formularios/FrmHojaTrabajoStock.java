@@ -38,8 +38,10 @@ import vista.formularios.listas.AbstractDocForm;
 import javax.swing.border.TitledBorder;
 import javax.swing.JComboBox;
 
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.math.BigDecimal;
 
 public class FrmHojaTrabajoStock extends JInternalFrame{
 	private JPanel contentPane;
@@ -94,15 +96,20 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Boolean.class, Object.class, Object.class, Object.class
+				Object.class, Object.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, BigDecimal.class, Boolean.class, Object.class, Object.class, Object.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			 @Override
+			    public boolean isCellEditable(int row, int column) {
+			        return column == 6 || column==7  ? true : false;
+			    }
 		});
 		TBHojaTrabajo.getColumnModel().getColumn(0).setResizable(false);
 		TBHojaTrabajo.getColumnModel().getColumn(0).setPreferredWidth(29);
 		TBHojaTrabajo.getColumnModel().getColumn(1).setPreferredWidth(305);
+		
 		TBHojaTrabajo.getColumnModel().getColumn(5).setPreferredWidth(114);
 		TBHojaTrabajo.getColumnModel().getColumn(6).setPreferredWidth(78);
 		TBHojaTrabajo.getColumnModel().getColumn(7).setResizable(false);
@@ -212,19 +219,32 @@ public class FrmHojaTrabajoStock extends JInternalFrame{
 	
 	public void llenarHojaTrabajo(String prmgrupo,String prmmarca)
 	{
+		try {
+			
 		
 		DefaultTableModel model=(DefaultTableModel)TBHojaTrabajo.getModel();
 		java.util.List<Object[]> listHojaTrabajoc=new HojaTrabajoStockDAO().ListarHojaTrabajo(prmgrupo,prmmarca);
 		int i=1;
+		BigDecimal deci=new BigDecimal("0.0");
+		
 		for (Object[] objects : listHojaTrabajoc) {
-			model.addRow(new Object[]{i,objects[1],(objects[2]!=null?objects[2]:"0.0"),
-					(objects[3]!=null?objects[3]:"0.0"),
-					(objects[4]!=null?objects[4]:"0.0"),
-					(objects[5]!=null?objects[5]:"0.0"),"0.0",false,
+			BigDecimal stock=new BigDecimal(objects[2].toString());
+			BigDecimal stockmin=new BigDecimal(objects[3].toString());
+			BigDecimal backorder=new BigDecimal(objects[4].toString());
+			BigDecimal reque=new BigDecimal(objects[5].toString());
+			model.addRow(new Object[]{i,
+					objects[1],
+					(objects[2]!=null?stock:deci),
+					(objects[3]!=null?stockmin:deci),
+					(objects[4]!=null?backorder:deci),
+					(objects[5]!=null?reque:deci),
+					deci,false,
 					objects[0],objects[6],objects[7]});
 			i++;
 		}
-		
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 	
 	public void LlenarCombox()
