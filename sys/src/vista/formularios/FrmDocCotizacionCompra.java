@@ -598,29 +598,58 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 			idunimedida = getConsolidadoTM().getValueAt(row, 2).toString();
 
 			float cantidad, precio_unitario, vventa, pdescuento, descuento, pimpuesto, impuesto, importe;
-
-			cantidad = Float.parseFloat(getConsolidadoTM().getValueAt(row, 4)
-					.toString());
-			precio_unitario = Float.parseFloat(getConsolidadoTM().getValueAt(
-					row, 5).toString());
-
-			vventa = Float.parseFloat(getConsolidadoTM().getValueAt(row, 6)
-					.toString());
-
-			pdescuento = Float.parseFloat(getConsolidadoTM().getValueAt(row, 7)
-					.toString());
-
-			descuento = Float.parseFloat(getConsolidadoTM().getValueAt(row, 8)
-					.toString());
-
-			pimpuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 9)
-					.toString());
-
-			impuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 10)
-					.toString());
-
-			importe = Float.parseFloat(getConsolidadoTM().getValueAt(row, 11)
-					.toString());
+			
+			try {
+				cantidad = Float.parseFloat(getConsolidadoTM().getValueAt(row, 4)
+						.toString());				
+			} catch (Exception e) {
+				cantidad = 0;
+			}
+			try {
+				precio_unitario = Float.parseFloat(getConsolidadoTM().getValueAt(
+						row, 5).toString());				
+			} catch (Exception e) {
+				precio_unitario = 0;
+			}
+			try {
+				vventa = Float.parseFloat(getConsolidadoTM().getValueAt(row, 6)
+						.toString());				
+			} catch (Exception e) {
+				vventa = 0;
+			}
+			
+			try {
+				pdescuento = Float.parseFloat(getConsolidadoTM().getValueAt(row, 7)
+						.toString());
+			} catch (Exception e) {
+				pdescuento = 0;
+			}
+			
+			try {
+				descuento = 0;
+			} catch (Exception e) {
+				descuento = Float.parseFloat(getConsolidadoTM().getValueAt(row, 8)
+						.toString());
+			}
+			try {
+				
+				pimpuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 9)
+						.toString());
+			} catch (Exception e) {
+				pimpuesto = 0;
+			}
+			try {
+				impuesto = Float.parseFloat(getConsolidadoTM().getValueAt(row, 10)
+						.toString());
+			} catch (Exception e) {
+				impuesto = 0;
+			}
+			try {
+				importe = Float.parseFloat(getConsolidadoTM().getValueAt(row, 11)
+						.toString());				
+			} catch (Exception e) {
+				importe = 0;
+			}
 
 			Producto p = productoDAO.find(idproducto);
 			Unimedida u = unimedidaDAO.find(idunimedida);
