@@ -1404,6 +1404,8 @@ public class FrmComprobantePago extends JInternalFrame {
 		TDDetalle.getColumnModel().getColumn(8).setPreferredWidth(69);
 		TDDetalle.getColumnModel().getColumn(9).setResizable(false);
 		TDDetalle.getColumnModel().getColumn(9).setPreferredWidth(76);
+		TDDetalle.getColumnModel().getColumn(9).setMinWidth(0);
+		TDDetalle.getColumnModel().getColumn(9).setMaxWidth(0);
 		TDDetalle.getColumnModel().getColumn(10).setResizable(false);
 		TDDetalle.getColumnModel().getColumn(10).setPreferredWidth(77);
 		TDDetalle.getColumnModel().getColumn(11).setResizable(false);
