@@ -543,6 +543,8 @@ public class FrmDocSalida extends AbstractDocForm {
 
 				}
 			}
+		} else {
+			UtilMensajes.mensaje_alterta("DOC_ATENDIDO_TOTAL");
 		}
 	}
 
@@ -838,8 +840,7 @@ public class FrmDocSalida extends AbstractDocForm {
 	public boolean validarDetalle() {
 		return getDetalleTM().esValido();
 	}
-	
-	
+
 	@Override
 	protected void limpiarVista() {
 		this.txtNumero_2.setText("");
@@ -852,13 +853,13 @@ public class FrmDocSalida extends AbstractDocForm {
 
 		this.cntConcepto.txtCodigo.setText("");
 		this.cntConcepto.llenar();
-		
+
 		this.cntResponsable.txtCodigo.setText("");
 		this.cntResponsable.llenar();
-		
+
 		this.cntSucursal.txtCodigo.setText("");
 		this.cntSucursal.llenar();
-		
+
 		this.cntAlmacen.setData(null);
 		this.cntAlmacen.setText("");
 		this.cntAlmacen.llenar();
@@ -866,17 +867,16 @@ public class FrmDocSalida extends AbstractDocForm {
 		this.cntSucursal_dest.setText("");
 		this.cntSucursal_dest.llenar();
 		this.cntAlmacen_dest.setData(null);
-		
+
 		this.cntAlmacen_dest.setText("");
 		this.cntAlmacen_dest.llenar();
 
 		this.txtGlosa.setText("");
-		
+
 		this.txtFecha.setDate(Calendar.getInstance().getTime());
-		
-		
+
 		getDetalleTM().limpiar();
-	
+
 	}
 
 	public DSGTableModel getDetalleTM() {
@@ -914,26 +914,29 @@ public class FrmDocSalida extends AbstractDocForm {
 		// JRBeanCollectionDataSource(listOfUser);
 		try {
 			String ruta = "D:\\JaspersoftWorkspace\\ReportesSys\\reportes\\prueba.jasper";
-			
-			
+
 			List<DetDocsalida> ds = detDocsalidaDAO.getPorIdSalida(salida);
-			
-			
-			JRBeanCollectionDataSource beanCollectionDataSource=new JRBeanCollectionDataSource(ds);  
-			
+
+			JRBeanCollectionDataSource beanCollectionDataSource = new JRBeanCollectionDataSource(
+					ds);
+
 			System.out.println(beanCollectionDataSource.getRecordCount());
-			JasperPrint jasperPrint=JasperFillManager.fillReport(ruta, new HashMap(),beanCollectionDataSource);
-			
-			 JasperReport jasperReport=(JasperReport)JRLoader.loadObjectFromFile(ruta);
-			 //JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, new HashMap());
-			 //impresion de reporte
-			 // TRUE: muestra la ventana de dialogo "preferencias de impresion"
-			 JasperPrintManager.printReport(jasperPrint, true);
-			 
-//			JasperPrint jasperPrint = JasperFillManager.fillReport(
-//					ruta, new HashMap<Object, Object>());
-//			JasperExportManager
-//					.exportReportToPdfFile(jasperPrint, "D:\\JaspersoftWorkspace\\ReportesSys\\reportes\\ppp.pdf");
+			JasperPrint jasperPrint = JasperFillManager.fillReport(ruta,
+					new HashMap(), beanCollectionDataSource);
+
+			JasperReport jasperReport = (JasperReport) JRLoader
+					.loadObjectFromFile(ruta);
+			// JasperPrint jasperPrint =
+			// JasperFillManager.fillReport(jasperReport, new HashMap());
+			// impresion de reporte
+			// TRUE: muestra la ventana de dialogo "preferencias de impresion"
+			JasperPrintManager.printReport(jasperPrint, true);
+
+			// JasperPrint jasperPrint = JasperFillManager.fillReport(
+			// ruta, new HashMap<Object, Object>());
+			// JasperExportManager
+			// .exportReportToPdfFile(jasperPrint,
+			// "D:\\JaspersoftWorkspace\\ReportesSys\\reportes\\ppp.pdf");
 		} catch (JRException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
