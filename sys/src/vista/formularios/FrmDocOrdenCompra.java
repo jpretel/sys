@@ -11,6 +11,7 @@ import java.util.Map;
 
 import vista.Sys;
 import vista.barras.PanelBarraDocumento;
+import vista.combobox.ComboBox;
 import vista.contenedores.cntResponsable;
 import vista.controles.DSGTableModel;
 import vista.controles.celleditor.TxtProducto;
@@ -34,6 +35,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.TableColumnModel;
 
 import net.sf.jasperreports.engine.JRDataSource;
+import core.centralizacion.ContabilizaComprasRecepcion;
 import core.centralizacion.ContabilizaSlcCompras;
 import dao.ClieprovDAO;
 import dao.DDOrdenCompraDAO;
@@ -104,7 +106,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private JLabel lblMoneda;
 	private JLabel lblTCambio;
 	private JLabel lblTCMoneda;
-
+	
+	private ComboBox cboTipoDoc;
+	private List<String[]> optionList = new ArrayList<String[]>();
+	
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
 		txtFecha.setBounds(245, 11, 89, 22);
@@ -139,10 +144,17 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.lblReferencia = new JLabel("Referencia");
 		this.lblReferencia.setBounds(10, 104, 74, 16);
 		pnlPrincipal.add(this.lblReferencia);
-
+		
+		optionList.add(new String[]{"S","Solicitud de Compra"});
+		optionList.add(new String[]{"C","Cotizacion de Compra"});
+		cboTipoDoc = new vista.combobox.ComboBox(optionList,1); 
+//		cboTipoDoc.setBounds(446, 106, 125, 20);
+//		pnlPrincipal.add(cboTipoDoc);		
+		
+		cboTipoDoc.setSelectedIndex(0);
+		
 		this.cntReferenciaDoc = new CntReferenciaDoc() {
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void buscarReferencia() {
 				String serie;
@@ -156,7 +168,13 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				}
 
 				if (numero > 0 && !serie.isEmpty()) {
-					referenciarSolicitudCompra(serie, numero);
+					String tipo = optionList.get(cboTipoDoc.getSelectedIndex())[0].toString();
+					//referenciarSolicitudCotizacionCompra(serie, numero, sucursal, almacen,tipo);
+					if (tipo=="S") {
+						referenciarSolicitudCompra(serie, numero);
+					} else {
+						
+					}
 					txtSerie.setText("");
 					txtNumero.setText("");
 				} else {
@@ -218,7 +236,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			}
 		};
 
-		this.cntReferenciaDoc.setBounds(74, 102, 180, 20);
+		this.cntReferenciaDoc.setBounds(200, 100, 180, 20);
 		pnlPrincipal.add(this.cntReferenciaDoc);
 
 		this.cntMoneda = new CntMoneda();
@@ -493,8 +511,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		ContabilizaSlcCompras.ContabilizaOrdenCompra(getOrdencompra()
 				.getIdordencompra());
 
-		// ContabilizaComprasRecepcion.ContabilizaComprasRecepcion(
-		// getOrdencompra().getIdordencompra(), 1, "Compra");
+		ContabilizaComprasRecepcion.ContabilizarComprasRecepcion(
+		 getOrdencompra().getIdordencompra(), 1, "Compra");
 	}
 
 	@Override
