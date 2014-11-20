@@ -1,9 +1,9 @@
 package vista.formularios;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -17,9 +17,11 @@ import vista.utilitarios.UtilMensajes;
 import vista.utilitarios.editores.FloatEditor;
 import vista.utilitarios.renderers.FloatRenderer;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -51,11 +53,11 @@ import entity.SolicitudCotizacion;
 import entity.Unimedida;
 
 import java.awt.Component;
+import java.awt.Insets;
 
 import vista.contenedores.CntMoneda;
 import vista.controles.DSGTextFieldNumber;
 import vista.contenedores.CntClieprov;
-import vista.controles.FindButton;
 import vista.controles.DSGTextFieldCorrelativo;
 
 public class FrmDocCotizacionCompra extends AbstractDocForm {
@@ -91,7 +93,7 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 	private DSGTextFieldNumber txtTCambio;
 	private CntClieprov cntClieprov;
 	private JLabel lblProveedor;
-	private FindButton btnFindCot;
+	private JButton btnFindCot;
 	private DSGTextFieldCorrelativo txtNumeroSol;
 	private DSGTextFieldCorrelativo txtSerieSol;
 	private JLabel lblSolicitudDeCotizacin;
@@ -270,15 +272,22 @@ public class FrmDocCotizacionCompra extends AbstractDocForm {
 		this.lblProveedor.setBounds(11, 43, 50, 16);
 		pnlPrincipal.add(this.lblProveedor);
 
-		this.btnFindCot = new FindButton();
-		this.btnFindCot.setBounds(250, 103, 20, 20);
-		this.btnFindCot.addMouseListener(new MouseAdapter() {
+		this.btnFindCot = new JButton();
+		this.btnFindCot.setIcon(new ImageIcon(new ImageIcon(getClass()
+				.getResource("/main/resources/iconos/search.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH)));
+
+		btnFindCot.setMargin(new Insets(0, 0, 0, 0));
+		btnFindCot.addActionListener(new ActionListener() {
+			
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (btnFindCot.isEnabled())
-					llenarDetalle();
+			public void actionPerformed(ActionEvent arg0) {
+				llenarDetalle();
+				
 			}
 		});
+		
+		this.btnFindCot.setBounds(250, 103, 20, 20);
 
 		pnlPrincipal.add(this.btnFindCot);
 

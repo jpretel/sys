@@ -280,8 +280,13 @@ public class FrmDocRequerimiento extends AbstractDocForm {
 
 	@Override
 	public void nuevo() {
+		Calendar c = Calendar.getInstance();
+		
 		setRequerimiento(new Requerimiento());
 		getRequerimiento().setIdrequerimiento(System.nanoTime());
+		requerimiento.setAnio(c.get(Calendar.YEAR));
+		requerimiento.setMes(c.get(Calendar.MONTH) + 1);
+		requerimiento.setDia(c.get(Calendar.DAY_OF_MONTH));
 		txtSerie.requestFocus();
 	}
 

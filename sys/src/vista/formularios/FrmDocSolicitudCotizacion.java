@@ -4,10 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -52,7 +55,6 @@ import entity.SolicitudCompra;
 import entity.SolicitudCotizacion;
 import entity.Unimedida;
 import vista.contenedores.CntClieprov;
-import vista.controles.FindButton;
 
 public class FrmDocSolicitudCotizacion extends AbstractDocForm {
 
@@ -83,7 +85,7 @@ public class FrmDocSolicitudCotizacion extends AbstractDocForm {
 	private CntClieprov cntClieprov;
 	private DSGTextFieldCorrelativo txtSerieRef;
 	private DSGTextFieldCorrelativo txtNumeroRef;
-	private FindButton findButton;
+	private JButton btnRefSal;
 	private JLabel lblSolicitudDeCompra;
 
 	public FrmDocSolicitudCotizacion() {
@@ -231,16 +233,23 @@ public class FrmDocSolicitudCotizacion extends AbstractDocForm {
 		this.txtNumeroRef.setBounds(558, 63, 80, 20);
 		pnlPrincipal.add(this.txtNumeroRef);
 
-		this.findButton = new FindButton();
-		this.findButton.setBounds(640, 63, 20, 20);
-		this.findButton.addMouseListener(new MouseAdapter() {
+		this.btnRefSal = new JButton();
+		this.btnRefSal.setIcon(new ImageIcon(new ImageIcon(getClass()
+				.getResource("/main/resources/iconos/search.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH)));
+
+		btnRefSal.setMargin(new Insets(0, 0, 0, 0));
+		
+		this.btnRefSal.setBounds(640, 63, 20, 20);
+		this.btnRefSal.addActionListener(new ActionListener() {
+			
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (findButton.isEnabled())
-					llenarDetalle();
+			public void actionPerformed(ActionEvent arg0) {
+				llenarDetalle();
 			}
 		});
-		pnlPrincipal.add(this.findButton);
+		
+		pnlPrincipal.add(this.btnRefSal);
 
 		this.lblSolicitudDeCompra = new JLabel("Solicitud de Compra");
 		this.lblSolicitudDeCompra.setBounds(400, 64, 104, 16);
@@ -387,7 +396,7 @@ public class FrmDocSolicitudCotizacion extends AbstractDocForm {
 		this.txtNumero_2.setEditable(true);
 		this.txtFecha.setEditable(true);
 		this.txtGlosa.setEditable(true);
-		this.findButton.setEnabled(true);
+		this.btnRefSal.setEnabled(true);
 		FormValidador.TextFieldsEdicion(true, txtSerieRef, txtNumeroRef);
 		FormValidador.CntEdicion(true, cntClieprov);
 		getDetalleTM().setEditar(true);
@@ -399,7 +408,7 @@ public class FrmDocSolicitudCotizacion extends AbstractDocForm {
 		this.txtNumero_2.setEditable(false);
 		this.txtFecha.setEditable(false);
 		this.txtGlosa.setEditable(false);
-		this.findButton.setEnabled(false);
+		this.btnRefSal.setEnabled(false);
 		FormValidador.TextFieldsEdicion(false, txtSerieRef, txtNumeroRef);
 		FormValidador.CntEdicion(false, cntClieprov);
 		getDetalleTM().setEditar(false);

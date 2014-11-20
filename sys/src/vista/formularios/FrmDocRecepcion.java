@@ -1,5 +1,7 @@
 package vista.formularios;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ import vista.utilitarios.renderers.FloatRenderer;
 import javax.persistence.Tuple;
 import javax.swing.JLabel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -56,17 +60,13 @@ import entity.Unimedida;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 
 import vista.contenedores.CntGrupoCentralizacion;
 
 import javax.swing.JTextField;
-
-import vista.controles.FindButton;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import vista.contenedores.CntMoneda;
 
@@ -99,7 +99,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	private JLabel lblNewLabel;
 	private JTextField txtSerieCompra;
 	private JTextField txtNumeroCompra;
-	private FindButton findButton;
+	private JButton btnRefOC;
 	private OrdenCompra ordencompra = null;
 	private CntMoneda cntMoneda;
 
@@ -323,15 +323,23 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			}
 		});
 
-		this.findButton = new FindButton();
-		findButton.addMouseListener(new MouseAdapter() {
+		this.btnRefOC = new JButton();
+		this.btnRefOC.setIcon(new ImageIcon(new ImageIcon(getClass()
+				.getResource("/main/resources/iconos/search.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH)));
+
+		btnRefOC.setMargin(new Insets(0, 0, 0, 0));
+		btnRefOC.addActionListener(new ActionListener() {
+			
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				llenarDetalleRecepcion();
+				
 			}
 		});
-		this.findButton.setBounds(198, 145, 20, 20);
-		pnlPrincipal.add(this.findButton);
+		
+		this.btnRefOC.setBounds(198, 145, 21, 21);
+		pnlPrincipal.add(this.btnRefOC);
 
 		cntConcepto.txtCodigo.addFocusListener(new FocusAdapter() {
 			@Override
@@ -340,11 +348,11 @@ public class FrmDocRecepcion extends AbstractDocForm {
 					if (cntConcepto.getSeleccionado().getSolcitaCompra() > 0) {
 						txtSerieCompra.setEditable(true);
 						txtNumeroCompra.setEditable(true);
-						findButton.setEnabled(true);
+						btnRefOC.setEnabled(true);
 					} else {
 						txtSerieCompra.setEditable(false);
 						txtNumeroCompra.setEditable(false);
-						findButton.setEnabled(false);
+						btnRefOC.setEnabled(false);
 					}
 				}
 			}
@@ -570,16 +578,16 @@ public class FrmDocRecepcion extends AbstractDocForm {
 			if (cntConcepto.getSeleccionado().getSolcitaCompra() > 0) {
 				txtSerieCompra.setEditable(true);
 				txtNumeroCompra.setEditable(true);
-				findButton.setEnabled(true);
+				btnRefOC.setEnabled(true);
 			} else {
 				txtSerieCompra.setEditable(false);
 				txtNumeroCompra.setEditable(false);
-				findButton.setEnabled(false);
+				btnRefOC.setEnabled(false);
 			}
 		} else {
 			txtSerieCompra.setEditable(false);
 			txtNumeroCompra.setEditable(false);
-			findButton.setEnabled(false);
+			btnRefOC.setEnabled(false);
 		}
 
 		FormValidador.CntEdicion(true, this.cntGrupoCentralizacion,
@@ -596,7 +604,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		this.txtGlosa.setEditable(false);
 		this.txtSerieCompra.setEditable(false);
 		this.txtNumeroCompra.setEditable(false);
-		this.findButton.setEnabled(false);
+		this.btnRefOC.setEnabled(false);
 		FormValidador.CntEdicion(false, this.cntGrupoCentralizacion,
 				this.cntMoneda, this.cntConcepto, this.cntResponsable,
 				this.cntSucursal, this.cntAlmacen);

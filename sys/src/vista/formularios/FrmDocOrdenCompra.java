@@ -239,7 +239,7 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 			}
 		};
 
-		this.cntReferenciaDoc.setBounds(200, 100, 180, 20);
+		this.cntReferenciaDoc.setBounds(200, 100, 185, 23);
 		pnlPrincipal.add(this.cntReferenciaDoc);
 
 		this.cntMoneda = new CntMoneda();
