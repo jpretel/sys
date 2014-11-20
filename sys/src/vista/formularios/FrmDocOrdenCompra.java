@@ -106,10 +106,10 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 	private JLabel lblMoneda;
 	private JLabel lblTCambio;
 	private JLabel lblTCMoneda;
-	
+
 	private ComboBox cboTipoDoc;
 	private List<String[]> optionList = new ArrayList<String[]>();
-	
+
 	public FrmDocOrdenCompra() {
 		super("Orden de Compra");
 		txtFecha.setBounds(245, 11, 89, 22);
@@ -142,19 +142,20 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		this.scrlGlosa.setViewportView(this.txtGlosa);
 
 		this.lblReferencia = new JLabel("Referencia");
-		this.lblReferencia.setBounds(10, 104, 74, 16);
+		this.lblReferencia.setBounds(10, 102, 74, 16);
 		pnlPrincipal.add(this.lblReferencia);
-		
-		optionList.add(new String[]{"S","Solicitud de Compra"});
-		optionList.add(new String[]{"C","Cotizacion de Compra"});
-		cboTipoDoc = new vista.combobox.ComboBox(optionList,1); 
-//		cboTipoDoc.setBounds(446, 106, 125, 20);
-//		pnlPrincipal.add(cboTipoDoc);		
-		
+
+		optionList.add(new String[] { "S", "Solicitud de Compra" });
+		optionList.add(new String[] { "C", "Cotizacion de Compra" });
+		cboTipoDoc = new vista.combobox.ComboBox(optionList, 1);
+//		cboTipoDoc.setBounds(72, 100, 125, 20);
+//		pnlPrincipal.add(cboTipoDoc);
+
 		cboTipoDoc.setSelectedIndex(0);
-		
+
 		this.cntReferenciaDoc = new CntReferenciaDoc() {
 			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void buscarReferencia() {
 				String serie;
@@ -168,12 +169,14 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 				}
 
 				if (numero > 0 && !serie.isEmpty()) {
-					String tipo = optionList.get(cboTipoDoc.getSelectedIndex())[0].toString();
-					//referenciarSolicitudCotizacionCompra(serie, numero, sucursal, almacen,tipo);
-					if (tipo=="S") {
+					String tipo = optionList.get(cboTipoDoc.getSelectedIndex())[0]
+							.toString();
+					// referenciarSolicitudCotizacionCompra(serie, numero,
+					// sucursal, almacen,tipo);
+					if (tipo == "S") {
 						referenciarSolicitudCompra(serie, numero);
 					} else {
-						
+
 					}
 					txtSerie.setText("");
 					txtNumero.setText("");
@@ -511,8 +514,8 @@ public class FrmDocOrdenCompra extends AbstractDocForm {
 		ContabilizaSlcCompras.ContabilizaOrdenCompra(getOrdencompra()
 				.getIdordencompra());
 
-		ContabilizaComprasRecepcion.ContabilizarComprasRecepcion(
-		 getOrdencompra().getIdordencompra(), 1, "Compra");
+		ContabilizaComprasRecepcion.ContabilizaCompra(ordencompra
+				.getIdordencompra());
 	}
 
 	@Override

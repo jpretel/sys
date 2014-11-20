@@ -1,13 +1,15 @@
 package vista.contenedores;
 
 import java.awt.Color;
+import java.awt.Insets;
 import java.awt.Window;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import vista.Sys;
-import vista.controles.FindButton;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -19,8 +21,8 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public abstract class AbstractCntBuscar<T> extends JPanel {
 	/**
@@ -29,7 +31,7 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 	private static final long serialVersionUID = 1L;
 	public JXTextFieldEntityAC<T> txtCodigo;
 	public JTextField txtDescripcion;
-	public FindButton btnBuscar;
+	public JButton btnBuscar;
 
 	public AbstractCntBuscar(String[] cabeceras, int[] anchos) {
 
@@ -93,18 +95,24 @@ public abstract class AbstractCntBuscar<T> extends JPanel {
 		txtDescripcion = new JTextField(15);
 		txtDescripcion.setEditable(false);
 
-		btnBuscar = new FindButton();
+		btnBuscar = new JButton();
 		this.btnBuscar.setFocusable(false);
+		
+		this.btnBuscar.setIcon(new ImageIcon(new ImageIcon(getClass()
+				.getResource("/main/resources/iconos/search.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH)));
 
-		btnBuscar.addMouseListener(new MouseAdapter() {
+		btnBuscar.setMargin(new Insets(0, 0, 0, 0));
+		
+		
+		btnBuscar.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (isEnabled()) {
-					txtCodigo.requestFocus();
-					txtCodigo.checkForAndShowSuggestions();
-				}
+			public void actionPerformed(ActionEvent arg0) {
+				txtCodigo.requestFocus();
+				txtCodigo.checkForAndShowSuggestions();
 			}
 		});
+		
 		GridBagConstraints gbc_txtCodigo = new GridBagConstraints();
 
 		gbc_txtCodigo.fill = GridBagConstraints.HORIZONTAL;

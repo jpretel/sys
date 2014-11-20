@@ -10,16 +10,21 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import vista.Sys;
-import vista.controles.FindButton;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Insets;
+
+import javax.swing.JButton;
+import javax.swing.ImageIcon;
 
 public class CntReferenciaDoc extends JPanel implements FocusListener {
 	/**
@@ -28,8 +33,6 @@ public class CntReferenciaDoc extends JPanel implements FocusListener {
 	private static final long serialVersionUID = 1L;
 	public DSGTextFieldCorrelativo txtSerie;
 	public DSGTextFieldCorrelativo txtNumero;
-	public FindButton btnBuscar;
-	public ViewButton btnVer;
 
 	private JWindow refWindow;
 	private JScrollPane scrollPane;
@@ -38,6 +41,8 @@ public class CntReferenciaDoc extends JPanel implements FocusListener {
 	private int[] anchos;
 	private boolean editar;
 	private Object[][] data;
+	private JButton btnBuscar;
+	private JButton btnVer;
 
 	/**
 	 * @wbp.parser.constructor
@@ -46,12 +51,12 @@ public class CntReferenciaDoc extends JPanel implements FocusListener {
 		this.cabeceras = cabeceras;
 		this.anchos = anchos;
 		setForeground(Color.LIGHT_GRAY);
-		this.setBounds(152, 11, 180, 20);
+		this.setBounds(152, 11, 188, 25);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 
 		gridBagLayout.columnWidths = new int[] { 46, 94, 20, 20, 0 };
-		gridBagLayout.rowHeights = new int[] { 20, 0 };
-		gridBagLayout.columnWeights = new double[] { 1.0, 1.0, 0.0, 0.0,
+		gridBagLayout.rowHeights = new int[] { 25, 0 };
+		gridBagLayout.columnWeights = new double[] { 0, 0, 0.0, 0.0,
 				Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
@@ -59,6 +64,7 @@ public class CntReferenciaDoc extends JPanel implements FocusListener {
 		txtSerie = new DSGTextFieldCorrelativo(4);
 
 		GridBagConstraints gbc_txtCodigo = new GridBagConstraints();
+		// gbc_txtCodigo.insets = new Insets(0, 0, 0, 5);
 
 		gbc_txtCodigo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtCodigo.gridx = 0;
@@ -67,24 +73,36 @@ public class CntReferenciaDoc extends JPanel implements FocusListener {
 
 		txtNumero = new DSGTextFieldCorrelativo(8);
 		GridBagConstraints gbc_txtDescripcion = new GridBagConstraints();
+		// gbc_txtDescripcion.insets = new Insets(0, 0, 0, 5);
 		gbc_txtDescripcion.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtDescripcion.gridx = 1;
 		gbc_txtDescripcion.gridy = 0;
 		add(txtNumero, gbc_txtDescripcion);
 
-		btnBuscar = new FindButton();
-		this.btnBuscar.setFocusable(false);
+		this.btnBuscar = new JButton();
+		this.btnBuscar.setIcon(new ImageIcon(new ImageIcon(getClass()
+				.getResource("/main/resources/iconos/search.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH)));
+
+		btnBuscar.setMargin(new Insets(0, 0, 0, 0));
 
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
+		// gbc_btnBuscar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnBuscar.anchor = GridBagConstraints.EAST;
 		gbc_btnBuscar.gridx = 2;
 		gbc_btnBuscar.gridy = 0;
 		add(btnBuscar, gbc_btnBuscar);
 
-		btnVer = new ViewButton();
-		this.btnVer.setFocusable(false);
+		btnVer = new JButton();
+		this.btnVer.setIcon(new ImageIcon(new ImageIcon(getClass().getResource(
+				"/main/resources/iconos/ver_referencia.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH)));
+
+		this.btnVer.setMargin(new Insets(0, 0, 0, 0));
 
 		GridBagConstraints gbc_btnVer = new GridBagConstraints();
+		gbc_btnVer.gridx = 3;
+		gbc_btnVer.gridy = 0;
 		gbc_btnVer.anchor = GridBagConstraints.EAST;
 		gbc_btnBuscar.gridx = 3;
 		gbc_btnBuscar.gridy = 0;
@@ -119,22 +137,19 @@ public class CntReferenciaDoc extends JPanel implements FocusListener {
 		txtSerie.addFocusListener(this);
 		btnBuscar.addFocusListener(this);
 		btnVer.addFocusListener(this);
-		btnBuscar.addMouseListener(new MouseAdapter() {
+		btnBuscar.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (isEnabled() && editar) {
-					buscarReferencia();
-				}
+			public void actionPerformed(ActionEvent arg0) {
+				buscarReferencia();
 			}
 		});
 
-		btnVer.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (isEnabled()) {
+		btnVer.addActionListener(new ActionListener() {
 
-					mostrarReferencias();
-				}
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+//				txtNumero.requestFocus();
+				mostrarReferencias();
 			}
 		});
 	}

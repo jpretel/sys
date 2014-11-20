@@ -68,6 +68,7 @@ public class CentralizaAlm {
 						+ concepto.getDescripcion() + " "
 						+ prod.getSubgrupo().getGrupo().getIdgrupo() + " "
 						+ prod.getSubgrupo().getId().getIdsubgrupo());
+				return null;
 			}
 
 			// Insertar cuenta de Debe

@@ -427,13 +427,23 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void grabar() {
 		docIngresoDAO.crear_editar(getIngreso());
+
+		for (DetDocingreso det : detDocingresoDAO.aEliminar(ingreso,
+				DetDocingresoL)) {
+			detDocingresoDAO.remove(det);
+		}
+
 		for (DetDocingreso det : getDetDocingresoL()) {
 			detDocingresoDAO.crear_editar(det);
 		}
-		ContabilizaComprasRecepcion.ContabilizarComprasRecepcion(getIngreso()
-				.getIddocingreso(), -1, "Recepcion");
+
+		ContabilizaComprasRecepcion.ContabilizaRecepcion(getIngreso()
+				.getIddocingreso());
+		
 		ContabilizaAlmacen.ContabilizarIngreso(getIngreso());
+
 		CentralizaAlm.CentralizaIngreso(getIngreso().getIddocingreso());
+
 		setIngreso(docIngresoDAO.find(getIngreso().getIddocingreso()));
 	}
 
@@ -611,7 +621,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 	@Override
 	public void llenarDesdeVista() {
 		Long Id = getIngreso().getIddocingreso();
-		System.out.println(Id);
+
 		getIngreso().setGrupoCentralizacion(
 				cntGrupoCentralizacion.getSeleccionado());
 		getIngreso().setSerie(this.txtSerie.getText());
@@ -623,6 +633,7 @@ public class FrmDocRecepcion extends AbstractDocForm {
 		}
 
 		getIngreso().setMoneda(cntMoneda.getSeleccionado());
+
 		getIngreso().setResponsable(this.cntResponsable.getSeleccionado());
 		getIngreso().setSucursal(this.cntSucursal.getSeleccionado());
 		getIngreso().setAlmacen(this.cntAlmacen.getSeleccionado());

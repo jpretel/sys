@@ -1,4 +1,7 @@
 package core.centralizacion;
+import java.util.ArrayList;
+import java.util.List;
+
 import dao.DOrdenCompraDAO;
 import dao.DetDocIngresoDAO;
 import dao.DocingresoDAO;
@@ -11,39 +14,55 @@ import entity.KardexCompraRecepcion;
 import entity.OrdenCompra;
 
 public class ContabilizaComprasRecepcion {
-	public static boolean ContabilizarComprasRecepcion(long id,int factor,String tabla){
-		System.out.println("asdas");
+	
+	public static boolean ContabilizaCompra (long id) {
 		OrdenCompraDAO ordenCompraDAO = new OrdenCompraDAO();
-		DocingresoDAO docingresoDAO = new DocingresoDAO();
 		DOrdenCompraDAO dordenCompraDAO = new DOrdenCompraDAO();
-		DetDocIngresoDAO detdocingresoDAO = new DetDocIngresoDAO();
-		OrdenCompra ordenCompra = null;
-		Docingreso docingreso = null;
-		KardexCompraRecepcion kardexCompraRecepcion = new KardexCompraRecepcion();
 		KardexCompraRecepcionDAO kardexCompraRecepcionDAO = new KardexCompraRecepcionDAO();
-		kardexCompraRecepcionDAO.borrarPorRefCompraFactor(id,factor);
-		if(tabla == "Compra"){			
-			ordenCompra = ordenCompraDAO.find(id);
-			for(DOrdenCompra dordenCompra : dordenCompraDAO.getPorOrdenCompra(ordenCompra)){
-				kardexCompraRecepcion.setIdordencompra(dordenCompra.getId().getIdordencompra());
-				kardexCompraRecepcion.setFactor(factor);
-				kardexCompraRecepcion.setCantidad(dordenCompra.getCantidad());
-				kardexCompraRecepcion.setProducto(dordenCompra.getProducto());
-				kardexCompraRecepcion.setUnimedida(dordenCompra.getUnimedida());
-			}
-		}else{
-			docingreso = docingresoDAO.find(id);
-			for(DetDocingreso detdocingreso: detdocingresoDAO.getPorIdIngreso(docingreso)){
-				kardexCompraRecepcion.setIdordencompra(detdocingreso.getIdreferencia());
-				kardexCompraRecepcion.setCantidad(detdocingreso.getCantidad());
-				kardexCompraRecepcion.setFactor(factor);
-				kardexCompraRecepcion.setProducto(detdocingreso.getProducto());
-				kardexCompraRecepcion.setUnimedida(detdocingreso.getUnimedida());
-				kardexCompraRecepcion.setIddocingreso(detdocingreso.getId().getIdingreso());
-			}
+		
+		OrdenCompra ordenCompra = ordenCompraDAO.find(id);
+		
+		kardexCompraRecepcionDAO.borrarPorReferencia(id);
+		List<KardexCompraRecepcion> kardex = new ArrayList<KardexCompraRecepcion>();
+		
+		for(DOrdenCompra dordenCompra : dordenCompraDAO.getPorOrdenCompra(ordenCompra)){
+			KardexCompraRecepcion kdx = new KardexCompraRecepcion();
+			kdx.setIdordencompra(id);
+			kdx.setIdreferencia(id);
+			kdx.setFactor(1);
+			kdx.setCantidad(dordenCompra.getCantidad());
+			kdx.setProducto(dordenCompra.getProducto());
+			kdx.setUnimedida(dordenCompra.getUnimedida());
+			kardex.add(kdx);
 		}
-		kardexCompraRecepcion.setIdreferencia(id);
-		kardexCompraRecepcionDAO.crear_editar(kardexCompraRecepcion);		
+		kardexCompraRecepcionDAO.create(kardex);
+		return true;
+	}
+	
+	
+	public static boolean ContabilizaRecepcion (long id) {
+		
+		DocingresoDAO docingresoDAO = new DocingresoDAO();
+		DetDocIngresoDAO detdocingresoDAO = new DetDocIngresoDAO();
+		
+		KardexCompraRecepcionDAO kardexCompraRecepcionDAO = new KardexCompraRecepcionDAO();
+		
+		kardexCompraRecepcionDAO.borrarPorReferencia(id);
+		
+		List<KardexCompraRecepcion> kardex = new ArrayList<KardexCompraRecepcion>();
+		Docingreso docingreso = docingresoDAO.find(id);
+		for(DetDocingreso detdocingreso: detdocingresoDAO.getPorIdIngreso(docingreso)){
+			KardexCompraRecepcion kdx = new KardexCompraRecepcion();
+			kdx.setIdordencompra(detdocingreso.getIdreferencia());
+			kdx.setIdreferencia(id);
+			kdx.setFactor(-1);
+			kdx.setCantidad(detdocingreso.getCantidad());
+			kdx.setProducto(detdocingreso.getProducto());
+			kdx.setUnimedida(detdocingreso.getUnimedida());
+			kardex.add(kdx);
+		}
+		
+		kardexCompraRecepcionDAO.create(kardex);
 		return true;
 	}
 }

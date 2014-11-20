@@ -21,11 +21,7 @@ public class KardexCompraRecepcion implements Serializable {
 	
 	private long idordencompra;
 	
-	private int item_compra;
-	
-	private long iddocingreso;
-	
-	private int item_recepcion;
+	private long idreferencia;
 	
 	@ManyToOne
 	@JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
@@ -40,7 +36,7 @@ public class KardexCompraRecepcion implements Serializable {
 	private float cantidad;
 	private static final long serialVersionUID = 1L;
 	
-	private long idreferencia;
+	
 
 	public KardexCompraRecepcion() {
 		super();
@@ -100,29 +96,5 @@ public class KardexCompraRecepcion implements Serializable {
 
 	public void setIdordencompra(long idordencompra) {
 		this.idordencompra = idordencompra;
-	}
-
-	public int getItem_compra() {
-		return item_compra;
-	}
-
-	public void setItem_compra(int item_compra) {
-		this.item_compra = item_compra;
-	}
-
-	public long getIddocingreso() {
-		return iddocingreso;
-	}
-
-	public void setIddocingreso(long iddocingreso) {
-		this.iddocingreso = iddocingreso;
-	}
-
-	public int getItem_recepcion() {
-		return item_recepcion;
-	}
-
-	public void setItem_recepcion(int item_recepcion) {
-		this.item_recepcion = item_recepcion;
 	}
 }

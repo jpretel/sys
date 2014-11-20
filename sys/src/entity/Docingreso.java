@@ -52,7 +52,7 @@ public class Docingreso implements Serializable {
 		this.ordencompra = ordencompra;
 	}
 
-	@Column(nullable=false, length=500)
+	@Column(nullable=false, length=250)
 	private String glosa;
 	
 	@Column(nullable=false, length=8)

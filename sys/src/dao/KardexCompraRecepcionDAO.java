@@ -27,6 +27,17 @@ public class KardexCompraRecepcionDAO extends AbstractDAO<KardexCompraRecepcion>
 		return getEntityManager().createQuery(q).getResultList();
 	}
 	
+	public void borrarPorReferencia(long idreferencia) {
+		getEntityManager().getTransaction().begin();
+		CriteriaDelete<KardexCompraRecepcion> delete = cb.createCriteriaDelete(KardexCompraRecepcion.class);
+		Root<KardexCompraRecepcion> c = delete.from(KardexCompraRecepcion.class);
+		Predicate condicion = cb.equal( c.get("idreferencia"), idreferencia);
+		delete.where(condicion);
+		Query query = getEntityManager().createQuery(delete);
+		query.executeUpdate();
+		getEntityManager().getTransaction().commit();
+	}
+	
 	public void borrarPorRefCompraFactor(long idreferencia, int factor) {
 		getEntityManager().getTransaction().begin();
 		CriteriaDelete<KardexCompraRecepcion> delete = cb.createCriteriaDelete(KardexCompraRecepcion.class);
@@ -49,7 +60,7 @@ public class KardexCompraRecepcionDAO extends AbstractDAO<KardexCompraRecepcion>
 		
 		Predicate condicion = cb.and(
 				cb.equal(from.get("idordencompra"), oCompra.getIdordencompra()),
-				cb.and(cb.notEqual(from.get("iddocingreso"),
+				cb.and(cb.notEqual(from.get("idreferencia"),
 						docingreso.getIddocingreso())));
 		q.multiselect(
 				from.get("producto").alias("producto"),
