@@ -18,7 +18,7 @@ public class FrmListaOrdenCompra extends AbstractDocList {
 	private List<OrdenCompra> lista = new ArrayList<OrdenCompra>();
 
 	public FrmListaOrdenCompra() {
-		super("Ordenes de Compra", "vista.formularios.FrmDocOrdenCompra");
+		super("Lista de Ordenes de Compra", "vista.formularios.FrmDocOrdenCompra");
 		cboDocumento.setVisible(false);
 		lblDocumento.setVisible(false);
 		cabeceras = new String[] { "Fecha", "Serie", "Numero", "Responsable",

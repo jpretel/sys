@@ -18,7 +18,7 @@ public class FrmListaRequerimiento extends AbstractDocList {
 	private List<Requerimiento> lista = new ArrayList<Requerimiento>();
 
 	public FrmListaRequerimiento() {
-		super("Requerimiento", "vista.formularios.FrmDocRequerimiento");
+		super("Lista de Requerimientos", "vista.formularios.FrmDocRequerimiento");
 		cboDocumento.setVisible(false);
 		lblDocumento.setVisible(false);
 		cabeceras = new String[] { "Fecha", "Serie", "Numero", "Responsable",

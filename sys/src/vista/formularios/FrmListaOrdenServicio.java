@@ -18,7 +18,7 @@ public class FrmListaOrdenServicio extends AbstractDocList {
 	private List<OrdenServicio> lista = new ArrayList<OrdenServicio>();
 
 	public FrmListaOrdenServicio() {
-		super("Ordenes de Servicio", "vista.formularios.FrmDocOrdenServicio");
+		super("Lista de Ordenes de Servicio", "vista.formularios.FrmDocOrdenServicio");
 		cboDocumento.setVisible(false);
 		lblDocumento.setVisible(false);
 		cabeceras = new String[] { "Fecha", "Serie", "Numero", "Responsable",
