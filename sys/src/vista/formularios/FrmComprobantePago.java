@@ -458,7 +458,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		cboAlmacen.setBounds(418, 111, 143, 20);
 		panel_1.add(cboAlmacen);
 		
-		JLabel lblAlmacen = new JLabel("Almacen");
+		JLabel lblAlmacen = new JLabel("Sucursal");
 		lblAlmacen.setBounds(362, 114, 58, 14);
 		panel_1.add(lblAlmacen);
 		
@@ -1346,7 +1346,7 @@ public class FrmComprobantePago extends JInternalFrame {
 			String prmstrsucursal="001";
 			
 			ListAlmacen=new ComprobantePagoDAO().ListarAlmacen(prmstrsucursal);
-			cboAlmacen.addItem("Selecione Almacen");
+			cboAlmacen.addItem("Selecione Sucursal");
 			for (Object[] objects : ListAlmacen) {
 				cboAlmacen.addItem(objects[1]);
 			}
