@@ -119,15 +119,15 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 		return Resul;
 	}
 	
-	public Object DevolverComprobantePago(String prmstrdocumento)
+	public Object DevolverComprobantePago(int prmintIdComproPago)
 	{
 		Object comprobantepago=null;
 		try {
 			getEntityManager().getTransaction().begin();
 
 			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("sp_DevuelveComprobantePago");
-			query.registerStoredProcedureParameter("prmstrdocumento",String.class,ParameterMode.IN);
-			query.setParameter("prmstrdocumento",prmstrdocumento);
+			query.registerStoredProcedureParameter("prmintIdComproPago",Integer.class,ParameterMode.IN);
+			query.setParameter("prmintIdComproPago",prmintIdComproPago);
 			
 			comprobantepago= query.getSingleResult();
 			
@@ -179,5 +179,24 @@ public class ComprobantePagoDAO extends AbstractDAO<StockExistenciasValorizadoEn
 		return Resul;
 	}
 	
+	public List<Object[]> ListarComprobantePago(String prmsrtdocumento,String prmstrserie)
+	{
+		List<Object[]> Resul=null;
+		try {
+			getEntityManager().getTransaction().begin();
+
+			StoredProcedureQuery query = getEntityManager().createStoredProcedureQuery("sp_ListarComprobantePago");
+			query.registerStoredProcedureParameter("prmsrtdocumento",String.class,ParameterMode.IN);
+			query.registerStoredProcedureParameter("prmstrserie",String.class,ParameterMode.IN);
+			query.setParameter("prmsrtdocumento",prmsrtdocumento);
+			query.setParameter("prmstrserie",prmstrserie);
+			Resul=  query.getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return Resul;
+	}
 	
 }
