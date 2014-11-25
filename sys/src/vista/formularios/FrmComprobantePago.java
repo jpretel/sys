@@ -65,28 +65,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ScrollPaneConstants;
 
-//import org.eclipse.persistence.internal.oxm.record.json.JSONParser.object_return;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import vista.Sys;
 import vista.barras.PanelBarraMaestro;
 import vista.controles.DSGDatePicker;
@@ -152,14 +130,18 @@ public class FrmComprobantePago extends JInternalFrame {
 	JComboBox cboMarca = new JComboBox();
 	java.util.List<Object[]> listGrupo=new HojaTrabajoStockDAO().ListarGrupo();
 	java.util.List<Object[]> listMarca=new HojaTrabajoStockDAO().ListarMarca();
-	JInternalFrame internalFrame = new JInternalFrame("Agregar Producto de Nota de Ingreso");
+	JInternalFrame iframeNotaIngreso = new JInternalFrame("Agregar Producto de Nota de Ingreso");
 	JInternalFrame iframeproducto = new JInternalFrame("Buscar Producto");
+	JInternalFrame iframeComprobante = new JInternalFrame("Buscar Comprobante Pago");
 	private JTable TBNotaIngreso;
 	BigDecimal IGV=new BigDecimal("1.18");
 	Icon iconbusqueda = new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/GrillaBuscar.png"));
 	private JTextField txtNDocumento;
 	private JTable tbproducto;
+	private JTable tbcomprobantepago;
 	private JTextField txtNSerie;
+	private JTextField txtNDocumentoBuscar;
+	private JTextField txtNSerieBuscar;
 
 	/**
 	 * Launch the application.
@@ -210,8 +192,8 @@ public class FrmComprobantePago extends JInternalFrame {
 //		cboTipoDoc.setModel(new DefaultComboBoxModel(new String[] {"---Selecione---"}));
 		panel_1.add(cboTipoDoc);
 		contentPane.setLayout(null);
-		internalFrame.setFrameIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/logo.png")));
-		internalFrame.addComponentListener(new ComponentAdapter() {
+		iframeNotaIngreso.setFrameIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/logo.png")));
+		iframeNotaIngreso.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentHidden(ComponentEvent arg0) {
 				for (int i = TBNotaIngreso.getRowCount() -1; i >= 0; i--)
@@ -297,17 +279,119 @@ public class FrmComprobantePago extends JInternalFrame {
 		btnbuscarproducto.setBounds(410, 8, 50, 28);
 		iframeproducto.getContentPane().add(btnbuscarproducto);
 		iframeproducto.setVisible(false);
-		internalFrame.setClosable(true);
-		internalFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
 		
-		internalFrame.setBounds(0, 0, 698, 313);
-		contentPane.add(internalFrame);
-		internalFrame.getContentPane().setLayout(null);
+		iframeComprobante.setClosable(true);
+		iframeComprobante.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		iframeComprobante.setBounds(534, 281, 425, 253);
+		contentPane.add(iframeComprobante);
+		iframeComprobante.getContentPane().setLayout(null);
+		
+		
+		JLabel lblNdocumentoBuscar = new JLabel("N° Documento");
+		lblNdocumentoBuscar.setBounds(10, 0, 200, 50);
+		iframeComprobante.getContentPane().add(lblNdocumentoBuscar);
+		
+		txtNDocumentoBuscar = new JTextField();
+		txtNDocumentoBuscar.setBounds(85, 15, 118, 20);
+		iframeComprobante.getContentPane().add(txtNDocumentoBuscar);
+		txtNDocumentoBuscar.setColumns(10);
+		
+		JLabel lblNserieBuscar = new JLabel("N° Serie");
+		lblNserieBuscar.setBounds(220, 0, 200, 50);
+		iframeComprobante.getContentPane().add(lblNserieBuscar);
+		
+		txtNSerieBuscar = new JTextField();
+		txtNSerieBuscar.setBounds(265, 15, 118, 20);
+		iframeComprobante.getContentPane().add(txtNSerieBuscar);
+		txtNSerieBuscar.setColumns(10);
+		
+		JButton btnComprobantebuscar = new JButton("");
+		btnComprobantebuscar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ListarComprobantePago();
+			}
+		});
+		btnComprobantebuscar.setIcon(new ImageIcon(new ImageIcon(PanelBarraMaestro.class
+				.getResource("/main/resources/iconos/consultar.png")).getImage()
+				.getScaledInstance(18, 18, java.awt.Image.SCALE_DEFAULT)));
+		btnComprobantebuscar.setBounds(390, 8, 50, 28);
+		iframeComprobante.getContentPane().add(btnComprobantebuscar);
+		
+		
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(10, 40, 500, 150);
+		iframeComprobante.getContentPane().add(scrollPane_3);
+		
+		tbcomprobantepago = new JTable();
+		tbcomprobantepago.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"N\u00B0", "N\u00B0 Serie", "N\u00B0 Documento", "TipoDoc","Fecha","Idcomp"
+			}
+		));
+		tbcomprobantepago.getColumnModel().getColumn(0).setResizable(false);
+		tbcomprobantepago.getColumnModel().getColumn(0).setPreferredWidth(26);
+		tbcomprobantepago.getColumnModel().getColumn(1).setPreferredWidth(133);
+		tbcomprobantepago.getColumnModel().getColumn(2).setPreferredWidth(133);
+		tbcomprobantepago.getColumnModel().getColumn(5).setPreferredWidth(0);
+		tbcomprobantepago.getColumnModel().getColumn(5).setMinWidth(0);
+		tbcomprobantepago.getColumnModel().getColumn(5).setMaxWidth(0);
+		
+		scrollPane_3.setViewportView(tbcomprobantepago);
+		
+		
+		
+		JButton btnBuscarCompPago = new JButton("");
+		btnBuscarCompPago.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					int f=tbcomprobantepago.getSelectedRow();
+					int id=Integer.parseInt(tbcomprobantepago.getModel().getValueAt(f, 5).toString());
+					BuscarComprobantePago(id);
+					iframeComprobante.setVisible(false);
+				} catch (Exception e) {
+					Error(e.toString());
+				}
+				
+			}
+		});
+		btnBuscarCompPago.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmAgregar.png")));
+		btnBuscarCompPago.setToolTipText("Agregar");
+		btnBuscarCompPago.setBounds(410, 196, 50, 28);
+		iframeComprobante.getContentPane().add(btnBuscarCompPago);
+		
+		JButton btnCancelarCompPago = new JButton("");
+		btnCancelarCompPago.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				iframeComprobante.setVisible(false);
+			}
+		});
+		btnCancelarCompPago.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
+		btnCancelarCompPago.setToolTipText("Cancelar");
+		btnCancelarCompPago.setBounds(460, 196, 50, 28);
+		iframeComprobante.getContentPane().add(btnCancelarCompPago);
+		
+		
+		
+		
+		
+		iframeComprobante.setVisible(false);
+		
+		iframeNotaIngreso.setClosable(true);
+		iframeNotaIngreso.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		
+		iframeNotaIngreso.setBounds(0, 0, 698, 313);
+		contentPane.add(iframeNotaIngreso);
+		iframeNotaIngreso.getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(10, 11, 662, 239);
-		internalFrame.getContentPane().add(scrollPane_1);
+		iframeNotaIngreso.getContentPane().add(scrollPane_1);
 		
 		TBNotaIngreso = new JTable();
 		scrollPane_1.setViewportView(TBNotaIngreso);
@@ -375,7 +459,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		btnCancelarDetalle.setIcon(new ImageIcon(FrmComprobantePago.class.getResource("/main/resources/iconos/FrmCancelar.png")));
 		btnCancelarDetalle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 internalFrame.setVisible(false);
+				 iframeNotaIngreso.setVisible(false);
 				 for (int i = TBNotaIngreso.getRowCount() -1; i >= 0; i--)
 				 
 			     {
@@ -384,7 +468,7 @@ public class FrmComprobantePago extends JInternalFrame {
 			}
 		});
 		btnCancelarDetalle.setBounds(620, 254, 50, 28);
-		internalFrame.getContentPane().add(btnCancelarDetalle);
+		iframeNotaIngreso.getContentPane().add(btnCancelarDetalle);
 		
 		JButton btnAceptarDetalle = new JButton("");
 		btnAceptarDetalle.setToolTipText("Agregar");
@@ -395,8 +479,8 @@ public class FrmComprobantePago extends JInternalFrame {
 			}
 		});
 		btnAceptarDetalle.setBounds(570, 254, 50, 28);
-		internalFrame.getContentPane().add(btnAceptarDetalle);
-		internalFrame.setVisible(false);
+		iframeNotaIngreso.getContentPane().add(btnAceptarDetalle);
+		iframeNotaIngreso.setVisible(false);
 		contentPane.add(panel_1);
 		
 		JLabel lblFechaDeDocumento = new JLabel("Fecha Documento");
@@ -759,73 +843,109 @@ public class FrmComprobantePago extends JInternalFrame {
 	public void btnbuscarActionListener(ActionEvent  evt)
 	{
 		try {
-			
-		Object comprobantepagodat=new ComprobantePagoDAO().DevolverComprobantePago(txtNDocumento.getText());
-		
-		
-		if(comprobantepagodat!=null){
-		Object[] comprobantepago=(Object[]) comprobantepagodat;
-		String fecha=comprobantepago[4].toString();
-		String fechavence=comprobantepago[5].toString();
-		fecha=fecha.substring(8, 10)+"/"+fecha.substring(5, 7)+"/"+fecha.substring(0, 4);
-		fechavence=fechavence.substring(8, 10)+"/"+fechavence.substring(5, 7)+"/"+fechavence.substring(0, 4);
-		prmintcomprobante=Integer.valueOf(comprobantepago[0].toString());
-		txtFechaDoc.getEditor().setText(fecha);
-		txtFVence.getEditor().setText(fechavence);
-		txtDetraccion.setText(comprobantepago[7].toString());
-		txtIGV.setText(comprobantepago[8].toString());
-		txtPercep.setText(comprobantepago[9].toString());
-		txtNoGrav.setText(comprobantepago[10].toString());
-		txtRenta.setText(comprobantepago[11].toString());
-		txtTotal.setText(comprobantepago[13].toString());
-		txtNSerie.setText(comprobantepago[1].toString());
-		devuleveprovedor(comprobantepago[16].toString());
-		devuelvetipodocumento(comprobantepago[3].toString());
-		devuelveAlamcen(comprobantepago[19].toString());
-		devuelveMoneda(comprobantepago[6].toString());
-		System.out.println(comprobantepago[1].toString());
-		int prmintcomprobante=Integer.parseInt(comprobantepago[0].toString());
-		List<Object[]>ComprobanteDetalle=new ComprobantePagoDAO().DevolverComprobantePagoDetalle(prmintcomprobante);
-		int n=1;
-		for (Object[] objects : ComprobanteDetalle) {
-			BigDecimal dat1=new BigDecimal(objects[3].toString());
-			
-			Object datos[]={n,false
-					,objects[1].toString(),
-					objects[18].toString(),
-					new JButton(iconbusqueda),
-					"",
-					Integer.parseInt(objects[7].toString())==1?dat1:dat1.divide(IGV, 2, RoundingMode.HALF_UP)
-					,
-					dat1,
-					objects[4].toString(),
-					0,
-					(Integer.parseInt(objects[6].toString())==1?true:false),
-					(Integer.parseInt(objects[7].toString())==1?true:false),
-					objects[19].toString(),new JButton(iconbusqueda),
-					objects[0].toString(),objects[9].toString(),
-					objects[12].toString(),
-					objects[13].toString(),"0"
-			        };
-			//"IdDcomprobante","idProducto","idDNotaIngreso","IdOrdenCompra"
-			 ((DefaultTableModel)TDDetalle.getModel()).addRow(datos);
-		}
-		CalcularTotales();
-		activarbuton(true, true, false, false, false);
-		}else
-		{
-			LimpiarControl();
-			JOptionPane.showMessageDialog(this,
-                    "No se Encontro Resultado",
-                    "Comprobante Pago",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-		}
+			 iframeComprobante.setBounds(contentPane.getWidth()/4, contentPane.getHeight()/4, 536, 253);
+			 iframeComprobante.setVisible(true);
+		     
 		} catch (Exception e) {
 			Error(e.toString());
 		}
 		
 	}
+	
+	public void ListarComprobantePago()
+	{
+		try {
+			List<Object[]>ComprobantePago=new ComprobantePagoDAO().ListarComprobantePago(txtNDocumentoBuscar.getText(),
+					txtNSerieBuscar.getText());
+			int n=1;
+			for (Object[] objects : ComprobantePago) {
+				
+				Object datos[]={n,objects[1],objects[2],objects[3],objects[4],objects[0]
+				        };
+				n++;
+				 ((DefaultTableModel)tbcomprobantepago.getModel()).addRow(datos);
+			}
+			
+		} catch (Exception e) {
+			Error(e.toString());
+		}
+	}
+	
+	public void BuscarComprobantePago(int prmintIdComproPago)
+	{
+		try {
+			
+			Object comprobantepagodat=new ComprobantePagoDAO().DevolverComprobantePago(prmintIdComproPago);
+			LimpiarControl();
+			
+			if(comprobantepagodat!=null){
+				
+			Object[] comprobantepago=(Object[]) comprobantepagodat;
+			String fecha=comprobantepago[4].toString();
+			String fechavence=comprobantepago[5].toString();
+			fecha=fecha.substring(8, 10)+"/"+fecha.substring(5, 7)+"/"+fecha.substring(0, 4);
+			fechavence=fechavence.substring(8, 10)+"/"+fechavence.substring(5, 7)+"/"+fechavence.substring(0, 4);
+			prmintcomprobante=Integer.valueOf(comprobantepago[0].toString());
+			txtFechaDoc.getEditor().setText(fecha);
+			txtFVence.getEditor().setText(fechavence);
+			txtDetraccion.setText(comprobantepago[7].toString());
+			txtIGV.setText(comprobantepago[8].toString());
+			txtPercep.setText(comprobantepago[9].toString());
+			txtNoGrav.setText(comprobantepago[10].toString());
+			txtRenta.setText(comprobantepago[11].toString());
+			txtTotal.setText(comprobantepago[13].toString());
+			txtNSerie.setText(comprobantepago[1].toString());
+			txtNDocumento.setText(comprobantepago[2].toString());
+			devuleveprovedor(comprobantepago[16].toString());
+			devuelvetipodocumento(comprobantepago[3].toString());
+			devuelveAlamcen(comprobantepago[19].toString());
+			devuelveMoneda(comprobantepago[6].toString());
+			System.out.println(comprobantepago[1].toString());
+			int prmintcomprobante=Integer.parseInt(comprobantepago[0].toString());
+			List<Object[]>ComprobanteDetalle=new ComprobantePagoDAO().DevolverComprobantePagoDetalle(prmintcomprobante);
+			int n=1;
+			for (Object[] objects : ComprobanteDetalle) {
+				BigDecimal dat1=new BigDecimal(objects[3].toString());
+				
+				Object datos[]={n,false
+						,objects[1].toString(),
+						objects[18].toString(),
+						new JButton(iconbusqueda),
+						"",
+						Integer.parseInt(objects[7].toString())==1?dat1:dat1.divide(IGV, 2, RoundingMode.HALF_UP)
+						,
+						dat1,
+						objects[4].toString(),
+						0,
+						(Integer.parseInt(objects[6].toString())==1?true:false),
+						(Integer.parseInt(objects[7].toString())==1?true:false),
+						objects[19].toString(),new JButton(iconbusqueda),
+						objects[0].toString(),objects[9].toString(),
+						objects[12].toString(),
+						objects[13].toString(),"0"
+				        };
+				//"IdDcomprobante","idProducto","idDNotaIngreso","IdOrdenCompra"
+				 ((DefaultTableModel)TDDetalle.getModel()).addRow(datos);
+			}
+			CalcularTotales();
+			activarbuton(true, true, false, false, false);
+			}else
+			{
+				
+				JOptionPane.showMessageDialog(this,
+	                    "No se Encontro Resultado",
+	                    "Comprobante Pago",
+	                    JOptionPane.INFORMATION_MESSAGE);
+
+			}
+			} catch (Exception e) {
+				Error(e.toString());
+			}
+	}
+	
+	
+	
+	
 	//------------------Devuelve Combox
 	public void devuleveprovedor(String prmstrproveedor)
 	{
@@ -1091,8 +1211,8 @@ public class FrmComprobantePago extends JInternalFrame {
 			
 			 if(columna==13){
 			 //if(TDDetalle.getModel().getColumnName(arg0))
-				 internalFrame.setBounds(contentPane.getWidth()/6, contentPane.getHeight()/4, 698, 313);
-			     internalFrame.setVisible(true);
+				 iframeNotaIngreso.setBounds(contentPane.getWidth()/6, contentPane.getHeight()/4, 698, 313);
+			     iframeNotaIngreso.setVisible(true);
 			     LlenarTBNotaIngreso();
 			 
 		//	 }
@@ -1182,7 +1302,7 @@ public class FrmComprobantePago extends JInternalFrame {
 			}
 		}
 		CalcularTotales();
-		internalFrame.setVisible(false);
+		iframeNotaIngreso.setVisible(false);
 		((DefaultTableModel)TDDetalle.getModel()).removeRow(filaseleccionada);
 		filaseleccionada=-1;
 	} catch (Exception e) {
@@ -1513,7 +1633,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		}
 		if(txtNDocumento.getText().trim().length()<4 && estado==true)
 		{
-			MessageValidacion("Debe Ingresar N° de Documento");
+			MessageValidacion("Debe Ingresar NÂ° de Documento");
 			estado=false;
 		}
 		if(cboProvedor.getSelectedIndex()==0 && estado==true)
@@ -1560,7 +1680,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		cboMoneda.setEnabled(estado);
 		cboProvedor.setEnabled(estado);
 		cboAlmacen.setEnabled(estado);
-		//txtNDocumento.setEnabled(estado);
+		txtNDocumento.setEnabled(estado);
 		txtProveedor.setEnabled(estado);
 		txtFechaDoc.setEnabled(estado);
 		txtFVence.setEnabled(estado);
@@ -1588,7 +1708,7 @@ public class FrmComprobantePago extends JInternalFrame {
 		cboMoneda.setSelectedIndex(0);
 		cboProvedor.setSelectedIndex(0);
 		cboAlmacen.setSelectedIndex(0);
-		//txtNDocumento.setEnabled(estado);
+		txtNDocumento.setText("");
 		txtProveedor.setText("");
 		txtFechaDoc.getEditor().setText("");
 		txtFVence.getEditor().setText("");
